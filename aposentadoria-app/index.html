@@ -1,0 +1,679 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Simulador Previdenciário</title>
+    <link rel="stylesheet" href="styles.css?v=flow1" />
+  </head>
+  <body data-report-owner="Fernanda Borges Oliveira">
+    <main class="app-shell">
+      <section class="workspace">
+        <header class="topbar">
+          <div class="portal-title">
+            <p class="eyebrow">RGPS urbano | regras gerais e transições</p>
+            <h1>Simulador Previdenciário</h1>
+          </div>
+          <div class="status-pill" id="referenceDate"></div>
+        </header>
+
+        <section class="notice">
+          <strong>Uso técnico preliminar.</strong>
+          Este app não substitui análise jurídica, CNIS completo nem simulação oficial do Meu INSS. Ele ajuda a comparar regras com os dados informados.
+        </section>
+
+        <div class="portal-grid">
+          <aside class="portal-sidebar">
+            <nav class="tabs" aria-label="Módulos do simulador">
+              <button class="tab-button active" type="button" data-route="aposentadorias" data-tab="retirementTab">
+                <span>Aposentadorias</span>
+                <small>Regras, transições e melhor caminho</small>
+              </button>
+              <button class="tab-button" type="button" data-route="relatorio" data-tab="reportTab">
+                <span>Relatório CNIS</span>
+                <small>Leitura previdenciária e pendências</small>
+              </button>
+              <button class="tab-button" type="button" data-route="beneficios" data-tab="benefitsTab">
+                <span>Benefícios e pensões</span>
+                <small>Auxílios, pensão, IR e acréscimos</small>
+              </button>
+              <button class="tab-button" type="button" data-route="clientes" data-tab="clientsTab">
+                <span>Clientes / Atendimentos</span>
+                <small>Registros salvos, busca e exportação</small>
+              </button>
+            </nav>
+            <div class="sidebar-note">
+              <strong>Fluxo sugerido</strong>
+              <p>Preencha os dados básicos, gere a simulação e depois consolide o relatório com o CNIS.</p>
+            </div>
+          </aside>
+
+          <section class="portal-content">
+        <div class="workflow-strip" aria-label="Fluxo guiado do atendimento">
+          <button type="button" class="workflow-step active" data-tab-target="retirementTab">
+            <span>1</span>
+            Dados e cálculo
+          </button>
+          <button type="button" class="workflow-step" data-tab-target="reportTab">
+            <span>2</span>
+            CNIS e parecer
+          </button>
+          <button type="button" class="workflow-step" data-tab-target="benefitsTab">
+            <span>3</span>
+            Benefícios e documentos
+          </button>
+          <button type="button" class="workflow-step" data-tab-target="clientsTab">
+            <span>4</span>
+            Atendimento salvo
+          </button>
+        </div>
+        <section class="tab-panel active" id="retirementTab">
+          <div class="page-heading">
+            <p class="eyebrow">Módulo 01</p>
+            <h2>Aposentadorias e regras de elegibilidade</h2>
+          </div>
+          <div class="layout">
+          <form id="retirementForm" class="panel form-panel">
+            <div class="section-title">
+              <span>01</span>
+              <h2>Identificação</h2>
+            </div>
+
+            <label>
+              NIS/PIS/PASEP
+              <input name="nis" inputmode="numeric" placeholder="000.00000.00-0" />
+            </label>
+
+            <label>
+              Nome
+              <input name="name" placeholder="Nome da pessoa segurada" />
+            </label>
+
+            <div class="grid two">
+              <label>
+                CPF
+                <input name="cpf" inputmode="numeric" placeholder="000.000.000-00" />
+              </label>
+              <label>
+                RG
+                <input name="rg" placeholder="Documento de identidade" />
+              </label>
+            </div>
+
+            <div class="grid two">
+              <label>
+                Estado civil
+                <input name="civilStatus" placeholder="Ex.: solteira, casado, união estável" />
+              </label>
+              <label>
+                Profissão
+                <input name="profession" placeholder="Profissão declarada" />
+              </label>
+            </div>
+
+            <label>
+              Endereço completo
+              <input name="address" placeholder="Rua, número, complemento, bairro, cidade/UF e CEP" />
+            </label>
+
+            <div class="grid two">
+              <label>
+                Telefone
+                <input name="phone" inputmode="tel" placeholder="(00) 00000-0000" />
+              </label>
+              <label>
+                E-mail
+                <input name="email" type="email" placeholder="cliente@email.com" />
+              </label>
+            </div>
+
+            <div class="grid two">
+              <label>
+                Sexo cadastral
+                <select name="sex" required>
+                  <option value="female">Mulher</option>
+                  <option value="male">Homem</option>
+                </select>
+              </label>
+
+              <label>
+                Data de nascimento
+                <input name="birthDate" type="date" required />
+              </label>
+            </div>
+
+            <div class="section-title">
+              <span>02</span>
+              <h2>Tempo e carência</h2>
+            </div>
+
+            <div class="grid two">
+              <label>
+                Tempo total de contribuição
+                <div class="inline-fields">
+                  <input name="contribYears" type="number" min="0" max="60" value="30" aria-label="Anos de contribuição" />
+                  <span>anos</span>
+                  <input name="contribMonths" type="number" min="0" max="11" value="0" aria-label="Meses de contribuição" />
+                  <span>meses</span>
+                </div>
+              </label>
+
+              <label>
+                Carência
+                <div class="inline-fields">
+                  <input name="carencia" type="number" min="0" max="720" value="180" />
+                  <span>meses</span>
+                </div>
+              </label>
+            </div>
+
+            <div class="grid two">
+              <label>
+                Tempo em 13/11/2019
+                <div class="inline-fields">
+                  <input name="contrib2019Years" type="number" min="0" max="60" value="28" aria-label="Anos em 13 de novembro de 2019" />
+                  <span>anos</span>
+                  <input name="contrib2019Months" type="number" min="0" max="11" value="0" aria-label="Meses em 13 de novembro de 2019" />
+                  <span>meses</span>
+                </div>
+              </label>
+
+              <label>
+                Salários considerados
+                <div class="inline-fields">
+                  <input name="averageSalary" type="number" min="0" step="0.01" value="2500" />
+                  <span>R$ média</span>
+                </div>
+              </label>
+            </div>
+
+            <div class="section-title">
+              <span>03</span>
+              <h2>Condições especiais</h2>
+            </div>
+
+            <div class="switch-row">
+              <label class="check">
+                <input name="startedBeforeReform" type="checkbox" checked />
+                <span>Já tinha filiação/contribuição antes de 13/11/2019</span>
+              </label>
+              <label class="check">
+                <input name="isTeacher" type="checkbox" />
+                <span>Professor(a) da educação básica</span>
+              </label>
+              <label class="check">
+                <input name="isSpecial" type="checkbox" />
+                <span>Atividade especial com exposição nociva</span>
+              </label>
+            </div>
+
+            <label class="special-only" id="specialExposureField">
+              Grau da atividade especial
+              <select name="specialExposureYears">
+                <option value="25">25 anos - regra geral de exposição nociva</option>
+                <option value="20">20 anos - mineração subterrânea afastada da frente/asbesto</option>
+                <option value="15">15 anos - mineração subterrânea em frente de produção</option>
+              </select>
+            </label>
+
+            <label class="special-only" id="specialExposureTimeField">
+              Tempo efetivo em condição especial
+              <div class="inline-fields">
+                <input name="specialYears" type="number" min="0" max="45" value="25" aria-label="Anos de exposição especial" />
+                <span>anos</span>
+                <input name="specialMonths" type="number" min="0" max="11" value="0" aria-label="Meses de exposição especial" />
+                <span>meses</span>
+              </div>
+            </label>
+
+            <div class="switch-row">
+              <label class="check">
+                <input name="hasDisability" type="checkbox" />
+                <span>Pessoa com deficiência avaliada ou a avaliar pelo INSS</span>
+              </label>
+            </div>
+
+            <div class="detail-field" id="disabilityFields">
+              <label>
+                Grau predominante da deficiência
+                <select name="disabilityDegree">
+                  <option value="severe">Grave</option>
+                  <option value="moderate">Moderada</option>
+                  <option value="mild">Leve</option>
+                </select>
+              </label>
+              <label>
+                Tempo trabalhado na condição de pessoa com deficiência
+                <div class="inline-fields">
+                  <input name="disabilityYears" type="number" min="0" max="60" value="15" aria-label="Anos como pessoa com deficiência" />
+                  <span>anos</span>
+                  <input name="disabilityMonths" type="number" min="0" max="11" value="0" aria-label="Meses como pessoa com deficiência" />
+                  <span>meses</span>
+                </div>
+              </label>
+            </div>
+
+            <div class="switch-row">
+              <label class="check">
+                <input name="isPermanentlyIncapable" type="checkbox" />
+                <span>Incapacidade permanente para qualquer atividade laboral</span>
+              </label>
+            </div>
+
+            <div class="detail-field" id="incapacityFields">
+              <label class="check">
+                <input name="incapacityCarencyWaived" type="checkbox" />
+                <span>Incapacidade por acidente/doença que dispensa carência</span>
+              </label>
+              <label class="check">
+                <input name="needsThirdPartyCare" type="checkbox" />
+                <span>Necessita assistência permanente de terceiros</span>
+              </label>
+            </div>
+
+            <div class="switch-row">
+              <label class="check">
+                <input name="isRuralWorker" type="checkbox" />
+                <span>Trabalhador(a) rural / segurado especial</span>
+              </label>
+            </div>
+
+            <label class="detail-field" id="ruralFields">
+              Tempo rural comprovável
+              <div class="inline-fields">
+                <input name="ruralYears" type="number" min="0" max="60" value="15" aria-label="Anos rurais" />
+                <span>anos</span>
+                <input name="ruralMonths" type="number" min="0" max="11" value="0" aria-label="Meses rurais" />
+                <span>meses</span>
+              </div>
+            </label>
+
+            <div class="switch-row">
+              <label class="check">
+                <input name="isPortuaryWorker" type="checkbox" />
+                <span>Trabalhador portuário avulso</span>
+              </label>
+            </div>
+
+            <div class="detail-field" id="portuaryFields">
+              <label class="check">
+                <input name="portuaryRegistry15Years" type="checkbox" />
+                <span>Cadastro/registro ativo há pelo menos 15 anos</span>
+              </label>
+              <label class="check">
+                <input name="portuaryAttendance80" type="checkbox" />
+                <span>Compareceu a pelo menos 80% das convocações e turnos</span>
+              </label>
+            </div>
+
+            <div class="actions">
+              <button type="submit">Calcular melhor regra</button>
+              <button type="button" class="secondary" id="fillExample">Exemplo</button>
+              <button type="button" class="secondary next-step" data-next-tab="reportTab">Próxima etapa</button>
+            </div>
+          </form>
+
+          <section class="results">
+            <div class="panel summary-card" id="bestResult">
+              <p class="eyebrow">Resultado</p>
+              <h2>Preencha os dados para comparar as regras.</h2>
+              <p>O app avalia idade, tempo comum, especial, rural, PcD, incapacidade, carência, pontos e pedágios, depois ordena pela data mais próxima e por estimativa de renda.</p>
+            </div>
+
+            <div class="panel">
+              <div class="section-title compact">
+                <span>04</span>
+                <h2>Comparativo das regras</h2>
+              </div>
+              <div id="rulesList" class="rules-list"></div>
+            </div>
+          </section>
+          </div>
+        </section>
+
+        <section class="tab-panel" id="reportTab">
+          <div class="page-heading">
+            <p class="eyebrow">Módulo 02</p>
+            <h2>Relatório da vida previdenciária</h2>
+          </div>
+          <div class="layout">
+            <form id="reportForm" class="panel form-panel">
+              <div class="section-title">
+                <span>01</span>
+                <h2>Extrato CNIS/NIS</h2>
+              </div>
+
+              <label>
+                PDF do extrato previdenciário
+                <input name="cnisPdf" type="file" accept="application/pdf" />
+              </label>
+
+              <label>
+                Texto extraído ou colado do CNIS
+                <textarea name="cnisText" rows="11" placeholder="Cole aqui o texto do CNIS se o PDF não puder ser lido automaticamente."></textarea>
+              </label>
+
+              <div class="grid two">
+                <label>
+                  Observações do atendimento
+                  <textarea name="caseNotes" rows="6" placeholder="Ex.: vínculo rural, períodos especiais, doença grave, dependentes, contribuições em atraso..."></textarea>
+                </label>
+                <div class="stacked-fields">
+                  <label>
+                    Responsável pelo relatório
+                    <input name="reportOwner" value="Fernanda Borges Oliveira" placeholder="Nome de quem está emitindo o relatório" />
+                  </label>
+                  <label>
+                    Objetivo principal
+                    <select name="reportGoal">
+                      <option value="best-retirement">Encontrar melhor aposentadoria</option>
+                      <option value="benefits">Mapear benefícios possíveis</option>
+                      <option value="full">Relatório completo</option>
+                    </select>
+                  </label>
+                </div>
+              </div>
+
+              <div class="actions">
+                <button type="submit">Gerar relatório</button>
+                <button type="button" class="secondary" id="copyReport">Copiar relatório</button>
+                <button type="button" class="secondary" id="downloadReport">Baixar relatório</button>
+                <button type="button" class="secondary" id="generateOpinionPdf">Gerar parecer em PDF</button>
+                <button type="button" class="secondary next-step" data-next-tab="benefitsTab">Próxima etapa</button>
+              </div>
+            </form>
+
+            <section class="results">
+              <div class="panel summary-card" id="reportSummary">
+                <p class="eyebrow">Relatório</p>
+                <h2>Importe ou cole o CNIS para gerar uma leitura orientada.</h2>
+                <p>O app tenta identificar NIS, nome, vínculos, benefícios, lacunas, períodos especiais e alertas documentais. A triagem fica mais forte quando os campos da aba de aposentadoria também estão preenchidos.</p>
+              </div>
+              <div class="panel">
+                <div class="section-title compact">
+                  <span>02</span>
+                  <h2>Vida previdenciária</h2>
+                </div>
+                <div id="reportOutput" class="report-output"></div>
+              </div>
+            </section>
+          </div>
+        </section>
+
+        <section class="tab-panel" id="benefitsTab">
+          <div class="page-heading">
+            <p class="eyebrow">Módulo 03</p>
+            <h2>Benefícios previdenciários, pensões e isenções</h2>
+          </div>
+          <div class="layout">
+            <form id="benefitsForm" class="panel form-panel">
+              <div class="section-title">
+                <span>01</span>
+                <h2>Qualidade de segurado e contexto</h2>
+              </div>
+
+              <div class="grid two">
+                <label>
+                  Categoria atual
+                  <select name="insuredCategory">
+                    <option value="employee">Empregado urbano/rural</option>
+                    <option value="domestic">Empregado doméstico</option>
+                    <option value="individual">Contribuinte individual/MEI</option>
+                    <option value="facultative">Facultativo</option>
+                    <option value="special">Segurado especial rural</option>
+                    <option value="unemployed">Desempregado em período de graça</option>
+                  </select>
+                </label>
+
+                <label>
+                  Contribuições mensais
+                  <input name="benefitContribMonths" type="number" min="0" max="720" value="18" />
+                </label>
+              </div>
+
+              <div class="switch-row">
+                <label class="check">
+                  <input name="hasInsuredStatus" type="checkbox" checked />
+                  <span>Mantém qualidade de segurado</span>
+                </label>
+                <label class="check">
+                  <input name="medicalDocuments" type="checkbox" />
+                  <span>Possui atestado, laudo ou relatório médico</span>
+                </label>
+                <label class="check">
+                  <input name="temporaryIncapacityOver15" type="checkbox" />
+                  <span>Incapacidade temporária por mais de 15 dias</span>
+                </label>
+                <label class="check">
+                  <input name="workAccidentOrSevereDisease" type="checkbox" />
+                  <span>Acidente, doença do trabalho ou doença grave que pode dispensar carência</span>
+                </label>
+                <label class="check">
+                  <input name="permanentSequela" type="checkbox" />
+                  <span>Sequela permanente que reduz capacidade para o trabalho habitual</span>
+                </label>
+                <label class="check">
+                  <input name="maternityEvent" type="checkbox" />
+                  <span>Parto, adoção, guarda judicial ou aborto legal</span>
+                </label>
+              </div>
+
+              <div class="section-title">
+                <span>02</span>
+                <h2>Pensão e dependentes</h2>
+              </div>
+
+              <div class="grid two">
+                <label>
+                  Idade do cônjuge/companheiro(a) na data do óbito
+                  <input name="spouseAgeAtDeath" type="number" min="0" max="120" value="45" />
+                </label>
+                <label>
+                  Dependentes habilitáveis
+                  <input name="dependentCount" type="number" min="0" max="20" value="1" />
+                </label>
+              </div>
+
+              <div class="switch-row">
+                <label class="check">
+                  <input name="deathOccurred" type="checkbox" />
+                  <span>Há óbito de segurado(a) ou aposentado(a)</span>
+                </label>
+                <label class="check">
+                  <input name="deceasedHad18Contribs" type="checkbox" checked />
+                  <span>Falecido(a) tinha ao menos 18 contribuições</span>
+                </label>
+                <label class="check">
+                  <input name="unionOver2Years" type="checkbox" checked />
+                  <span>Casamento/união estável com ao menos 2 anos</span>
+                </label>
+                <label class="check">
+                  <input name="dependentInvalidOrDisabled" type="checkbox" />
+                  <span>Dependente inválido ou com deficiência</span>
+                </label>
+              </div>
+
+              <div class="section-title">
+                <span>03</span>
+                <h2>Isenções e acréscimos</h2>
+              </div>
+
+              <div class="switch-row">
+                <label class="check">
+                  <input name="isRetiredOrPensioner" type="checkbox" />
+                  <span>Já recebe aposentadoria, pensão, reforma ou reserva remunerada</span>
+                </label>
+                <label class="check">
+                  <input name="hasSeriousDisease" type="checkbox" />
+                  <span>Possui doença grave/moléstia profissional com documentação médica</span>
+                </label>
+                <label class="check">
+                  <input name="receivesPermanentIncapacityRetirement" type="checkbox" />
+                  <span>Recebe ou está avaliando aposentadoria por incapacidade permanente</span>
+                </label>
+                <label class="check">
+                  <input name="needsCareForDailyActivities" type="checkbox" />
+                  <span>Depende de terceiros para atividades diárias</span>
+                </label>
+              </div>
+
+              <label>
+                Doença grave/moléstia para triagem de IR
+                <select name="seriousDiseaseType">
+                  <option value="">Selecione, se houver</option>
+                  <option value="moléstia profissional">Moléstia profissional</option>
+                  <option value="tuberculose ativa">Tuberculose ativa</option>
+                  <option value="alienação mental">Alienação mental</option>
+                  <option value="esclerose múltipla">Esclerose múltipla</option>
+                  <option value="neoplasia maligna">Neoplasia maligna</option>
+                  <option value="cegueira">Cegueira</option>
+                  <option value="hanseníase">Hanseníase</option>
+                  <option value="paralisia irreversível e incapacitante">Paralisia irreversível e incapacitante</option>
+                  <option value="cardiopatia grave">Cardiopatia grave</option>
+                  <option value="doença de Parkinson">Doença de Parkinson</option>
+                  <option value="espondiloartrose anquilosante">Espondiloartrose anquilosante</option>
+                  <option value="nefropatia grave">Nefropatia grave</option>
+                  <option value="hepatopatia grave">Hepatopatia grave</option>
+                  <option value="doença de Paget em estado avançado">Doença de Paget em estado avançado</option>
+                  <option value="contaminação por radiação">Contaminação por radiação</option>
+                  <option value="AIDS">AIDS</option>
+                  <option value="fibrose cística">Fibrose cística</option>
+                </select>
+              </label>
+
+              <div class="section-title">
+                <span>04</span>
+                <h2>Documentos e contratação</h2>
+              </div>
+
+              <div class="grid two">
+                <label>
+                  Tipo de benefício / pedido
+                  <input name="benefitType" placeholder="Ex.: aposentadoria por idade, pensão por morte, auxílio-doença" />
+                </label>
+                <label>
+                  Honorários
+                  <input name="feeTerms" placeholder="Ex.: 30% dos atrasados + 1 benefício mensal" />
+                </label>
+              </div>
+
+              <label>
+                Resumo do serviço contratado
+                <textarea name="serviceSummary" rows="5" placeholder="Descreva a análise, protocolo, acompanhamento administrativo/judicial e demais serviços contratados."></textarea>
+              </label>
+
+              <div class="grid two">
+                <label>
+                  Local de assinatura
+                  <input name="signaturePlace" value="Brasília/DF" />
+                </label>
+                <label>
+                  Data
+                  <input name="signatureDate" type="date" />
+                </label>
+              </div>
+
+              <div class="grid two">
+                <label>
+                  OAB
+                  <input name="lawyerOab" placeholder="OAB/UF nº ..." />
+                </label>
+                <label>
+                  Endereço profissional
+                  <input name="lawyerAddress" placeholder="Endereço profissional da advogada" />
+                </label>
+              </div>
+
+              <label class="check lgpd-consent">
+                <input name="lgpdConsent" type="checkbox" />
+                <span>Autorizo o tratamento dos dados pessoais e sensíveis para análise previdenciária, elaboração de documentos, contato profissional e eventual prestação de serviços advocatícios.</span>
+              </label>
+
+              <div class="actions">
+                <button type="submit">Analisar benefícios</button>
+                <button type="button" class="secondary" id="generateDocuments">Gerar documentos</button>
+                <button type="button" class="secondary next-step" data-next-tab="clientsTab">Ver atendimento salvo</button>
+              </div>
+            </form>
+
+            <section class="results">
+              <div class="panel summary-card" id="benefitsSummary">
+                <p class="eyebrow">Benefícios</p>
+                <h2>Preencha o contexto para mapear benefícios possíveis.</h2>
+                <p>O resultado indica elegibilidade preliminar, exigências documentais e pontos que dependem de perícia ou análise administrativa.</p>
+              </div>
+              <div class="panel">
+                <div class="section-title compact">
+                  <span>04</span>
+                  <h2>Mapa de benefícios</h2>
+                </div>
+                <div id="benefitsList" class="rules-list"></div>
+              </div>
+              <div class="panel document-panel" id="documentPreviewPanel">
+                <div class="section-title compact">
+                  <span>05</span>
+                  <h2>Pré-visualização dos documentos</h2>
+                </div>
+                <div class="document-toolbar">
+                  <button type="button" class="secondary" id="generateContractPdf">Gerar contrato em PDF</button>
+                  <button type="button" class="secondary" id="generatePowerPdf">Gerar procuração em PDF</button>
+                  <button type="button" id="generateBothPdfs">Gerar ambos em PDF</button>
+                </div>
+                <div class="document-tabs">
+                  <button type="button" class="document-tab active" data-document="contractDocument">Contrato</button>
+                  <button type="button" class="document-tab" data-document="powerDocument">Procuração</button>
+                </div>
+                <article class="legal-document active" id="contractDocument" contenteditable="true"></article>
+                <article class="legal-document" id="powerDocument" contenteditable="true"></article>
+              </div>
+            </section>
+          </div>
+        </section>
+
+        <section class="tab-panel" id="clientsTab">
+          <div class="page-heading">
+            <p class="eyebrow">Administração</p>
+            <h2>Clientes / Atendimentos</h2>
+          </div>
+          <div class="panel form-panel">
+            <div class="grid two">
+              <label>
+                Pesquisar atendimento
+                <input id="clientSearch" placeholder="Nome, CPF ou benefício" />
+              </label>
+              <label>
+                Status do atendimento atual
+                <select id="currentStatus">
+                  <option value="Novo">Novo</option>
+                  <option value="Em análise">Em análise</option>
+                  <option value="Documentos gerados">Documentos gerados</option>
+                  <option value="Protocolado">Protocolado</option>
+                  <option value="Exigência">Exigência</option>
+                  <option value="Concluído">Concluído</option>
+                </select>
+              </label>
+            </div>
+            <div class="grid two">
+              <label>
+                Exportar dados
+                <button type="button" id="exportClientsCsv">Exportar CSV / Excel</button>
+              </label>
+            </div>
+            <div id="clientsList" class="clients-list"></div>
+          </div>
+        </section>
+          </section>
+        </div>
+
+        <footer>
+          <span>Fernanda Borges Oliveira - Direito Público.</span>
+          <span>Fontes de referência: INSS/Gov.br, EC 103/2019, LC 142/2013 e regras vigentes em 2026. Atualize os parâmetros antes de uso profissional.</span>
+        </footer>
+      </section>
+    </main>
+
+    <script src="rules.js?v=docs1"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script src="app.js?v=flow1"></script>
+  </body>
+</html>
