@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Plataforma do Direito</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="#" data-go="home">Plataforma do Direito</a>
+  <nav>
+    <a href="#como">Como funciona</a>
+    <a href="#areas" data-go="home">Áreas atendidas</a>
+    <a href="#" data-go="home">Para empresas</a>
+    <a href="#" class="btn-ghost" data-go="area">Entrar</a>
+  </nav>
+</header>
+
+<main>
+  <!-- HOME -->
+  <section id="view-home" class="view active">
+    <div class="hero">
+      <h1>O que você precisa resolver?</h1>
+      <p class="lead">Conte seu problema do seu jeito. Não precisa saber qual é a área do Direito.</p>
+      <form id="start-form" class="composer">
+        <textarea id="start-text" rows="4" placeholder="Ex.: Meu plano de saúde negou uma cirurgia que meu médico pediu..."></textarea>
+        <button type="submit" aria-label="Começar">➜</button>
+      </form>
+      <p class="privacy">🔒 Sua conversa é privada. Não coloque senhas ou dados bancários.</p>
+      <div class="chips" id="shortcuts">
+        <button data-topic="previdenciario">INSS e aposentadoria</button>
+        <button data-topic="administrativo">Servidor público</button>
+        <button data-topic="saude">Plano de saúde</button>
+        <button data-topic="consumidor">Compras e serviços</button>
+        <button data-topic="cartorio">Cartório e documentos</button>
+      </div>
+    </div>
+
+    <div class="how" id="como">
+      <div><span>1</span><h3>Conte o problema</h3><p>Sem cadastro, sem juridiquês.</p></div>
+      <div><span>2</span><h3>Receba orientação</h3><p>Caminhos, documentos e fontes oficiais, de graça.</p></div>
+      <div><span>3</span><h3>Advogado, se precisar</h3><p>Seu caso chega organizado. Você não repete nada.</p></div>
+    </div>
+
+    <div class="areas" id="areas">
+      <h2>Podemos ajudar em</h2>
+      <div class="grid">
+        <article><h3>Administrativo</h3><p>Servidor, concurso, PAD, licitações...</p></article>
+        <article><h3>Previdenciário</h3><p>Aposentadoria, benefício, CNIS...</p></article>
+        <article><h3>Saúde</h3><p>Plano de saúde, SUS, medicamentos...</p></article>
+        <article><h3>Consumidor</h3><p>Compras, bancos, companhias aéreas...</p></article>
+        <article><h3>Cartório e Extrajudicial</h3><p>Certidões, registros, escrituras...</p></article>
+      </div>
+    </div>
+  </section>
+
+  <!-- TRIAGEM -->
+  <section id="view-chat" class="view">
+    <div class="chat-layout">
+      <div class="chat">
+        <div id="messages" class="messages"></div>
+        <div id="answers" class="answers"></div>
+      </div>
+      <aside class="progress" aria-label="Seu atendimento">
+        <h4>Seu atendimento</h4>
+        <ol id="steps">
+          <li data-step="0">Problema informado</li>
+          <li data-step="1">Entendendo sua situação</li>
+          <li data-step="2">Orientação inicial</li>
+          <li data-step="3">Próximos passos</li>
+        </ol>
+      </aside>
+    </div>
+  </section>
+
+  <!-- RESULTADO -->
+  <section id="view-result" class="view">
+    <div class="narrow" id="result"></div>
+  </section>
+
+  <!-- TRANSIÇÃO PARA ADVOGADO -->
+  <section id="view-lawyer" class="view">
+    <div class="narrow">
+      <h1>Já organizamos seu caso.</h1>
+      <p class="lead">Você não precisa contar tudo outra vez.</p>
+      <ul class="checks" id="case-summary"></ul>
+      <h2>Escolha como continuar</h2>
+      <div class="card">
+        <h3>Consulta online</h3>
+        <p>Videoconferência com advogado.</p>
+        <div class="slots" id="slots"></div>
+        <button class="btn" id="confirm-slot" disabled>Escolher horário →</button>
+        <p class="muted small">Para agendar, pediremos apenas nome, e-mail e telefone.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- MINHA ÁREA -->
+  <section id="view-area" class="view">
+    <div class="narrow">
+      <h1>Olá, Maria.</h1>
+      <div class="card">
+        <p class="muted small">Seu caso</p>
+        <h3 id="area-title">Plano de saúde — cirurgia negada</h3>
+        <p><span class="pill">Em análise pelo advogado</span></p>
+        <p class="muted">Próxima atualização prevista: 06/10</p>
+        <ul class="timeline">
+          <li class="done">Documentação recebida</li>
+          <li class="now">Análise jurídica</li>
+          <li>Preparação do requerimento</li>
+          <li>Protocolo</li>
+          <li>Acompanhamento</li>
+        </ul>
+      </div>
+      <div class="card warn">
+        <p class="muted small">Próximo passo</p>
+        <h3>⚠️ Envie a negativa do plano</h3>
+        <p class="muted">Documentos: 6 de 7 enviados</p>
+        <label class="btn">Enviar documento<input type="file" hidden></label>
+      </div>
+      <div class="card">
+        <p class="muted small">Próxima reunião</p>
+        <h3 id="area-meeting">08/10 — 14h</h3>
+      </div>
+      <nav class="tabs"><a>Atendimentos</a><a>Documentos</a><a>Mensagens</a><a>Pagamentos</a></nav>
+    </div>
+  </section>
+</main>
+
+<footer class="foot">
+  Protótipo de interface. A orientação inicial é informativa e não substitui a análise individual por advogado.
+</footer>
+
+<script src="flows.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
