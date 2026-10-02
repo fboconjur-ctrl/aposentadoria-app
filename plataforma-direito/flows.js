@@ -103,10 +103,10 @@ const FLOWS = {
 const OBJECTIVE_Q = { q: "E o que você gostaria que acontecesse?", a: ["Resolver rápido", "Ser indenizado(a)", "Entender meus direitos", "Outro"] };
 
 function classify(text) {
-  const t = text.toLowerCase();
+  const t = text.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
   let best = null, score = 0;
   for (const [key, f] of Object.entries(FLOWS)) {
-    const s = f.keywords.filter((k) => t.includes(k)).length;
+    const s = f.keywords.filter((k) => t.includes(k.normalize("NFD").replace(/[\u0300-\u036f]/g, ""))).length;
     if (s > score) { score = s; best = key; }
   }
   return best;

@@ -29,3 +29,9 @@ Fluxo: problema → orientação gratuita → caminho → autoatendimento quando
 ## Limites
 
 Classificação por palavras-chave e respostas simuladas; sem IA, backend, contas, upload real ou agendamento real.
+
+## Ferramentas
+
+- `node plataforma-direito/ferramentas/testar.js` — confere se cada pergunta de teste cai na resposta certa. Rodar antes de cada publicação.
+- `node plataforma-direito/ferramentas/gerar-revisao.js` — gera `conteudo/REVISAO.md` com todas as respostas para revisão jurídica.
+- Parâmetros que mudam no tempo (ex.: salário mínimo usado nos cálculos) ficam em `continuacoes.js`, no objeto `PARAMS`.

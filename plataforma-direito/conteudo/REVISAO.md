@@ -10,7 +10,7 @@ Gerado automaticamente em 02/10/2026 a partir do código (101 respostas). Não e
 
 ### 1. Quais deficiências são consideradas graves para a aposentadoria da pessoa com deficiência?
 
-`pcd-grau` · Atlas `OPP-PREV-001` · continuação: _Vamos ver se você pode ter direito?_
+`pcd-grau` · Atlas `OPP-PREV-001`
 
 A lei não traz uma lista de doenças ou deficiências graves. O grau (leve, moderada ou grave) não depende do diagnóstico, e sim de quanto a deficiência limita a sua vida e o seu trabalho.
 
@@ -35,7 +35,7 @@ _Aposentadoria por tempo, sem idade mínima. Há também a aposentadoria por ida
 
 ### 2. Quem tem direito à aposentadoria da pessoa com deficiência?
 
-`pcd-quem` · Atlas `OPP-PREV-001` · continuação: _Vamos ver se você pode ter direito?_
+`pcd-quem` · Atlas `OPP-PREV-001`
 
 Tem direito o segurado do INSS com impedimento de longo prazo (físico, mental, intelectual ou sensorial) que, junto com barreiras, dificulta sua participação plena na sociedade.
 
@@ -101,7 +101,7 @@ Também é possível ir direto à Justiça Federal. Como recurso administrativo 
 
 ### 7. Como funciona a aposentadoria especial?
 
-`especial-ppp` · Atlas `OPP-PREV-008`
+`especial-ppp` · Atlas `OPP-PREV-008` · continuação: _Vamos avaliar seus períodos especiais?_
 
 É para quem trabalhou exposto a agentes nocivos à saúde, como ruído, agentes químicos, biológicos ou eletricidade. A exposição é comprovada pelo PPP (Perfil Profissiográfico Previdenciário), emitido pela empresa.
 
@@ -115,7 +115,7 @@ Períodos especiais anteriores a 13/11/2019 podem ser convertidos em tempo comum
 
 ### 8. Quem tem direito ao BPC/LOAS?
 
-`bpc-renda` · Atlas `OPP-PREV-004`
+`bpc-renda` · Atlas `OPP-PREV-004` · continuação: _Vamos ver se a renda da sua família se encaixa?_
 
 Pessoas com 65 anos ou mais, ou com deficiência de longo prazo, cuja família tenha renda por pessoa de até 1/4 do salário mínimo. A lei permite considerar outros elementos de vulnerabilidade.
 
@@ -127,7 +127,7 @@ Pessoas com 65 anos ou mais, ou com deficiência de longo prazo, cuja família t
 
 ### 9. Como funciona a pensão por morte?
 
-`pensao-duracao` · Atlas `OPP-PREV-003`
+`pensao-duracao` · Atlas `OPP-PREV-003` · continuação: _Vamos ver por quanto tempo a pensão será paga?_
 
 É paga aos dependentes de quem contribuía ou era aposentado. O valor é de 50% da aposentadoria (recebida ou a que teria direito) mais 10% por dependente, até 100%.
 
@@ -151,7 +151,7 @@ O motivo da negativa, que aparece na carta de indeferimento, define qual caminho
 
 ### 11. Quem tem direito ao salário-maternidade?
 
-`salario-maternidade` · Atlas `OPP-PREV-006`
+`salario-maternidade` · Atlas `OPP-PREV-006` · continuação: _Vamos ver se você pode receber?_
 
 Têm direito as seguradas do INSS que têm filho ou adotam: empregadas, domésticas, contribuintes individuais e MEI, facultativas, seguradas especiais (rurais) e desempregadas que ainda mantêm a qualidade de segurada.
 
@@ -247,7 +247,7 @@ Durante o período de graça, você mantém direito aos benefícios, e seus depe
 
 ### 17. Quem tem direito ao auxílio-acidente?
 
-`auxilio-acidente` · Atlas `OPP-PREV-007`
+`auxilio-acidente` · Atlas `OPP-PREV-007` · continuação: _Vamos ver se você tem direito ao auxílio-acidente?_
 
 É uma indenização mensal para quem ficou com sequela permanente que reduz a capacidade para o trabalho que exercia, depois de um acidente de qualquer natureza (não precisa ser do trabalho).
 
@@ -674,7 +674,7 @@ Em erro de dentista, o profissional responde se houver culpa. Em tratamentos est
 
 ### 1. Posso desistir de uma compra feita pela internet?
 
-`arrependimento` · Atlas `OPP-CON-001`
+`arrependimento` · Atlas `OPP-CON-001` · continuação: _Ainda dá tempo de desistir?_
 
 Sim. Em compras feitas fora da loja física (internet, telefone, catálogo), você pode desistir em até 7 dias, contados da assinatura ou do recebimento do produto, sem precisar justificar.
 
@@ -688,7 +688,7 @@ Em compras na loja física, a troca por arrependimento não é obrigatória por 
 
 ### 2. Comprei um produto com defeito. Quais são meus direitos?
 
-`defeito` · Atlas `OPP-CON-003`
+`defeito` · Atlas `OPP-CON-003` · continuação: _Vamos calcular seus prazos?_
 
 Você tem 30 dias (produto não durável) ou 90 dias (durável) para reclamar. O prazo conta da entrega, se o defeito é aparente, ou de quando ele aparece, se é oculto.
 
@@ -716,7 +716,7 @@ Danos morais não são automáticos: é preciso demonstrar o prejuízo, como per
 
 ### 4. Meu nome foi negativado. O que posso fazer?
 
-`negativado` · Atlas `OPP-CON-002`
+`negativado` · Atlas `OPP-CON-002` · continuação: _Sua negativação gera indenização?_
 
 A inclusão em cadastro de inadimplentes deve ser comunicada antes, por escrito. Sem esse aviso, a negativação é irregular.
 
@@ -1012,7 +1012,7 @@ Estados e municípios têm estatutos próprios, com prazos que podem ser diferen
 
 ### 3. Fui aprovado(a) em concurso. Tenho direito à nomeação?
 
-`concurso-vagas` · Atlas `OPP-ADM-004`
+`concurso-vagas` · Atlas `OPP-ADM-004` · continuação: _Vamos avaliar seu direito à nomeação?_
 
 Se você foi aprovado(a) dentro do número de vagas do edital, tem direito à nomeação durante o prazo de validade do concurso (STF, Tema 161).
 
@@ -1084,7 +1084,7 @@ Em regra, quem é excluído das cotas sem má-fé continua concorrendo na ampla 
 
 ### 8. Como recorrer de multa de trânsito ou de suspensão da CNH?
 
-`multa-transito` · Atlas `OPP-ADM-010`
+`multa-transito` · Atlas `OPP-ADM-010` · continuação: _Vamos conferir prazos e vícios da sua multa?_
 
 Há três etapas: defesa prévia (ou indicação do condutor), recurso à JARI e recurso ao Cetran ou Contran. Os prazos vêm na notificação e, em geral, são de pelo menos 30 dias.
 
@@ -1218,7 +1218,7 @@ O prazo para abrir é de 2 meses do falecimento. O atraso pode gerar multa no IT
 
 ### 2. Posso me divorciar em cartório?
 
-`divorcio-cartorio` · Atlas `OPP-FAM-001`
+`divorcio-cartorio` · Atlas `OPP-FAM-001` · continuação: _Seu divórcio pode ser em cartório?_
 
 Sim, se o casal estiver de acordo e não houver filhos menores ou incapazes, nem gravidez. O divórcio é feito por escritura pública, com advogado.
 
@@ -1246,7 +1246,7 @@ Erros evidentes de grafia são corrigidos no cartório, sem processo.
 
 ### 4. Como regularizar um imóvel por usucapião em cartório?
 
-`usucapiao` · Atlas `OPP-IMO-001`
+`usucapiao` · Atlas `OPP-IMO-001` · continuação: _Qual modalidade de usucapião se encaixa no seu caso?_
 
 A usucapião pode ser feita diretamente no Registro de Imóveis, sem processo judicial, com advogado.
 

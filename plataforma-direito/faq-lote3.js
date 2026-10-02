@@ -100,7 +100,7 @@ FAQ.push(
       "Outros tratamentos ligados à infertilidade, como cirurgias e exames de diagnóstico, seguem o rol da ANS.",
       "Há discussão específica para congelamento de óvulos de pacientes com câncer antes da quimioterapia, em que algumas decisões determinam a cobertura."],
     sources: [["Lei 9.656/1998, art. 10, III", P + "leis/l9656.htm"], ["STJ — Tema 1.067", "https://processo.stj.jus.br/repetitivos/temas_repetitivos/"]], next: "Quer avaliar seu caso?" },
-  { id: "portabilidade", area: "saude", all: [["portabilidade", "trocar de plano", "mudar de plano"]],
+  { id: "portabilidade", prio: 2, area: "saude", all: [["portabilidade", "trocar de plano", "mudar de plano"]],
     q: "Como trocar de plano sem cumprir nova carência?",
     a: ["Pela portabilidade de carências, você muda de plano levando as carências já cumpridas.",
       "Requisitos principais: plano atual ativo e em dia; permanência mínima de 2 anos no plano de origem na primeira portabilidade (3 anos se cumpriu cobertura parcial temporária) e de 1 ano nas seguintes; plano de destino em faixa de preço compatível.",

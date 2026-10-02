@@ -195,6 +195,19 @@ function runFollowUp(fu) {
       i++;
       step();
     };
+    if (input === "number") {
+      const n = document.createElement("input");
+      n.type = "number"; n.min = "0"; n.step = "any"; n.inputMode = "decimal";
+      n.id = `fu-${id}`; n.className = "fu-date";
+      const ok = document.createElement("button");
+      ok.textContent = "Confirmar";
+      ok.onclick = () => { if (n.value !== "") answer(Number(n.value), n.value); };
+      const skip = document.createElement("button");
+      skip.textContent = "Não sei";
+      skip.onclick = () => answer(null, "Não sei");
+      $("fu-answers").append(n, ok, skip);
+      return;
+    }
     if (input === "date") {
       const d = document.createElement("input");
       d.type = "date";

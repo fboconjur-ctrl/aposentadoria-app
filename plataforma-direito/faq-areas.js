@@ -277,7 +277,7 @@ FAQ.push(
       "A presença de advogado é obrigatória. O imposto estadual (ITCMD) precisa ser recolhido antes da escritura.",
       "O prazo para abrir é de 2 meses do falecimento. O atraso pode gerar multa no ITCMD, conforme a lei do estado."],
     sources: [["CPC, arts. 610 e 611", L.cpc[1]], ["Resolução CNJ 35/2007", "https://atos.cnj.jus.br/atos/detalhar/179"]], next: "Vamos ver se o seu pode ser em cartório?", followUp: INVENTARIO_FU },
-  { id: "divorcio-cartorio", area: "cartorio", all: [["divórcio", "divorcio", "separação", "separacao", "separar"]],
+  { id: "divorcio-cartorio", area: "cartorio", all: [["divórcio", "divorci", "separação", "separacao", "separar"]],
     q: "Posso me divorciar em cartório?",
     a: ["Sim, se o casal estiver de acordo e não houver filhos menores ou incapazes, nem gravidez. O divórcio é feito por escritura pública, com advogado.",
       "Com filhos menores, guarda, convivência e pensão precisam passar pela Justiça. Resolvidas essas questões judicialmente, o divórcio pode ser concluído em cartório em algumas situações.",
@@ -373,7 +373,7 @@ const LIMINAR_MED_FU = {
 
 FAQ.push({
   id: "liminar-medicamento", area: "saude",
-  all: [["liminar", "justiça", "justica", "processo", "ação", "acao", "conseguir", "consigo", "fornecer", "pagar", "cobrir", "plano", "sus"], MEDICAMENTOS],
+  all: [["liminar", "justiça", "justica", "processo", "ação", "acao", "fornecer", "pagar", "cobrir", "pedir", "mounjaro", "monjaro", "ozempic", "wegovy", "canabidiol"], MEDICAMENTOS],
   q: "Consigo uma liminar para receber um medicamento (como Mounjaro ou Ozempic)?",
   a: [
     "É possível, mas não é automático. A Justiça analisa principalmente três coisas: se o medicamento é imprescindível para você, se as alternativas disponíveis não funcionaram e quem deve fornecer (plano de saúde ou SUS).",

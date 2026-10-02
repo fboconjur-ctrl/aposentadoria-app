@@ -234,7 +234,7 @@ FAQ.push(
       "A suspensão da CNH acontece com 20 pontos em 12 meses se houver 2 ou mais infrações gravíssimas, 30 pontos se houver 1, e 40 pontos se não houver nenhuma. Motoristas profissionais têm regra própria.",
       "Recorrer não gera pontos nem multa adicional, e a infração só é registrada depois de esgotados os recursos."],
     sources: [["Código de Trânsito Brasileiro, arts. 261, 280 a 290", P + "leis/l9503compilado.htm"]], next: "Quer ajuda com o recurso?" },
-  { id: "tribunal-contas", area: "administrativo", all: [["tribunal de contas", "tcu", "tce", "tcm", "tomada de contas", "tce "]],
+  { id: "tribunal-contas", area: "administrativo", all: [["tribunal de contas", "tcu", " tce", " tcm", "tomada de contas"]],
     q: "Fui citado(a) pelo Tribunal de Contas. O que significa?",
     a: ["A citação ocorre quando o Tribunal aponta possível dano aos cofres públicos e chama você a se defender ou a devolver o valor. A audiência ocorre quando há irregularidade sem dano, que pode gerar multa.",
       "O prazo de defesa vem na comunicação; no TCU, costuma ser de 15 dias. [VALIDAR para cada tribunal]",

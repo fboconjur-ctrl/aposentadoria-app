@@ -4,7 +4,7 @@ const fs = require("fs"), path = require("path"), vm = require("vm");
 const dir = path.join(__dirname, "..");
 const ctx = { console, Date, Math, URLSearchParams };
 vm.createContext(ctx);
-for (const f of ["flows.js", "faq.js", "faq-areas.js", "faq-lote2.js", "faq-lote3.js", "atlas.js"]) vm.runInContext(fs.readFileSync(path.join(dir, f), "utf8"), ctx, { filename: f });
+for (const f of ["flows.js", "faq.js", "faq-areas.js", "faq-lote2.js", "faq-lote3.js", "continuacoes.js", "atlas.js"]) vm.runInContext(fs.readFileSync(path.join(dir, f), "utf8"), ctx, { filename: f });
 const { FAQ, ATLAS } = vm.runInContext("({ FAQ, ATLAS })", ctx);
 const AREAS = { previdenciario: "Previdenciário", saude: "Saúde", consumidor: "Consumidor", administrativo: "Administrativo", cartorio: "Cartório e Extrajudicial" };
 let out = `# Revisão das respostas da Plataforma do Direito\n\nGerado automaticamente em ${new Date().toLocaleDateString("pt-BR")} a partir do código (${FAQ.length} respostas). Não edite este arquivo: anote as correções e elas serão aplicadas no código.\n\n**Como revisar:** em cada resposta, marque **✅ ok**, **✏️ corrigir** (escreva a correção logo abaixo) ou **❌ remover**. Trechos com [VALIDAR] são os de menor segurança.\n\n`;
