@@ -5,7 +5,7 @@ Método: execução em navegador real (Chromium), sem rede, reproduzindo caso �
 
 ## Classificação
 
-**INTEGRÁVEL APÓS REFATORAÇÃO** — como motor de análise para o cidadão.
+**INTEGRÁVEL APÓS REFATORAÇÃO** — como motor de análise para o cidadão. Com a v13.7, os dois bloqueadores P0 foram corrigidos; seguem os P1 (conclusões raras e em rótulo técnico).
 **APROVEITÁVEL JÁ** — o corpus de regras, a taxonomia de 28 domínios e as conexões entre domínios, como base de conhecimento para o dossiê do advogado.
 
 ## O que funciona
@@ -55,6 +55,28 @@ Método: execução em navegador real (Chromium), sem rede, reproduzindo caso �
 3. Remover os wrappers de `window.analyze`.
 4. Escrever textos explicativos para as conclusões dos domínios mais procurados (DA-03, DA-04, DA-05, DA-21).
 5. Só então ligar o motor à triagem de Administrativo da plataforma, primeiro para uso interno (dossiê) e depois para o público.
+
+## Correções aplicadas — versão v13.7
+
+Arquivo corrigido entregue à parte (`direito_administrativo_computavel_v13_7.html`), com dois testes reprodutíveis (`testar_dac.js` e `regressoes_nfv2.js`). **Nenhuma regra foi alterada:** o hash do corpus (3.292 regras) é idêntico antes e depois.
+
+| Verificação | Original | v13.7 |
+|---|---|---|
+| Erros no carregamento | 4 | **0** |
+| Testes internos do motor (`runRealityTests`) | não rodavam (21/22 quando forçados) | **22/22** |
+| Casos epistemológicos da auditoria | 10/21 | **21/21** |
+| Regressões oficiais NFV2 (2.8, 3.1, 3.2) | 54/74 | **59/74**, sem nenhuma regressão |
+
+O que foi corrigido:
+1. **Hipótese não vira mais fato** (“talvez”, “indícios”, “suposto”, “possivelmente”, “será apurado”, “sob investigação”).
+2. **“Não foi ouvido” invertido:** o extrator antigo marcava contraditório **observado**, porque os padrões com acento nunca casavam com o texto normalizado. Corrigido em todo o extrator legado.
+3. **Paráfrases de negação da defesa:** “sem que lhe fosse oferecido prazo para defesa”, “cerceamento de defesa”, “sem ser intimado”.
+4. **“X, mas Y”:** a negação ou falta de prova de uma parte não contamina mais a outra (“Não houve dano, mas houve vantagem indevida comprovada”). Alegação e contestação continuam valendo para a frase inteira.
+5. **Absolvição “por insuficiência de provas”** é reconhecida como absolvição (antes ficava desconhecida).
+6. **Confissão** tratada como alegação até valoração, conforme a especificação NFV2 (caso E2E27).
+7. **`analyze()` inexistente:** substituído por chamada ao caminho único `engineAnalyzeCore()`, o que destravou a inicialização.
+
+As 15 divergências restantes nas regressões oficiais: 11 são de **nomenclatura** (a especificação usa `IMPROBIDADE`, `FRAUDE`, `INEXISTENCIA_FATO`, `DESEQUILIBRIO`, `LIMITE_ULTRAPASSADO`, conceitos que o motor não implementa com esse nome) e 4 são casos específicos de absolvição penal, LAI e risco contratual, já existentes na versão original.
 
 ## O que já foi integrado à Plataforma do Direito
 - Cada resposta de Administrativo indica os domínios DAC relacionados (`dac.js`).
