@@ -148,3 +148,49 @@ function findFaq(text) {
   }
   return best;
 }
+
+// Continuação após a resposta: perguntas rápidas que levam a uma avaliação
+// preliminar e ao próximo passo. Indicativo — o grau real só sai da avaliação do INSS.
+const PCD_FOLLOWUP = {
+  title: "Vamos ver se você pode ter direito?",
+  intro: "São 5 perguntas rápidas. No fim, mostramos uma estimativa e o que fazer para pedir o benefício.",
+  questions: [
+    { id: "sexo", q: "Qual o sexo no seu cadastro do INSS?", a: ["Feminino", "Masculino"] },
+    { id: "tempo", q: "Quanto tempo de contribuição você tem, mais ou menos?", a: ["Menos de 15 anos", "15 a 19 anos", "20 a 24 anos", "25 a 28 anos", "29 a 32 anos", "33 anos ou mais", "Não sei"] },
+    { id: "desde", q: "Durante esse tempo de contribuição, você já tinha a deficiência?", a: ["Todo o tempo", "Parte do tempo", "Não sei"] },
+    { id: "impacto", q: "No dia a dia e no trabalho, a deficiência limita você…", a: ["Um pouco", "Bastante", "Muito: preciso de ajuda ou adaptações constantes"] },
+    { id: "laudos", q: "Você tem laudos que descrevem suas limitações?", a: ["Sim, atualizados", "Tenho, mas antigos", "Não tenho"] },
+  ],
+  evaluate(ans) {
+    const female = ans.sexo === "Feminino";
+    const graus = { "Um pouco": "leve", "Bastante": "moderada", "Muito: preciso de ajuda ou adaptações constantes": "grave" };
+    const grau = graus[ans.impacto];
+    const need = { grave: female ? 20 : 25, moderada: female ? 24 : 29, leve: female ? 28 : 33 }[grau];
+    const min = { "Menos de 15 anos": 0, "15 a 19 anos": 15, "20 a 24 anos": 20, "25 a 28 anos": 25, "29 a 32 anos": 29, "33 anos ou mais": 33 }[ans.tempo];
+    const items = [];
+    let headline, tone;
+    if (min === undefined) {
+      headline = "Primeiro passo: descobrir seu tempo de contribuição.";
+      tone = "info";
+      items.push("Baixe seu extrato do CNIS no Meu INSS (meu.inss.gov.br). Ele mostra quanto tempo você já tem.");
+    } else if (min >= need) {
+      headline = `Pela sua descrição, você pode já ter tempo suficiente (deficiência ${grau}: ${need} anos).`;
+      tone = "good";
+    } else if (min + 5 >= need) {
+      headline = `Você pode estar perto: na deficiência ${grau}, a exigência é de ${need} anos.`;
+      tone = "near";
+    } else {
+      headline = `Pela aposentadoria por tempo, ainda faltam alguns anos (deficiência ${grau}: ${need} anos).`;
+      tone = "info";
+      items.push(`Vale ver também a aposentadoria por idade: ${female ? "55" : "60"} anos de idade e 15 anos de contribuição como pessoa com deficiência.`);
+    }
+    items.push("O grau estimado aqui é só uma referência: quem define é a avaliação do INSS (perícia médica e assistente social).");
+    if (ans.desde !== "Todo o tempo") items.push("Como a deficiência não abrange todo o tempo, os períodos são convertidos proporcionalmente. Esse cálculo muda bastante o resultado.");
+    if (ans.laudos !== "Sim, atualizados") items.push("Providencie laudo atualizado que descreva as limitações do dia a dia, não só o CID. Isso pesa na definição do grau.");
+    items.push("O pedido é feito pelo Meu INSS ou pelo 135, como “aposentadoria da pessoa com deficiência”.");
+    const lawyer = tone !== "info" || ans.desde !== "Todo o tempo";
+    return { headline, tone, items, lawyer, summary: `Estimativa: deficiência ${grau || "?"}; exigência ${need || "?"} anos; tempo informado: ${ans.tempo}.` };
+  },
+};
+FAQ.find((f) => f.id === "pcd-grau").followUp = PCD_FOLLOWUP;
+FAQ.find((f) => f.id === "pcd-quem").followUp = PCD_FOLLOWUP;

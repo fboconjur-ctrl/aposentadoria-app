@@ -35,7 +35,7 @@ function offer(options, onPick) {
 }
 
 function startChat(text, forcedKey) {
-  Object.assign(state, { text, answers: [], qi: 0, flow: null });
+  Object.assign(state, { text, answers: [], qi: 0, flow: null, followSummary: null, cnisSummary: null });
   if (text && !forcedKey && isQuestion(text)) return answerQuestion(text);
   $("messages").innerHTML = "";
   go("chat");
@@ -87,6 +87,7 @@ function renderResult() {
     ${state.text ? `<p class="muted">“${esc(state.text)}”</p>` : ""}
     <h2>O que você pode fazer agora</h2>
     <ol class="steps-list">${steps}</ol>
+    ${state.key === "previdenciario" ? CNIS_CARD : ""}
     <h2>O que a lei prevê</h2>
     <p>${esc(f.law)}</p>
     <details><summary>Ver fundamento jurídico e fontes →</summary><ul>${sources}</ul></details>
@@ -101,6 +102,7 @@ function renderResult() {
       </div>
     </div>
     <p class="muted small">Orientação inicial informativa, gerada a partir do que você contou. Não substitui a análise individual por advogado.</p>`;
+  bindCnis();
   $("to-lawyer").onclick = openLawyer;
   $("alone").onclick = () => (e => { e.target.textContent = "Orientação salva ✓"; e.target.disabled = true; })(event);
 }
@@ -111,7 +113,7 @@ function openLawyer() {
     ? ["Relato", `${n} perguntas respondidas`, "Documentos necessários identificados", "Orientação inicial concluída"]
     : ["Sua pergunta", "Área identificada"]).map((t) => `<li>${t}</li>`).join("");
   $("f-area").value = state.flow ? state.flow.subject : "Pergunta sem resposta pronta";
-  $("f-resumo").value = [state.text && `Relato: ${state.text}`, ...state.answers.map((r, i) => `${i + 1}. ${[...state.flow.questions, OBJECTIVE_Q][i].q} ${r}`)].filter(Boolean).join("\n");
+  $("f-resumo").value = [state.text && `Relato: ${state.text}`, ...(state.cnisSummary ? [state.cnisSummary] : []), ...(state.followSummary ? [state.followSummary, ...state.answers] : state.answers.map((r, i) => `${i + 1}. ${[...state.flow.questions, OBJECTIVE_Q][i].q} ${r}`))].filter(Boolean).join("\n");
   go("lawyer");
 }
 
@@ -131,7 +133,9 @@ function answerQuestion(text) {
       ${table}
       ${f.tips ? `<h2>Dicas práticas</h2><ul class="tips">${f.tips.map((t) => `<li>${esc(t)}</li>`).join("")}</ul>` : ""}
       <details open><summary>Fundamento jurídico e fontes</summary><ul>${sources(f.sources)}</ul></details>
-      <div class="card decision">
+      ${f.followUp ? `<section class="followup" id="followup"><p class="eyebrow">Próximo passo</p><h2>${esc(f.followUp.title)}</h2><p class="muted">${esc(f.followUp.intro)}</p><div id="fu-log" class="fu-log"></div><div id="fu-answers" class="answers"></div></section>` : ""}
+      ${key === "previdenciario" ? CNIS_CARD : ""}
+      <div class="card decision" id="faq-cta">
         <h2>${esc(f.next)}</h2>
         <div class="actions">
           ${key === "previdenciario" ? `<a class="btn" href="/simulador/">Abrir o simulador</a>` : ""}
@@ -155,9 +159,106 @@ function answerQuestion(text) {
       </div>`;
   }
   $("to-lawyer").onclick = openLawyer;
+  if (f && f.followUp) runFollowUp(f.followUp);
+  bindCnis();
   const tf = $("to-flow");
   if (tf) tf.onclick = () => { $("messages").innerHTML = ""; go("chat"); setStep(1); say(text, "user"); begin(key); };
   go("result");
+}
+
+function runFollowUp(fu) {
+  const ans = {};
+  let i = 0;
+  const log = $("fu-log");
+  const step = () => {
+    if (i >= fu.questions.length) return finishFollowUp(fu, ans);
+    const { id, q, a } = fu.questions[i];
+    const el = document.createElement("div");
+    el.className = "msg bot";
+    el.textContent = q;
+    log.appendChild(el);
+    $("fu-answers").innerHTML = "";
+    a.forEach((o) => {
+      const b = document.createElement("button");
+      b.textContent = o;
+      b.onclick = () => {
+        ans[id] = o;
+        state.answers.push(o);
+        const u = document.createElement("div");
+        u.className = "msg user";
+        u.textContent = o;
+        log.appendChild(u);
+        i++;
+        step();
+      };
+      $("fu-answers").appendChild(b);
+    });
+  };
+  step();
+}
+
+function finishFollowUp(fu, ans) {
+  const r = fu.evaluate(ans);
+  state.followSummary = r.summary;
+  $("fu-answers").innerHTML = "";
+  const box = document.createElement("div");
+  box.className = "fu-result " + r.tone;
+  box.innerHTML = `<h3>${esc(r.headline)}</h3><ul>${r.items.map((t) => `<li>${esc(t)}</li>`).join("")}</ul>
+    <div class="actions"><button class="btn" id="fu-help">${r.lawyer ? "Quero ajuda para pedir meu benefício" : "Quero que um advogado confira"}</button>
+    <a class="btn secondary" href="/simulador/">Simular no detalhe</a></div>
+    ${r.lawyer ? `<p class="small">Pelo que você respondeu, uma análise profissional pode fazer diferença no resultado: grau, conversão de períodos e escolha da melhor regra.</p>` : ""}`;
+  $("followup").appendChild(box);
+  $("fu-help").onclick = openLawyer;
+  $("faq-cta").hidden = true;
+  box.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+const CNIS_CARD = `
+  <section class="cnis-card" id="cnis-card">
+    <p class="eyebrow">Análise do seu CNIS</p>
+    <h2>Envie seu extrato do CNIS e a gente lê para você</h2>
+    <p class="muted">Baixe no Meu INSS: <strong>Extrato de Contribuição (CNIS)</strong> → Baixar PDF. A leitura acontece no seu aparelho; o arquivo não é enviado para nenhum servidor.</p>
+    <label class="btn" for="cnis-file">Escolher PDF do CNIS</label>
+    <input type="file" id="cnis-file" accept="application/pdf" hidden>
+    <details><summary>O PDF não abre? Cole o texto do extrato</summary>
+      <textarea id="cnis-text" rows="5" placeholder="Cole aqui o conteúdo do CNIS"></textarea>
+      <button class="btn secondary" id="cnis-paste">Analisar texto</button>
+    </details>
+    <div id="cnis-out" aria-live="polite"></div>
+  </section>`;
+
+function bindCnis() {
+  const out = $("cnis-out");
+  if (!out) return;
+  const run = (text) => {
+    const r = analyzeCnis(text);
+    if (!r.readable) { out.innerHTML = `<p class="warn-text">Não consegui identificar os vínculos. Confira se é o extrato completo do CNIS ou cole o texto no campo acima.</p>`; return; }
+    state.cnisSummary = `CNIS: ${r.vinculos.length} vínculos; tempo aproximado ${r.totalText}; ${r.findings.length} pontos de atenção (${[...new Set(r.findings.map((f) => f.code))].join(", ")}).`;
+    out.innerHTML = `
+      <div class="stats">
+        <div><span class="label">Tempo aproximado</span><strong>${r.totalText}</strong></div>
+        <div><span class="label">Vínculos</span><strong>${r.vinculos.length}</strong></div>
+        <div><span class="label">Pontos de atenção</span><strong>${r.findings.length}</strong></div>
+      </div>
+      ${r.findings.length ? `<h3>O que precisa de atenção</h3><ul class="findings">${r.findings.map((f) => `<li><span class="code">${esc(f.code)}</span><div><strong>${esc(f.label)}</strong><br><span class="muted small">${esc(f.vinculo)}</span><p>${esc(f.fix)}</p></div></li>`).join("")}</ul>` : `<p>Não encontramos pendências marcadas no extrato. Ainda assim, confira se todos os seus empregos aparecem.</p>`}
+      <details><summary>Ver vínculos lidos</summary><div class="table-wrap"><table><thead><tr><th>Origem</th><th>Tipo</th><th>Início</th><th>Fim</th></tr></thead><tbody>
+        ${r.vinculos.map((v) => `<tr><td>${esc(v.origem)}</td><td>${esc(v.tipo)}</td><td>${fmtDate(v.start)}</td><td>${v.end ? fmtDate(v.end) : "sem data"}</td></tr>`).join("")}
+      </tbody></table></div></details>
+      <div class="fu-result ${r.findings.length ? "near" : "good"}">
+        <h3>${r.findings.length ? "Seu extrato tem pontos que podem mudar seu tempo de contribuição." : "Seu extrato parece organizado."}</h3>
+        <p>${r.before2019 ? "Você já contribuía antes da Reforma de 2019, então pode usar as regras de transição." : "Seu primeiro vínculo é posterior à Reforma: valem as regras permanentes."}${r.monthsSinceLast > 12 ? " Sua última contribuição tem mais de 12 meses: vale verificar se você ainda mantém a qualidade de segurado." : ""}</p>
+        <div class="actions"><button class="btn" id="cnis-help">Quero que analisem meu CNIS</button><a class="btn secondary" href="/simulador/">Simular com ${r.totalText}</a></div>
+      </div>
+      <p class="muted small">Leitura automática e preliminar. O tempo exato depende da conferência de cada vínculo e das regras de carência.</p>`;
+    $("cnis-help").onclick = openLawyer;
+  };
+  $("cnis-file").onchange = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    out.innerHTML = `<p>Lendo seu extrato…</p>`;
+    try { run(await extractPdfText(file)); } catch { out.innerHTML = `<p class="warn-text">Não consegui ler esse PDF. Ele pode ser uma imagem escaneada. Baixe novamente pelo Meu INSS ou cole o texto no campo acima.</p>`; }
+  };
+  $("cnis-paste").onclick = () => run($("cnis-text").value);
 }
 
 $("lead-form").onsubmit = async (e) => {
