@@ -143,7 +143,7 @@ function findFaq(text) {
   let best = null, bestScore = 0;
   for (const f of FAQ) {
     if (!f.all.every((group) => group.some((k) => t.includes(k)))) continue;
-    const score = f.all.flat().filter((k) => t.includes(k)).length;
+    const score = f.all.flat().filter((k) => t.includes(k)).length + (f.prio || 0);
     if (score > bestScore) { best = f; bestScore = score; }
   }
   return best;

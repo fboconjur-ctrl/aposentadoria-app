@@ -1,12 +1,12 @@
 # Revisão das respostas da Plataforma do Direito
 
-Gerado automaticamente em 02/10/2026 a partir do código (65 respostas). Não edite este arquivo: anote as correções e elas serão aplicadas no código.
+Gerado automaticamente em 02/10/2026 a partir do código (101 respostas). Não edite este arquivo: anote as correções e elas serão aplicadas no código.
 
 **Como revisar:** em cada resposta, marque **✅ ok**, **✏️ corrigir** (escreva a correção logo abaixo) ou **❌ remover**. Trechos com [VALIDAR] são os de menor segurança.
 
 ---
 
-## Previdenciário (15)
+## Previdenciário (24)
 
 ### 1. Quais deficiências são consideradas graves para a aposentadoria da pessoa com deficiência?
 
@@ -231,9 +231,139 @@ Tempo trabalhado no setor privado pode ser somado com a Certidão de Tempo de Co
 
 **Revisão:** ☐ ✅ ok ☐ ✏️ corrigir ☐ ❌ remover
 
+### 16. Parei de contribuir. Até quando continuo segurado(a) do INSS?
+
+`periodo-graca` · Atlas `OPP-PREV-002` · continuação: _Vamos calcular até quando você mantém a qualidade de segurado?_
+
+Depois da última contribuição, você continua segurado(a) por um período chamado período de graça: em regra 12 meses (6 meses para o facultativo).
+
+Esse prazo aumenta mais 12 meses para quem tem mais de 120 contribuições sem ter perdido a qualidade de segurado, e mais 12 meses para quem comprova desemprego. Pode chegar a 36 meses.
+
+Durante o período de graça, você mantém direito aos benefícios, e seus dependentes mantêm direito à pensão por morte.
+
+**Fontes:** Lei 8.213/1991, art. 15
+
+**Revisão:** ☐ ✅ ok ☐ ✏️ corrigir ☐ ❌ remover
+
+### 17. Quem tem direito ao auxílio-acidente?
+
+`auxilio-acidente` · Atlas `OPP-PREV-007`
+
+É uma indenização mensal para quem ficou com sequela permanente que reduz a capacidade para o trabalho que exercia, depois de um acidente de qualquer natureza (não precisa ser do trabalho).
+
+Vale 50% do salário de benefício, é pago junto com o salário e dura até a aposentadoria. Não exige carência.
+
+Têm direito: empregado, empregado doméstico, trabalhador avulso e segurado especial. Contribuinte individual e facultativo não têm direito.
+
+Muitas pessoas têm direito e não sabem: o pedido pode ser feito mesmo anos depois, desde que a sequela seja comprovada.
+
+**Fontes:** Lei 8.213/1991, art. 86
+
+**Revisão:** ☐ ✅ ok ☐ ✏️ corrigir ☐ ❌ remover
+
+### 18. Como funciona a aposentadoria rural e a híbrida?
+
+`rural` · Atlas `OPP-PREV-009`
+
+A aposentadoria rural por idade exige 60 anos (homem) ou 55 anos (mulher) e 15 anos de atividade rural, mesmo sem contribuições, para o segurado especial (agricultor familiar, pescador artesanal).
+
+A atividade rural é provada com início de prova material (notas de produtor, ITR, certidões com profissão de lavrador, documentos de sindicato) e testemunhas. A autodeclaração validada pelo INSS também é usada.
+
+A aposentadoria híbrida soma tempo rural e urbano. Segue a idade da regra urbana e permite contar tempo rural antigo, mesmo anterior a 1991 (STJ, Tema 1.007).
+
+**Fontes:** Lei 8.213/1991, arts. 11, VII, 39, 48 e 106 · STJ — Tema 1.007
+
+**Revisão:** ☐ ✅ ok ☐ ✏️ corrigir ☐ ❌ remover
+
+### 19. Posso converter tempo especial em tempo comum?
+
+`conversao-especial` · Atlas `OPP-PREV-008`
+
+Sim, mas só para períodos trabalhados até 13/11/2019, data da Reforma. Depois disso, a conversão foi proibida.
+
+Para quem precisaria de 25 anos de atividade especial, o tempo é multiplicado por 1,4 (homem) ou 1,2 (mulher). Cada 10 anos especiais viram 14 (homem) ou 12 (mulher).
+
+O acréscimo pode antecipar a aposentadoria ou aumentar o valor. É preciso comprovar a exposição com PPP e, conforme a época, LTCAT.
+
+**Fontes:** Lei 8.213/1991, art. 57, §5º · EC 103/2019, art. 25, §2º
+
+**Revisão:** ☐ ✅ ok ☐ ✏️ corrigir ☐ ❌ remover
+
+### 20. Como funciona o auxílio-reclusão?
+
+`auxilio-reclusao` · Atlas `OPP-PREV-003`
+
+É pago aos dependentes do segurado de baixa renda preso em regime fechado. O limite de baixa renda é fixado anualmente pelo governo.
+
+Exige 24 contribuições do segurado (carência) e que ele tivesse qualidade de segurado na data da prisão.
+
+O valor é de um salário mínimo. O benefício deixa de ser pago se o preso fugir, progredir para o semiaberto ou for solto. É preciso apresentar a cada 3 meses a certidão de recolhimento prisional.
+
+**Fontes:** Lei 8.213/1991, art. 80 · EC 103/2019, art. 27
+
+**Revisão:** ☐ ✅ ok ☐ ✏️ corrigir ☐ ❌ remover
+
+### 21. Ainda dá para pedir a revisão da vida toda?
+
+`vida-toda` · Atlas `OPP-PREV-005`
+
+Não. Em 2024, o STF decidiu que a regra de transição da Lei 9.876/1999 é obrigatória, o que na prática encerrou a revisão da vida toda.
+
+Quem tinha ação em andamento deve acompanhar a decisão sobre os efeitos no seu processo, inclusive quanto à devolução de valores.
+
+Outras revisões continuam possíveis: tempo não computado, atividade especial, salários errados no cálculo. Vale analisar sua carta de concessão.
+
+**Fontes:** STF — ADIs 2.110 e 2.111
+
+**Revisão:** ☐ ✅ ok ☐ ✏️ corrigir ☐ ❌ remover
+
+### 22. Quem tem direito ao acréscimo de 25% na aposentadoria?
+
+`adicional-25` · Atlas `OPP-PREV-002`
+
+O aposentado por incapacidade permanente (antiga invalidez) que precisa de ajuda permanente de outra pessoa para as atividades do dia a dia.
+
+O acréscimo vale mesmo que ultrapasse o teto do INSS e acaba com a morte do aposentado (não passa para a pensão).
+
+O STF decidiu que o acréscimo não pode ser estendido a outros tipos de aposentadoria (Tema 1.095).
+
+**Fontes:** Lei 8.213/1991, art. 45 · STF — Tema 1.095
+
+**Revisão:** ☐ ✅ ok ☐ ✏️ corrigir ☐ ❌ remover
+
+### 23. Contribuo como MEI ou pelo plano simplificado. Isso conta para aposentadoria?
+
+`complementacao` · Atlas `OPP-PREV-010`
+
+As contribuições de 5% (MEI e facultativo de baixa renda) e de 11% (plano simplificado) contam para a aposentadoria por idade e para os demais benefícios, mas não para aposentadorias que exigem tempo de contribuição, como a regra dos pontos.
+
+Para usar esse tempo em outras regras, é possível complementar a contribuição até 20%, com juros e multa.
+
+Depois da Reforma, meses com contribuição abaixo do salário mínimo só contam se forem complementados, agrupados com outros meses ou compensados com o excedente de outros meses.
+
+Contribuições em atraso de autônomo podem ser pagas, mas não valem para carência quando anteriores à primeira contribuição em dia.
+
+**Fontes:** Lei 8.212/1991, art. 21 · EC 103/2019, art. 29
+
+**Revisão:** ☐ ✅ ok ☐ ✏️ corrigir ☐ ❌ remover
+
+### 24. Tempo de serviço militar e de aluno-aprendiz contam para aposentadoria?
+
+`tempo-militar` · Atlas `OPP-PREV-001`
+
+O serviço militar obrigatório conta como tempo de contribuição. Basta apresentar a certidão de tempo de serviço militar emitida pelas Forças Armadas.
+
+O tempo de aluno-aprendiz em escola técnica pública pode ser contado se houve remuneração, mesmo indireta (alimentação, fardamento, material), à conta do orçamento público. [VALIDAR critérios atuais]
+
+Esses períodos costumam não aparecer no CNIS: é preciso pedir a averbação ao INSS com os documentos.
+
+**Fontes:** Lei 8.213/1991, art. 55
+
+**Revisão:** ☐ ✅ ok ☐ ✏️ corrigir ☐ ❌ remover
+
 ---
 
-## Saúde (16)
+## Saúde (21)
 
 ### 1. O plano de saúde pode negar um procedimento pedido pelo médico?
 
@@ -468,9 +598,79 @@ Guarde orçamentos de onde o tratamento ou o remédio pode ser obtido: eles agil
 
 **Revisão:** ☐ ✅ ok ☐ ✏️ corrigir ☐ ❌ remover
 
+### 17. O plano pode negar a prótese ou o material da cirurgia?
+
+`opme-protese` · Atlas `OPP-SAU-002` · continuação: _Vamos ver o que fazer com a negativa?_
+
+Próteses, órteses e materiais ligados ao ato cirúrgico (OPME) são de cobertura obrigatória quando a cirurgia é coberta.
+
+O médico define as características técnicas do material, mas não pode exigir marca. Se houver divergência, a operadora deve instaurar junta médica, com participação do seu médico, em prazo definido pela ANS.
+
+Próteses e órteses que não têm ligação com cirurgia (como óculos ou cadeira de rodas) em regra não são obrigatórias.
+
+**Fontes:** Lei 9.656/1998, art. 10, VII · ANS — junta médica (RN 424/2017)
+
+**Revisão:** ☐ ✅ ok ☐ ✏️ corrigir ☐ ❌ remover
+
+### 18. O plano é obrigado a cobrir fertilização in vitro?
+
+`fertilizacao` · Atlas `OPP-SAU-002`
+
+Em regra, não. O STJ decidiu que os planos não são obrigados a custear fertilização in vitro, salvo se o contrato prever (Tema 1.067).
+
+Outros tratamentos ligados à infertilidade, como cirurgias e exames de diagnóstico, seguem o rol da ANS.
+
+Há discussão específica para congelamento de óvulos de pacientes com câncer antes da quimioterapia, em que algumas decisões determinam a cobertura.
+
+**Fontes:** Lei 9.656/1998, art. 10, III · STJ — Tema 1.067
+
+**Revisão:** ☐ ✅ ok ☐ ✏️ corrigir ☐ ❌ remover
+
+### 19. Como trocar de plano sem cumprir nova carência?
+
+`portabilidade` · Atlas `OPP-SAU-007`
+
+Pela portabilidade de carências, você muda de plano levando as carências já cumpridas.
+
+Requisitos principais: plano atual ativo e em dia; permanência mínima de 2 anos no plano de origem na primeira portabilidade (3 anos se cumpriu cobertura parcial temporária) e de 1 ano nas seguintes; plano de destino em faixa de preço compatível.
+
+Use o Guia ANS de Planos de Saúde para encontrar planos compatíveis. Quem foi demitido(a) ou teve o plano cancelado tem regras especiais, sem prazo mínimo.
+
+**Fontes:** ANS — portabilidade de carências
+
+**Revisão:** ☐ ✅ ok ☐ ✏️ corrigir ☐ ❌ remover
+
+### 20. Não há vaga de UTI ou leito pelo SUS. O que fazer?
+
+`uti-sus` · Atlas `OPP-SAU-002`
+
+O paciente deve estar inscrito na central de regulação. Peça ao hospital o número da solicitação e o relatório médico com a indicação de UTI.
+
+Sem vaga em tempo adequado, cabe ação urgente contra o município ou o estado. A Justiça pode determinar a transferência ou a internação em hospital particular às custas do poder público.
+
+A Defensoria Pública atua nesses casos com urgência e gratuitamente. O plantão judiciário funciona fora do horário comercial.
+
+**Fontes:** Constituição Federal, art. 196 · Lei 8.080/1990
+
+**Revisão:** ☐ ✅ ok ☐ ✏️ corrigir ☐ ❌ remover
+
+### 21. Quais meus direitos em problemas com dentista ou plano odontológico?
+
+`odontologico` · Atlas `OPP-SAU-010`
+
+O plano odontológico deve cobrir os procedimentos do rol da ANS para a segmentação odontológica, como consultas, restaurações, tratamento de canal, extrações e algumas cirurgias.
+
+Implantes e aparelhos ortodônticos em regra não são obrigatórios, salvo se o contrato prever.
+
+Em erro de dentista, o profissional responde se houver culpa. Em tratamentos estéticos com resultado prometido, a responsabilidade costuma ser mais rigorosa. Guarde o prontuário, as radiografias e o orçamento.
+
+**Fontes:** Lei 9.656/1998 · CDC, art. 14, §4º
+
+**Revisão:** ☐ ✅ ok ☐ ✏️ corrigir ☐ ❌ remover
+
 ---
 
-## Consumidor (14)
+## Consumidor (21)
 
 ### 1. Posso desistir de uma compra feita pela internet?
 
@@ -680,9 +880,107 @@ Lucros cessantes (aluguel que você deixou de economizar) costumam ser reconheci
 
 **Revisão:** ☐ ✅ ok ☐ ✏️ corrigir ☐ ❌ remover
 
+### 15. Os juros do meu financiamento ou empréstimo são abusivos?
+
+`juros-abusivos` · Atlas `OPP-BAN-005`
+
+Juros acima de 12% ao ano não são abusivos por si só (STJ, Súmula 382). A abusividade aparece quando a taxa fica muito acima da média de mercado para aquela operação, divulgada pelo Banco Central.
+
+Também podem ser questionados: tarifas e seguros embutidos sem escolha (venda casada), capitalização de juros não prevista de forma clara e encargos de atraso acumulados.
+
+Antes de qualquer medida, compare a taxa do seu contrato com a média do Banco Central na data da contratação. Continuar pagando evita a negativação enquanto se discute.
+
+**Fontes:** STJ — Súmulas 382 e 539 · Banco Central — taxas médias de juros
+
+**Revisão:** ☐ ✅ ok ☐ ✏️ corrigir ☐ ❌ remover
+
+### 16. Apareceram compras no cartão que eu não fiz. O que fazer?
+
+`compra-nao-reconhecida` · Atlas `OPP-BAN-006`
+
+Bloqueie o cartão e conteste as compras imediatamente com o banco, pelo aplicativo ou pela central, e anote o protocolo.
+
+O banco responde por fraudes de terceiros ligadas ao seu serviço (STJ, Súmula 479). Cabe a ele provar que a compra foi sua.
+
+Se o banco negar o estorno, registre reclamação no Banco Central e no consumidor.gov.br. Cobranças mantidas indevidamente podem gerar devolução e indenização.
+
+**Fontes:** STJ — Súmula 479 · Banco Central — reclamações
+
+**Revisão:** ☐ ✅ ok ☐ ✏️ corrigir ☐ ❌ remover
+
+### 17. Meu celular foi roubado ou minha conta foi invadida. O que fazer?
+
+`conta-invadida` · Atlas `OPP-BAN-007`
+
+Ligue para o banco e bloqueie contas, cartões e aplicativos. Peça à operadora o bloqueio do chip e registre boletim de ocorrência.
+
+Avise seus contatos se o WhatsApp foi clonado e recupere a conta pelo próprio aplicativo, ativando a verificação em duas etapas.
+
+Se houve transferências ou empréstimos feitos pelos criminosos fora do seu perfil habitual, o banco pode ser responsabilizado por falha de segurança. Peça o MED (Pix) e conteste as operações.
+
+**Fontes:** STJ — Súmula 479 · Banco Central — MED
+
+**Revisão:** ☐ ✅ ok ☐ ✏️ corrigir ☐ ❌ remover
+
+### 18. O banco cobrou tarifa ou seguro que eu não pedi. Posso reaver?
+
+`tarifas-venda-casada` · Atlas `OPP-BAN-005`
+
+Existe um conjunto de serviços bancários essenciais gratuitos, como certas quantidades de saques, extratos e transferências. Cobrar por eles é irregular.
+
+Condicionar o empréstimo à contratação de seguro, capitalização ou outro produto é venda casada, proibida pelo CDC. O STJ entende que o consumidor deve poder escolher a seguradora.
+
+Peça o cancelamento e a devolução dos valores. Se pagou indevidamente, a devolução pode ser em dobro.
+
+**Fontes:** CDC, art. 39, I · Resolução CMN 3.919/2010 · STJ — Tema 972
+
+**Revisão:** ☐ ✅ ok ☐ ✏️ corrigir ☐ ❌ remover
+
+### 19. Quero cancelar academia, curso ou faculdade. Posso ser multado(a)?
+
+`academia-curso` · Atlas `OPP-CON-009`
+
+Você pode cancelar a qualquer momento. Multa só é válida se estiver no contrato, for proporcional e não for excessiva (em geral, considera-se razoável algo em torno de 10% a 20% do saldo restante).
+
+Curso contratado pela internet pode ser cancelado em até 7 dias com devolução integral.
+
+Na faculdade, a instituição não pode reter documentos (como histórico) por falta de pagamento. Mensalidades já pagas por período não cursado podem ser devolvidas proporcionalmente.
+
+**Fontes:** CDC, arts. 49 e 51 · Lei 9.870/1999
+
+**Revisão:** ☐ ✅ ok ☐ ✏️ corrigir ☐ ❌ remover
+
+### 20. Tive problema com pacote de viagem ou hospedagem. Quem responde?
+
+`turismo` · Atlas `OPP-CON-010`
+
+A agência de viagens e os fornecedores do pacote (hotel, companhia aérea, operadora) respondem juntos pelos problemas.
+
+Se você cancelar, a retenção deve seguir o contrato e ser proporcional. Se o fornecedor cancelar ou não prestar o serviço, você tem direito a reembolso integral ou a serviço equivalente.
+
+Hotel que não honra a reserva deve providenciar acomodação equivalente e arcar com a diferença. Guarde vouchers, e-mails e comprovantes.
+
+**Fontes:** CDC, arts. 7º, 14 e 25
+
+**Revisão:** ☐ ✅ ok ☐ ✏️ corrigir ☐ ❌ remover
+
+### 21. Meus dados vazaram. Tenho direito a indenização?
+
+`vazamento-dados` · Atlas `OPP-CON-001`
+
+A empresa responsável pelos dados deve comunicar o incidente aos titulares e à ANPD quando houver risco relevante.
+
+Segundo o STJ, o vazamento de dados comuns (nome, telefone, endereço) não gera dano moral automático: é preciso provar o prejuízo. Dados sensíveis ou uso efetivo em fraude mudam a análise.
+
+Você pode pedir à empresa informações sobre quais dados foram vazados e o que ela fez, e reclamar na ANPD.
+
+**Fontes:** Lei 13.709/2018 (LGPD), arts. 42 e 48 · ANPD
+
+**Revisão:** ☐ ✅ ok ☐ ✏️ corrigir ☐ ❌ remover
+
 ---
 
-## Administrativo (9)
+## Administrativo (15)
 
 ### 1. Como funciona a defesa em processo disciplinar (PAD)?
 
@@ -816,9 +1114,93 @@ Débito e multa têm regras diferentes de prescrição. A cobrança de débito i
 
 **Revisão:** ☐ ✅ ok ☐ ✏️ corrigir ☐ ❌ remover
 
+### 10. Quais direitos do servidor público costumam ser negados?
+
+`direitos-servidor` · Atlas `OPP-ADM-005`
+
+Os mais comuns: progressões e promoções atrasadas, adicionais (insalubridade, noturno, tempo de serviço) não pagos, licenças negadas e pedidos de remoção para acompanhar cônjuge ou por motivo de saúde.
+
+Cada ente (União, estado, município) tem seu estatuto e seu plano de carreira. O primeiro passo é identificar a lei que rege o seu cargo.
+
+Faça o pedido por escrito e guarde o protocolo. Valores atrasados podem ser cobrados dos últimos 5 anos.
+
+**Fontes:** Lei 8.112/1990 (federal) · Decreto 20.910/1932 (prescrição)
+
+**Revisão:** ☐ ✅ ok ☐ ✏️ corrigir ☐ ❌ remover
+
+### 11. Fui acusado(a) de improbidade administrativa. O que mudou na lei?
+
+`improbidade` · Atlas `OPP-ADM-007`
+
+Desde a Lei 14.230/2021, só há improbidade com dolo: a vontade livre e consciente de praticar o ato ilícito. Erro, mesmo grosseiro, não configura improbidade.
+
+Só o Ministério Público pode propor a ação. A prescrição é de 8 anos, com marcos de interrupção.
+
+As sanções incluem perda da função, suspensão dos direitos políticos, multa e proibição de contratar com o poder público, aplicadas de forma proporcional. O ressarcimento ao erário é tratado à parte.
+
+**Fontes:** Lei 8.429/1992 (com a Lei 14.230/2021)
+
+**Revisão:** ☐ ✅ ok ☐ ✏️ corrigir ☐ ❌ remover
+
+### 12. O poder público causou um prejuízo. Posso pedir indenização?
+
+`responsabilidade-estado` · Atlas `OPP-ADM-010`
+
+Sim. O Estado responde pelos danos causados por seus agentes independentemente de culpa: basta provar o dano e a relação com a atuação (ou omissão relevante) do poder público.
+
+Exemplos comuns: acidentes por buracos na via, erros em hospital público, danos causados por viaturas, prisões indevidas.
+
+O prazo para pedir indenização contra o poder público é de 5 anos.
+
+**Fontes:** Constituição Federal, art. 37, §6º · Decreto 20.910/1932
+
+**Revisão:** ☐ ✅ ok ☐ ✏️ corrigir ☐ ❌ remover
+
+### 13. Meu imóvel vai ser desapropriado. Quais meus direitos?
+
+`desapropriacao` · Atlas `OPP-ADM-008`
+
+A desapropriação exige indenização prévia, justa e em dinheiro (salvo exceções da reforma agrária e urbana).
+
+Você pode discutir o valor oferecido. Na ação de desapropriação, um perito judicial avalia o imóvel.
+
+Também podem ser devidos juros e indenização por benfeitorias e fundo de comércio. Se o poder público ocupar o imóvel sem processo regular, cabe ação de desapropriação indireta.
+
+**Fontes:** Constituição Federal, art. 5º, XXIV · Decreto-Lei 3.365/1941
+
+**Revisão:** ☐ ✅ ok ☐ ✏️ corrigir ☐ ❌ remover
+
+### 14. Como pedir informações a um órgão público?
+
+`lai` · Atlas `OPP-ADM-010` · continuação: _Vamos calcular o prazo de resposta?_
+
+Qualquer pessoa pode pedir informações públicas, sem justificar o motivo. O pedido é gratuito.
+
+O órgão tem 20 dias para responder, prorrogáveis por mais 10, com justificativa.
+
+Se o acesso for negado, você pode recorrer em 10 dias. No governo federal, use a plataforma Fala.BR. Estados e municípios têm seus próprios canais.
+
+**Fontes:** Lei 12.527/2011 (LAI)
+
+**Revisão:** ☐ ✅ ok ☐ ✏️ corrigir ☐ ❌ remover
+
+### 15. Minha empresa recebeu auto de infração ou teve o alvará negado. O que fazer?
+
+`auto-infracao` · Atlas `OPP-ADM-010`
+
+Leia a notificação: ela informa o prazo de defesa, que costuma ser curto. Apresente a defesa por escrito dentro dele.
+
+O auto deve descrever o fato, a norma violada e a penalidade. Falhas nesses elementos podem anular a autuação.
+
+Cabe recurso contra a decisão. Interdição ou apreensão sem direito de defesa, fora de situação de risco imediato, pode ser questionada na Justiça.
+
+**Fontes:** Lei 9.784/1999 (processo administrativo federal)
+
+**Revisão:** ☐ ✅ ok ☐ ✏️ corrigir ☐ ❌ remover
+
 ---
 
-## Cartório e Extrajudicial (11)
+## Cartório e Extrajudicial (20)
 
 ### 1. Como fazer inventário em cartório?
 
@@ -975,6 +1357,132 @@ Leve o celular ou o link ao Tabelionato de Notas. O custo segue a tabela de emol
 Atrasar a abertura do inventário pode gerar multa, conforme a lei do estado. Alguns estados têm isenções para valores pequenos ou para o único imóvel residencial.
 
 **Fontes:** Constituição Federal, art. 155, I e §1º · EC 132/2023
+
+**Revisão:** ☐ ✅ ok ☐ ✏️ corrigir ☐ ❌ remover
+
+### 12. O que é preciso para comprar um imóvel com segurança?
+
+`compra-imovel` · Atlas `OPP-IMO-004`
+
+Peça a certidão de matrícula atualizada no Registro de Imóveis: ela mostra o dono, dívidas, penhoras e outras restrições.
+
+Peça também certidões do vendedor (ações cíveis, trabalhistas, fiscais e protestos) para evitar fraude contra credores.
+
+Imóvel de valor acima de 30 salários mínimos exige escritura pública. Depois, registre a escritura: só o registro transfere a propriedade. Antes, é preciso pagar o ITBI ao município.
+
+**Fontes:** Código Civil, arts. 108 e 1.245 · Lei 6.015/1973
+
+**Revisão:** ☐ ✅ ok ☐ ✏️ corrigir ☐ ❌ remover
+
+### 13. Moro em área irregular. Como regularizar?
+
+`reurb` · Atlas `OPP-IMO-009`
+
+A Regularização Fundiária Urbana (REURB) permite regularizar núcleos urbanos informais e dar título de propriedade aos moradores.
+
+Na REURB Social, voltada a população de baixa renda, os custos de registro são gratuitos. Na REURB Específica, os interessados pagam.
+
+O pedido é feito à prefeitura, por moradores, associações, Defensoria ou Ministério Público.
+
+**Fontes:** Lei 13.465/2017
+
+**Revisão:** ☐ ✅ ok ☐ ✏️ corrigir ☐ ❌ remover
+
+### 14. Posso reconhecer um filho socioafetivo em cartório?
+
+`socioafetiva` · Atlas `OPP-FAM-007`
+
+Sim. O reconhecimento de paternidade ou maternidade socioafetiva pode ser feito direto no Registro Civil para filhos a partir de 12 anos.
+
+É necessário o consentimento do filho (se tiver 12 anos ou mais) e dos pais registrais. O vínculo afetivo deve ser demonstrado.
+
+Para filhos menores de 12 anos, ou se faltar algum consentimento, o caminho é judicial. O reconhecimento gera todos os efeitos de filiação, inclusive herança.
+
+**Fontes:** Provimento CNJ 149/2023 (Código Nacional de Normas)
+
+**Revisão:** ☐ ✅ ok ☐ ✏️ corrigir ☐ ❌ remover
+
+### 15. Posso mudar o regime de bens do casamento?
+
+`regime-bens` · Atlas `OPP-FAM-010`
+
+Sim. A alteração exige pedido do casal, com motivo, e não pode prejudicar terceiros (credores). Tradicionalmente é feita na Justiça. [VALIDAR: possibilidade atual pela via extrajudicial]
+
+Antes do casamento, o regime é escolhido por pacto antenupcial, feito por escritura pública no Tabelionato de Notas. Sem pacto, vale a comunhão parcial.
+
+Pessoas com mais de 70 anos, por lei, casam no regime de separação obrigatória, mas o STF admitiu afastar essa regra por escritura pública (Tema 1.236).
+
+**Fontes:** Código Civil, arts. 1.639 e 1.641 · STF — Tema 1.236
+
+**Revisão:** ☐ ✅ ok ☐ ✏️ corrigir ☐ ❌ remover
+
+### 16. Como validar documentos brasileiros para usar no exterior?
+
+`apostila` · Atlas `OPP-IMO-002`
+
+Para países que fazem parte da Convenção da Apostila de Haia, basta apostilar o documento em qualquer cartório habilitado. Não é preciso passar pelo consulado.
+
+Certidões de nascimento e casamento para processos de cidadania costumam precisar estar em inteiro teor e atualizadas antes do apostilamento.
+
+Confira se o país de destino exige tradução juramentada, e se a tradução deve ser feita antes ou depois da apostila.
+
+**Fontes:** Resolução CNJ 228/2016
+
+**Revisão:** ☐ ✅ ok ☐ ✏️ corrigir ☐ ❌ remover
+
+### 17. Como sacar FGTS, PIS ou saldo bancário de quem faleceu?
+
+`alvara-valores` · Atlas `OPP-SUC-006`
+
+Valores de FGTS, PIS-Pasep e saldos de salários são pagos aos dependentes habilitados no INSS, sem inventário.
+
+Na falta de dependentes, ou para saldos bancários e restituições de pequeno valor sem outros bens, é possível pedir alvará judicial, um procedimento mais simples que o inventário.
+
+Se houver outros bens, os valores entram no inventário (que pode ser em cartório).
+
+**Fontes:** Lei 6.858/1980
+
+**Revisão:** ☐ ✅ ok ☐ ✏️ corrigir ☐ ❌ remover
+
+### 18. Preciso fazer inventário se a pessoa não deixou bens?
+
+`inventario-negativo` · Atlas `OPP-SUC-010`
+
+Não é obrigatório, mas o inventário negativo pode ser útil: ele declara oficialmente que não há bens.
+
+Serve, por exemplo, para o viúvo ou viúva que quer se casar de novo sem a imposição do regime de separação obrigatória, ou para afastar cobranças de credores contra os herdeiros.
+
+Pode ser feito em cartório, com advogado, se os herdeiros forem capazes e estiverem de acordo.
+
+**Fontes:** Código Civil, art. 1.523, I · Resolução CNJ 35/2007
+
+**Revisão:** ☐ ✅ ok ☐ ✏️ corrigir ☐ ❌ remover
+
+### 19. Posso vender ou renunciar à minha parte na herança?
+
+`cessao-hereditaria` · Atlas `OPP-SUC-009`
+
+Sim. A cessão de direitos hereditários deve ser feita por escritura pública. Os outros herdeiros têm preferência para comprar a sua parte nas mesmas condições.
+
+A renúncia também é feita por escritura pública ou por termo no processo, e não pode ser parcial nem sob condição. Quem renuncia é tratado como se nunca tivesse sido herdeiro.
+
+Renunciar “em favor” de alguém específico é, na prática, uma cessão, e gera ITCMD duas vezes.
+
+**Fontes:** Código Civil, arts. 1.793 a 1.795 e 1.804 a 1.813
+
+**Revisão:** ☐ ✅ ok ☐ ✏️ corrigir ☐ ❌ remover
+
+### 20. O que acontece com contas digitais e criptomoedas de quem morreu?
+
+`heranca-digital` · Atlas `OPP-SUC-005`
+
+Bens digitais com valor econômico (criptomoedas, saldos em plataformas, direitos autorais, domínios) entram no inventário como os demais bens.
+
+Contas pessoais (redes sociais, e-mail) seguem as regras de cada plataforma, que costumam permitir memorial ou exclusão a pedido da família. Ainda não há lei específica.
+
+O melhor caminho é o planejamento: listar ativos e acessos em testamento ou documento seguro.
+
+**Fontes:** Código Civil, art. 1.784
 
 **Revisão:** ☐ ✅ ok ☐ ✏️ corrigir ☐ ❌ remover
 

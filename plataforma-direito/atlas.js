@@ -19,3 +19,5 @@ const ATLAS = {
 };
 // Código padrão por área, quando a pessoa chega pela triagem e não por uma resposta.
 const ATLAS_AREA = { previdenciario: "OPP-PREV-001", saude: "OPP-SAU-001", consumidor: "OPP-CON-001", administrativo: "OPP-ADM-001", cartorio: "OPP-SUC-001" };
+
+if (typeof ATLAS_EXTRA !== "undefined") Object.assign(ATLAS, ATLAS_EXTRA);
