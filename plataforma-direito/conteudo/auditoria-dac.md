@@ -78,6 +78,17 @@ O que foi corrigido:
 
 As 15 divergências restantes nas regressões oficiais: 11 são de **nomenclatura** (a especificação usa `IMPROBIDADE`, `FRAUDE`, `INEXISTENCIA_FATO`, `DESEQUILIBRIO`, `LIMITE_ULTRAPASSADO`, conceitos que o motor não implementa com esse nome) e 4 são casos específicos de absolvição penal, LAI e risco contratual, já existentes na versão original.
 
+## Versão v13.8 — conclusões em linguagem simples
+
+Sem alterar regras nem a leitura de fatos (regressões idênticas à v13.7: 21/21 e 59/74; hash do corpus inalterado):
+- Cada conclusão vira uma frase em português simples, com **Fundamento** legível (ex.: “Constituição Federal, art. 37, III”) e o **porquê** (condições atendidas e exceções). O rastro técnico continua visível, em letra menor.
+- Frases revisadas para os efeitos mais frequentes dos domínios mais procurados (prazos de defesa e prescrição, contraditório, ampla defesa, devido processo, dolo/erro grosseiro, concurso, improbidade).
+- Demais efeitos traduzidos automaticamente a partir do nome da regra, com acentuação; regras de segurança aparecem como garantias (“Dolo não pode ser presumido: precisa ser provado.”).
+- Quando não há conclusão segura, o motor diz o que falta esclarecer, em vez de “UNKNOWN”.
+- Correção de legibilidade: o texto das conclusões estava em cor quase invisível sobre o fundo escuro.
+
+**Limite que permanece (P1):** a explicação melhorou, mas a **cobertura de conclusões** ainda é baixa. Ex.: “PAD sem prazo de defesa” leva a “é preciso verificar o contraditório”, e não à conclusão de nulidade; “sem dolo e sem dano” não leva automaticamente a “improbidade afastada”. Isso depende de ligar os fatos extraídos às condições das regras (vocabulário de predicados), próxima etapa.
+
 ## O que já foi integrado à Plataforma do Direito
 - Cada resposta de Administrativo indica os domínios DAC relacionados (`dac.js`).
 - Os domínios vão no pedido de consulta, junto com o código do Atlas, para orientar o dossiê.
