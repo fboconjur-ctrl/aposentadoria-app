@@ -284,3 +284,58 @@ FAQ.push(
       "Atrasar a abertura do inventário pode gerar multa, conforme a lei do estado. Alguns estados têm isenções para valores pequenos ou para o único imóvel residencial."],
     sources: [["Constituição Federal, art. 155, I e §1º", P + "constituicao/constituicao.htm"], ["EC 132/2023", P + "constituicao/emendas/emc/emc132.htm"]], next: "Quer estimar o imposto do seu caso?" },
 );
+
+/* ===== SAÚDE: temas do repositório de teses do Escritório Digital ===== */
+const HOME_CARE_FU = {
+  title: "Vamos organizar o pedido de home care?",
+  intro: "Perguntas da triagem do Escritório Digital. No fim, mostramos o que falta para um pedido forte.",
+  questions: [
+    { id: "indicacao", q: "O médico indicou expressamente home care (internação domiciliar)?", a: ["Sim, por escrito", "Só verbalmente", "Não"] },
+    { id: "itens", q: "O que foi prescrito?", a: ["Equipe (enfermagem 24h, fisio, fono)", "Equipamentos e insumos", "Tudo isso", "Não sei"] },
+    { id: "negativa", q: "Como foi a negativa?", a: ["Total", "Parcial (reduziram horas ou itens)", "Ainda não pedi", "Sem resposta"] },
+    { id: "escrita", q: "A negativa foi por escrito?", a: ["Sim", "Não"] },
+    { id: "internado", q: "O paciente está internado agora?", a: ["Sim, com alta prevista", "Sim, sem previsão", "Não, já está em casa"] },
+    { id: "risco", q: "Qual o risco se o atendimento demorar?", a: ["Alto (risco de vida ou de piora grave)", "Moderado", "Não sei"] },
+    { id: "despesas", q: "A família já está pagando parte do tratamento?", a: ["Sim", "Não"] },
+  ],
+  evaluate(a) {
+    const items = [];
+    if (a.indicacao !== "Sim, por escrito") items.push("Peça ao médico relatório escrito indicando home care em substituição à internação hospitalar, com a lista de serviços, horas de enfermagem e equipamentos.");
+    if (a.escrita === "Não" || a.negativa === "Sem resposta") items.push("Peça a negativa por escrito à operadora (anote o protocolo). Sem resposta no prazo, registre NIP na ANS.");
+    if (a.negativa === "Parcial (reduziram horas ou itens)") items.push("Redução de horas ou de itens prescritos também pode ser questionada: a operadora não pode substituir a prescrição médica.");
+    if (a.internado === "Sim, com alta prevista") items.push("Com alta prevista, o pedido é urgente: sem home care, a alta pode colocar o paciente em risco.");
+    if (a.despesas === "Sim") items.push("Guarde notas e recibos: o que a família pagou pode ser cobrado de volta.");
+    items.push("Documentos: relatório médico detalhado, prescrição, negativa, carteirinha e contrato, prontuário e exames.");
+    const urgent = a.risco.startsWith("Alto") || a.internado === "Sim, com alta prevista";
+    return { headline: urgent ? "O caso é urgente: cabe pedido de liminar." : "Veja o que organizar para pedir o home care.",
+      tone: urgent ? "near" : "good", items, lawyer: true,
+      summary: `Home care: indicação ${a.indicacao}; itens ${a.itens}; negativa ${a.negativa} (${a.escrita === "Sim" ? "escrita" : "não escrita"}); internado ${a.internado}; risco ${a.risco}; despesas ${a.despesas}.` };
+  },
+};
+
+FAQ.push(
+  { id: "home-care", area: "saude", all: [["home care", "homecare", "internação domiciliar", "internacao domiciliar", "enfermagem em casa", "atendimento domiciliar"]],
+    q: "O plano é obrigado a cobrir home care?",
+    a: ["Quando o médico indica a internação domiciliar em substituição à internação hospitalar, a jurisprudência tende a considerar abusiva a negativa, mesmo que o contrato exclua o home care.",
+      "A cobertura deve abranger o que foi prescrito: equipe de enfermagem, fisioterapia, equipamentos e insumos necessários. A operadora não pode reduzir horas ou itens por conta própria.",
+      "O ponto central é o relatório médico: ele deve mostrar que o paciente precisaria estar internado se não houvesse o atendimento em casa."],
+    sources: [["Lei 9.656/1998", P + "leis/l9656.htm"], ["STJ — jurisprudência sobre home care", "https://scon.stj.jus.br/SCON/"]], next: "Vamos organizar o seu pedido?", followUp: HOME_CARE_FU },
+  { id: "cancelamento-plano", area: "saude", all: [["plano"], ["cancel", "rescind", "rescis", "encerr", "excluíd", "excluid"]],
+    q: "O plano de saúde pode ser cancelado durante um tratamento?",
+    a: ["Em planos coletivos, a operadora pode rescindir o contrato, mas o STJ decidiu que, se houver beneficiário em tratamento que garanta sua sobrevivência ou integridade física, a cobertura deve continuar até a alta, desde que pagas as mensalidades (Tema 1.082).",
+      "Em planos individuais, o cancelamento só é permitido por fraude ou por atraso de mais de 60 dias nos últimos 12 meses, com notificação até o 50º dia de atraso.",
+      "Planos coletivos com poucas vidas (os “falsos coletivos”) podem receber proteção semelhante à dos individuais."],
+    sources: [["Lei 9.656/1998, art. 13", P + "leis/l9656.htm"], ["STJ — Tema 1.082", "https://processo.stj.jus.br/repetitivos/temas_repetitivos/"]], next: "Seu plano foi cancelado?", followUp: SAUDE_NEGATIVA_FU },
+  { id: "saude-mental", area: "saude", all: [["psiquiátr", "psiquiatr", "saúde mental", "saude mental", "dependência química", "dependencia quimica", "ludopatia", "jogo", "apostas", "bets", "depressão", "depressao", "clínica de reabilitação", "internação involuntária"]],
+    q: "O plano cobre tratamento psiquiátrico, dependência química ou vício em jogos?",
+    a: ["Sim. Transtornos mentais, inclusive dependência química e o transtorno do jogo (ludopatia), estão entre as doenças de cobertura obrigatória pelos planos de saúde.",
+      "A limitação do tempo de internação psiquiátrica é considerada abusiva pelo STJ (Súmula 302, aplicada também a esses casos). A coparticipação após 30 dias de internação é admitida se prevista no contrato.",
+      "Psicoterapia e consultas com psiquiatra seguem o rol e as diretrizes da ANS. Quando a rede não tem clínica adequada, a operadora deve garantir o atendimento."],
+    sources: [["Lei 9.656/1998, arts. 10 e 12", P + "leis/l9656.htm"], ["Lei 10.216/2001", P + "leis/leis_2001/l10216.htm"], ["STJ — Súmula 302", "https://scon.stj.jus.br/SCON/sumstj/"]], next: "O plano negou ou limitou o tratamento?", followUp: SAUDE_NEGATIVA_FU },
+  { id: "liminar-descumprida", area: "saude", all: [["liminar", "decisão", "decisao", "ordem do juiz", "tutela"], ["descumpr", "não cumpr", "nao cumpr", "não está cumprindo", "ignor", "atras"]],
+    q: "Consegui uma liminar, mas o plano ou o governo não está cumprindo. E agora?",
+    a: ["Avise o juiz imediatamente, por meio do advogado, com provas do descumprimento: protocolos, negativas, mensagens e datas.",
+      "O juiz pode aumentar a multa diária, determinar o bloqueio de valores nas contas do plano ou do ente público para custear o tratamento, e até mandar comprar o medicamento diretamente.",
+      "Guarde orçamentos de onde o tratamento ou o remédio pode ser obtido: eles agilizam o bloqueio de valores."],
+    sources: [["CPC, arts. 297, 536 e 537", P + "_ato2015-2018/2015/lei/l13105.htm"]], next: "Precisa de ajuda para fazer cumprir a decisão?" },
+);

@@ -35,7 +35,7 @@ function offer(options, onPick) {
 }
 
 function startChat(text, forcedKey, skipQuestion) {
-  Object.assign(state, { text, answers: [], qi: 0, flow: null, followSummary: null, cnisSummary: null, docSummary: null });
+  Object.assign(state, { text, answers: [], qi: 0, flow: null, followSummary: null, cnisSummary: null, docSummary: null, faqId: null });
   if (text && !forcedKey && !skipQuestion && isQuestion(text)) return answerQuestion(text);
   $("messages").innerHTML = "";
   go("chat");
@@ -115,12 +115,15 @@ function openLawyer() {
     ? ["Relato", `${n} perguntas respondidas`, "Documentos necessários identificados", "Orientação inicial concluída"]
     : ["Sua pergunta", "Área identificada"]).map((t) => `<li>${t}</li>`).join("");
   $("f-area").value = state.flow ? state.flow.subject : "Pergunta sem resposta pronta";
+  const code = (state.faqId && ATLAS[state.faqId]) || ATLAS_AREA[state.key] || "";
+  $("f-codigo").value = code;
   $("f-resumo").value = [state.text && `Relato: ${state.text}`, ...(state.cnisSummary ? [state.cnisSummary] : []), ...(state.docSummary ? [state.docSummary] : []), ...(state.followSummary ? [state.followSummary, ...state.answers] : state.answers.map((r, i) => `${i + 1}. ${[...state.flow.questions, OBJECTIVE_Q][i].q} ${r}`))].filter(Boolean).join("\n");
   go("lawyer");
 }
 
 function answerQuestion(text) {
   const f = findFaq(text);
+  state.faqId = f ? f.id : null;
   const key = (f && f.area) || classify(text);
   state.key = key;
   state.flow = key ? FLOWS[key] : null;
