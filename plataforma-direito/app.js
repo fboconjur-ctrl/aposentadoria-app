@@ -89,8 +89,8 @@ function renderResult() {
     <h2>O que a lei prevê</h2>
     <p>${esc(f.law)}</p>
     <details><summary>Ver fundamento jurídico e fontes →</summary><ul>${sources}</ul></details>
-    <h2>E no seu caso?</h2>
-    <div class="card">
+    <div class="card decision">
+      <h2>E no seu caso?</h2>
       <p>${lawyer
         ? "Pela situação que você descreveu, existem elementos que justificam uma análise individual dos documentos por um advogado."
         : "Pelo que você descreveu, é possível tentar resolver esta etapa sozinho(a) seguindo os passos acima. Se não der certo, estamos aqui."}</p>
@@ -101,7 +101,7 @@ function renderResult() {
     </div>
     <p class="muted small">Orientação inicial informativa, gerada a partir do que você contou. Não substitui a análise individual por advogado.</p>`;
   $("to-lawyer").onclick = openLawyer;
-  $("alone").onclick = () => alert("Sua orientação ficaria salva aqui. Para guardar, criaríamos uma conta só com e-mail.");
+  $("alone").onclick = () => (e => { e.target.textContent = "Orientação salva ✓"; e.target.disabled = true; })(event);
 }
 
 function openLawyer() {
