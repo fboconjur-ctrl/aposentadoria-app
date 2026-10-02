@@ -237,9 +237,10 @@ function bindCnis() {
     out.innerHTML = `
       <div class="stats">
         <div><span class="label">Tempo aproximado</span><strong>${r.totalText}</strong></div>
-        <div><span class="label">Vínculos</span><strong>${r.vinculos.length}</strong></div>
+        <div><span class="label">${r.ageYears ? "Idade" : "Vínculos"}</span><strong>${r.ageYears ? r.ageYears + " anos" : r.vinculos.length}</strong></div>
         <div><span class="label">Pontos de atenção</span><strong>${r.findings.length}</strong></div>
       </div>
+      ${r.declared ? `<p class="warn-text">Este arquivo é a lista de relações <strong>declaradas no pedido</strong>, não o extrato CNIS completo. Ele não mostra salários nem os indicadores de pendência. Para uma análise completa, envie também o <strong>Extrato de Contribuição (CNIS)</strong>.</p>` : ""}
       ${r.findings.length ? `<h3>O que precisa de atenção</h3><ul class="findings">${r.findings.map((f) => `<li><span class="code">${esc(f.code)}</span><div><strong>${esc(f.label)}</strong><br><span class="muted small">${esc(f.vinculo)}</span><p>${esc(f.fix)}</p></div></li>`).join("")}</ul>` : `<p>Não encontramos pendências marcadas no extrato. Ainda assim, confira se todos os seus empregos aparecem.</p>`}
       <details><summary>Ver vínculos lidos</summary><div class="table-wrap"><table><thead><tr><th>Origem</th><th>Tipo</th><th>Início</th><th>Fim</th></tr></thead><tbody>
         ${r.vinculos.map((v) => `<tr><td>${esc(v.origem)}</td><td>${esc(v.tipo)}</td><td>${fmtDate(v.start)}</td><td>${v.end ? fmtDate(v.end) : "sem data"}</td></tr>`).join("")}

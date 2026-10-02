@@ -13,6 +13,7 @@ const CNIS_INDICATORS = {
   "IEAN": { label: "Exposição a agente nocivo informada pela empresa", fix: "Indício de atividade especial. Peça o PPP dessa empresa: ele pode aumentar seu tempo ou permitir aposentadoria especial." },
   "PRPPS": { label: "Vínculo com regime próprio (serviço público)", fix: "Esse tempo pertence a um regime de servidor. Para somar ao INSS é preciso a Certidão de Tempo de Contribuição (CTC) do órgão." },
   "PREC-FACULTCONC": { label: "Recolhimento facultativo junto com outro vínculo", fix: "Contribuição facultativa no mesmo período de outro vínculo pode ser indevida. Vale análise." },
+  "DECLARADO": { label: "Período incluído ou alterado por você no pedido", fix: "Esse período não estava igual no CNIS. O INSS vai exigir prova: carteira de trabalho, contrato, holerites ou guias pagas." },
   "PREM-EXT": { label: "Remuneração informada fora do prazo", fix: "Os salários desse período podem precisar de comprovação." },
 };
 
@@ -42,13 +43,35 @@ function monthsBetween(a, b) { return (b.getFullYear() - a.getFullYear()) * 12 +
 function fmtMonths(n) { const y = Math.floor(n / 12), m = n % 12; return [y && `${y} ano${y > 1 ? "s" : ""}`, m && `${m} ${m > 1 ? "meses" : "mês"}`].filter(Boolean).join(" e ") || "0 mês"; }
 function fmtDate(d) { return d.toLocaleDateString("pt-BR"); }
 
+// Formato "Relações Previdenciárias Declaradas pelo Requerente" (gerado no pedido de benefício do Meu INSS).
+function parseDeclared(raw) {
+  const HEADER = /^(Tipo de Regime|Relação Previdenciária\s+Período\s+Tipo de Operação|Vínculo Especial)$/;
+  return raw.split(/\n\s*Tipo de Regime\s*\n/).map((block) => {
+    const text = block.split("\n").map((l) => l.trim()).filter((l) => l && !HEADER.test(l)).join(" ");
+    const m = text.match(/(\d{2})\/(\d{2})\/(\d{4})\s*-\s*(\d{2})?\/?(\d{2})?\/?(\d{4})?\s+(Sem Altera\S+|Inclu\S+|Alterad\S+|Exclu\S+)?/);
+    if (!m) return null;
+    const rest = (text.slice(0, m.index) + " " + text.slice(m.index + m[0].length)).replace(/\s+/g, " ").trim();
+    const tipo = /Contribuinte|Individual|Autônomo/i.test(rest) ? "Contribuinte individual/facultativo"
+      : /^Benef[ií]cio|Outros$/i.test(rest) ? "Benefício" : /rural|segurado especial/i.test(rest) ? "Rural" : "Empregado";
+    let origem = rest.replace(/Contribuinte|Individual \/|Autônomo|Empregado|Outros|Dom[eé]stico|Avulso/gi, "").replace(/\s+/g, " ").trim();
+    if (/^RECOLHIMENTO$/i.test(origem)) origem = "Recolhimento como contribuinte individual";
+    if (/^EMPRESARIO/i.test(origem)) origem = "Empresário / contribuinte individual";
+    const op = m[7] || "";
+    const indicators = /Inclu|Alterad/i.test(op) ? ["DECLARADO"] : [];
+    return { origem: origem || tipo, tipo, start: toDate(m[1], m[2], m[3]), end: m[6] ? toDate(m[4], m[5], m[6]) : null, openEnded: !m[6], indicators, op };
+  }).filter(Boolean);
+}
+
 function analyzeCnis(text, today = new Date()) {
   const raw = text.replace(/\r/g, "");
   const nit = raw.match(/\b\d{3}\.\d{5}\.\d{2}-\d\b/)?.[0] || "";
   const name = raw.match(/Nome:\s*([A-ZÀ-Ü ]{5,})/)?.[1]?.trim() || "";
-  // Cada vínculo começa com "Seq." (número) seguido do NIT.
-  const parts = raw.split(/\n\s*(?=\d{1,3}\s+\d{3}\.\d{5}\.\d{2}-\d\b)/).slice(1);
-  const vinculos = parts.map((block) => {
+  const birth = raw.match(/Nascimento:?\s*(\d{2})\/(\d{2})\/(\d{4})/);
+  const birthDate = birth ? toDate(birth[1], birth[2], birth[3]) : null;
+  const declared = /Relações Previdenciárias Declaradas/i.test(raw);
+  // Extrato CNIS: cada vínculo começa com "Seq." (número) seguido do NIT.
+  const parts = declared ? [] : raw.split(/\n\s*(?=\d{1,3}\s+\d{3}\.\d{5}\.\d{2}-\d\b)/).slice(1);
+  const vinculos = declared ? parseDeclared(raw) : parts.map((block) => {
     const head = block.split(/\n/).slice(0, 4).join(" ");
     const dates = [...head.matchAll(DATE_RE)].map((m) => toDate(m[1], m[2], m[3]));
     const months = [...head.matchAll(MONTH_RE)].filter((m) => !/\d{2}\/\d{2}\/\d{4}/.test(m.input.slice(m.index - 3, m.index + 7)));
@@ -84,5 +107,10 @@ function analyzeCnis(text, today = new Date()) {
   vinculos.filter((v) => v.openEnded && v.tipo === "Empregado").forEach((v) => findings.push({ vinculo: v.origem, code: "SEM DATA FIM", label: "Vínculo sem data de saída", fix: "Se você já saiu dessa empresa, o INSS pode estar sem a data correta. Separe o termo de rescisão ou a carteira com a baixa." }));
   gaps.forEach((g) => findings.push({ vinculo: `${fmtDate(g.from)} a ${fmtDate(g.to)}`, code: "LACUNA", label: `Período de ${fmtMonths(g.months)} sem contribuição`, fix: "Você trabalhou nesse período? Emprego sem registro, trabalho rural ou autônomo podem ser reconhecidos com provas." }));
 
-  return { nit, name, vinculos, totalMonths, totalText: fmtMonths(totalMonths), gaps, monthsSinceLast, before2019, findings, readable: vinculos.length > 0 };
+  const ageYears = birthDate ? Math.floor(monthsBetween(birthDate, today) / 12) : null;
+  const pcdHint = vinculos.some((v) => /defici|apae|pcd|cego|surdo/i.test(v.origem));
+  const benefits = vinculos.filter((v) => v.tipo === "Benefício");
+  if (pcdHint) findings.unshift({ vinculo: vinculos.find((v) => /defici|apae|pcd|cego|surdo/i.test(v.origem)).origem, code: "PcD?", label: "Vínculo com entidade de pessoas com deficiência", fix: "Se você tem deficiência, pode ter direito à aposentadoria da pessoa com deficiência (LC 142/2013), com tempo menor e sem idade mínima. Vale avaliar." });
+  benefits.forEach((v) => findings.push({ vinculo: `${fmtDate(v.start)} a ${v.end ? fmtDate(v.end) : "atual"}`, code: "BENEFÍCIO", label: "Período recebendo benefício", fix: "Benefício por incapacidade conta como tempo e carência quando fica entre períodos de contribuição. Confira de qual benefício se trata." }));
+  return { declared, ageYears, pcdHint, nit, name, vinculos, totalMonths, totalText: fmtMonths(totalMonths), gaps, monthsSinceLast, before2019, findings, readable: vinculos.length > 0 };
 }
