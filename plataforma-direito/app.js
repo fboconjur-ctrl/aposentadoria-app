@@ -78,7 +78,7 @@ function finish() {
 function renderResult() {
   const f = state.flow;
   const lawyer = f.needsLawyer(state.answers);
-  const steps = f.steps.map((s) => `<li><strong>${esc(s.t)}</strong><br><span class="muted">${esc(s.d)}</span>${s.link ? `<br><a href="${s.link[1]}" target="_blank" rel="noopener">${esc(s.link[0])} →</a>` : ""}</li>`).join("");
+  const steps = f.steps.filter((s) => !s.when || s.when(state.answers)).map((s) => `<li><strong>${esc(s.t)}</strong><br><span class="muted">${esc(s.d)}</span>${s.link ? `<br><a href="${s.link[1]}" ${s.link[1].startsWith("http") ? ' target="_blank" rel="noopener"' : ""}>${esc(s.link[0])} →</a>` : ""}</li>`).join("");
   const sources = f.sources.map(([n, u]) => `<li><a href="${u}" target="_blank" rel="noopener">${esc(n)}</a></li>`).join("");
   $("result").innerHTML = `
     <h1>Entendemos sua situação</h1>

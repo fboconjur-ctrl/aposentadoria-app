@@ -20,7 +20,10 @@ Regra geral de todos os fluxos: a orientação é informativa, sempre mostra a f
 5. Trabalhou em atividade insalubre, perigosa, como professor(a) ou no campo? Sim / Não / Não sei
 6. Você tem acesso ao Meu INSS? Sim / Não
 
+**Entrada pelo simulador:** quem escolhe “Quero me aposentar” recebe como primeiro passo o nosso simulador (já existente), que compara regra geral e regras de transição. O simulador também aparece direto na home, no cartão de Previdenciário.
+
 **Orientação — o que você pode fazer agora**
+0. **Simule sua aposentadoria agora** no nosso simulador.
 1. **Baixe seu extrato do CNIS** no Meu INSS (meu.inss.gov.br). Ele mostra o que o INSS considera do seu tempo.
 2. **Confira se faltam períodos** no extrato: empregos sem registro, contribuições como autônomo, períodos rurais.
 3. **Simule no próprio Meu INSS** (“Simular aposentadoria”) ou no nosso simulador.
