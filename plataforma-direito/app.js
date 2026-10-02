@@ -34,9 +34,9 @@ function offer(options, onPick) {
   });
 }
 
-function startChat(text, forcedKey) {
+function startChat(text, forcedKey, skipQuestion) {
   Object.assign(state, { text, answers: [], qi: 0, flow: null, followSummary: null, cnisSummary: null, docSummary: null });
-  if (text && !forcedKey && isQuestion(text)) return answerQuestion(text);
+  if (text && !forcedKey && !skipQuestion && isQuestion(text)) return answerQuestion(text);
   $("messages").innerHTML = "";
   go("chat");
   setStep(1);
@@ -157,7 +157,7 @@ function answerQuestion(text) {
         <h2>Como prefere seguir?</h2>
         <div class="actions">
           <button class="btn" id="to-lawyer">Enviar minha pergunta</button>
-          ${key ? `<button class="btn secondary" id="to-flow">Contar meu caso</button>` : ""}
+          <button class="btn secondary" id="to-flow">Contar meu caso</button>
         </div>
       </div>`;
   }
@@ -166,7 +166,7 @@ function answerQuestion(text) {
   bindCnis();
   bindDoc(key);
   const tf = $("to-flow");
-  if (tf) tf.onclick = () => { $("messages").innerHTML = ""; go("chat"); setStep(1); say(text, "user"); begin(key); };
+  if (tf) tf.onclick = () => { if (key) { $("messages").innerHTML = ""; go("chat"); setStep(1); say(text, "user"); begin(key); } else startChat(text, null, true); };
   go("result");
 }
 

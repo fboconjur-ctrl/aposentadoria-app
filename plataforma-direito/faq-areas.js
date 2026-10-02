@@ -335,3 +335,53 @@ FAQ.push({ id: "indeferido", area: "previdenciario", all: [["negad", "indefer", 
   a: ["Você tem três caminhos: novo pedido (quando faltou documento), recurso ao Conselho de Recursos da Previdência Social em 30 dias da ciência da decisão, ou ação na Justiça Federal.",
     "O motivo da negativa, que aparece na carta de indeferimento, define qual caminho é melhor."],
   sources: [["Lei 8.213/1991, art. 126", L.l8213[1]]], next: "Vamos ver o seu prazo e o melhor caminho?", followUp: RECURSO_FU });
+
+/* ---------------- SAÚDE: medicamento por liminar ---------------- */
+const MEDICAMENTOS = ["mounjaro", "monjaro", "tirzepatida", "ozempic", "wegovy", "semaglutida", "saxenda", "liraglutida", "canabidiol", "cannabis", "zolgensma", "spinraza", "insulina", "remédio", "remedio", "medicamento"];
+
+const LIMINAR_MED_FU = {
+  title: "Vamos avaliar as chances no seu caso?",
+  intro: "5 perguntas. No fim, mostramos o que pesa a favor, o que falta e os documentos.",
+  questions: [
+    { id: "via", q: "Você quer o medicamento pelo plano de saúde ou pelo SUS?", a: ["Plano de saúde", "SUS", "Não sei"] },
+    { id: "indicacao", q: "Para que o médico indicou?", a: ["Diabetes tipo 2", "Obesidade", "Outra doença"] },
+    { id: "alternativas", q: "Você já tentou outros tratamentos que não deram resultado?", a: ["Sim, vários", "Sim, um", "Não"] },
+    { id: "laudo", q: "O médico fez laudo explicando por que esse remédio é imprescindível?", a: ["Sim", "Não"] },
+    { id: "renda", q: "Você consegue pagar o tratamento sem comprometer o sustento?", a: ["Não consigo", "Com muita dificuldade", "Consigo"] },
+  ],
+  evaluate(a) {
+    const pro = [], contra = [];
+    if (a.alternativas === "Sim, vários") pro.push("Outros tratamentos já falharam: é um dos requisitos mais importantes."); else contra.push("A Justiça exige demonstrar que as alternativas disponíveis (no SUS ou no rol do plano) não funcionaram ou não são indicadas.");
+    if (a.laudo === "Sim") pro.push("Há laudo médico fundamentado."); else contra.push("Falta o laudo detalhado: diagnóstico, tratamentos anteriores, por que este remédio é imprescindível e o risco de não usar.");
+    if (a.via === "SUS") {
+      if (a.renda === "Consigo") contra.push("Pelo SUS, para medicamento fora da lista, é preciso demonstrar que você não consegue pagar."); else pro.push("Incapacidade financeira declarada: é requisito pelo SUS.");
+      contra.push("Pelo SUS, medicamento fora da lista oficial segue requisitos rígidos do STF (Tema 6), e a prova é de quem pede.");
+    }
+    if (a.via === "Plano de saúde") contra.push("Planos em regra não são obrigados a fornecer medicamento de uso domiciliar (art. 10, VI, da Lei 9.656), salvo exceções como antineoplásicos orais e casos que a jurisprudência reconhece. Se for aplicado em ambiente hospitalar ou ambulatorial, a análise muda.");
+    if (a.indicacao === "Obesidade") contra.push("Para obesidade, os tribunais costumam ser mais restritivos que para diabetes. Ajuda muito comprovar comorbidades e tentativas anteriores.");
+    if (a.indicacao === "Diabetes tipo 2") pro.push("A indicação para diabetes tipo 2 consta no registro do medicamento na Anvisa.");
+    const score = pro.length - contra.length;
+    return {
+      headline: score >= 1 ? "Seu caso tem elementos favoráveis, mas precisa de documentação forte." : score >= -1 ? "É possível tentar, mas há pontos fracos que precisam ser resolvidos antes." : "Hoje as chances de liminar são baixas. Veja o que pode fortalecer o pedido.",
+      tone: score >= 1 ? "good" : score >= -1 ? "near" : "info",
+      items: [...pro.map((t) => `A favor: ${t}`), ...contra.map((t) => `Atenção: ${t}`), "Antes da ação, faça o pedido administrativo (ao plano ou à Secretaria de Saúde) e guarde a negativa: ela costuma ser exigida.", "Sem condições de pagar advogado, a Defensoria Pública atende gratuitamente."],
+      lawyer: true,
+      summary: `Saúde — liminar de medicamento. Via: ${a.via}; indicação: ${a.indicacao}; alternativas: ${a.alternativas}; laudo: ${a.laudo}; renda: ${a.renda}.`,
+    };
+  },
+};
+
+FAQ.push({
+  id: "liminar-medicamento", area: "saude",
+  all: [["liminar", "justiça", "justica", "processo", "ação", "acao", "conseguir", "consigo", "fornecer", "pagar", "cobrir", "plano", "sus"], MEDICAMENTOS],
+  q: "Consigo uma liminar para receber um medicamento (como Mounjaro ou Ozempic)?",
+  a: [
+    "É possível, mas não é automático. A Justiça analisa principalmente três coisas: se o medicamento é imprescindível para você, se as alternativas disponíveis não funcionaram e quem deve fornecer (plano de saúde ou SUS).",
+    "Pelo plano de saúde: em regra, o plano não é obrigado a fornecer remédio de uso em casa. Medicamentos como Mounjaro e Ozempic, aplicados pelo próprio paciente, costumam ser negados, e os tribunais frequentemente confirmam a negativa. Há exceções analisadas caso a caso.",
+    "Pelo SUS: para remédio fora da lista oficial, o STF fixou requisitos rígidos (Tema 6): registro na Anvisa, laudo que comprove a necessidade, falta de alternativa eficaz no SUS e incapacidade de pagar.",
+    "Para obesidade, as decisões tendem a ser mais restritivas que para diabetes tipo 2. Um laudo completo e a prova de tratamentos anteriores fazem muita diferença.",
+  ],
+  tips: ["Peça primeiro ao plano ou à Secretaria de Saúde e guarde a negativa por escrito.", "O laudo deve citar o diagnóstico, os tratamentos já feitos, por que eles falharam e o risco de não usar o medicamento.", "Guarde exames que mostrem a evolução (glicada, peso, comorbidades)."],
+  sources: [["Lei 9.656/1998, art. 10, VI", "https://www.planalto.gov.br/ccivil_03/leis/l9656.htm"], ["STF — Tema 6 e Tema 1.234", "https://portal.stf.jus.br/jurisprudenciaRepercussao/"], ["Anvisa — consulta de registro", "https://consultas.anvisa.gov.br/"]],
+  next: "Quer avaliar as chances no seu caso?", followUp: LIMINAR_MED_FU,
+});

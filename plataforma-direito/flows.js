@@ -3,7 +3,7 @@
 // nunca vê "você está no módulo X".
 const FLOWS = {
   saude: {
-    keywords: ["plano de saúde", "plano", "cirurgia", "operadora", "sus", "medicamento", "remédio", "unimed", "exame", "tratamento", "internação"],
+    keywords: ["liminar", "mounjaro", "monjaro", "ozempic", "wegovy", "canabidiol", "médico", "medico", "hospital", "doença", "doenca", "plano de saúde", "plano", "cirurgia", "operadora", "sus", "medicamento", "remédio", "unimed", "exame", "tratamento", "internação"],
     understood: "Entendi. Seu problema envolve cobertura de saúde — plano de saúde ou SUS.",
     subject: "Plano de saúde → negativa de cobertura",
     caseTitle: "Plano de saúde — cobertura negada",
