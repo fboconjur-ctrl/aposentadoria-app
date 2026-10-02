@@ -217,7 +217,7 @@ Se não puder comparecer por motivo de saúde, remarque pelo Meu INSS ou pelo 13
 
 ### 15. Como funciona a aposentadoria do servidor público?
 
-`servidor-aposentadoria` · Atlas `OPP-ADM-005`
+`servidor-aposentadoria` · Atlas `OPP-ADM-005` · Domínios DAC: DA-04 Agentes Públicos
 
 O servidor efetivo se aposenta pelo regime próprio (RPPS) do seu ente: União, estado ou município. Cada ente pode ter regras próprias após a Reforma de 2019.
 
@@ -852,7 +852,7 @@ Suspeita de site falso: registre boletim de ocorrência e avise o banco imediata
 
 ### 13. A concessionária pode cortar minha luz ou água?
 
-`corte-luz-agua` · Atlas `OPP-CON-008`
+`corte-luz-agua` · Atlas `OPP-CON-008` · Domínios DAC: DA-13 Serviços Públicos; DA-07 Concessões
 
 Pode cortar por falta de pagamento de conta atual, mas só depois de aviso prévio por escrito.
 
@@ -966,7 +966,7 @@ Hotel que não honra a reserva deve providenciar acomodação equivalente e arca
 
 ### 21. Meus dados vazaram. Tenho direito a indenização?
 
-`vazamento-dados` · Atlas `OPP-CON-001`
+`vazamento-dados` · Atlas `OPP-CON-001` · Domínios DAC: DA-17 Proteção de Dados
 
 A empresa responsável pelos dados deve comunicar o incidente aos titulares e à ANPD quando houver risco relevante.
 
@@ -984,7 +984,7 @@ Você pode pedir à empresa informações sobre quais dados foram vazados e o qu
 
 ### 1. Como funciona a defesa em processo disciplinar (PAD)?
 
-`pad-prazo` · Atlas `OPP-ADM-001` · continuação: _Vamos calcular seu prazo de defesa?_
+`pad-prazo` · Atlas `OPP-ADM-001` · Domínios DAC: DA-21 Responsabilização Administrativa; DA-03 Processo Administrativo; DA-04 Agentes Públicos · continuação: _Vamos calcular seu prazo de defesa?_
 
 O PAD tem três fases: instauração (portaria), inquérito (instrução, defesa e relatório) e julgamento. Você tem direito ao contraditório e à ampla defesa em todas.
 
@@ -998,7 +998,7 @@ A acusação precisa individualizar sua conduta. Por decisão técnica, você s�
 
 ### 2. Qual o prazo de prescrição de uma infração disciplinar?
 
-`pad-prescricao` · Atlas `OPP-ADM-001` · continuação: _Vamos calcular seu prazo de defesa?_
+`pad-prescricao` · Atlas `OPP-ADM-001` · Domínios DAC: DA-21 Responsabilização Administrativa; DA-04 Agentes Públicos · continuação: _Vamos calcular seu prazo de defesa?_
 
 No estatuto federal: 5 anos para infrações puníveis com demissão, cassação ou destituição; 2 anos para suspensão; 180 dias para advertência.
 
@@ -1012,7 +1012,7 @@ Estados e municípios têm estatutos próprios, com prazos que podem ser diferen
 
 ### 3. Fui aprovado(a) em concurso. Tenho direito à nomeação?
 
-`concurso-vagas` · Atlas `OPP-ADM-004` · continuação: _Vamos avaliar seu direito à nomeação?_
+`concurso-vagas` · Atlas `OPP-ADM-004` · Domínios DAC: DA-04 Agentes Públicos; DA-01 Constituição Administrativa · continuação: _Vamos avaliar seu direito à nomeação?_
 
 Se você foi aprovado(a) dentro do número de vagas do edital, tem direito à nomeação durante o prazo de validade do concurso (STF, Tema 161).
 
@@ -1026,7 +1026,7 @@ Acompanhe o prazo de validade e a prorrogação no Diário Oficial.
 
 ### 4. Qual o prazo para recorrer em licitação?
 
-`licitacao-recurso` · Atlas `OPP-ADM-002`
+`licitacao-recurso` · Atlas `OPP-ADM-002` · Domínios DAC: DA-05 Licitações e Contratos; DA-03 Processo Administrativo
 
 Na Lei 14.133/2021, a intenção de recorrer deve ser manifestada logo após o julgamento ou a habilitação, na própria sessão. Depois, o recurso é apresentado em 3 dias úteis.
 
@@ -1040,7 +1040,7 @@ Para aprofundar temas da Lei 14.133, consulte o Codex 14133.
 
 ### 5. O órgão público não paga minha empresa. O que fazer?
 
-`orgao-nao-paga` · Atlas `OPP-ADM-003`
+`orgao-nao-paga` · Atlas `OPP-ADM-003` · Domínios DAC: DA-05 Licitações e Contratos
 
 Formalize a cobrança por escrito, com notas fiscais, atestos do fiscal e empenho, e peça atualização monetária e juros pelo atraso.
 
@@ -1054,7 +1054,7 @@ Atrasos superiores a 2 meses podem permitir a suspensão da execução ou a exti
 
 ### 6. Fui eliminado(a) no psicotécnico, TAF ou exame médico do concurso. Posso recorrer?
 
-`concurso-eliminacao` · Atlas `OPP-ADM-004`
+`concurso-eliminacao` · Atlas `OPP-ADM-004` · Domínios DAC: DA-04 Agentes Públicos; DA-24 Controle Judicial
 
 Sim. Primeiro use o recurso administrativo previsto no edital, dentro do prazo, e peça acesso ao laudo, à gravação ou ao resultado detalhado.
 
@@ -1070,7 +1070,7 @@ Candidatas gestantes têm direito de remarcar o teste físico (STF, Tema 973).
 
 ### 7. Fui eliminado(a) das cotas na banca de heteroidentificação. O que fazer?
 
-`heteroidentificacao` · Atlas `OPP-ADM-004`
+`heteroidentificacao` · Atlas `OPP-ADM-004` · Domínios DAC: DA-04 Agentes Públicos; DA-01 Constituição Administrativa
 
 A heteroidentificação é válida (STF, ADC 41), mas o procedimento deve respeitar o edital, avaliar apenas o fenótipo (características físicas), ser registrado (filmado) e permitir recurso.
 
@@ -1084,7 +1084,7 @@ Em regra, quem é excluído das cotas sem má-fé continua concorrendo na ampla 
 
 ### 8. Como recorrer de multa de trânsito ou de suspensão da CNH?
 
-`multa-transito` · Atlas `OPP-ADM-010` · continuação: _Vamos conferir prazos e vícios da sua multa?_
+`multa-transito` · Atlas `OPP-ADM-010` · Domínios DAC: DA-03 Processo Administrativo; DA-24 Controle Judicial · continuação: _Vamos conferir prazos e vícios da sua multa?_
 
 Há três etapas: defesa prévia (ou indicação do condutor), recurso à JARI e recurso ao Cetran ou Contran. Os prazos vêm na notificação e, em geral, são de pelo menos 30 dias.
 
@@ -1100,7 +1100,7 @@ Recorrer não gera pontos nem multa adicional, e a infração só é registrada 
 
 ### 9. Fui citado(a) pelo Tribunal de Contas. O que significa?
 
-`tribunal-contas` · Atlas `OPP-ADM-006` · continuação: _Vamos calcular seu prazo de defesa?_
+`tribunal-contas` · Atlas `OPP-ADM-006` · Domínios DAC: DA-23 Controle Externo; DA-21 Responsabilização Administrativa · continuação: _Vamos calcular seu prazo de defesa?_
 
 A citação ocorre quando o Tribunal aponta possível dano aos cofres públicos e chama você a se defender ou a devolver o valor. A audiência ocorre quando há irregularidade sem dano, que pode gerar multa.
 
@@ -1116,7 +1116,7 @@ Débito e multa têm regras diferentes de prescrição. A cobrança de débito i
 
 ### 10. Quais direitos do servidor público costumam ser negados?
 
-`direitos-servidor` · Atlas `OPP-ADM-005`
+`direitos-servidor` · Atlas `OPP-ADM-005` · Domínios DAC: DA-04 Agentes Públicos
 
 Os mais comuns: progressões e promoções atrasadas, adicionais (insalubridade, noturno, tempo de serviço) não pagos, licenças negadas e pedidos de remoção para acompanhar cônjuge ou por motivo de saúde.
 
@@ -1130,7 +1130,7 @@ Faça o pedido por escrito e guarde o protocolo. Valores atrasados podem ser cob
 
 ### 11. Fui acusado(a) de improbidade administrativa. O que mudou na lei?
 
-`improbidade` · Atlas `OPP-ADM-007`
+`improbidade` · Atlas `OPP-ADM-007` · Domínios DAC: DA-20 Improbidade Administrativa; DA-21 Responsabilização Administrativa; DA-27 Crimes contra Administração
 
 Desde a Lei 14.230/2021, só há improbidade com dolo: a vontade livre e consciente de praticar o ato ilícito. Erro, mesmo grosseiro, não configura improbidade.
 
@@ -1144,7 +1144,7 @@ As sanções incluem perda da função, suspensão dos direitos políticos, mult
 
 ### 12. O poder público causou um prejuízo. Posso pedir indenização?
 
-`responsabilidade-estado` · Atlas `OPP-ADM-010`
+`responsabilidade-estado` · Atlas `OPP-ADM-010` · Domínios DAC: DA-01 Constituição Administrativa; DA-24 Controle Judicial
 
 Sim. O Estado responde pelos danos causados por seus agentes independentemente de culpa: basta provar o dano e a relação com a atuação (ou omissão relevante) do poder público.
 
@@ -1158,7 +1158,7 @@ O prazo para pedir indenização contra o poder público é de 5 anos.
 
 ### 13. Meu imóvel vai ser desapropriado. Quais meus direitos?
 
-`desapropriacao` · Atlas `OPP-ADM-008`
+`desapropriacao` · Atlas `OPP-ADM-008` · Domínios DAC: DA-12 Intervenção na Propriedade
 
 A desapropriação exige indenização prévia, justa e em dinheiro (salvo exceções da reforma agrária e urbana).
 
@@ -1172,7 +1172,7 @@ Também podem ser devidos juros e indenização por benfeitorias e fundo de com�
 
 ### 14. Como pedir informações a um órgão público?
 
-`lai` · Atlas `OPP-ADM-010` · continuação: _Vamos calcular o prazo de resposta?_
+`lai` · Atlas `OPP-ADM-010` · Domínios DAC: DA-16 Transparência e Acesso à Informação; DA-17 Proteção de Dados · continuação: _Vamos calcular o prazo de resposta?_
 
 Qualquer pessoa pode pedir informações públicas, sem justificar o motivo. O pedido é gratuito.
 
@@ -1186,7 +1186,7 @@ Se o acesso for negado, você pode recorrer em 10 dias. No governo federal, use 
 
 ### 15. Minha empresa recebeu auto de infração ou teve o alvará negado. O que fazer?
 
-`auto-infracao` · Atlas `OPP-ADM-010`
+`auto-infracao` · Atlas `OPP-ADM-010` · Domínios DAC: DA-03 Processo Administrativo; DA-24 Controle Judicial
 
 Leia a notificação: ela informa o prazo de defesa, que costuma ser curto. Apresente a defesa por escrito dentro dele.
 

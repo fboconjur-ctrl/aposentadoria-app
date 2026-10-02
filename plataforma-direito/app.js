@@ -116,7 +116,7 @@ function openLawyer() {
     : ["Sua pergunta", "Área identificada"]).map((t) => `<li>${t}</li>`).join("");
   $("f-area").value = state.flow ? state.flow.subject : "Pergunta sem resposta pronta";
   const code = (state.faqId && ATLAS[state.faqId]) || ATLAS_AREA[state.key] || "";
-  $("f-codigo").value = code;
+  $("f-codigo").value = [code, state.faqId ? dacResumo(state.faqId) : ""].filter(Boolean).join(" · ");
   $("f-resumo").value = [state.text && `Relato: ${state.text}`, ...(state.cnisSummary ? [state.cnisSummary] : []), ...(state.docSummary ? [state.docSummary] : []), ...(state.followSummary ? [state.followSummary, ...state.answers] : state.answers.map((r, i) => `${i + 1}. ${[...state.flow.questions, OBJECTIVE_Q][i].q} ${r}`))].filter(Boolean).join("\n");
   go("lawyer");
 }

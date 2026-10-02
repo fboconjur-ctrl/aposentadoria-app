@@ -4,7 +4,7 @@ const fs = require("fs"), path = require("path"), vm = require("vm");
 const dir = path.join(__dirname, "..");
 const ctx = { console, Date, Math, URLSearchParams };
 vm.createContext(ctx);
-for (const f of ["flows.js", "faq.js", "faq-areas.js", "faq-lote2.js", "faq-lote3.js", "continuacoes.js", "atlas.js"]) vm.runInContext(fs.readFileSync(path.join(dir, f), "utf8"), ctx, { filename: f });
+for (const f of ["flows.js", "faq.js", "faq-areas.js", "faq-lote2.js", "faq-lote3.js", "continuacoes.js", "atlas.js", "dac.js"]) vm.runInContext(fs.readFileSync(path.join(dir, f), "utf8"), ctx, { filename: f });
 const { FAQ, findFaq, isQuestion } = vm.runInContext("({ FAQ, findFaq, isQuestion })", ctx);
 
 // [pergunta, id esperado]
