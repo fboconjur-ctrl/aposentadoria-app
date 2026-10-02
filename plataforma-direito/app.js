@@ -326,3 +326,24 @@ document.querySelectorAll("[data-go]").forEach((a) => a.addEventListener("click"
   if (a.getAttribute("href") === "#") e.preventDefault();
   go(a.dataset.go);
 }));
+
+document.querySelectorAll("[data-tool]").forEach((b) => (b.onclick = () => {
+  $("b2b-tool").value = b.dataset.tool;
+  $("b2b-title").textContent = b.dataset.tool;
+  $("b2b-form").hidden = false;
+  $("b2b-msg").textContent = "";
+  $("b2b-form").scrollIntoView({ behavior: "smooth", block: "start" });
+}));
+$("b2b-form").onsubmit = async (e) => {
+  e.preventDefault();
+  $("b2b-send").disabled = true;
+  try {
+    const r = await fetch("/", { method: "POST", headers: { "Content-Type": "application/x-www-form-urlencoded" }, body: new URLSearchParams(new FormData(e.target)).toString() });
+    if (!r.ok) throw new Error(r.status);
+    $("b2b-msg").textContent = "Recebido. Avisaremos você assim que a ferramenta abrir.";
+    e.target.reset();
+  } catch {
+    $("b2b-msg").textContent = "Não conseguimos enviar agora. Verifique a conexão e tente de novo.";
+  }
+  $("b2b-send").disabled = false;
+};
