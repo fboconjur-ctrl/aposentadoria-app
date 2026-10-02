@@ -35,7 +35,7 @@ function offer(options, onPick) {
 }
 
 function startChat(text, forcedKey) {
-  Object.assign(state, { text, answers: [], qi: 0, flow: null, followSummary: null, cnisSummary: null });
+  Object.assign(state, { text, answers: [], qi: 0, flow: null, followSummary: null, cnisSummary: null, docSummary: null });
   if (text && !forcedKey && isQuestion(text)) return answerQuestion(text);
   $("messages").innerHTML = "";
   go("chat");
@@ -87,6 +87,7 @@ function renderResult() {
     ${state.text ? `<p class="muted">“${esc(state.text)}”</p>` : ""}
     <h2>O que você pode fazer agora</h2>
     <ol class="steps-list">${steps}</ol>
+    ${docCard(state.key)}
     ${state.key === "previdenciario" ? CNIS_CARD : ""}
     <h2>O que a lei prevê</h2>
     <p>${esc(f.law)}</p>
@@ -103,6 +104,7 @@ function renderResult() {
     </div>
     <p class="muted small">Orientação inicial informativa, gerada a partir do que você contou. Não substitui a análise individual por advogado.</p>`;
   bindCnis();
+  bindDoc(state.key);
   $("to-lawyer").onclick = openLawyer;
   $("alone").onclick = () => (e => { e.target.textContent = "Orientação salva ✓"; e.target.disabled = true; })(event);
 }
@@ -113,7 +115,7 @@ function openLawyer() {
     ? ["Relato", `${n} perguntas respondidas`, "Documentos necessários identificados", "Orientação inicial concluída"]
     : ["Sua pergunta", "Área identificada"]).map((t) => `<li>${t}</li>`).join("");
   $("f-area").value = state.flow ? state.flow.subject : "Pergunta sem resposta pronta";
-  $("f-resumo").value = [state.text && `Relato: ${state.text}`, ...(state.cnisSummary ? [state.cnisSummary] : []), ...(state.followSummary ? [state.followSummary, ...state.answers] : state.answers.map((r, i) => `${i + 1}. ${[...state.flow.questions, OBJECTIVE_Q][i].q} ${r}`))].filter(Boolean).join("\n");
+  $("f-resumo").value = [state.text && `Relato: ${state.text}`, ...(state.cnisSummary ? [state.cnisSummary] : []), ...(state.docSummary ? [state.docSummary] : []), ...(state.followSummary ? [state.followSummary, ...state.answers] : state.answers.map((r, i) => `${i + 1}. ${[...state.flow.questions, OBJECTIVE_Q][i].q} ${r}`))].filter(Boolean).join("\n");
   go("lawyer");
 }
 
@@ -134,6 +136,7 @@ function answerQuestion(text) {
       ${f.tips ? `<h2>Dicas práticas</h2><ul class="tips">${f.tips.map((t) => `<li>${esc(t)}</li>`).join("")}</ul>` : ""}
       <details open><summary>Fundamento jurídico e fontes</summary><ul>${sources(f.sources)}</ul></details>
       ${f.followUp ? `<section class="followup" id="followup"><p class="eyebrow">Próximo passo</p><h2>${esc(f.followUp.title)}</h2><p class="muted">${esc(f.followUp.intro)}</p><div id="fu-log" class="fu-log"></div><div id="fu-answers" class="answers"></div></section>` : ""}
+      ${docCard(key)}
       ${key === "previdenciario" ? CNIS_CARD : ""}
       <div class="card decision" id="faq-cta">
         <h2>${esc(f.next)}</h2>
@@ -161,6 +164,7 @@ function answerQuestion(text) {
   $("to-lawyer").onclick = openLawyer;
   if (f && f.followUp) runFollowUp(f.followUp);
   bindCnis();
+  bindDoc(key);
   const tf = $("to-flow");
   if (tf) tf.onclick = () => { $("messages").innerHTML = ""; go("chat"); setStep(1); say(text, "user"); begin(key); };
   go("result");
@@ -172,25 +176,40 @@ function runFollowUp(fu) {
   const log = $("fu-log");
   const step = () => {
     if (i >= fu.questions.length) return finishFollowUp(fu, ans);
-    const { id, q, a } = fu.questions[i];
+    const { id, q, a, input } = fu.questions[i];
     const el = document.createElement("div");
     el.className = "msg bot";
     el.textContent = q;
     log.appendChild(el);
     $("fu-answers").innerHTML = "";
+    const answer = (value, shown) => {
+      ans[id] = value;
+      state.answers.push(`${q} ${shown}`);
+      const u = document.createElement("div");
+      u.className = "msg user";
+      u.textContent = shown;
+      log.appendChild(u);
+      i++;
+      step();
+    };
+    if (input === "date") {
+      const d = document.createElement("input");
+      d.type = "date";
+      d.id = `fu-${id}`;
+      d.className = "fu-date";
+      const ok = document.createElement("button");
+      ok.textContent = "Confirmar data";
+      ok.onclick = () => { if (d.value) answer(new Date(d.value + "T12:00:00"), new Date(d.value + "T12:00:00").toLocaleDateString("pt-BR")); };
+      const skip = document.createElement("button");
+      skip.textContent = "Não sei";
+      skip.onclick = () => answer(null, "Não sei");
+      $("fu-answers").append(d, ok, skip);
+      return;
+    }
     a.forEach((o) => {
       const b = document.createElement("button");
       b.textContent = o;
-      b.onclick = () => {
-        ans[id] = o;
-        state.answers.push(o);
-        const u = document.createElement("div");
-        u.className = "msg user";
-        u.textContent = o;
-        log.appendChild(u);
-        i++;
-        step();
-      };
+      b.onclick = () => answer(o, o);
       $("fu-answers").appendChild(b);
     });
   };
@@ -204,9 +223,9 @@ function finishFollowUp(fu, ans) {
   const box = document.createElement("div");
   box.className = "fu-result " + r.tone;
   box.innerHTML = `<h3>${esc(r.headline)}</h3><ul>${r.items.map((t) => `<li>${esc(t)}</li>`).join("")}</ul>
-    <div class="actions"><button class="btn" id="fu-help">${r.lawyer ? "Quero ajuda para pedir meu benefício" : "Quero que um advogado confira"}</button>
-    <a class="btn secondary" href="/simulador/">Simular no detalhe</a></div>
-    ${r.lawyer ? `<p class="small">Pelo que você respondeu, uma análise profissional pode fazer diferença no resultado: grau, conversão de períodos e escolha da melhor regra.</p>` : ""}`;
+    <div class="actions"><button class="btn" id="fu-help">${r.lawyer ? "Quero ajuda com meu caso" : "Quero que um advogado confira"}</button>
+    ${state.key === "previdenciario" ? `<a class="btn secondary" href="/simulador/">Simular no detalhe</a>` : ""}</div>
+    ${r.lawyer ? `<p class="small">Pelo que você respondeu, uma análise profissional pode fazer diferença no resultado. Seu caso chega organizado ao advogado.</p>` : ""}`;
   $("followup").appendChild(box);
   $("fu-help").onclick = openLawyer;
   $("faq-cta").hidden = true;

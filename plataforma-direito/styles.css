@@ -219,3 +219,8 @@ tr:last-child td { border-bottom: 0; }
 .findings p { margin-top: 4px; }
 .warn-text { color: var(--ink); background: var(--amber-soft); padding: 12px 14px; border-radius: 10px; }
 @media (max-width: 560px) { .stats { grid-template-columns: 1fr; } }
+.fu-date { padding: 8px 12px; border: 1.5px solid var(--line); border-radius: 10px; background: var(--bg); color: var(--ink); font: 1rem var(--font-body); }
+.facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px; margin: 0; }
+.facts div { background: var(--tint); border-radius: 12px; padding: 12px 14px; }
+.facts dt { font-size: .74rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.facts dd { margin: 2px 0 0; font-weight: 600; overflow-wrap: anywhere; }
