@@ -176,3 +176,10 @@ summary { cursor: pointer; color: var(--brand); font-weight: 600; }
   .msg { max-width: 92%; }
   .hero-demo { display: none; }
 }
+
+/* Formulário de contato */
+.lead-form label { font-weight: 600; font-size: .92rem; }
+.lead-form input:not([type="checkbox"]), .lead-form select { width: 100%; padding: 11px 14px; border: 1.5px solid var(--line); border-radius: 10px; background: var(--bg); color: var(--ink); font: 1rem var(--font-body); margin-bottom: 6px; }
+.lead-form input:focus, .lead-form select:focus { border-color: var(--brand); outline: none; }
+.lead-form .consent { display: flex; gap: 10px; align-items: flex-start; font-weight: 400; color: var(--ink-2); margin-block: 8px; }
+.lead-form .consent input { margin-top: 4px; }

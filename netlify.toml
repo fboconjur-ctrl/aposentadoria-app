@@ -1,0 +1,13 @@
+# Publica o repositório inteiro: plataforma na raiz, simulador em /simulador.
+[build]
+  publish = "."
+
+[[redirects]]
+  from = "/"
+  to = "/plataforma-direito/"
+  status = 301
+
+[[redirects]]
+  from = "/simulador/*"
+  to = "/aposentadoria-app/:splat"
+  status = 200

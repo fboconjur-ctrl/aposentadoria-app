@@ -112,27 +112,25 @@ function openLawyer() {
     "Documentos necessários identificados",
     "Orientação inicial concluída",
   ].map((t) => `<li>${t}</li>`).join("");
-  const slots = ["06/10 — 10h", "06/10 — 16h", "07/10 — 9h", "08/10 — 14h"];
-  $("slots").innerHTML = "";
-  slots.forEach((s) => {
-    const b = document.createElement("button");
-    b.textContent = s;
-    b.onclick = () => {
-      document.querySelectorAll("#slots button").forEach((x) => x.classList.remove("sel"));
-      b.classList.add("sel");
-      state.slot = s;
-      $("confirm-slot").disabled = false;
-    };
-    $("slots").appendChild(b);
-  });
-  $("confirm-slot").disabled = true;
+  $("f-area").value = state.flow.subject;
+  $("f-resumo").value = [state.text && `Relato: ${state.text}`, ...state.answers.map((r, i) => `${i + 1}. ${[...state.flow.questions, OBJECTIVE_Q][i].q} ${r}`)].filter(Boolean).join("\n");
   go("lawyer");
 }
 
-$("confirm-slot").onclick = () => {
-  $("area-title").textContent = state.flow ? state.flow.caseTitle : $("area-title").textContent;
-  if (state.slot) $("area-meeting").textContent = state.slot;
-  go("area");
+$("lead-form").onsubmit = async (e) => {
+  e.preventDefault();
+  const form = e.target;
+  $("f-send").disabled = true;
+  try {
+    const r = await fetch("/", { method: "POST", headers: { "Content-Type": "application/x-www-form-urlencoded" }, body: new URLSearchParams(new FormData(form)).toString() });
+    if (!r.ok) throw new Error(r.status);
+    $("area-title").textContent = state.flow.caseTitle;
+    $("area-meeting").textContent = "A combinar — retornaremos em até 1 dia útil";
+    go("area");
+  } catch {
+    $("f-msg").textContent = "Não conseguimos enviar agora. Verifique a conexão e tente de novo.";
+    $("f-send").disabled = false;
+  }
 };
 
 $("start-form").onsubmit = (e) => {

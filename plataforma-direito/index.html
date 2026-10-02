@@ -67,7 +67,7 @@
       <h2>Podemos ajudar em</h2>
       <div class="grid">
         <article><h3>Administrativo</h3><p>Servidor, concurso, PAD, licitações...</p></article>
-        <article><h3>Previdenciário</h3><p>Aposentadoria, benefício, CNIS...</p><a href="../aposentadoria-app/index.html">Simular minha aposentadoria →</a></article>
+        <article><h3>Previdenciário</h3><p>Aposentadoria, benefício, CNIS...</p><a href="/simulador/">Simular minha aposentadoria →</a></article>
         <article><h3>Saúde</h3><p>Plano de saúde, SUS, medicamentos...</p></article>
         <article><h3>Consumidor</h3><p>Compras, bancos, companhias aéreas...</p></article>
         <article><h3>Cartório e Extrajudicial</h3><p>Certidões, registros, escrituras...</p></article>
@@ -105,14 +105,25 @@
       <h1>Já organizamos seu caso.</h1>
       <p class="lead">Você não precisa contar tudo outra vez.</p>
       <ul class="checks" id="case-summary"></ul>
-      <h2>Escolha como continuar</h2>
-      <div class="card">
-        <h3>Consulta online</h3>
-        <p>Videoconferência com advogado.</p>
-        <div class="slots" id="slots"></div>
-        <button class="btn" id="confirm-slot" disabled>Escolher horário →</button>
-        <p class="muted small">Para agendar, pediremos apenas nome, e-mail e telefone.</p>
-      </div>
+      <h2>Peça sua consulta</h2>
+      <form class="card lead-form" id="lead-form" name="contato-advogado" method="POST" data-netlify="true" netlify-honeypot="empresa-site">
+        <input type="hidden" name="form-name" value="contato-advogado">
+        <input type="hidden" name="area" id="f-area">
+        <input type="hidden" name="resumo" id="f-resumo">
+        <p hidden><label>Não preencha: <input name="empresa-site"></label></p>
+        <label for="f-nome">Nome</label>
+        <input id="f-nome" name="nome" required autocomplete="name">
+        <label for="f-email">E-mail</label>
+        <input id="f-email" name="email" type="email" required autocomplete="email">
+        <label for="f-tel">WhatsApp ou telefone</label>
+        <input id="f-tel" name="telefone" type="tel" required autocomplete="tel">
+        <label for="f-periodo">Melhor período para a consulta online</label>
+        <select id="f-periodo" name="periodo"><option>Manhã</option><option>Tarde</option><option>Noite</option></select>
+        <label class="consent"><input type="checkbox" id="f-lgpd" name="consentimento" value="sim" required>
+          Autorizo o uso dos dados e do relato acima para o contato e a preparação da consulta.</label>
+        <button class="btn" type="submit" id="f-send">Enviar e agendar →</button>
+        <p class="muted small" id="f-msg">Retornamos em até 1 dia útil com as opções de horário.</p>
+      </form>
     </div>
   </section>
 

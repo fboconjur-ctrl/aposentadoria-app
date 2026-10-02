@@ -33,7 +33,7 @@ const FLOWS = {
       { q: "Você tem acesso ao seu extrato do CNIS?", a: ["Sim", "Não", "Não sei o que é"] },
     ],
     steps: [
-      { t: "Simule sua aposentadoria agora", d: "Nosso simulador compara as regras da Reforma e de transição e mostra qual chega primeiro.", link: ["Abrir o simulador", "../aposentadoria-app/index.html"], when: (ans) => ans[0] === "Quero me aposentar" },
+      { t: "Simule sua aposentadoria agora", d: "Nosso simulador compara as regras da Reforma e de transição e mostra qual chega primeiro.", link: ["Abrir o simulador", "/simulador/"], when: (ans) => ans[0] === "Quero me aposentar" },
       { t: "Baixe seu extrato do CNIS", d: "Ele mostra os vínculos e contribuições que o INSS considera.", link: ["Acessar Meu INSS", "https://meu.inss.gov.br"] },
       { t: "Separe estes documentos", d: "Documento com foto · CPF · carteiras de trabalho · carta de indeferimento (se houver)" },
       { t: "Verifique o prazo de recurso", d: "Em caso de indeferimento, o recurso administrativo tem prazo de 30 dias da ciência da decisão." },
