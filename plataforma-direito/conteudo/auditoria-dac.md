@@ -89,6 +89,35 @@ Sem alterar regras nem a leitura de fatos (regressões idênticas à v13.7: 21/2
 
 **Limite que permanece (P1):** a explicação melhorou, mas a **cobertura de conclusões** ainda é baixa. Ex.: “PAD sem prazo de defesa” leva a “é preciso verificar o contraditório”, e não à conclusão de nulidade; “sem dolo e sem dano” não leva automaticamente a “improbidade afastada”. Isso depende de ligar os fatos extraídos às condições das regras (vocabulário de predicados), próxima etapa.
 
+## Versão v13.9 — fatos ligados às regras (o motor passa a concluir)
+
+Nova bateria de **15 casos-modelo de conclusão** (`testar_conclusoes.js`): cada caso define o que o motor **deve** concluir e o que **não pode** concluir (armadilhas de hipótese, alegação, negação e falta de informação).
+
+| Bateria | v13.8 | v13.9 |
+|---|---|---|
+| Casos-modelo de conclusão | 11/15 | **15/15** |
+| Leitura de fatos | 21/21 | 21/21 |
+| Regressões oficiais NFV2 | 59/74 | 59/74 |
+| Testes internos | 22/22 | 22/22 |
+| Corpus (hash) | inalterado | inalterado |
+
+Defeitos encontrados e corrigidos:
+1. **Condições negativas inavaliáveis:** `label()` transformava “= False” em “(não)” antes da compilação; as 20 regras com condição negativa (ex.: “ilegalidade + dolo qualificador = não → não configura improbidade”) nunca podiam ser aplicadas.
+2. **Polaridade na busca genérica:** a simples menção de um termo satisfazia tanto “= sim” quanto “= não”, e negação/hipótese/alegação eram ignoradas.
+3. **Predicados específicos sem ligação com os fatos:** ponte explícita (ex.: `dolo_qualificador`, `ato_doloso_fim_ilicito` → DOLO; `decisao_administrativa`, `ato_administrativo_existente` → ato informado no relato).
+4. **Seleção só por palavras:** regras integralmente atendidas pelos fatos não entravam na análise; agora entram.
+
+Derivações jurídicas introduzidas (explícitas e conservadoras — só com fato **afirmado**, nunca com alegação ou hipótese):
+- Punição aplicada **com** negação de defesa/contraditório → ato ilegal (CF, art. 5º, LV).
+- Ato restritivo (remoção, exoneração, demissão…) **sem** processo prévio ou **sem** motivação → ato ilegal (CF, art. 5º, LIV; Lei 9.784/1999, art. 50).
+
+Exemplos de resultado:
+- “Demitido em PAD sem prazo para defesa” → **O ato é ilegal e deve ser anulado** (Lei 9.784/1999, art. 53).
+- “Houve ilegalidade, mas não houve dolo” → **Sem dolo, a ilegalidade não configura improbidade** (Lei 8.429/1992, art. 17-C).
+- “Talvez tenha havido dolo” / “segundo a denúncia” / “não há prova de dolo” → **nenhuma conclusão** sobre improbidade (correto).
+
+**Para validação jurídica:** as duas derivações acima e a frase “sem dolo, não configura improbidade”.
+
 ## O que já foi integrado à Plataforma do Direito
 - Cada resposta de Administrativo indica os domínios DAC relacionados (`dac.js`).
 - Os domínios vão no pedido de consulta, junto com o código do Atlas, para orientar o dossiê.
