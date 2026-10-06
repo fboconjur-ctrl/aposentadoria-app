@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Escritório — Plataforma do Direito</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Figtree:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="../styles.css">
+<link rel="stylesheet" href="escritorio.css">
+</head>
+<body class="office">
+<aside class="side">
+  <a class="brand" href="../">Plataforma do Direito</a>
+  <p class="side-tag">Escritório</p>
+  <nav>
+    <button class="nav on" data-view="hoje">Hoje</button>
+    <button class="nav" data-view="funil">Casos</button>
+    <button class="nav" data-view="prazos">Prazos</button>
+  </nav>
+  <p class="demo-note">Dados fictícios de demonstração. Os pedidos reais entram aqui na próxima etapa, com acesso protegido.</p>
+</aside>
+
+<main class="office-main">
+  <section id="v-hoje" class="oview on">
+    <header class="ohead"><div><p class="eyebrow" id="hoje-data"></p><h1>Bom dia, Fernanda.</h1></div></header>
+    <div class="kpis" id="kpis"></div>
+    <div class="two">
+      <div class="panel"><h2>Agenda de hoje</h2><ul class="list" id="agenda"></ul></div>
+      <div class="panel"><h2>Prazos mais próximos</h2><ul class="list" id="prazos-hoje"></ul></div>
+    </div>
+    <div class="panel"><h2>Novos pedidos da plataforma</h2><ul class="list" id="novos"></ul></div>
+  </section>
+
+  <section id="v-funil" class="oview">
+    <header class="ohead"><div><p class="eyebrow">Funil de atendimento</p><h1>Casos</h1></div>
+      <input id="busca" class="search" placeholder="Buscar por nome, área ou código" aria-label="Buscar casos"></header>
+    <div class="board" id="board"></div>
+  </section>
+
+  <section id="v-prazos" class="oview">
+    <header class="ohead"><div><p class="eyebrow">Controle</p><h1>Prazos</h1></div></header>
+    <div class="panel"><table class="table"><thead><tr><th>Prazo</th><th>Caso</th><th>Providência</th><th>Fundamento</th><th>Situação</th></tr></thead><tbody id="tab-prazos"></tbody></table></div>
+  </section>
+
+  <section id="v-caso" class="oview">
+    <header class="ohead"><div><button class="back" id="voltar">← Casos</button><p class="eyebrow" id="caso-codigo"></p><h1 id="caso-titulo"></h1><p class="muted" id="caso-sub"></p></div>
+      <div class="stage-ctl"><label for="caso-etapa" class="small muted">Etapa</label><select id="caso-etapa"></select></div></header>
+    <div class="dossie" id="dossie"></div>
+  </section>
+</main>
+<script src="escritorio.js"></script>
+</body>
+</html>
