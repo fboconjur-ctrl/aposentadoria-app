@@ -18,6 +18,7 @@
     <button class="nav on" data-view="hoje">Hoje</button>
     <button class="nav" data-view="funil">Casos</button>
     <button class="nav" data-view="prazos">Prazos</button>
+    <button class="nav" data-view="importar">Importar meus casos</button>
   </nav>
   <p class="demo-note">Dados fictícios de demonstração. Os pedidos reais entram aqui na próxima etapa, com acesso protegido.</p>
 </aside>
@@ -42,6 +43,21 @@
   <section id="v-prazos" class="oview">
     <header class="ohead"><div><p class="eyebrow">Controle</p><h1>Prazos</h1></div></header>
     <div class="panel"><table class="table"><thead><tr><th>Prazo</th><th>Caso</th><th>Providência</th><th>Fundamento</th><th>Situação</th></tr></thead><tbody id="tab-prazos"></tbody></table></div>
+  </section>
+
+  <section id="v-importar" class="oview">
+    <header class="ohead"><div><p class="eyebrow">Só neste navegador</p><h1>Importar meus casos</h1></div></header>
+    <div class="panel">
+      <p>Cole a lista de processos (planilha copiada, CSV ou texto com números CNJ) ou escolha um arquivo. <b>Nada é enviado para a internet</b>: os dados ficam guardados apenas neste navegador.</p>
+      <p class="small muted">Colunas reconhecidas, se houver cabeçalho: processo, cliente, área, assunto, tribunal/órgão, etapa/situação, prazo, providência, observação. Sem cabeçalho, o painel encontra os números CNJ no texto.</p>
+      <textarea id="imp-texto" rows="10" class="search" style="width:100%;font-family:monospace" placeholder="0700000-00.2026.8.07.0001;Cliente;Consumidor;..."></textarea>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+        <input type="file" id="imp-arquivo" accept=".csv,.tsv,.txt,.json">
+        <button class="btn" id="imp-ok">Importar</button>
+        <button class="back" id="imp-limpar">Apagar casos importados</button>
+      </div>
+      <p id="imp-msg" class="small"></p>
+    </div>
   </section>
 
   <section id="v-caso" class="oview">

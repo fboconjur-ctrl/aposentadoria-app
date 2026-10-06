@@ -97,12 +97,70 @@ const CASOS = [
   },
 ];
 
+// Casos importados pela advogada: ficam só no localStorage deste navegador.
+const IMP_KEY = "pd-escritorio-importados";
+const TRIB = { "8.07": "TJDFT", "4.01": "TRF1", "5.10": "TRT10", "8.26": "TJSP", "8.13": "TJMG", "8.19": "TJRJ", "8.09": "TJGO" };
+const RAMO = { 1: "STF", 3: "STJ", 4: "Justiça Federal", 5: "Justiça do Trabalho", 6: "Justiça Eleitoral", 8: "Justiça Estadual" };
+const CNJ_RE = /\b(\d{7})-?(\d{2})\.?(\d{4})\.?(\d)\.?(\d{2})\.?(\d{4})\b/g;
+const fmtCnj = (m) => `${m[1]}-${m[2]}.${m[3]}.${m[4]}.${m[5]}.${m[6]}`;
+const tribunalDe = (m) => TRIB[`${m[4]}.${m[5]}`] || `${RAMO[m[4]] || "Tribunal"} ${m[5]}`;
+const semAcento = (t) => String(t).normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim();
+const parseData = (t) => { const m = String(t || "").match(/(\d{1,2})\/(\d{1,2})\/(\d{4})|(\d{4})-(\d{2})-(\d{2})/); if (!m) return null; const x = m[1] ? new Date(+m[3], m[2] - 1, +m[1], 12) : new Date(+m[4], m[5] - 1, +m[6], 12); return isNaN(x) ? null : x; };
+
+function casoImportado(n, o) {
+  return {
+    id: o.processo || `IMP-${String(n).padStart(4, "0")}`, nome: o.cliente || "Cliente não informado", area: o.area || "A classificar",
+    titulo: o.assunto || (o.processo ? `Processo ${o.tribunal || ""}`.trim() : "Caso importado"), atlas: "", origem: "Importado",
+    etapa: ETAPAS.find((e) => semAcento(e) === semAcento(o.etapa || "")) || "Caso ativo",
+    resumo: o.obs || "Importado da sua lista. Complete o resumo.", objetivo: "—",
+    cronologia: [], partes: [o.cliente, o.tribunal].filter(Boolean), docs: { ok: [], falta: [] },
+    questoes: [], normas: [], orientacoes: [], decidir: [],
+    prazos: o.prazo ? [{ data: o.prazo, o: o.providencia || "Prazo", f: o.tribunal || "" }] : [],
+  };
+}
+
+function lerLista(texto) {
+  texto = String(texto || "").trim(); if (!texto) return [];
+  if (texto[0] === "[") { try { return JSON.parse(texto).map((o, i) => casoImportado(i + 1, { ...o, prazo: parseData(o.prazo) })); } catch {} }
+  const linhas = texto.split(/\r?\n/).filter((l) => l.trim());
+  const sep = [";", "\t", ","].find((s) => linhas[0].includes(s)) || ";";
+  const cab = linhas[0].split(sep).map(semAcento);
+  const COL = { processo: /processo|numero|cnj/, cliente: /cliente|nome|parte|autor/, area: /area|materia/, assunto: /assunto|titulo|classe|objeto|acao/, tribunal: /tribunal|orgao|vara|juizo/, etapa: /etapa|situacao|status|fase/, prazo: /prazo|vencimento|data/, providencia: /providencia|tarefa|ato/, obs: /obs|resumo|nota/ };
+  const idx = {}; Object.entries(COL).forEach(([k, re]) => { const i = cab.findIndex((c) => re.test(c) && !Object.values(idx).includes(cab.indexOf(c))); if (i >= 0) idx[k] = i; });
+  const temCab = Object.keys(idx).length >= 2;
+  const casos = []; const vistos = new Set();
+  if (temCab) {
+    linhas.slice(1).forEach((l) => {
+      const v = l.split(sep).map((x) => x.trim().replace(/^"|"$/g, "")); const o = {};
+      Object.entries(idx).forEach(([k, i]) => (o[k] = v[i] || ""));
+      const m = [...(o.processo || l).matchAll(CNJ_RE)][0];
+      if (m) { o.processo = fmtCnj(m); o.tribunal = o.tribunal || tribunalDe(m); }
+      o.prazo = parseData(o.prazo);
+      if (o.processo && vistos.has(o.processo)) return; vistos.add(o.processo);
+      if (Object.values(o).some(Boolean)) casos.push(casoImportado(casos.length + 1, o));
+    });
+  } else {
+    linhas.forEach((l) => [...l.matchAll(CNJ_RE)].forEach((m) => {
+      const num = fmtCnj(m); if (vistos.has(num)) return; vistos.add(num);
+      const resto = l.replace(m[0], "").replace(/^[\s;,|\t-]+|[\s;,|\t-]+$/g, "");
+      casos.push(casoImportado(casos.length + 1, { processo: num, tribunal: tribunalDe(m), obs: resto, prazo: parseData(resto) }));
+    }));
+  }
+  return casos;
+}
+
+let importados = [];
+try { importados = (JSON.parse(localStorage.getItem(IMP_KEY) || "[]")).map(revive); } catch {}
+function revive(c) { c.prazos.forEach((p) => (p.data = new Date(p.data))); c.cronologia = c.cronologia.map(([t, x]) => [new Date(t), x]); if (c.consulta) c.consulta.quando = new Date(c.consulta.quando); return c; }
+if (importados.length) CASOS.splice(0, CASOS.length, ...importados);
+
 // Etapa de cada caso pode ser alterada aqui (fica salva neste navegador).
 const ETAPA_KEY = "pd-escritorio-etapas";
 let etapasSalvas = {};
 try { etapasSalvas = JSON.parse(localStorage.getItem(ETAPA_KEY) || "{}"); } catch {}
 CASOS.forEach((c) => { if (etapasSalvas[c.id]) c.etapa = etapasSalvas[c.id]; });
-function salvarEtapa(c) { etapasSalvas[c.id] = c.etapa; try { localStorage.setItem(ETAPA_KEY, JSON.stringify(etapasSalvas)); } catch {} }
+function salvarEtapa(c) { if (importados.includes(c)) { try { localStorage.setItem(IMP_KEY, JSON.stringify(importados)); } catch {} } salvarEtapaDemo(c); }
+function salvarEtapaDemo(c) { etapasSalvas[c.id] = c.etapa; try { localStorage.setItem(ETAPA_KEY, JSON.stringify(etapasSalvas)); } catch {} }
 
 const todosPrazos = () => CASOS.flatMap((c) => c.prazos.map((p) => ({ ...p, caso: c }))).sort((a, b) => a.data - b.data);
 const situacao = (p) => { const n = dias(p.data); return n < 0 ? ["vencido", "red"] : n <= 3 ? [`${n} dia(s)`, "red"] : n <= 7 ? [`${n} dias`, "amber"] : [`${n} dias`, "green"]; };
@@ -151,7 +209,7 @@ function abrirCaso(id) {
   const li = (a) => a.map((x) => `<li>${esc(x)}</li>`).join("");
   $("dossie").innerHTML = `
     <div class="panel wide"><h2>Resumo executivo</h2><p>${esc(c.resumo)}</p><p><b>Objetivo do cliente:</b> ${esc(c.objetivo)}</p>
-      <div class="codes"><span class="pill-s">Atlas ${esc(c.atlas)}</span>${c.dac ? `<span class="pill-s">DAC ${esc(c.dac)}</span>` : ""}</div></div>
+      <div class="codes">${c.atlas ? `<span class="pill-s">Atlas ${esc(c.atlas)}</span>` : ""}${c.dac ? `<span class="pill-s">DAC ${esc(c.dac)}</span>` : ""}</div></div>
     <div class="panel"><h2>Cronologia</h2><ul class="timeline-d">${c.cronologia.map(([t, x]) => `<li><time>${fmt(t)}</time><span>${esc(x)}</span></li>`).join("")}</ul></div>
     <div class="panel"><h2>Documentos</h2><ul class="docs-d">${c.docs.ok.map((x) => `<li>${esc(x)}</li>`).join("")}${c.docs.falta.map((x) => `<li class="missing">${esc(x)} — <i>pendente</i></li>`).join("")}</ul></div>
     <div class="panel"><h2>Questões jurídicas identificadas</h2><ul>${li(c.questoes)}</ul></div>
@@ -169,6 +227,18 @@ document.addEventListener("click", (e) => {
   const b = e.target.closest("[data-caso]"); if (b) return abrirCaso(b.dataset.caso);
   const n = e.target.closest(".nav"); if (n) go(n.dataset.view);
 });
+$("imp-arquivo").onchange = async (e) => { const f = e.target.files[0]; if (f) $("imp-texto").value = await f.text(); };
+$("imp-ok").onclick = () => {
+  const novos = lerLista($("imp-texto").value);
+  if (!novos.length) { $("imp-msg").textContent = "Não encontrei processos nesse texto. Confira se há números CNJ ou um cabeçalho com colunas."; return; }
+  importados = novos; try { localStorage.setItem(IMP_KEY, JSON.stringify(importados)); } catch {}
+  CASOS.splice(0, CASOS.length, ...importados);
+  $("imp-msg").textContent = `${novos.length} caso(s) importado(s). Os exemplos fictícios foram ocultados.`;
+  document.querySelector(".demo-note").textContent = "Seus casos importados — guardados só neste navegador.";
+  renderAll();
+};
+$("imp-limpar").onclick = () => { try { localStorage.removeItem(IMP_KEY); } catch {} location.reload(); };
+if (importados.length) document.querySelector(".demo-note").textContent = "Seus casos importados — guardados só neste navegador.";
 $("voltar").onclick = () => go("funil");
 $("busca").oninput = (e) => renderFunil(e.target.value);
 renderAll();
