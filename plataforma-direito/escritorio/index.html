@@ -21,6 +21,7 @@
     <button class="nav" data-view="funil">Casos</button>
     <button class="nav" data-view="crm">Clientes</button>
     <button class="nav" data-view="docs">Documentos</button>
+    <button class="nav" data-view="fin">Financeiro</button>
     <button class="nav" data-view="prazos">Prazos</button>
     <button class="nav" data-view="acomp">Acompanhamento</button>
     <button class="nav" data-view="djen">Publicações (DJEN)</button>
@@ -192,6 +193,40 @@
       <p class="small muted">Você pode editar o texto abaixo antes de baixar. Revise sempre antes de assinar.</p>
       <article id="doc-texto" class="doc-folha" contenteditable="true"></article>
     </div>
+  </section>
+
+  <section id="v-fin" class="oview">
+    <header class="ohead"><div><p class="eyebrow">Honorários, recebimentos e despesas · só neste navegador</p><h1>Financeiro</h1></div>
+      <input type="month" id="fin-mes" class="search" style="min-width:0"></header>
+    <div class="kpis" id="fin-kpis"></div>
+    <div class="two">
+      <form class="panel" id="fin-hon">
+        <h2>Honorários (gera as parcelas)</h2>
+        <div class="crm-grid">
+          <label>Caso / cliente<select id="fh-vinculo" class="search"></select></label>
+          <label>Valor total (R$)<input id="fh-valor" class="search" inputmode="decimal" required placeholder="5.000,00"></label>
+          <label>Parcelas<input id="fh-n" class="search" type="number" min="1" max="48" value="1"></label>
+          <label>1º vencimento<input id="fh-venc" class="search" type="date" required></label>
+          <label class="wide">Descrição<input id="fh-desc" class="search" placeholder="Honorários contratuais — ação X" required></label>
+        </div>
+        <div><button class="btn" type="submit">Gerar parcelas</button></div>
+      </form>
+      <form class="panel" id="fin-lanc">
+        <h2>Lançamento avulso</h2>
+        <div class="crm-grid">
+          <label>Tipo<select id="fl-tipo" class="search"><option value="receita">Recebimento</option><option value="despesa">Despesa</option></select></label>
+          <label>Valor (R$)<input id="fl-valor" class="search" inputmode="decimal" required></label>
+          <label>Data<input id="fl-data" class="search" type="date" required></label>
+          <label>Categoria<select id="fl-cat" class="search"><option>Honorários</option><option>Êxito</option><option>Consulta</option><option>Custas (reembolsável)</option><option>Aluguel / escritório</option><option>Sistemas e assinaturas</option><option>Impostos</option><option>Outros</option></select></label>
+          <label class="wide">Descrição<input id="fl-desc" class="search" required></label>
+          <label>Caso / cliente<select id="fl-vinculo" class="search"></select></label>
+          <label style="flex-direction:row;display:flex;gap:6px;align-items:center"><input type="checkbox" id="fl-pago" checked> Já pago</label>
+        </div>
+        <div><button class="btn" type="submit">Lançar</button></div>
+      </form>
+    </div>
+    <div class="panel"><div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:center"><h2>Lançamentos do mês</h2><button class="back" id="fin-csv">Exportar planilha (CSV)</button></div>
+      <table class="table"><thead><tr><th>Vencimento</th><th>Descrição</th><th>Valor</th><th>Situação</th><th></th></tr></thead><tbody id="fin-tab"></tbody></table></div>
   </section>
 
   <section id="v-acomp" class="oview">

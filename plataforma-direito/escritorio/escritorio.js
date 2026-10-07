@@ -713,6 +713,77 @@ function areaPrazo(a) {
 document.querySelectorAll("[data-pz-area]").forEach((b) => (b.onclick = () => areaPrazo(b.dataset.pzArea)));
 areaPrazo("civel");
 
+// Financeiro: honorários parcelados, recebimentos e despesas; guardado neste navegador.
+const FIN_KEY = "pd-financeiro";
+let fin = [];
+try { fin = JSON.parse(localStorage.getItem(FIN_KEY) || "[]"); } catch {}
+const salvarFin = () => { try { localStorage.setItem(FIN_KEY, JSON.stringify(fin)); } catch {} };
+const numBR = (t) => { const s = String(t || "").trim(); const n = /,\d{1,2}$/.test(s) ? s.replace(/\./g, "").replace(",", ".") : s.replace(/,/g, ""); return Math.round(parseFloat(n) * 100) / 100 || 0; };
+const reaisBR = (v) => (+v || 0).toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+const addMes = (isoD, n) => { const [a, m, d] = isoD.split("-").map(Number); const x = new Date(a, m - 1 + n, d, 12); if (x.getDate() !== d) x.setDate(0); return iso(x); };
+function nomeVinculo(v) { if (!v) return ""; const [t, id] = v.split(/:(.+)/); return (t === "caso" ? CASOS.find((c) => c.id === id) : clientes.find((c) => c.id === id))?.nome || ""; }
+function renderFin() {
+  const mes = $("fin-mes").value, hojeIso = iso(hoje);
+  const doMes = fin.filter((l) => (l.pago || l.venc).slice(0, 7) === mes || l.venc.slice(0, 7) === mes);
+  const soma = (arr) => arr.reduce((t, l) => t + l.valor, 0);
+  const recebido = soma(fin.filter((l) => l.tipo === "receita" && l.pago && l.pago.slice(0, 7) === mes));
+  const aReceber = soma(fin.filter((l) => l.tipo === "receita" && !l.pago && l.venc.slice(0, 7) === mes));
+  const atrasado = soma(fin.filter((l) => l.tipo === "receita" && !l.pago && l.venc < hojeIso));
+  const despesas = soma(fin.filter((l) => l.tipo === "despesa" && (l.pago || l.venc).slice(0, 7) === mes));
+  $("fin-kpis").innerHTML = [["Recebido no mês", recebido, ""], ["A receber no mês", aReceber, ""], ["Em atraso (total)", atrasado, atrasado ? "alert" : ""], ["Despesas do mês", despesas, ""], ["Resultado do mês", recebido - despesas, ""]]
+    .map(([t, v, cl]) => `<div class="kpi ${cl}"><span class="muted small">${t}</span><strong style="font-size:1.4rem">${reaisBR(v)}</strong></div>`).join("");
+  $("fin-tab").innerHTML = doMes.sort((a, b) => a.venc.localeCompare(b.venc)).map((l) => {
+    const atras = !l.pago && l.venc < hojeIso;
+    const sit = l.pago ? `<span class="pill-s green">${l.tipo === "receita" ? "recebido" : "pago"} ${fmt(new Date(l.pago + "T12:00"))}</span>` : `<span class="pill-s ${atras ? "red" : "amber"}">${atras ? "atrasado" : "em aberto"}</span>`;
+    return `<tr data-fin="${l.id}"><td>${fmt(new Date(l.venc + "T12:00"))}</td><td>${esc(l.desc)}${l.parcela ? ` <span class="small muted">(${l.parcela})</span>` : ""}<br><span class="small muted">${esc(l.cat || "")}${nomeVinculo(l.vinculo) ? " · " + esc(nomeVinculo(l.vinculo)) : ""}</span></td>
+      <td class="v-${l.tipo}">${l.tipo === "despesa" ? "−" : ""}${reaisBR(l.valor)}</td><td>${sit}</td>
+      <td><div class="fin-acoes small">${l.pago ? `<button class="linkish small" data-fa="desfazer">desfazer</button>` : `<button class="linkish small" data-fa="pagar">${l.tipo === "receita" ? "receber" : "pagar"}</button>`}${l.tipo === "receita" ? `<button class="linkish small" data-fa="recibo">recibo</button>` : ""}${l.tipo === "receita" && !l.pago ? `<button class="linkish small" data-fa="cobrar">cobrar no WhatsApp</button>` : ""}<button class="linkish small" data-fa="del" style="color:#b42318">excluir</button></div></td></tr>`;
+  }).join("") || `<tr><td colspan="5" class="muted">Nenhum lançamento neste mês.</td></tr>`;
+}
+const opcoesFin = () => { opcoesVinculo(); $("fh-vinculo").innerHTML = $("fl-vinculo").innerHTML = $("t-vinculo").innerHTML; };
+$("fh-vinculo").onfocus = $("fl-vinculo").onfocus = () => { const a = $("fh-vinculo").value, b = $("fl-vinculo").value; opcoesFin(); $("fh-vinculo").value = a; $("fl-vinculo").value = b; };
+$("fin-hon").onsubmit = (e) => {
+  e.preventDefault();
+  const total = numBR($("fh-valor").value), n = Math.max(1, +$("fh-n").value || 1);
+  const base = Math.floor(total / n * 100) / 100, resto = Math.round((total - base * n) * 100) / 100;
+  for (let i = 0; i < n; i++) fin.push({ id: "F-" + Date.now().toString(36) + i, tipo: "receita", cat: "Honorários", desc: $("fh-desc").value.trim(), valor: i === 0 ? Math.round((base + resto) * 100) / 100 : base,
+    venc: addMes($("fh-venc").value, i), pago: null, vinculo: $("fh-vinculo").value, parcela: n > 1 ? `${i + 1}/${n}` : "" });
+  salvarFin(); $("fin-mes").value = $("fh-venc").value.slice(0, 7); $("fh-valor").value = ""; renderFin();
+};
+$("fin-lanc").onsubmit = (e) => {
+  e.preventDefault();
+  fin.push({ id: "F-" + Date.now().toString(36), tipo: $("fl-tipo").value, cat: $("fl-cat").value, desc: $("fl-desc").value.trim(), valor: numBR($("fl-valor").value), venc: $("fl-data").value, pago: $("fl-pago").checked ? $("fl-data").value : null, vinculo: $("fl-vinculo").value });
+  salvarFin(); $("fl-valor").value = ""; $("fl-desc").value = ""; renderFin();
+};
+$("fin-tab").addEventListener("click", (e) => {
+  const b = e.target.closest("[data-fa]"); if (!b) return;
+  const l = fin.find((x) => x.id === b.closest("[data-fin]").dataset.fin), acao = b.dataset.fa;
+  if (acao === "pagar") l.pago = iso(hoje);
+  if (acao === "desfazer") l.pago = null;
+  if (acao === "del") fin = fin.filter((x) => x !== l);
+  if (acao === "recibo") {
+    const D = window.DocGerador; const nome = nomeVinculo(l.vinculo) || "[NOME DO CLIENTE]";
+    const cli = clientes.find((c) => c.nome === nome) || {};
+    const html = D.MODELOS.recibo.gerar({ nome, tipo: "pf", doc: cli.cpf || "[CPF]" }, { valor: String(l.valor).replace(".", ","), referente: `da prestação de serviços jurídicos (${l.desc}${l.parcela ? `, parcela ${l.parcela}` : ""})`, cidade: D.adv().cidade });
+    const w = open("", "_blank"); w.document.write(`<html><head><meta charset="utf-8"><title>Recibo</title><style>body{font:12pt/1.6 "Times New Roman",serif;max-width:700px;margin:40px auto;padding:0 24px}h3{text-align:center}p{text-align:justify}.ass{text-align:center;margin-top:48px}</style></head><body>${html}<script>print()<\/script></body></html>`); w.document.close();
+  }
+  if (acao === "cobrar") {
+    const cli = clientes.find((c) => c.nome === nomeVinculo(l.vinculo));
+    if (!cli || !telWa(cli.tel)) { alert("Cadastre o WhatsApp do cliente em Clientes."); return; }
+    const txt = `Olá, ${primeiroNome(cli.nome)}! Lembrete: a parcela ${l.parcela || ""} dos honorários (${reaisBR(l.valor)}) vence em ${fmt(new Date(l.venc + "T12:00"))}. Qualquer dúvida, estou à disposição.`;
+    open(`https://wa.me/${telWa(cli.tel)}?text=${encodeURIComponent(txt)}`, "_blank", "noopener");
+    (cli.hist ||= []).unshift({ em: new Date().toISOString(), o: "WhatsApp: cobrança de parcela" }); salvarCrm();
+  }
+  salvarFin(); renderFin();
+});
+$("fin-csv").onclick = () => {
+  const linhas = [["Tipo", "Vencimento", "Pago em", "Descrição", "Parcela", "Categoria", "Cliente/caso", "Valor"], ...fin.map((l) => [l.tipo, l.venc, l.pago || "", l.desc, l.parcela || "", l.cat || "", nomeVinculo(l.vinculo), String(l.valor).replace(".", ",")])];
+  const csv = "\ufeff" + linhas.map((r) => r.map((c) => `"${String(c).replace(/"/g, '""')}"`).join(";")).join("\n");
+  const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([csv], { type: "text/csv" })); a.download = "financeiro.csv"; document.body.appendChild(a); a.click(); a.remove();
+};
+$("fin-mes").value = iso(hoje).slice(0, 7); $("fin-mes").onchange = renderFin;
+$("fh-venc").value = $("fl-data").value = iso(hoje); opcoesFin(); renderFin();
+
 $("voltar").onclick = () => go("funil");
 $("busca").oninput = (e) => renderFunil(e.target.value);
 renderAll();

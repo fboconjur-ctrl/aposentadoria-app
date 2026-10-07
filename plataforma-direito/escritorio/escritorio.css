@@ -110,3 +110,6 @@ body.office { display: grid; grid-template-columns: 240px minmax(0, 1fr); min-he
 .ag-dia.hoje { color: var(--brand); font-weight: 700; }
 .ag-item .acoes-ag { display: flex; gap: 12px; flex-wrap: wrap; }
 [hidden] { display: none !important; }
+
+.v-receita { color: var(--ok); font-weight: 600; } .v-despesa { color: #b42318; font-weight: 600; }
+.fin-acoes { display: flex; gap: 10px; flex-wrap: wrap; }
