@@ -191,7 +191,7 @@
   dz.ondrop = (e) => { e.preventDefault(); dz.classList.remove("over"); processar([...e.dataTransfer.files]); };
 
   // ---------- kit da ação ----------
-  const KIT = [["procuracao", "Procuração", true], ["contrato", "Contrato de honorários", true], ["hipossuficiencia", "Declaração de hipossuficiência", false], ["peticao", "Minuta da petição (pedido pronto para o Claude)", true], ["checklist", "Checklist de documentos", true]];
+  const KIT = [["procuracao", "Procuração", true], ["contrato", "Contrato de honorários", true], ["hipossuficiencia", "Declaração de hipossuficiência", false], ["peticao", "Minuta da petição (pedido pronto para o Claude)", true], ["checklist", "Checklist de documentos", true], ["protocolo", "Ficha de protocolo PJe (e instruções para o Claude)", true]];
   $("kit-opcoes").innerHTML = KIT.map(([k, n, on]) => `<label><input type="checkbox" value="${k}"${on ? " checked" : ""}> ${n}</label>`).join("");
   const docHtml = (corpo) => `<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word"><head><meta charset="utf-8"><style>body{font:12pt/1.5 "Times New Roman",serif}h3{text-align:center}p{text-align:justify}.ass{text-align:center;margin-top:36pt}</style></head><body>${corpo}</body></html>`;
   $("kit-gerar").onclick = async () => {
@@ -212,6 +212,41 @@
       `Petição: monte a petição inicial com a skill "peticao".\n\nCLIENTE (autor):\n${["Nome: " + p.nome, p.nac && "Nacionalidade: " + p.nac, p.civil && "Estado civil: " + p.civil, p.prof && "Profissão: " + p.prof, p.rg && "RG: " + p.rg, p.doc && "CPF/CNPJ: " + p.doc, p.end && "Endereço: " + p.end].filter(Boolean).join("\n")}\n\nRÉU: ${reu || "[informar]"}\nCIDADE/FORO PRETENDIDO: ${foro}\n\nHISTÓRIA DO CASO:\n${hist || "[narrar]"}\n\nUse a jurisprudência do tribunal desse foro, verificada com link. Salve a petição no meu Google Drive.`);
     if (escolhidos.includes("checklist")) pasta.file(n(i++, "Checklist.txt"),
       `KIT DA AÇÃO — ${p.nome}${reu ? " x " + reu : ""}\nGerado em ${new Date().toLocaleString("pt-BR")}\n\nDOCUMENTOS DO CLIENTE\n[${p.doc ? "x" : " "}] CPF\n[${p.rg ? "x" : " "}] RG / CNH\n[${p.end ? "x" : " "}] Comprovante de endereço\n[ ] Provas do fato (contratos, prints, notas, protocolos)\n\nPARA ASSINAR\n[ ] Procuração\n[ ] Contrato de honorários (preencher valores)\n${escolhidos.includes("hipossuficiencia") ? "[ ] Declaração de hipossuficiência\n" : ""}\nPETIÇÃO\n[ ] Colar o arquivo "Pedido da petição" no Claude e revisar a minuta\n[ ] Conferir o quadro de verificação da jurisprudência\n[ ] Completar os campos [COMPLETAR]\n`);
+    if (escolhidos.includes("protocolo")) {
+      const docsCli = [...($("dz-input").files || [])].map((f) => f.name);
+      const anexos = [["Petição inicial", "petição final em PDF, revisada por você (a assinatura é feita no próprio PJe)"],
+        ["Procuração", "01 - Procuração (assinada pelo cliente)"],
+        ...docsCli.map((n) => [/comprov|conta|fatura|endere/i.test(n) ? "Comprovante de residência" : /cpf|rg|cnh|ident/i.test(n) ? "Documento de identificação" : "Outros documentos", "Documentos do cliente/" + n]),
+        ...(escolhidos.includes("hipossuficiencia") || $("kit-grat").checked ? [["Declaração de hipossuficiência", "Declaração de hipossuficiência (assinada)"]] : []),
+        ["Outros documentos", "provas do caso (contratos, prints, laudos, protocolos)"]];
+      const pedidos = [$("kit-grat").checked && "Justiça gratuita", $("kit-tutela").checked && "Tutela de urgência / liminar", $("kit-prior").checked && "Prioridade de tramitação", $("kit-segredo").checked && "Segredo de justiça"].filter(Boolean);
+      pasta.file(n(i++, "Ficha de protocolo PJe.txt"),
+`FICHA DE PROTOCOLO — PJe
+Use com a skill "protocolo-pje" no Claude Desktop (com o Claude in Chrome): "Protocole este kit no PJe".
+
+TRIBUNAL / SISTEMA: ${$("kit-trib").value || "[escolher]"}
+FORO / COMARCA: ${foro}
+CLASSE PROCESSUAL: [confirmar na Tabela Processual Unificada do CNJ no próprio PJe]
+ASSUNTO: [confirmar na TPU — ${reu ? "ação em face de " + reu : "conforme a petição"}]
+VALOR DA CAUSA: ${$("kit-valor").value ? "R$ " + $("kit-valor").value : "[conforme a petição]"}
+PEDIDOS NA AUTUAÇÃO: ${pedidos.join("; ") || "nenhum"}
+
+POLO ATIVO
+- ${p.nome} — ${p.tipo === "pj" ? "CNPJ" : "CPF"} ${p.doc}${p.end ? " — " + p.end : ""}
+  Advogada: ${adv.nome} — OAB ${adv.oab}
+
+POLO PASSIVO
+- ${reu || "[réu]"} — [CPF/CNPJ do réu, se souber; o PJe permite buscar pelo nome]
+
+ANEXOS (nesta ordem; tipo de documento no PJe → arquivo)
+${anexos.map(([t, a], k) => `${k + 1}. ${t} → ${a}`).join("\n")}
+
+REGRAS PARA O ROBÔ
+- Preencher e anexar; NUNCA clicar em "Assinar" ou "Protocolar": parar e chamar a advogada.
+- Nunca digitar PIN/senha do token ou do certificado.
+- Se algum campo não bater com a ficha, parar e perguntar.
+`);
+    }
     for (const f of $("dz-input").files || []) pasta.folder("Documentos do cliente").file(f.name, f);
     const blob = await zip.generateAsync({ type: "blob" });
     const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = `Kit - ${p.nome}.zip`; document.body.appendChild(a); a.click(); a.remove();

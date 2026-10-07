@@ -164,6 +164,9 @@
       <div class="crm-grid" style="margin-top:8px">
         <label>Réu / parte contrária<input id="kit-reu" class="search"></label>
         <label>Cidade onde a ação será proposta<input id="kit-foro" class="search"></label>
+        <label>Tribunal / sistema<select id="kit-trib" class="search"><option value="">— escolher —</option><option>TJDFT — PJe 1º grau</option><option>TJDFT — Juizado Especial (PJe)</option><option>TRT10 — PJe-JT</option><option>TRF1 — PJe (Justiça Federal / JEF)</option><option>TJPB — PJe</option><option>Outro</option></select></label>
+        <label>Valor da causa (R$)<input id="kit-valor" class="search" inputmode="decimal"></label>
+        <label class="wide" style="display:flex;gap:16px;flex-wrap:wrap"><span><input type="checkbox" id="kit-grat"> Justiça gratuita</span><span><input type="checkbox" id="kit-tutela"> Tutela de urgência / liminar</span><span><input type="checkbox" id="kit-prior"> Prioridade (idoso, doença grave, PcD)</span><span><input type="checkbox" id="kit-segredo"> Segredo de justiça</span></label>
       </div>
       <h2 style="margin-top:12px">3. O que vai no kit</h2>
       <div class="kit-opcoes" id="kit-opcoes"></div>
