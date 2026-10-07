@@ -669,6 +669,37 @@ $("ag-lista").addEventListener("click", (e) => {
 });
 $("ag-data").value = iso(hoje); $("ag-vinculo").innerHTML = $("t-vinculo").innerHTML; renderAgenda();
 
+// Calculadora de prazos (prazos-calc.js) + lançamento no caso e na lista de tarefas.
+const PZ_EXTRAS_KEY = "pd-feriados-locais";
+try { $("pz-extras").value = localStorage.getItem(PZ_EXTRAS_KEY) || ""; } catch {}
+const lerExtras = () => new Map($("pz-extras").value.split("\n").map((l) => l.match(/(\d{2})\/(\d{2})\/(\d{4})\s*(.*)/)).filter(Boolean).map((m) => [`${m[3]}-${m[2]}-${m[1]}`, m[4] || "feriado local / suspensão"]));
+const brData = (k) => k.split("-").reverse().join("/");
+let ultimoPrazo = null;
+$("pz-caso").onfocus = () => { $("pz-caso").innerHTML = `<option value="">— só calcular —</option>` + CASOS.map((c) => `<option value="${esc(c.id)}">${esc(c.nome)} · ${esc(c.titulo)}</option>`).join(""); };
+$("pz-form").onsubmit = (e) => {
+  e.preventDefault();
+  try { localStorage.setItem(PZ_EXTRAS_KEY, $("pz-extras").value); } catch {}
+  const r = Prazos.calcular({ marco: $("pz-data").value, tipoMarco: $("pz-tipo").value, dias: $("pz-dias").value, contagem: $("pz-contagem").value,
+    dobro: $("pz-dobro").checked, recesso: $("pz-recesso").checked, forenses: $("pz-forenses").checked, extras: lerExtras() });
+  ultimoPrazo = r;
+  const venc = new Date(r.vencimento + "T12:00");
+  $("pz-res").hidden = false;
+  $("pz-res").innerHTML = `<div class="kpi alert" style="margin-top:12px"><span class="muted small">Vencimento</span><strong>${venc.toLocaleDateString("pt-BR", { weekday: "long", day: "2-digit", month: "2-digit", year: "numeric" })}</strong><span class="small">${dias(venc)} dia(s) a partir de hoje</span></div>
+    <ol class="small" style="margin:12px 0">${r.passos.map(([t, d]) => `<li><b>${brData(d)}</b> — ${esc(t)}</li>`).join("")}</ol>
+    ${r.pulos.length ? `<details class="small"><summary>${r.pulos.length} dia(s) não contado(s)</summary><ul>${r.pulos.map(([d, m]) => `<li>${brData(d)} — ${esc(m)}</li>`).join("")}</ul></details>` : ""}
+    <p class="small muted">Confira no calendário do tribunal: feriados locais, pontos facultativos e suspensões de expediente variam e não são calculados sem que você os informe acima. A data é uma conferência, não substitui a sua verificação.</p>
+    <div style="display:flex;gap:10px;flex-wrap:wrap"><button type="button" class="btn" id="pz-lancar">Lançar no caso + criar tarefa</button></div>`;
+  $("pz-lancar").onclick = () => {
+    const prov = $("pz-prov").value.trim() || "Prazo";
+    const caso = CASOS.find((c) => c.id === $("pz-caso").value);
+    if (caso) { caso.prazos.push({ data: venc, o: prov, f: `${$("pz-dias").value} dias ${$("pz-contagem").value === "corridos" ? "corridos" : "úteis"} a partir de ${brData($("pz-data").value)}` }); if (importados.includes(caso)) try { localStorage.setItem(IMP_KEY, JSON.stringify(importados)); } catch {} }
+    tarefas.push({ id: "T-" + Date.now().toString(36), texto: `${prov} — vence ${brData(r.vencimento)}`, quando: r.vencimento, prio: "1", vinculo: caso ? `caso:${caso.id}` : "", feita: false, criada: new Date().toISOString() });
+    salvarTarefas(); renderAll(); renderTarefas();
+    $("pz-lancar").replaceWith(Object.assign(document.createElement("span"), { className: "small", textContent: caso ? "Lançado no caso e na lista de tarefas." : "Tarefa criada (nenhum caso escolhido)." }));
+  };
+};
+$("pz-data").value = iso(hoje);
+
 $("voltar").onclick = () => go("funil");
 $("busca").oninput = (e) => renderFunil(e.target.value);
 renderAll();

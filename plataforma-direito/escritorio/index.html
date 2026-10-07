@@ -86,6 +86,24 @@
 
   <section id="v-prazos" class="oview">
     <header class="ohead"><div><p class="eyebrow">Controle</p><h1>Prazos</h1></div></header>
+    <form class="panel" id="pz-form">
+      <h2>Calcular prazo</h2>
+      <div class="crm-grid">
+        <label>A partir de<select id="pz-tipo" class="search"><option value="disponibilizacao">Disponibilização no DJEN/DJe</option><option value="publicacao">Publicação</option><option value="intimacao">Intimação / ciência</option><option value="portal">Intimação no portal (ciência em 10 dias)</option></select></label>
+        <label>Data<input id="pz-data" class="search" type="date" required></label>
+        <label>Prazo (dias)<input id="pz-dias" class="search" type="number" min="1" value="15" required></label>
+        <label>Contagem<select id="pz-contagem" class="search"><option value="uteis">Dias úteis (CPC, art. 219)</option><option value="corridos">Dias corridos</option></select></label>
+        <label class="wide" style="display:flex;gap:18px;flex-wrap:wrap;align-items:center">
+          <span><input type="checkbox" id="pz-dobro"> Prazo em dobro (Fazenda, MP, Defensoria, litisconsortes em autos físicos)</span>
+          <span><input type="checkbox" id="pz-recesso" checked> Recesso 20/12–20/01</span>
+          <span><input type="checkbox" id="pz-forenses" checked> Carnaval, Quinta-feira Santa, Corpus Christi e Dia da Justiça</span></label>
+        <label class="wide">Feriados locais e suspensões do tribunal (um por linha: dd/mm/aaaa motivo) — ficam salvos<textarea id="pz-extras" rows="2" class="search" placeholder="28/10/2026 Dia do Servidor (TJDFT)"></textarea></label>
+        <label class="wide">Providência<input id="pz-prov" class="search" placeholder="Ex.: Réplica, Contrarrazões, Embargos de declaração"></label>
+        <label>Caso<select id="pz-caso" class="search"></select></label>
+      </div>
+      <div><button class="btn" type="submit">Calcular</button></div>
+      <div id="pz-res" hidden></div>
+    </form>
     <div class="panel"><table class="table"><thead><tr><th>Prazo</th><th>Caso</th><th>Providência</th><th>Fundamento</th><th>Situação</th></tr></thead><tbody id="tab-prazos"></tbody></table></div>
   </section>
 
@@ -230,6 +248,7 @@
     <div class="dossie" id="dossie"></div>
   </section>
 </main>
+<script src="prazos-calc.js"></script>
 <script src="escritorio.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script src="leitura-docs.js"></script>
