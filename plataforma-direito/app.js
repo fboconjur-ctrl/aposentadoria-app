@@ -357,10 +357,11 @@ $("b2b-form").onsubmit = async (e) => {
 };
 
 // Calculadoras públicas (prazo processual e prescrição penal).
-Calculadoras.prazo($("calc-prazo"));
+Calculadoras.prazo($("calc-civel"), "civel");
+Calculadoras.prazo($("calc-penal"), "penal");
 Calculadoras.prescricao($("calc-prescricao"));
 document.querySelectorAll("[data-calc]").forEach((b) => (b.onclick = () => {
   document.querySelectorAll("[data-calc]").forEach((x) => x.classList.toggle("on", x === b));
-  $("calc-prazo").hidden = b.dataset.calc !== "prazo"; $("calc-prescricao").hidden = b.dataset.calc !== "prescricao";
+  document.querySelectorAll(".calc-painel").forEach((p) => (p.hidden = p.id !== "calc-" + b.dataset.calc));
 }));
 $("calc-advogado").onclick = () => { state.text = state.text || "Dúvida sobre prazo ou prescrição (calculadora)"; state.key = null; state.flow = null; state.answers = []; openLawyer(); };

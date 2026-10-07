@@ -692,7 +692,7 @@ $("pz-form").onsubmit = (e) => {
   $("pz-lancar").onclick = () => {
     const prov = $("pz-prov").value.trim() || "Prazo";
     const caso = CASOS.find((c) => c.id === $("pz-caso").value);
-    if (caso) { caso.prazos.push({ data: venc, o: prov, f: `${$("pz-dias").value} dias ${$("pz-contagem").value === "corridos" ? "corridos" : "úteis"} a partir de ${brData($("pz-data").value)}` }); if (importados.includes(caso)) try { localStorage.setItem(IMP_KEY, JSON.stringify(importados)); } catch {} }
+    if (caso) { caso.prazos.push({ data: venc, o: prov, f: `${$("pz-dias").value} dias ${$("pz-contagem").value === "penal" ? "corridos (CPP, art. 798)" : "úteis"} a partir de ${brData($("pz-data").value)}` }); if (importados.includes(caso)) try { localStorage.setItem(IMP_KEY, JSON.stringify(importados)); } catch {} }
     tarefas.push({ id: "T-" + Date.now().toString(36), texto: `${prov} — vence ${brData(r.vencimento)}`, quando: r.vencimento, prio: "1", vinculo: caso ? `caso:${caso.id}` : "", feita: false, criada: new Date().toISOString() });
     salvarTarefas(); renderAll(); renderTarefas();
     $("pz-lancar").replaceWith(Object.assign(document.createElement("span"), { className: "small", textContent: caso ? "Lançado no caso e na lista de tarefas." : "Tarefa criada (nenhum caso escolhido)." }));
@@ -700,7 +700,18 @@ $("pz-form").onsubmit = (e) => {
 };
 $("pz-data").value = iso(hoje);
 Calculadoras.prescricao($("esc-prescricao"));
-$("pz-contagem").onchange = () => { if ($("pz-contagem").value === "penal") $("pz-recesso").parentElement.lastChild.textContent = " Suspensão 20/12–20/01 (CPP, art. 798-A) — desmarque se réu preso, Maria da Penha ou urgente"; };
+const PZ_AREA = {
+  civel: { regra: "<b>Cível, trabalhista, Juizado e previdenciário:</b> dias úteis (CPC, art. 219); exclui o dia do começo e inclui o do vencimento (art. 224).", recesso: "Recesso 20/12–20/01 (CPC, art. 220)", dobro: "Prazo em dobro (Fazenda, MP, Defensoria, litisconsortes em autos físicos)" },
+  penal: { regra: "<b>Penal:</b> dias corridos (CPP, art. 798) — fins de semana e feriados contam; começa no 1º dia útil após a intimação (Súmula 310/STF); vencimento em dia sem expediente prorroga.", recesso: "Suspensão 20/12–20/01 (CPP, art. 798-A) — desmarque se réu preso, Maria da Penha ou medida urgente", dobro: "Defensoria Pública (prazo em dobro)" },
+};
+function areaPrazo(a) {
+  document.querySelectorAll("[data-pz-area]").forEach((b) => b.classList.toggle("on", b.dataset.pzArea === a));
+  $("pz-contagem").value = a === "penal" ? "penal" : "uteis";
+  $("pz-regra").innerHTML = PZ_AREA[a].regra; $("pz-recesso-txt").textContent = PZ_AREA[a].recesso; $("pz-dobro-txt").textContent = PZ_AREA[a].dobro;
+  $("pz-presc-box").hidden = a !== "penal"; $("pz-res").hidden = true;
+}
+document.querySelectorAll("[data-pz-area]").forEach((b) => (b.onclick = () => areaPrazo(b.dataset.pzArea)));
+areaPrazo("civel");
 
 $("voltar").onclick = () => go("funil");
 $("busca").oninput = (e) => renderFunil(e.target.value);

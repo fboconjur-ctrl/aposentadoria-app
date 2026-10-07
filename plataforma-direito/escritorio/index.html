@@ -88,14 +88,16 @@
     <header class="ohead"><div><p class="eyebrow">Controle</p><h1>Prazos</h1></div></header>
     <form class="panel" id="pz-form">
       <h2>Calcular prazo</h2>
+      <div class="calc-abas"><button type="button" class="on" data-pz-area="civel">Cível, trabalhista e Juizado</button><button type="button" data-pz-area="penal">Penal</button></div>
+      <p class="calc-regra" id="pz-regra"></p>
       <div class="crm-grid">
         <label>A partir de<select id="pz-tipo" class="search"><option value="disponibilizacao">Disponibilização no DJEN/DJe</option><option value="publicacao">Publicação</option><option value="intimacao">Intimação / ciência</option><option value="portal">Intimação no portal (ciência em 10 dias)</option></select></label>
         <label>Data<input id="pz-data" class="search" type="date" required></label>
         <label>Prazo (dias)<input id="pz-dias" class="search" type="number" min="1" value="15" required></label>
-        <label>Contagem<select id="pz-contagem" class="search"><option value="uteis">Dias úteis (CPC, art. 219)</option><option value="penal">Penal — dias corridos (CPP, art. 798)</option><option value="corridos">Dias corridos</option></select></label>
+        <input type="hidden" id="pz-contagem" value="uteis">
         <label class="wide" style="display:flex;gap:18px;flex-wrap:wrap;align-items:center">
-          <span><input type="checkbox" id="pz-dobro"> Prazo em dobro (Fazenda, MP, Defensoria, litisconsortes em autos físicos)</span>
-          <span><input type="checkbox" id="pz-recesso" checked> Recesso 20/12–20/01</span>
+          <span><input type="checkbox" id="pz-dobro"> <span id="pz-dobro-txt">Prazo em dobro (Fazenda, MP, Defensoria, litisconsortes em autos físicos)</span></span>
+          <span><input type="checkbox" id="pz-recesso" checked> <span id="pz-recesso-txt">Recesso 20/12–20/01 (CPC, art. 220)</span></span>
           <span><input type="checkbox" id="pz-forenses" checked> Carnaval, Quinta-feira Santa, Corpus Christi e Dia da Justiça</span></label>
         <label class="wide">Feriados locais e suspensões do tribunal (um por linha: dd/mm/aaaa motivo) — ficam salvos<textarea id="pz-extras" rows="2" class="search" placeholder="28/10/2026 Dia do Servidor (TJDFT)"></textarea></label>
         <label class="wide">Providência<input id="pz-prov" class="search" placeholder="Ex.: Réplica, Contrarrazões, Embargos de declaração"></label>
@@ -104,7 +106,7 @@
       <div><button class="btn" type="submit">Calcular</button></div>
       <div id="pz-res" hidden></div>
     </form>
-    <details class="panel"><summary><b>Prescrição penal</b> <span class="small muted">(CP, arts. 109, 110, 115 e 117)</span></summary><div id="esc-prescricao" style="margin-top:12px"></div></details>
+    <details class="panel" id="pz-presc-box" hidden><summary><b>Prescrição penal</b> <span class="small muted">(CP, arts. 109, 110, 115 e 117)</span></summary><div id="esc-prescricao" style="margin-top:12px"></div></details>
     <div class="panel"><table class="table"><thead><tr><th>Prazo</th><th>Caso</th><th>Providência</th><th>Fundamento</th><th>Situação</th></tr></thead><tbody id="tab-prazos"></tbody></table></div>
   </section>
 

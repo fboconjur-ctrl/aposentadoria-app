@@ -5,31 +5,36 @@ const Calculadoras = (() => {
   const hojeIso = () => { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`; };
   const AVISO = "Cálculo de conferência. Feriados locais, suspensões de expediente e particularidades do caso podem alterar o resultado — confirme com um(a) advogado(a).";
 
-  function prazo(el) {
+  function prazo(el, area = "civel") {
+    const penal = area === "penal";
     el.innerHTML = `<form class="calc">
+      <p class="calc-regra">${penal
+        ? "<b>Processo penal.</b> Prazos em dias <b>corridos</b> (CPP, art. 798): sábados, domingos e feriados contam. Começa no 1º dia útil após a intimação (Súmula 310/STF) e, se terminar em dia sem expediente, prorroga para o próximo dia útil."
+        : "<b>Processo cível, trabalhista, Juizado Especial e previdenciário.</b> Prazos em dias <b>úteis</b> (CPC, art. 219; CLT, art. 775; Lei 9.099/95, art. 12-A). Exclui o dia do começo e inclui o do vencimento (CPC, art. 224)."}</p>
       <div class="calc-grid">
-        <label>Tipo de processo<select name="contagem"><option value="uteis">Cível, trabalhista, Juizado, previdenciário (dias úteis)</option><option value="penal">Penal (dias corridos — CPP, art. 798)</option><option value="corridos">Outro prazo em dias corridos</option></select></label>
         <label>A partir de<select name="tipoMarco"><option value="disponibilizacao">Disponibilização no Diário (DJEN/DJe)</option><option value="publicacao">Publicação</option><option value="intimacao">Intimação / ciência</option><option value="portal">Intimação no portal eletrônico</option></select></label>
         <label>Data<input type="date" name="marco" required value="${hojeIso()}"></label>
-        <label>Prazo (dias)<input type="number" name="dias" min="1" value="15" required></label>
+        <label>Prazo (dias)<input type="number" name="dias" min="1" value="${penal ? 5 : 15}" required></label>
       </div>
-      <label class="calc-check"><input type="checkbox" name="recesso" checked> <span class="rec-txt">Considerar recesso de 20/12 a 20/01</span></label>
-      <label class="calc-check"><input type="checkbox" name="dobro"> Prazo em dobro (Fazenda Pública, MP, Defensoria)</label>
+      ${penal
+        ? `<label class="calc-check"><input type="checkbox" name="urgente"> Réu preso, Lei Maria da Penha ou medida urgente (não há suspensão de 20/12 a 20/01 — CPP, art. 798-A)</label>
+           <label class="calc-check"><input type="checkbox" name="dobro"> Defensoria Pública (prazo em dobro)</label>`
+        : `<label class="calc-check"><input type="checkbox" name="recesso" checked> Considerar recesso de 20/12 a 20/01 (CPC, art. 220)</label>
+           <label class="calc-check"><input type="checkbox" name="dobro"> Prazo em dobro (Fazenda Pública, MP, Defensoria)</label>`}
       <button class="btn" type="submit">Calcular</button>
       <div class="calc-res" hidden></div></form>`;
     const f = el.querySelector("form");
-    const ajusta = () => { const pen = f.contagem.value === "penal"; f.querySelector(".rec-txt").textContent = pen ? "Suspensão de 20/12 a 20/01 (CPP, art. 798-A) — desmarque se houver réu preso, Lei Maria da Penha ou medida urgente" : "Considerar recesso de 20/12 a 20/01 (CPC, art. 220)"; };
-    f.contagem.onchange = ajusta; ajusta();
     f.onsubmit = (e) => {
       e.preventDefault();
-      const r = Prazos.calcular({ marco: f.marco.value, tipoMarco: f.tipoMarco.value, dias: f.dias.value, contagem: f.contagem.value, dobro: f.dobro.checked, recesso: f.recesso.checked, forenses: true });
+      const r = Prazos.calcular({ marco: f.marco.value, tipoMarco: f.tipoMarco.value, dias: f.dias.value, contagem: penal ? "penal" : "uteis", dobro: f.dobro.checked,
+        recesso: penal ? !f.urgente.checked : f.recesso.checked, forenses: true });
       const v = new Date(r.vencimento + "T12:00");
       const res = f.querySelector(".calc-res"); res.hidden = false;
       res.innerHTML = `<p class="calc-venc">Vence em <b>${v.toLocaleDateString("pt-BR", { weekday: "long", day: "2-digit", month: "2-digit", year: "numeric" })}</b></p>
         <ol>${r.passos.map(([t, d]) => `<li><b>${br(d)}</b> — ${h(t)}</li>`).join("")}</ol>
         ${r.pulos.length ? `<details><summary>${r.pulos.length} dia(s) pulado(s) (sem expediente ou suspensão)</summary><ul>${r.pulos.map(([d, m]) => `<li>${br(d)} — ${h(m)}</li>`).join("")}</ul></details>` : ""}
         <p class="calc-aviso">${AVISO}</p>`;
-      el.dispatchEvent(new CustomEvent("calculado", { detail: { tipo: "prazo", r } }));
+      el.dispatchEvent(new CustomEvent("calculado", { detail: { tipo: "prazo", area, r } }));
     };
   }
 

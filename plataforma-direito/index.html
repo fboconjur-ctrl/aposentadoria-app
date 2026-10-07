@@ -137,9 +137,13 @@
       <p class="eyebrow">Ferramentas gratuitas</p>
       <h1>Calculadoras jurídicas</h1>
       <p class="muted">Confira quando vence um prazo do seu processo ou se um crime já pode estar prescrito. O cálculo é feito no seu aparelho; nada é enviado.</p>
-      <div class="calc-abas" role="tablist"><button class="on" data-calc="prazo">Prazo processual</button><button data-calc="prescricao">Prescrição penal</button></div>
-      <div class="card" id="calc-prazo" style="margin-top:12px"></div>
-      <div class="card" id="calc-prescricao" style="margin-top:12px" hidden></div>
+      <p class="calc-sub" style="margin-top:8px">Área cível</p>
+      <div class="calc-abas"><button class="on" data-calc="civel">Prazo cível, trabalhista e Juizado</button></div>
+      <p class="calc-sub" style="margin-top:12px">Área penal</p>
+      <div class="calc-abas"><button data-calc="penal">Prazo penal</button><button data-calc="prescricao">Prescrição penal</button></div>
+      <div class="card calc-painel" id="calc-civel" style="margin-top:16px"></div>
+      <div class="card calc-painel" id="calc-penal" style="margin-top:16px" hidden></div>
+      <div class="card calc-painel" id="calc-prescricao" style="margin-top:16px" hidden></div>
       <div class="card decision" style="margin-top:16px"><h2>Ficou com dúvida sobre o resultado?</h2><p class="muted">Prazo perdido e prescrição mudam o rumo do caso. Uma advogada pode conferir para você.</p>
         <div class="actions"><button class="btn" id="calc-advogado">Falar com advogado</button></div></div>
     </div>
