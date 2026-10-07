@@ -79,3 +79,10 @@ body.office { display: grid; grid-template-columns: 240px minmax(0, 1fr); min-he
 .pub.aberta .texto { max-height: none; }
 .pub .acoes { display: flex; gap: 14px; flex-wrap: wrap; }
 .pub .acoes .linkish, .pub .acoes a { font-size: .88rem; }
+
+.crm-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
+.crm-grid label { display: grid; gap: 4px; font-size: .85rem; }
+.crm-grid .wide { grid-column: 1 / -1; }
+.crm-grid .search { min-width: 0; width: 100%; }
+.wa-btn { background: #1f8f4e; color: #fff; border: 0; border-radius: 999px; padding: 6px 12px; font: 600 .85rem var(--font-body); cursor: pointer; }
+.atrasada { color: #b42318; font-weight: 600; }

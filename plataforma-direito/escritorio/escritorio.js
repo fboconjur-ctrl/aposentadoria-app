@@ -455,6 +455,89 @@ $("acomp-lista").addEventListener("click", (e) => {
 renderAcomp();
 try { if (listaAcomp().length && Date.now() - +(localStorage.getItem(ACOMP_KEY + "-ultima") || 0) > 6 * 3600e3) atualizarAcomp(); } catch {}
 
+// CRM: clientes guardados só neste navegador; WhatsApp por link wa.me com mensagem pronta.
+const CRM_KEY = "pd-crm";
+let clientes = [];
+try { clientes = JSON.parse(localStorage.getItem(CRM_KEY) || "[]"); } catch {}
+const salvarCrm = () => { try { localStorage.setItem(CRM_KEY, JSON.stringify(clientes)); } catch {} };
+const soDig = (t) => String(t || "").replace(/\D/g, "");
+const telWa = (t) => { const d = soDig(t); return d.length >= 12 ? d : d.length >= 10 ? "55" + d : ""; };
+const primeiroNome = (n) => String(n || "").trim().split(/\s+/)[0] || "";
+const MODELOS = {
+  "Primeiro contato": (c) => `Olá, ${primeiroNome(c.nome)}! Aqui é a Fernanda Borges Oliveira, advogada (OAB/DF 35.332). Recebi seu pedido sobre ${c.area.toLowerCase()} e gostaria de entender melhor o seu caso. Qual o melhor horário para conversarmos?`,
+  "Confirmar consulta": (c) => `Olá, ${primeiroNome(c.nome)}! Confirmando nossa consulta${c.quando ? ` em ${fmt(new Date(c.quando + "T12:00"))}` : ""}. Se puder, separe os documentos que tiver sobre o caso. Qualquer imprevisto, me avise por aqui.`,
+  "Pedir documentos": (c) => `Olá, ${primeiroNome(c.nome)}! Para darmos andamento, preciso dos seguintes documentos:\n- \n- \nPode enviar foto ou PDF por aqui mesmo. Obrigada!`,
+  "Proposta de honorários": (c) => `Olá, ${primeiroNome(c.nome)}! Conforme conversamos, segue a proposta para atuação no seu caso. Fico à disposição para qualquer dúvida.`,
+  "Atualização do processo": (c) => `Olá, ${primeiroNome(c.nome)}! Passando para atualizar sobre o seu processo${c.procs ? ` (${c.procs.split(/\n/)[0]})` : ""}: `,
+  "Lembrete": (c) => `Olá, ${primeiroNome(c.nome)}! Passando para lembrar: ${c.acao || ""}.`,
+  "Mensagem livre": (c) => `Olá, ${primeiroNome(c.nome)}! `,
+};
+let editando = null, conversando = null;
+
+function renderCrm() {
+  const f = semAcento($("crm-busca").value);
+  const vis = clientes.filter((c) => !f || semAcento([c.nome, c.tel, c.area, c.etapa, c.email].join(" ")).includes(f))
+    .sort((a, b) => (a.quando || "9") .localeCompare(b.quando || "9"));
+  const hojeIso = iso(hoje);
+  const atrasadas = clientes.filter((c) => c.quando && c.quando < hojeIso).length;
+  const hojeN = clientes.filter((c) => c.quando === hojeIso).length;
+  $("crm-kpis").innerHTML = [["Clientes", clientes.length, ""], ["Ações para hoje", hojeN, hojeN ? "alert" : ""], ["Ações atrasadas", atrasadas, atrasadas ? "alert" : ""],
+    ["Em negociação", clientes.filter((c) => ["Consulta sugerida", "Agendada", "Realizada", "Proposta"].includes(c.etapa)).length, ""]]
+    .map(([t, n, cl]) => `<div class="kpi ${cl}"><span class="muted small">${t}</span><strong>${n}</strong></div>`).join("");
+  $("crm-tab").innerHTML = vis.map((c) => {
+    const ult = (c.hist || [])[0];
+    return `<tr><td><button class="linkish" data-cli="${c.id}">${esc(c.nome)}</button><br><span class="muted small">${esc(c.area)} · ${esc(c.origem)}</span></td>
+      <td><span class="pill-s">${esc(c.etapa)}</span></td>
+      <td>${esc(c.acao || "—")}${c.quando ? `<br><span class="small ${c.quando < hojeIso ? "atrasada" : "muted"}">${fmt(new Date(c.quando + "T12:00"))}</span>` : ""}</td>
+      <td class="small">${ult ? `${fmt(new Date(ult.em))}<br><span class="muted">${esc(ult.o)}</span>` : "—"}</td>
+      <td>${telWa(c.tel) ? `<button class="wa-btn" data-wa="${c.id}">WhatsApp</button>` : `<span class="muted small">sem telefone</span>`}</td></tr>`;
+  }).join("") || `<tr><td colspan="5" class="muted">Nenhum cliente ainda. Clique em "Novo cliente".</td></tr>`;
+}
+
+const CAMPOS = { nome: "c-nome", tel: "c-tel", email: "c-email", area: "c-area", origem: "c-origem", etapa: "c-etapa", acao: "c-acao", quando: "c-quando", procs: "c-procs", notas: "c-notas" };
+function abrirForm(c) {
+  editando = c || null;
+  $("c-etapa").innerHTML = ETAPAS.map((e) => `<option>${e}</option>`).join("");
+  Object.entries(CAMPOS).forEach(([k, id]) => ($(id).value = c ? c[k] || "" : k === "etapa" ? "Orientação" : k === "area" ? "Previdenciário" : k === "origem" ? "Plataforma" : ""));
+  $("crm-form-titulo").textContent = c ? c.nome : "Novo cliente";
+  $("crm-excluir").hidden = !c; $("crm-form").hidden = false; $("crm-wa").hidden = true; $("c-nome").focus();
+}
+$("crm-novo").onclick = () => abrirForm(null);
+$("crm-cancelar").onclick = () => ($("crm-form").hidden = true);
+$("crm-salvar").onclick = () => {
+  const dados = Object.fromEntries(Object.entries(CAMPOS).map(([k, id]) => [k, $(id).value.trim()]));
+  if (!dados.nome) { $("c-nome").focus(); return; }
+  if (editando) Object.assign(editando, dados); else clientes.push({ id: "CL-" + Date.now().toString(36), criado: new Date().toISOString(), hist: [], ...dados });
+  // Processos do cliente entram no acompanhamento automático.
+  const nums = [...dados.procs.matchAll(CNJ_RE)].map((m) => fmtCnj(m));
+  if (nums.length) { const atual = $("djen-monit").value; const novos = nums.filter((n) => !atual.includes(n)); if (novos.length) { $("djen-monit").value = (atual.trim() ? atual.trim() + "\n" : "") + novos.join("\n"); try { localStorage.setItem(MONIT_KEY, $("djen-monit").value); } catch {} } }
+  salvarCrm(); $("crm-form").hidden = true; renderCrm(); renderAcomp();
+};
+$("crm-excluir").onclick = () => { if (!editando) return; clientes = clientes.filter((c) => c !== editando); salvarCrm(); $("crm-form").hidden = true; renderCrm(); };
+
+function abrirWa(c) {
+  conversando = c; $("crm-form").hidden = true; $("crm-wa").hidden = false; $("wa-nome").textContent = c.nome;
+  const sugerido = { "Orientação": "Primeiro contato", "Consulta sugerida": "Primeiro contato", "Agendada": "Confirmar consulta", "Realizada": "Proposta de honorários", "Proposta": "Proposta de honorários", "Contratado": "Pedir documentos", "Caso ativo": "Atualização do processo" }[c.etapa] || "Mensagem livre";
+  $("wa-modelo").innerHTML = Object.keys(MODELOS).map((m) => `<option${m === sugerido ? " selected" : ""}>${m}</option>`).join("");
+  $("wa-texto").value = MODELOS[sugerido](c);
+  $("wa-hist").innerHTML = (c.hist || []).map((h) => `<li><span class="when">${fmt(new Date(h.em))}</span><span>${esc(h.o)}</span></li>`).join("") || `<li class="muted">Sem registros.</li>`;
+  $("crm-wa").scrollIntoView({ behavior: "smooth" });
+}
+$("wa-modelo").onchange = () => conversando && ($("wa-texto").value = MODELOS[$("wa-modelo").value](conversando));
+$("wa-fechar").onclick = () => ($("crm-wa").hidden = true);
+$("wa-abrir").onclick = () => {
+  const c = conversando; if (!c) return;
+  window.open(`https://wa.me/${telWa(c.tel)}?text=${encodeURIComponent($("wa-texto").value)}`, "_blank", "noopener");
+  (c.hist ||= []).unshift({ em: new Date().toISOString(), o: `WhatsApp: ${$("wa-modelo").value}` });
+  salvarCrm(); renderCrm(); abrirWa(c);
+};
+$("crm-tab").addEventListener("click", (e) => {
+  const w = e.target.closest("[data-wa]"); if (w) return abrirWa(clientes.find((c) => c.id === w.dataset.wa));
+  const n = e.target.closest("[data-cli]"); if (n) abrirForm(clientes.find((c) => c.id === n.dataset.cli));
+});
+$("crm-busca").oninput = renderCrm;
+renderCrm();
+
 $("voltar").onclick = () => go("funil");
 $("busca").oninput = (e) => renderFunil(e.target.value);
 renderAll();

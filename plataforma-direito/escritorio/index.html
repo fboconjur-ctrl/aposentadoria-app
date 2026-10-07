@@ -17,6 +17,7 @@
   <nav>
     <button class="nav on" data-view="hoje">Hoje</button>
     <button class="nav" data-view="funil">Casos</button>
+    <button class="nav" data-view="crm">Clientes</button>
     <button class="nav" data-view="prazos">Prazos</button>
     <button class="nav" data-view="acomp">Acompanhamento</button>
     <button class="nav" data-view="djen">Publicações (DJEN)</button>
@@ -45,6 +46,37 @@
   <section id="v-prazos" class="oview">
     <header class="ohead"><div><p class="eyebrow">Controle</p><h1>Prazos</h1></div></header>
     <div class="panel"><table class="table"><thead><tr><th>Prazo</th><th>Caso</th><th>Providência</th><th>Fundamento</th><th>Situação</th></tr></thead><tbody id="tab-prazos"></tbody></table></div>
+  </section>
+
+  <section id="v-crm" class="oview">
+    <header class="ohead"><div><p class="eyebrow">Relacionamento · só neste navegador</p><h1>Clientes</h1></div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap"><input id="crm-busca" class="search" placeholder="Buscar nome, telefone, área"><button class="btn" id="crm-novo">Novo cliente</button></div></header>
+    <div class="kpis" id="crm-kpis"></div>
+    <div class="panel" id="crm-form" hidden>
+      <h2 id="crm-form-titulo">Novo cliente</h2>
+      <div class="crm-grid">
+        <label>Nome<input id="c-nome" class="search"></label>
+        <label>WhatsApp (com DDD)<input id="c-tel" class="search" inputmode="tel" placeholder="61 99999-9999"></label>
+        <label>E-mail<input id="c-email" class="search" type="email"></label>
+        <label>Área<select id="c-area" class="search"><option>Previdenciário</option><option>Consumidor</option><option>Saúde</option><option>Administrativo</option><option>Cartório/Extrajudicial</option><option>Trabalhista</option><option>Empresas</option><option>Outra</option></select></label>
+        <label>Origem<select id="c-origem" class="search"><option>Plataforma</option><option>Indicação</option><option>WhatsApp</option><option>Instagram</option><option>Google</option><option>Outra</option></select></label>
+        <label>Etapa<select id="c-etapa" class="search"></select></label>
+        <label>Próxima ação<input id="c-acao" class="search" placeholder="Ex.: cobrar documentos"></label>
+        <label>Data da próxima ação<input id="c-quando" class="search" type="date"></label>
+        <label class="wide">Processos (números CNJ, um por linha)<textarea id="c-procs" rows="2" class="search"></textarea></label>
+        <label class="wide">Anotações<textarea id="c-notas" rows="3" class="search"></textarea></label>
+      </div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn" id="crm-salvar">Salvar</button><button class="back" id="crm-cancelar">Cancelar</button><button class="back" id="crm-excluir" style="color:#b42318">Excluir</button></div>
+    </div>
+    <div class="panel"><table class="table"><thead><tr><th>Cliente</th><th>Etapa</th><th>Próxima ação</th><th>Último contato</th><th>WhatsApp</th></tr></thead><tbody id="crm-tab"></tbody></table></div>
+    <div class="panel" id="crm-wa" hidden>
+      <h2>Mensagem para <span id="wa-nome"></span></h2>
+      <label class="small">Modelo<select id="wa-modelo" class="search"></select></label>
+      <textarea id="wa-texto" rows="7" class="search" style="width:100%"></textarea>
+      <div style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn" id="wa-abrir">Abrir no WhatsApp</button><button class="back" id="wa-fechar">Fechar</button></div>
+      <p class="small muted">Abre o WhatsApp (app ou Web) com o texto pronto; você confere e envia. O envio fica registrado no histórico do cliente.</p>
+      <h3 class="small">Histórico</h3><ul class="list small" id="wa-hist"></ul>
+    </div>
   </section>
 
   <section id="v-acomp" class="oview">
