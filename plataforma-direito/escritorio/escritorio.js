@@ -240,9 +240,9 @@ $("imp-ok").onclick = () => {
 $("imp-limpar").onclick = () => { try { localStorage.removeItem(IMP_KEY); } catch {} location.reload(); };
 if (importados.length) document.querySelector(".demo-note").textContent = "Seus casos importados — guardados só neste navegador.";
 // Publicações do DJEN: consulta pela função /api/djen (Netlify), que repassa à API pública do CNJ.
-const VISTAS_KEY = "pd-djen-vistas", MONIT_KEY = "pd-djen-monitorados";
+const VISTAS_KEY = "pd-djen-vistas", MONIT_KEY = "pd-djen-monitorados", PARTES_KEY = "pd-djen-partes";
 let vistas = new Set();
-try { vistas = new Set(JSON.parse(localStorage.getItem(VISTAS_KEY) || "[]")); $("djen-monit").value = localStorage.getItem(MONIT_KEY) || ""; } catch {}
+try { vistas = new Set(JSON.parse(localStorage.getItem(VISTAS_KEY) || "[]")); $("djen-monit").value = localStorage.getItem(MONIT_KEY) || ""; $("djen-partes").value = localStorage.getItem(PARTES_KEY) || ""; } catch {}
 const iso = (x) => x.toISOString().slice(0, 10);
 const so20 = (t) => String(t || "").replace(/\D/g, "");
 const mascara = (n) => (n = so20(n)).length === 20 ? `${n.slice(0, 7)}-${n.slice(7, 9)}.${n.slice(9, 13)}.${n[13]}.${n.slice(14, 16)}.${n.slice(16)}` : n;
@@ -279,6 +279,8 @@ async function buscarDjen() {
   // Alguns tribunais publicam sem vincular a OAB; a busca pelo nome cobre esses casos.
   const nome = $("djen-nome").value.trim();
   if (nome) consultas.push(consultaDjen({ nomeAdvogado: nome, ...datas }));
+  try { localStorage.setItem(PARTES_KEY, $("djen-partes").value); } catch {}
+  $("djen-partes").value.split(/\n/).map((x) => x.trim()).filter((x) => x.length >= 5).forEach((parte) => consultas.push(consultaDjen({ nomeParte: parte, ...datas })));
   processos.forEach((p) => consultas.push(consultaDjen({ numeroProcesso: p, ...datas })));
   const res = await Promise.allSettled(consultas);
   const falhas = res.filter((r) => r.status === "rejected");

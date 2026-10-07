@@ -1,8 +1,8 @@
 // Consulta pública ao DJEN (Comunica PJe / CNJ). Repassa só parâmetros permitidos,
 // para não virar um proxy aberto. Os dados do DJEN são públicos.
 const API = "https://comunicaapi.pje.jus.br/api/v1/comunicacao";
-const PERMITIDOS = ["numeroOab", "ufOab", "numeroProcesso", "nomeAdvogado", "dataDisponibilizacaoInicio", "dataDisponibilizacaoFim", "pagina", "itensPorPagina"];
-const OK = { numeroOab: /^\d{1,7}$/, ufOab: /^[A-Za-z]{2}$/, numeroProcesso: /^\d{20}$/, nomeAdvogado: /^[\p{L} .'-]{5,80}$/u, dataDisponibilizacaoInicio: /^\d{4}-\d{2}-\d{2}$/, dataDisponibilizacaoFim: /^\d{4}-\d{2}-\d{2}$/, pagina: /^\d{1,3}$/, itensPorPagina: /^\d{1,3}$/ };
+const PERMITIDOS = ["numeroOab", "ufOab", "numeroProcesso", "nomeAdvogado", "nomeParte", "dataDisponibilizacaoInicio", "dataDisponibilizacaoFim", "pagina", "itensPorPagina"];
+const OK = { numeroOab: /^\d{1,7}$/, ufOab: /^[A-Za-z]{2}$/, numeroProcesso: /^\d{20}$/, nomeAdvogado: /^[\p{L} .'-]{5,80}$/u, nomeParte: /^[\p{L}\d .,&'\/-]{5,120}$/u, dataDisponibilizacaoInicio: /^\d{4}-\d{2}-\d{2}$/, dataDisponibilizacaoFim: /^\d{4}-\d{2}-\d{2}$/, pagina: /^\d{1,3}$/, itensPorPagina: /^\d{1,3}$/ };
 
 export default async (req) => {
   const entrada = new URL(req.url).searchParams;
@@ -13,7 +13,7 @@ export default async (req) => {
     if (!OK[k].test(v)) return Response.json({ erro: `Parâmetro inválido: ${k}` }, { status: 400 });
     saida.set(k, v);
   }
-  if (!saida.get("numeroOab") && !saida.get("numeroProcesso") && !saida.get("nomeAdvogado")) return Response.json({ erro: "Informe a OAB ou o número do processo." }, { status: 400 });
+  if (!saida.get("numeroOab") && !saida.get("numeroProcesso") && !saida.get("nomeAdvogado") && !saida.get("nomeParte")) return Response.json({ erro: "Informe a OAB ou o número do processo." }, { status: 400 });
   try {
     const r = await fetch(`${API}?${saida}`, { headers: { Accept: "application/json" } });
     const corpo = await r.text();
