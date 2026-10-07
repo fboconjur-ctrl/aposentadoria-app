@@ -16,6 +16,7 @@
   <p class="side-tag">Escritório</p>
   <nav>
     <button class="nav on" data-view="hoje">Hoje</button>
+    <button class="nav" data-view="agenda">Agenda</button>
     <button class="nav" data-view="tarefas">Tarefas</button>
     <button class="nav" data-view="funil">Casos</button>
     <button class="nav" data-view="crm">Clientes</button>
@@ -42,6 +43,24 @@
         <textarea id="ped-texto" rows="4" class="search" style="width:100%;margin-top:8px" placeholder="PD1:..."></textarea>
         <button class="btn" id="ped-ok" style="margin-top:8px">Importar pedido</button> <span id="ped-msg" class="small"></span></details>
       <ul class="list" id="novos"></ul></div>
+  </section>
+
+  <section id="v-agenda" class="oview">
+    <header class="ohead"><div><p class="eyebrow">Próximos 60 dias</p><h1>Agenda</h1></div></header>
+    <form class="panel" id="ag-form">
+      <div class="crm-grid">
+        <label>Tipo<select id="ag-tipo" class="search"><option>Consulta</option><option>Audiência</option><option>Perícia</option><option>Reunião</option><option>Diligência</option><option>Outro</option></select></label>
+        <label>Data<input id="ag-data" class="search" type="date" required></label>
+        <label>Hora<input id="ag-hora" class="search" type="time" value="14:00"></label>
+        <label>Duração (min)<input id="ag-dur" class="search" type="number" min="15" step="15" value="60"></label>
+        <label class="wide">Título<input id="ag-titulo" class="search" placeholder="Ex.: Audiência de conciliação — Maria x Plano" required></label>
+        <label class="wide">Local ou link<input id="ag-local" class="search" placeholder="Endereço, sala virtual, link do Meet/Teams"></label>
+        <label>Caso / cliente<select id="ag-vinculo" class="search"></select></label>
+        <label class="wide">Observações<input id="ag-obs" class="search"></label>
+      </div>
+      <div><button class="btn" type="submit">Adicionar compromisso</button></div>
+    </form>
+    <div class="panel"><div id="ag-lista"></div></div>
   </section>
 
   <section id="v-tarefas" class="oview">

@@ -221,7 +221,7 @@ function abrirCaso(id) {
   go("caso");
 }
 
-function renderAll() { renderHoje(); renderFunil($("busca").value); renderPrazos(); }
+function renderAll() { renderHoje(); if (typeof renderAgenda === "function" && typeof agenda !== "undefined") renderAgenda(); renderFunil($("busca").value); renderPrazos(); }
 
 document.addEventListener("click", (e) => {
   const b = e.target.closest("[data-caso]"); if (b) return abrirCaso(b.dataset.caso);
@@ -618,6 +618,56 @@ document.addEventListener("click", (e) => {
   tarefas = tarefas.filter((x) => x.id !== b.closest("[data-tarefa]").dataset.tarefa); salvarTarefas(); renderTarefas();
 });
 $("t-quando").value = iso(hoje); opcoesVinculo(); renderTarefas();
+
+// Agenda: compromissos ligados a caso/cliente; exporta para o Google Agenda (link) ou qualquer agenda (.ics).
+const AGENDA_KEY = "pd-agenda";
+let agenda = [];
+try { agenda = JSON.parse(localStorage.getItem(AGENDA_KEY) || "[]"); } catch {}
+const salvarAgenda = () => { try { localStorage.setItem(AGENDA_KEY, JSON.stringify(agenda)); } catch {} };
+const inicioDe = (a) => new Date(`${a.data}T${a.hora || "09:00"}:00`);
+const gcalData = (d) => d.toISOString().replace(/[-:]/g, "").replace(/\.\d{3}/, "");
+function linkGoogle(a) {
+  const ini = inicioDe(a), fim = new Date(ini.getTime() + (+a.dur || 60) * 60000);
+  return "https://calendar.google.com/calendar/render?" + new URLSearchParams({ action: "TEMPLATE", text: `${a.tipo}: ${a.titulo}`, dates: `${gcalData(ini)}/${gcalData(fim)}`, details: a.obs || "", location: a.local || "" });
+}
+function baixarIcs(a) {
+  const ini = inicioDe(a), fim = new Date(ini.getTime() + (+a.dur || 60) * 60000), e = (t) => String(t || "").replace(/[,;\\]/g, (c) => "\\" + c).replace(/\n/g, "\\n");
+  const ics = ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//Plataforma do Direito//Escritorio//PT", "BEGIN:VEVENT", `UID:${a.id}@plataforma-direito`, `DTSTAMP:${gcalData(new Date())}`,
+    `DTSTART:${gcalData(ini)}`, `DTEND:${gcalData(fim)}`, `SUMMARY:${e(a.tipo + ": " + a.titulo)}`, `LOCATION:${e(a.local)}`, `DESCRIPTION:${e(a.obs)}`,
+    "BEGIN:VALARM", "TRIGGER:-PT1H", "ACTION:DISPLAY", "DESCRIPTION:Lembrete", "END:VALARM", "END:VEVENT", "END:VCALENDAR"].join("\r\n");
+  const l = document.createElement("a"); l.href = URL.createObjectURL(new Blob([ics], { type: "text/calendar" })); l.download = `${a.tipo} ${a.data}.ics`;
+  document.body.appendChild(l); l.click(); l.remove();
+}
+function renderAgenda() {
+  const hojeIso = iso(hoje), limite = iso(new Date(hoje.getTime() + 60 * DAY));
+  const prox = agenda.filter((a) => a.data >= hojeIso && a.data <= limite).sort((a, b) => (a.data + a.hora).localeCompare(b.data + b.hora));
+  let dia = "";
+  $("ag-lista").innerHTML = prox.map((a) => {
+    const cab = a.data !== dia ? `<p class="ag-dia${a.data === hojeIso ? " hoje" : ""}">${new Date(a.data + "T12:00").toLocaleDateString("pt-BR", { weekday: "long", day: "numeric", month: "long" })}${a.data === hojeIso ? " · hoje" : ""}</p>` : "";
+    dia = a.data;
+    return `${cab}<div class="list"><li class="ag-item" data-ag="${a.id}"><span class="when">${esc(a.hora || "—")}</span><div style="flex:1"><span class="pill-s">${esc(a.tipo)}</span> <b>${esc(a.titulo)}</b> ${rotuloVinculo(a.vinculo)}
+      ${a.local ? `<br><span class="small muted">${/^https?:/.test(a.local) ? `<a href="${esc(a.local)}" target="_blank" rel="noopener">${esc(a.local)}</a>` : esc(a.local)}</span>` : ""}${a.obs ? `<br><span class="small">${esc(a.obs)}</span>` : ""}
+      <div class="acoes-ag small"><a href="${linkGoogle(a)}" target="_blank" rel="noopener">Adicionar ao Google Agenda</a><button class="linkish small" data-ag-acao="ics">Baixar .ics</button><button class="linkish small" data-ag-acao="del" style="color:#b42318">Excluir</button></div></div></li></div>`;
+  }).join("") || `<p class="muted">Nenhum compromisso nos próximos 60 dias.</p>`;
+  // Tela Hoje: compromissos do dia + consultas marcadas nos casos.
+  const doDia = agenda.filter((a) => a.data === hojeIso).sort((a, b) => (a.hora || "").localeCompare(b.hora || ""));
+  const consultas = CASOS.filter((c) => c.consulta && dias(c.consulta.quando) === 0);
+  $("agenda").innerHTML = [...doDia.map((a) => `<li><span class="when">${esc(a.hora || "—")}</span><div><b>${esc(a.titulo)}</b> <span class="pill-s">${esc(a.tipo)}</span><br>${rotuloVinculo(a.vinculo)}${a.local ? ` <span class="small muted">${esc(a.local)}</span>` : ""}</div></li>`),
+    ...consultas.map((c) => `<li><span class="when">${c.consulta.hora}</span><div><button class="linkish" data-caso="${c.id}">${esc(c.nome)}</button><br><span class="muted small">${esc(c.titulo)} · dossiê pronto</span></div></li>`)].join("") || `<li class="muted">Nada na agenda hoje.</li>`;
+}
+$("ag-form").onsubmit = (e) => {
+  e.preventDefault();
+  agenda.push({ id: "A-" + Date.now().toString(36), tipo: $("ag-tipo").value, data: $("ag-data").value, hora: $("ag-hora").value, dur: $("ag-dur").value, titulo: $("ag-titulo").value.trim(), local: $("ag-local").value.trim(), obs: $("ag-obs").value.trim(), vinculo: $("ag-vinculo").value });
+  salvarAgenda(); $("ag-titulo").value = ""; $("ag-local").value = ""; $("ag-obs").value = ""; renderAgenda();
+};
+$("ag-vinculo").onfocus = () => { opcoesVinculo(); $("ag-vinculo").innerHTML = $("t-vinculo").innerHTML; };
+$("ag-lista").addEventListener("click", (e) => {
+  const b = e.target.closest("[data-ag-acao]"); if (!b) return;
+  const a = agenda.find((x) => x.id === b.closest("[data-ag]").dataset.ag);
+  if (b.dataset.agAcao === "ics") baixarIcs(a);
+  if (b.dataset.agAcao === "del") { agenda = agenda.filter((x) => x !== a); salvarAgenda(); renderAgenda(); }
+});
+$("ag-data").value = iso(hoje); $("ag-vinculo").innerHTML = $("t-vinculo").innerHTML; renderAgenda();
 
 $("voltar").onclick = () => go("funil");
 $("busca").oninput = (e) => renderFunil(e.target.value);

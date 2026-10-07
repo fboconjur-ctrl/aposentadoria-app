@@ -105,3 +105,7 @@ body.office { display: grid; grid-template-columns: 240px minmax(0, 1fr); min-he
 .tarefa .t-txt { flex: 1; }
 .tarefa .del { background: none; border: 0; color: var(--muted); cursor: pointer; font-size: 1.1rem; }
 .prio-1 { border-left: 3px solid #b42318; padding-left: 8px; }
+
+.ag-dia { margin: 12px 0 4px; font-size: .8rem; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.ag-dia.hoje { color: var(--brand); font-weight: 700; }
+.ag-item .acoes-ag { display: flex; gap: 12px; flex-wrap: wrap; }
