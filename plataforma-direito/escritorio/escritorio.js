@@ -281,7 +281,11 @@ async function buscarDjen() {
   const nome = $("djen-nome").value.trim();
   if (nome) consultas.push(rot("Seu nome", consultaDjen({ nomeAdvogado: nome, ...datas })));
   try { localStorage.setItem(PARTES_KEY, $("djen-partes").value); } catch {}
-  $("djen-partes").value.split(/\n/).map((x) => x.trim()).filter((x) => x.length >= 5).forEach((parte) => consultas.push(rot(`Parte "${parte}"`, consultaDjen({ nomeParte: parte, ...datas }))));
+  $("djen-partes").value.split(/\n/).map((x) => x.trim()).filter((x) => x.length >= 5).forEach((parte) => {
+    // Os diários costumam grafar nomes em maiúsculas e sem acento; consulta também nessa forma.
+    const formas = new Set([parte, parte.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase()]);
+    formas.forEach((f) => consultas.push(rot(`Parte "${f}"`, consultaDjen({ nomeParte: f, ...datas }))));
+  });
   processos.forEach((p) => consultas.push(rot(`Processo ${mascara(p)}`, consultaDjen({ numeroProcesso: p, ...datas }))));
   const res = await Promise.allSettled(consultas);
   const falhas = res.filter((r) => r.status === "rejected");
