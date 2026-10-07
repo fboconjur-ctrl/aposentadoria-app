@@ -16,7 +16,7 @@ Prévia: https://deploy-preview-1--prevcalculadora.netlify.app/plataforma-direit
 **Rotina**: "Publicações diárias — OAB/DF 35332" (9h44, dias úteis) — falta marcar o conector Gmail nela em claude.ai → Routines.
 
 ## Pendências (em ordem)
-1. **Supabase (login por e-mail e senha)** — projeto criado (apgrgbotrrhtxfhcjsgq) e código ligado (`supabase-config.js`, `escritorio/nuvem.js`, `supabase.sql`). Plano: ela conecta o conector Supabase no claude.ai e o Claude roda `supabase.sql`; ela cria a senha no painel ("Primeiro acesso"); o Claude roda as 2 linhas finais do `supabase.sql` para liberar o acesso.
+1. **Supabase (login por e-mail e senha)** — projeto criado (apgrgbotrrhtxfhcjsgq) e código ligado (`supabase-config.js`, `escritorio/nuvem.js`, `supabase.sql`). Tabelas e regras JÁ CRIADAS no Supabase (via conector). ela cria a senha no painel ("Primeiro acesso"); o Claude roda as 2 linhas finais do `supabase.sql` para liberar o acesso.
 2. Repositório privado (GitHub → Settings → Change visibility).
 3. Asaas (boleto/Pix/cartão) ligado ao Financeiro — depende do Supabase/servidor.
 4. Área do cliente com login — depende do Supabase.
