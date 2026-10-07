@@ -1,4 +1,4 @@
-// Login por e-mail (link mágico) + sincronização do painel no Supabase.
+// Login por e-mail e senha + sincronização do painel no Supabase.
 // Enquanto SUPABASE_CONFIG estiver vazio, o painel funciona como antes (dados só neste navegador).
 (() => {
   const CFG = window.SUPABASE_CONFIG;
@@ -8,7 +8,8 @@
   const capa = document.createElement("div");
   capa.id = "login-capa";
   capa.innerHTML = `<div class="login-box"><h1>Escritório</h1><p class="muted">Acesso restrito.</p>
-    <form id="login-form"><input id="login-email" type="email" required placeholder="seu e-mail" autocomplete="email"> <button class="btn">Receber link de acesso</button></form>
+    <form id="login-form"><input id="login-email" type="email" required placeholder="seu e-mail" autocomplete="email"><br><input id="login-senha" type="password" required minlength="8" placeholder="senha (mín. 8 caracteres)" autocomplete="current-password"><br><button class="btn">Entrar</button></form>
+    <p class="small"><button type="button" class="linkish" id="login-criar">Primeiro acesso? Criar minha senha</button></p>
     <p class="small muted" id="login-msg"></p></div>`;
   document.body.appendChild(capa);
   const msg = (t) => (document.getElementById("login-msg").textContent = t);
@@ -18,10 +19,17 @@
   s.onerror = () => status("Não foi possível carregar o login");
   s.onload = async () => {
     const sb = supabase.createClient(CFG.url, CFG.anonKey);
+    const dados = () => ({ email: document.getElementById("login-email").value.trim(), password: document.getElementById("login-senha").value });
     document.getElementById("login-form").onsubmit = async (e) => {
       e.preventDefault();
-      const { error } = await sb.auth.signInWithOtp({ email: document.getElementById("login-email").value.trim(), options: { emailRedirectTo: location.origin + location.pathname } });
-      msg(error ? error.message : "Pronto! Abra o link que enviamos para o seu e-mail.");
+      const { error } = await sb.auth.signInWithPassword(dados());
+      if (error) return msg(error.message === "Invalid login credentials" ? "E-mail ou senha incorretos." : error.message === "Email not confirmed" ? "Acesso ainda não liberado. Avise o Claude." : error.message);
+      location.reload();
+    };
+    document.getElementById("login-criar").onclick = async () => {
+      if (!document.getElementById("login-form").reportValidity()) return;
+      const { error } = await sb.auth.signUp(dados());
+      msg(error ? error.message : "Senha criada. Agora avise o Claude para liberar seu acesso.");
     };
 
     const { data: { session } } = await sb.auth.getSession();

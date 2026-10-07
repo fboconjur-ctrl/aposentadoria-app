@@ -36,5 +36,6 @@ create policy "pedidos: advogada lê" on public.pedidos for select to authentica
 drop policy if exists "pedidos: advogada marca" on public.pedidos;
 create policy "pedidos: advogada marca" on public.pedidos for update to authenticated using (public.eh_admin()) with check (public.eh_admin());
 
--- DEPOIS do seu 1º login no painel, rode só a linha abaixo, trocando pelo seu e-mail:
--- insert into public.admins (uid) select id from auth.users where email = 'SEU_EMAIL_AQUI';
+-- DEPOIS que a advogada criar a senha no painel ("Primeiro acesso"), liberar o acesso (trocar o e-mail):
+-- update auth.users set email_confirmed_at = coalesce(email_confirmed_at, now()) where email = 'SEU_EMAIL_AQUI';
+-- insert into public.admins (uid) select id from auth.users where email = 'SEU_EMAIL_AQUI' on conflict do nothing;
