@@ -342,7 +342,7 @@ $("start-form").onsubmit = (e) => {
 $("start-text").addEventListener("keydown", (e) => {
   if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); $("start-form").requestSubmit(); }
 });
-document.querySelectorAll("#shortcuts button").forEach((b) => (b.onclick = () => startChat("", b.dataset.topic)));
+document.querySelectorAll("#shortcuts [data-topic]").forEach((b) => (b.onclick = () => startChat("", b.dataset.topic)));
 document.querySelectorAll("[data-go]").forEach((a) => a.addEventListener("click", (e) => {
   if (a.getAttribute("href") === "#") e.preventDefault();
   go(a.dataset.go);
