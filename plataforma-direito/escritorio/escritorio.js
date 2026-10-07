@@ -206,7 +206,7 @@ function abrirCaso(id) {
   $("caso-sub").textContent = `${c.nome} · origem: ${c.origem}`;
   $("caso-etapa").innerHTML = ETAPAS.map((e) => `<option${e === c.etapa ? " selected" : ""}>${e}</option>`).join("");
   $("caso-etapa").onchange = (e) => { c.etapa = e.target.value; salvarEtapa(c); renderAll(); };
-  const li = (a) => a.map((x) => `<li>${esc(x)}</li>`).join("");
+  const li = (a) => (a || []).length ? a.map((x) => `<li>${esc(x)}</li>`).join("") : `<li class="muted" style="list-style:none">A preencher na consulta.</li>`;
   $("dossie").innerHTML = `
     <div class="panel wide"><h2>Resumo executivo</h2><p>${esc(c.resumo)}</p><p><b>Objetivo do cliente:</b> ${esc(c.objetivo)}</p>
       <div class="codes">${c.atlas ? `<span class="pill-s">Atlas ${esc(c.atlas)}</span>` : ""}${c.dac ? `<span class="pill-s">DAC ${esc(c.dac)}</span>` : ""}</div></div>
@@ -537,6 +537,38 @@ $("crm-tab").addEventListener("click", (e) => {
 });
 $("crm-busca").oninput = renderCrm;
 renderCrm();
+
+// Pedido vindo da plataforma pública: cria o caso (com o que a pessoa contou e os documentos já lidos) e o cliente no CRM.
+function lerPacote(texto) {
+  const m = String(texto).replace(/\s+/g, "").match(/PD1:([A-Za-z0-9+/=]+)/);
+  if (!m) return null;
+  try { return JSON.parse(decodeURIComponent(escape(atob(m[1])))); } catch { return null; }
+}
+$("ped-ok").onclick = () => {
+  const pk = lerPacote($("ped-texto").value);
+  if (!pk) { $("ped-msg").textContent = "Não encontrei o pacote do pedido (linha que começa com PD1:)."; return; }
+  if (CASOS.some((c) => c.id === pk.protocolo)) { $("ped-msg").textContent = `O pedido ${pk.protocolo} já foi importado.`; return; }
+  const area = { previdenciario: "Previdenciário", consumidor: "Consumidor", saude: "Saúde", administrativo: "Administrativo", cartorio: "Cartório/Extrajudicial" }[pk.key] || pk.area || "A classificar";
+  const caso = {
+    id: pk.protocolo, nome: pk.nome, area, titulo: pk.area || "Pedido da plataforma", atlas: (pk.codigo || "").split(" · ")[0], dac: (pk.codigo || "").split(" · ")[1] || "",
+    origem: "Plataforma", etapa: "Consulta sugerida", resumo: pk.relato || "—", objetivo: pk.respostas?.slice(-1)[0] || "—",
+    cronologia: [[new Date(pk.criado), "Pedido de consulta pela plataforma"]], partes: [pk.nome],
+    docs: { ok: [pk.cnis && "CNIS (lido na plataforma)", pk.documento && "Documento lido na plataforma"].filter(Boolean), falta: ["RG", "CPF", "Comprovante de endereço"] },
+    questoes: [], normas: [], orientacoes: [pk.cnis, pk.documento, pk.continuacao, ...(pk.respostas || [])].filter(Boolean),
+    decidir: [], prazos: [], contato: { email: pk.email, telefone: pk.telefone, periodo: pk.periodo },
+  };
+  if (!importados.length) CASOS.splice(0, CASOS.length);
+  importados.push(caso); CASOS.push(caso); try { localStorage.setItem(IMP_KEY, JSON.stringify(importados)); } catch {}
+  if (!clientes.some((c) => c.caso === pk.protocolo)) {
+    clientes.push({ id: "CL-" + Date.now().toString(36), caso: pk.protocolo, criado: new Date().toISOString(), nome: pk.nome, tel: pk.telefone, email: pk.email, area, origem: "Plataforma",
+      etapa: "Consulta sugerida", acao: `Retornar contato (prefere ${String(pk.periodo || "").toLowerCase()})`, quando: iso(hoje), procs: "", notas: `Protocolo ${pk.protocolo}\n${pk.relato || ""}`,
+      hist: [{ em: pk.criado, o: "Pedido pela plataforma" }] });
+    salvarCrm(); renderCrm();
+  }
+  document.querySelector(".demo-note").textContent = "Seus casos importados — guardados só neste navegador.";
+  $("ped-texto").value = ""; $("ped-msg").textContent = `Pedido ${pk.protocolo} importado: caso criado e cliente adicionado.`;
+  renderAll();
+};
 
 $("voltar").onclick = () => go("funil");
 $("busca").oninput = (e) => renderFunil(e.target.value);

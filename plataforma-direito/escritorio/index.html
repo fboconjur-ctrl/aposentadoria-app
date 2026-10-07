@@ -35,7 +35,11 @@
       <div class="panel"><h2>Agenda de hoje</h2><ul class="list" id="agenda"></ul></div>
       <div class="panel"><h2>Prazos mais próximos</h2><ul class="list" id="prazos-hoje"></ul></div>
     </div>
-    <div class="panel"><h2>Novos pedidos da plataforma</h2><ul class="list" id="novos"></ul></div>
+    <div class="panel"><h2>Novos pedidos da plataforma</h2>
+      <details><summary class="small"><b>Importar pedido recebido por e-mail</b> — cole o e-mail do formulário (ou só a linha "pacote")</summary>
+        <textarea id="ped-texto" rows="4" class="search" style="width:100%;margin-top:8px" placeholder="PD1:..."></textarea>
+        <button class="btn" id="ped-ok" style="margin-top:8px">Importar pedido</button> <span id="ped-msg" class="small"></span></details>
+      <ul class="list" id="novos"></ul></div>
   </section>
 
   <section id="v-funil" class="oview">
@@ -90,7 +94,8 @@
         <label>Cidade/UF padrão<input id="adv-cidade" class="search"></label>
       </div></details>
     <div class="panel">
-      <h2>1. Documentos do cliente</h2>
+      <label class="small" style="display:grid;gap:4px;max-width:420px">Cliente ou pedido já cadastrado (traz a história e o que a plataforma já leu)<select id="doc-cliente" class="search"></select></label>
+      <h2 style="margin-top:12px">1. Documentos do cliente</h2>
       <label class="dropzone" id="dz"><input type="file" id="dz-input" multiple accept="image/*,application/pdf" hidden>
         <b>Arraste aqui RG, CPF, CNH e comprovante de endereço</b><br><span class="small muted">fotos ou PDF · a leitura acontece neste navegador, nada é enviado</span></label>
       <ul class="list small" id="dz-lista"></ul>
@@ -108,7 +113,6 @@
     <details class="panel"><summary><b>Gerar um documento avulso / conferir dados</b></summary>
       <div class="crm-grid" style="margin-top:12px">
         <label>Modelo<select id="doc-modelo" class="search"></select></label>
-        <label>Cliente cadastrado (opcional)<select id="doc-cliente" class="search"></select></label>
       </div>
       <h2 style="margin-top:8px">Outorgante / Contratante</h2>
       <div class="crm-grid">

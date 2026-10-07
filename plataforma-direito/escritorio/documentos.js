@@ -135,7 +135,12 @@
   $("doc-modelo").onchange = camposModelo;
   $("p-tipo").onchange = tipoParte;
   $("doc-cliente").onfocus = listaClientes;
-  $("doc-cliente").onchange = () => { const c = clientes.find((x) => x.id === $("doc-cliente").value); if (c) $("p-nome").value = c.nome; };
+  $("doc-cliente").onchange = () => {
+    const c = clientes.find((x) => x.id === $("doc-cliente").value); if (!c) return;
+    $("p-nome").value = c.nome;
+    const caso = CASOS.find((k) => k.id === c.caso);
+    if (caso && !$("kit-historia").value) $("kit-historia").value = [caso.resumo, ...(caso.orientacoes || [])].filter((x) => x && x !== "—").join("\n");
+  };
 
   const PARTE = { tipo: "p-tipo", nome: "p-nome", nac: "p-nac", civil: "p-civil", prof: "p-prof", rg: "p-rg", doc: "p-doc", end: "p-end", rep: "p-rep", menor: "p-menor" };
   $("doc-gerar").onclick = () => {

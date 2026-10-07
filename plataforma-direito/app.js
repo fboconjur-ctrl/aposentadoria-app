@@ -302,10 +302,18 @@ $("lead-form").onsubmit = async (e) => {
   const form = e.target;
   $("f-send").disabled = true;
   try {
+    // Pacote do caso: tudo o que a pessoa contou e os documentos já lidos, para o escritório importar com um clique.
+    const protocolo = "PD-" + new Date().toISOString().slice(2, 10).replace(/-/g, "") + "-" + Math.random().toString(36).slice(2, 6).toUpperCase();
+    const pacote = { v: 1, protocolo, criado: new Date().toISOString(), area: $("f-area").value, key: state.key, faqId: state.faqId || null, codigo: $("f-codigo").value,
+      relato: state.text, cnis: state.cnisSummary || "", documento: state.docSummary || "", continuacao: state.followSummary || "",
+      respostas: state.followSummary ? state.answers : state.answers.map((r, i) => `${[...(state.flow?.questions || []), OBJECTIVE_Q][i]?.q || ""} ${r}`),
+      nome: $("f-nome").value.trim(), email: $("f-email").value.trim(), telefone: $("f-tel").value.trim(), periodo: $("f-periodo").value };
+    $("f-protocolo").value = protocolo;
+    $("f-pacote").value = "PD1:" + btoa(unescape(encodeURIComponent(JSON.stringify(pacote))));
     const r = await fetch("/", { method: "POST", headers: { "Content-Type": "application/x-www-form-urlencoded" }, body: new URLSearchParams(new FormData(form)).toString() });
     if (!r.ok) throw new Error(r.status);
     $("area-title").textContent = state.flow ? state.flow.caseTitle : "Pergunta enviada à advogada";
-    $("area-meeting").textContent = "A combinar — retornaremos em até 1 dia útil";
+    $("area-meeting").textContent = `A combinar — retornaremos em até 1 dia útil · protocolo ${$("f-protocolo").value}`;
     go("area");
   } catch {
     $("f-msg").textContent = "Não conseguimos enviar agora. Verifique a conexão e tente de novo.";
