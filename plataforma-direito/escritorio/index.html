@@ -234,12 +234,15 @@
   <section id="v-preco" class="oview">
     <header class="ohead"><div><p class="eyebrow">Sugestão de honorários ao pegar o caso</p><h1>Precificação</h1></div></header>
     <form class="panel" id="pr-form">
+      <p class="small muted">Base: Tabela de Honorários da OAB/DF (valores mínimos em URH). O valor da URH é publicado mensalmente no site da OAB/DF.</p>
       <div class="crm-grid">
+        <label class="wide">Buscar serviço na tabela<input id="pr-busca" class="search" placeholder="ex.: divórcio, mandado de segurança, INSS, júri, PAD"></label>
         <label class="wide">Serviço<select id="pr-servico" class="search"></select></label>
-        <label>Seu valor-hora (R$) — fica salvo<input id="pr-hora" class="search" inputmode="decimal" placeholder="ex.: 350,00"></label>
-        <label>Horas estimadas (ajuste se quiser)<input id="pr-horas" class="search" inputmode="decimal"></label>
-        <label>Piso da tabela OAB/DF (R$) — fica salvo<input id="pr-piso" class="search" inputmode="decimal" placeholder="valor mínimo da tabela vigente"></label>
-        <label>Proveito econômico estimado (R$)<input id="pr-proveito" class="search" inputmode="decimal" placeholder="opcional"></label>
+        <p class="wide small" id="pr-item"></p>
+        <label id="pr-urh-box">Valor da URH do mês (R$) — fica salvo<input id="pr-urh" class="search" inputmode="decimal" placeholder="ex.: 362,72 (fev/2025) — confira o atual"></label>
+        <label>Proveito econômico / valor em jogo (R$)<input id="pr-proveito" class="search" inputmode="decimal" placeholder="opcional"></label>
+        <label>Horas estimadas (opcional)<input id="pr-horas" class="search" inputmode="decimal"></label>
+        <label>Seu valor-hora (R$, opcional — mínimo 2 URH)<input id="pr-hora" class="search" inputmode="decimal"></label>
         <label>Êxito na opção 2 (%)<input id="pr-exito" class="search" type="number" min="0" max="30" value="20"></label>
       </div>
       <h2 style="margin-top:8px">Critérios do caso (CED, art. 49)</h2>
@@ -314,6 +317,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script src="leitura-docs.js"></script>
 <script src="documentos.js"></script>
+<script src="tabela-oabdf.js"></script>
 <script src="precificacao.js"></script>
 </body>
 </html>
