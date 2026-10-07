@@ -38,6 +38,7 @@ function startChat(text, forcedKey, skipQuestion) {
   Object.assign(state, { text, answers: [], qi: 0, flow: null, followSummary: null, cnisSummary: null, docSummary: null, faqId: null });
   if (text && !forcedKey && !skipQuestion && isQuestion(text)) return answerQuestion(text);
   $("messages").innerHTML = "";
+  $("qcount").textContent = ""; $("voltar").hidden = true;
   go("chat");
   setStep(1);
   if (text) say(text, "user");
@@ -66,12 +67,23 @@ function ask() {
   const qs = [...state.flow.questions, OBJECTIVE_Q];
   if (state.qi >= qs.length) return finish();
   const { q, a } = qs[state.qi];
+  $("qcount").textContent = `Pergunta ${state.qi + 1} de ${qs.length}`;
+  $("voltar").hidden = state.qi === 0;
   say(q);
   offer(a, (o) => { state.answers.push(o); state.qi++; ask(); });
 }
 
+$("voltar").onclick = () => {
+  if (!state.flow || state.qi === 0) return;
+  state.qi--; state.answers.pop();
+  const msgs = $("messages").children;
+  for (let i = 0; i < 3 && msgs.length; i++) msgs[msgs.length - 1].remove(); // pergunta atual, resposta anterior, pergunta anterior
+  ask();
+};
+
 function finish() {
   setStep(2);
+  $("qcount").textContent = ""; $("voltar").hidden = true;
   say("Obrigado. Já tenho o suficiente para uma orientação inicial.");
   setTimeout(() => { renderResult(); go("result"); setStep(3); }, 700);
 }
@@ -302,14 +314,12 @@ $("lead-form").onsubmit = async (e) => {
   const form = e.target;
   $("f-send").disabled = true;
   try {
-    if (!DocId.cpf($("f-cpf").value)) { $("f-msg").textContent = "Confira o CPF: os números não conferem."; $("f-cpf").focus(); $("f-send").disabled = false; return; }
-    $("f-cpf").value = DocId.formatar($("f-cpf").value);
     // Pacote do caso: tudo o que a pessoa contou e os documentos já lidos, para o escritório importar com um clique.
     const protocolo = "PD-" + new Date().toISOString().slice(2, 10).replace(/-/g, "") + "-" + Math.random().toString(36).slice(2, 6).toUpperCase();
     const pacote = { v: 1, protocolo, criado: new Date().toISOString(), area: $("f-area").value, key: state.key, faqId: state.faqId || null, codigo: $("f-codigo").value,
       relato: state.text, cnis: state.cnisSummary || "", documento: state.docSummary || "", continuacao: state.followSummary || "",
       respostas: state.followSummary ? state.answers : state.answers.map((r, i) => `${[...(state.flow?.questions || []), OBJECTIVE_Q][i]?.q || ""} ${r}`),
-      nome: $("f-nome").value.trim(), cpf: $("f-cpf").value, email: $("f-email").value.trim(), telefone: $("f-tel").value.trim(), periodo: $("f-periodo").value };
+      nome: $("f-nome").value.trim(), cpf: "", email: "", telefone: $("f-tel").value.trim(), periodo: $("f-periodo").value };
     $("f-protocolo").value = protocolo;
     $("f-pacote").value = "PD1:" + btoa(unescape(encodeURIComponent(JSON.stringify(pacote))));
     const r = await fetch("/", { method: "POST", headers: { "Content-Type": "application/x-www-form-urlencoded" }, body: new URLSearchParams(new FormData(form)).toString() });
@@ -379,3 +389,28 @@ async function enviarPedidoNuvem(pacote) {
     await firebase.firestore().collection("pedidos").add({ pacote, importado: false, criado: Date.now() });
   } catch { /* o e-mail do formulário continua sendo o caminho de reserva */ }
 }
+
+// WhatsApp do escritório: em todas as etapas, levando o que a pessoa já contou.
+const WA_NUMERO = "5561999733111";
+function waTexto() {
+  const linhas = ["Olá! Vim pela Plataforma do Direito."];
+  if (state.flow) linhas.push(`Assunto: ${state.flow.subject}`);
+  if (state.text) linhas.push(`Meu caso: ${state.text}`);
+  if (state.answers.length && !state.followSummary && state.flow) {
+    const qs = [...state.flow.questions, OBJECTIVE_Q];
+    state.answers.forEach((r, i) => qs[i] && linhas.push(`- ${qs[i].q} ${r}`));
+  }
+  if ($("f-protocolo").value) linhas.push(`Protocolo: ${$("f-protocolo").value}`);
+  return linhas.join("\n");
+}
+document.addEventListener("click", (e) => {
+  const a = e.target.closest("[data-wa]");
+  if (!a) return;
+  e.preventDefault();
+  window.open(`https://wa.me/${WA_NUMERO}?text=${encodeURIComponent(waTexto())}`, "_blank", "noopener");
+});
+$("outro").onclick = () => {
+  $("start-form").hidden = false;
+  $("outro").setAttribute("aria-pressed", "true");
+  $("start-text").focus();
+};

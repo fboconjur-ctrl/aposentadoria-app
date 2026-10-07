@@ -165,7 +165,7 @@ summary { cursor: pointer; color: var(--brand); font-weight: 600; }
   .how { grid-template-columns: 1fr; gap: 20px; }
 }
 @media (max-width: 760px) {
-  .topbar nav a:not(.btn-ghost):not([data-go=calculadoras]) { display: none; }
+  .topbar nav a:not(.btn-ghost):not(.btn-wa-sm) { display: none; }
   .chat-layout { grid-template-columns: 1fr; gap: 20px; }
   .progress { position: static; order: -1; padding: 0; border: 0; background: none; }
   .progress h4 { display: none; }
@@ -253,3 +253,33 @@ tr:last-child td { border-bottom: 0; }
 .calc-res { min-width: 0; overflow-x: auto; }
 .grid h2, .grid h3 { overflow-wrap: anywhere; }
 @media (max-width: 560px) { .topbar nav { gap: 14px; } .calc-tab th, .calc-tab td { padding: 6px 4px; font-size: .82rem; } }
+
+/* Página inicial simplificada + WhatsApp */
+.hero-simples { display: grid; grid-template-columns: 1fr; gap: 18px; max-width: 760px; text-align: center; justify-items: center; padding: 0 16px; }
+.hero-simples .lead { margin: 0 auto; }
+.tiles { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; width: 100%; }
+.tiles button { display: grid; justify-items: center; gap: 6px; padding: 18px 10px; background: var(--surface); border: 1.5px solid var(--line); border-radius: var(--r);
+  font: 600 1rem var(--font-body); color: var(--ink); cursor: pointer; box-shadow: var(--shadow); transition: border-color .15s, transform .15s; }
+.tiles button span { font-size: 1.8rem; line-height: 1; }
+.tiles button:hover, .tiles button[aria-pressed="true"] { border-color: var(--brand); transform: translateY(-2px); }
+.hero-simples .composer { width: 100%; text-align: left; box-sizing: border-box; }
+.hero-simples .composer label { font-weight: 600; display: block; margin-bottom: 6px; }
+.btn-wa { background: #1fa855; color: #fff; justify-content: center; font-size: 1.05rem; padding: 14px 26px; }
+.btn-wa::before { content: ""; width: 20px; height: 20px; background: currentColor; -webkit-mask: var(--wa-ico) center/contain no-repeat; mask: var(--wa-ico) center/contain no-repeat; }
+:root { --wa-ico: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2z'/%3E%3C/svg%3E"); }
+.btn-wa-sm { color: #1a8f48 !important; font-weight: 700 !important; }
+.trust { color: var(--muted); font-size: .9rem; margin: 0; }
+.wa-float { position: fixed; right: 18px; bottom: 18px; width: 58px; height: 58px; border-radius: 50%; background: #1fa855; display: grid; place-items: center;
+  box-shadow: 0 6px 20px rgba(0,0,0,.25); z-index: 50; }
+.wa-float svg { width: 32px; height: 32px; fill: #fff; }
+.qcount { margin: 4px 0 0; }
+.chat-extra { display: flex; flex-wrap: wrap; gap: 14px; justify-content: space-between; font-size: .92rem; margin-top: 10px; }
+.linkbtn { background: none; border: 0; color: var(--brand); font: inherit; cursor: pointer; padding: 0; }
+#view-lawyer .btn-wa { margin: 8px 0 4px; }
+.foot p { margin: 0 0 6px; }
+@media (max-width: 640px) {
+  .tiles { grid-template-columns: repeat(2, 1fr); }
+  .btn-wa { width: 100%; box-sizing: border-box; }
+  .topbar nav { gap: 14px; }
+}
+.foot { padding-bottom: 90px; }
