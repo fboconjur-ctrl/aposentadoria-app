@@ -15,7 +15,7 @@ export default async (req) => {
   }
   if (!saida.get("numeroOab") && !saida.get("numeroProcesso")) return Response.json({ erro: "Informe a OAB ou o número do processo." }, { status: 400 });
   try {
-    const r = await fetch(`${API}?${saida}`, { headers: { Accept: "application/json", "User-Agent": "PlataformaDoDireito/1.0" } });
+    const r = await fetch(`${API}?${saida}`, { headers: { Accept: "application/json" } });
     const corpo = await r.text();
     return new Response(corpo, { status: r.status, headers: { "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store" } });
   } catch (e) {

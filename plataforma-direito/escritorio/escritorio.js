@@ -250,9 +250,14 @@ const mascara = (n) => (n = so20(n)).length === 20 ? `${n.slice(0, 7)}-${n.slice
 async function consultaDjen(params) {
   const itens = [];
   for (let pagina = 1; pagina <= 5; pagina++) {
-    const r = await fetch(`/api/djen?${new URLSearchParams({ ...params, pagina, itensPorPagina: 100 })}`);
+    const qs = new URLSearchParams({ ...params, pagina, itensPorPagina: 100 });
+    // 1º direto do navegador (IP brasileiro); se o navegador bloquear, usa a função do Netlify.
+    let r = null;
+    try { r = await fetch(`https://comunicaapi.pje.jus.br/api/v1/comunicacao?${qs}`, { headers: { Accept: "application/json" } }); } catch { r = null; }
+    if (!r || !r.ok) { const v = await fetch(`/api/djen?${qs}`).catch(() => null); if (v && (v.ok || !r)) r = v; }
+    if (!r) throw new Error("sem conexão com o DJEN");
     const j = await r.json().catch(() => ({}));
-    if (!r.ok) throw new Error(j.erro || j.message || `DJEN respondeu ${r.status}`);
+    if (!r.ok) throw new Error(j.erro || j.message || `DJEN respondeu ${r.status}${r.status === 403 ? " (acesso recusado pelo CNJ)" : ""}`);
     const lote = j.items || j.itens || [];
     itens.push(...lote);
     if (lote.length < 100) break;
