@@ -22,6 +22,7 @@
     <button class="nav" data-view="crm">Clientes</button>
     <button class="nav" data-view="docs">Documentos</button>
     <button class="nav" data-view="fin">Financeiro</button>
+    <button class="nav" data-view="preco">Precificação</button>
     <button class="nav" data-view="prazos">Prazos</button>
     <button class="nav" data-view="acomp">Acompanhamento</button>
     <button class="nav" data-view="djen">Publicações (DJEN)</button>
@@ -230,6 +231,24 @@
       <table class="table"><thead><tr><th>Vencimento</th><th>Descrição</th><th>Valor</th><th>Situação</th><th></th></tr></thead><tbody id="fin-tab"></tbody></table></div>
   </section>
 
+  <section id="v-preco" class="oview">
+    <header class="ohead"><div><p class="eyebrow">Sugestão de honorários ao pegar o caso</p><h1>Precificação</h1></div></header>
+    <form class="panel" id="pr-form">
+      <div class="crm-grid">
+        <label class="wide">Serviço<select id="pr-servico" class="search"></select></label>
+        <label>Seu valor-hora (R$) — fica salvo<input id="pr-hora" class="search" inputmode="decimal" placeholder="ex.: 350,00"></label>
+        <label>Horas estimadas (ajuste se quiser)<input id="pr-horas" class="search" inputmode="decimal"></label>
+        <label>Piso da tabela OAB/DF (R$) — fica salvo<input id="pr-piso" class="search" inputmode="decimal" placeholder="valor mínimo da tabela vigente"></label>
+        <label>Proveito econômico estimado (R$)<input id="pr-proveito" class="search" inputmode="decimal" placeholder="opcional"></label>
+        <label>Êxito na opção 2 (%)<input id="pr-exito" class="search" type="number" min="0" max="30" value="20"></label>
+      </div>
+      <h2 style="margin-top:8px">Critérios do caso (CED, art. 49)</h2>
+      <div class="crm-grid" id="pr-fatores"></div>
+      <div><button class="btn" type="submit">Sugerir valor</button></div>
+      <div id="pr-res" hidden></div>
+    </form>
+  </section>
+
   <section id="v-acomp" class="oview">
     <header class="ohead"><div><p class="eyebrow">Movimentações pelo número · DataJud (CNJ)</p><h1>Acompanhamento</h1></div>
       <button class="btn" id="acomp-atualizar">Atualizar agora</button></header>
@@ -295,5 +314,6 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script src="leitura-docs.js"></script>
 <script src="documentos.js"></script>
+<script src="precificacao.js"></script>
 </body>
 </html>
