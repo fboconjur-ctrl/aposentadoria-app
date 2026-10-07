@@ -302,12 +302,14 @@ $("lead-form").onsubmit = async (e) => {
   const form = e.target;
   $("f-send").disabled = true;
   try {
+    if (!DocId.cpf($("f-cpf").value)) { $("f-msg").textContent = "Confira o CPF: os números não conferem."; $("f-cpf").focus(); $("f-send").disabled = false; return; }
+    $("f-cpf").value = DocId.formatar($("f-cpf").value);
     // Pacote do caso: tudo o que a pessoa contou e os documentos já lidos, para o escritório importar com um clique.
     const protocolo = "PD-" + new Date().toISOString().slice(2, 10).replace(/-/g, "") + "-" + Math.random().toString(36).slice(2, 6).toUpperCase();
     const pacote = { v: 1, protocolo, criado: new Date().toISOString(), area: $("f-area").value, key: state.key, faqId: state.faqId || null, codigo: $("f-codigo").value,
       relato: state.text, cnis: state.cnisSummary || "", documento: state.docSummary || "", continuacao: state.followSummary || "",
       respostas: state.followSummary ? state.answers : state.answers.map((r, i) => `${[...(state.flow?.questions || []), OBJECTIVE_Q][i]?.q || ""} ${r}`),
-      nome: $("f-nome").value.trim(), email: $("f-email").value.trim(), telefone: $("f-tel").value.trim(), periodo: $("f-periodo").value };
+      nome: $("f-nome").value.trim(), cpf: $("f-cpf").value, email: $("f-email").value.trim(), telefone: $("f-tel").value.trim(), periodo: $("f-periodo").value };
     $("f-protocolo").value = protocolo;
     $("f-pacote").value = "PD1:" + btoa(unescape(encodeURIComponent(JSON.stringify(pacote))));
     const r = await fetch("/", { method: "POST", headers: { "Content-Type": "application/x-www-form-urlencoded" }, body: new URLSearchParams(new FormData(form)).toString() });

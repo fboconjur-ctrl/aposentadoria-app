@@ -483,11 +483,11 @@ function renderCrm() {
   const atrasadas = clientes.filter((c) => c.quando && c.quando < hojeIso).length;
   const hojeN = clientes.filter((c) => c.quando === hojeIso).length;
   $("crm-kpis").innerHTML = [["Clientes", clientes.length, ""], ["Ações para hoje", hojeN, hojeN ? "alert" : ""], ["Ações atrasadas", atrasadas, atrasadas ? "alert" : ""],
-    ["Em negociação", clientes.filter((c) => ["Consulta sugerida", "Agendada", "Realizada", "Proposta"].includes(c.etapa)).length, ""]]
+    ["Sem CPF", clientes.filter((c) => !DocId.valido(c.cpf)).length, clientes.some((c) => !DocId.valido(c.cpf)) ? "alert" : ""], ["Em negociação", clientes.filter((c) => ["Consulta sugerida", "Agendada", "Realizada", "Proposta"].includes(c.etapa)).length, ""]]
     .map(([t, n, cl]) => `<div class="kpi ${cl}"><span class="muted small">${t}</span><strong>${n}</strong></div>`).join("");
   $("crm-tab").innerHTML = vis.map((c) => {
     const ult = (c.hist || [])[0];
-    return `<tr><td><button class="linkish" data-cli="${c.id}">${esc(c.nome)}</button><br><span class="muted small">${esc(c.area)} · ${esc(c.origem)}</span></td>
+    return `<tr><td><button class="linkish" data-cli="${c.id}">${esc(c.nome)}</button>${DocId.valido(c.cpf) ? "" : ` <span class="pill-s red">CPF pendente</span>`}<br><span class="muted small">${esc(c.area)} · ${esc(c.origem)}</span></td>
       <td><span class="pill-s">${esc(c.etapa)}</span></td>
       <td>${esc(c.acao || "—")}${c.quando ? `<br><span class="small ${c.quando < hojeIso ? "atrasada" : "muted"}">${fmt(new Date(c.quando + "T12:00"))}</span>` : ""}</td>
       <td class="small">${ult ? `${fmt(new Date(ult.em))}<br><span class="muted">${esc(ult.o)}</span>` : "—"}</td>
@@ -495,7 +495,7 @@ function renderCrm() {
   }).join("") || `<tr><td colspan="5" class="muted">Nenhum cliente ainda. Clique em "Novo cliente".</td></tr>`;
 }
 
-const CAMPOS = { nome: "c-nome", tel: "c-tel", email: "c-email", area: "c-area", origem: "c-origem", etapa: "c-etapa", acao: "c-acao", quando: "c-quando", procs: "c-procs", notas: "c-notas" };
+const CAMPOS = { nome: "c-nome", cpf: "c-cpf", tel: "c-tel", email: "c-email", area: "c-area", origem: "c-origem", etapa: "c-etapa", acao: "c-acao", quando: "c-quando", procs: "c-procs", notas: "c-notas" };
 function abrirForm(c) {
   editando = c || null;
   $("c-etapa").innerHTML = ETAPAS.map((e) => `<option>${e}</option>`).join("");
@@ -508,6 +508,8 @@ $("crm-cancelar").onclick = () => ($("crm-form").hidden = true);
 $("crm-salvar").onclick = () => {
   const dados = Object.fromEntries(Object.entries(CAMPOS).map(([k, id]) => [k, $(id).value.trim()]));
   if (!dados.nome) { $("c-nome").focus(); return; }
+  if (!DocId.valido(dados.cpf)) { $("c-cpf").setCustomValidity("CPF ou CNPJ inválido"); $("c-cpf").reportValidity(); $("c-cpf").focus(); return; }
+  $("c-cpf").setCustomValidity(""); dados.cpf = DocId.formatar(dados.cpf);
   if (editando) Object.assign(editando, dados); else clientes.push({ id: "CL-" + Date.now().toString(36), criado: new Date().toISOString(), hist: [], ...dados });
   // Processos do cliente entram no acompanhamento automático.
   const nums = [...dados.procs.matchAll(CNJ_RE)].map((m) => fmtCnj(m));
@@ -561,7 +563,7 @@ $("ped-ok").onclick = () => {
   if (!importados.length) CASOS.splice(0, CASOS.length);
   importados.push(caso); CASOS.push(caso); try { localStorage.setItem(IMP_KEY, JSON.stringify(importados)); } catch {}
   if (!clientes.some((c) => c.caso === pk.protocolo)) {
-    clientes.push({ id: "CL-" + Date.now().toString(36), caso: pk.protocolo, criado: new Date().toISOString(), nome: pk.nome, tel: pk.telefone, email: pk.email, area, origem: "Plataforma",
+    clientes.push({ id: "CL-" + Date.now().toString(36), caso: pk.protocolo, criado: new Date().toISOString(), nome: pk.nome, cpf: pk.cpf || "", tel: pk.telefone, email: pk.email, area, origem: "Plataforma",
       etapa: "Consulta sugerida", acao: `Retornar contato (prefere ${String(pk.periodo || "").toLowerCase()})`, quando: iso(hoje), procs: "", notas: `Protocolo ${pk.protocolo}\n${pk.relato || ""}`,
       hist: [{ em: pk.criado, o: "Pedido pela plataforma" }] });
     salvarCrm(); renderCrm();
@@ -765,7 +767,8 @@ $("fin-tab").addEventListener("click", (e) => {
   if (acao === "recibo") {
     const D = window.DocGerador; const nome = nomeVinculo(l.vinculo) || "[NOME DO CLIENTE]";
     const cli = clientes.find((c) => c.nome === nome) || {};
-    const html = D.MODELOS.recibo.gerar({ nome, tipo: "pf", doc: cli.cpf || "[CPF]" }, { valor: String(l.valor).replace(".", ","), referente: `da prestação de serviços jurídicos (${l.desc}${l.parcela ? `, parcela ${l.parcela}` : ""})`, cidade: D.adv().cidade });
+    if (!DocId.valido(cli.cpf)) { alert("Cadastre o CPF/CNPJ do cliente em Clientes antes de emitir o recibo."); go("crm"); if (cli.id) abrirForm(cli); return; }
+    const html = D.MODELOS.recibo.gerar({ nome, tipo: DocId.cnpj(cli.cpf) ? "pj" : "pf", doc: cli.cpf }, { valor: String(l.valor).replace(".", ","), referente: `da prestação de serviços jurídicos (${l.desc}${l.parcela ? `, parcela ${l.parcela}` : ""})`, cidade: D.adv().cidade });
     const w = open("", "_blank"); w.document.write(`<html><head><meta charset="utf-8"><title>Recibo</title><style>body{font:12pt/1.6 "Times New Roman",serif;max-width:700px;margin:40px auto;padding:0 24px}h3{text-align:center}p{text-align:justify}.ass{text-align:center;margin-top:48px}</style></head><body>${html}<script>print()<\/script></body></html>`); w.document.close();
   }
   if (acao === "cobrar") {

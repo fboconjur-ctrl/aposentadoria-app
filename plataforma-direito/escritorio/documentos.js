@@ -138,6 +138,7 @@
   $("doc-cliente").onchange = () => {
     const c = clientes.find((x) => x.id === $("doc-cliente").value); if (!c) return;
     $("p-nome").value = c.nome;
+    if (c.cpf) { $("p-doc").value = c.cpf; $("p-tipo").value = DocId.cnpj(c.cpf) ? "pj" : "pf"; tipoParte(); }
     const caso = CASOS.find((k) => k.id === c.caso);
     if (caso && !$("kit-historia").value) $("kit-historia").value = [caso.resumo, ...(caso.orientacoes || [])].filter((x) => x && x !== "—").join("\n");
   };
@@ -146,6 +147,8 @@
   $("doc-gerar").onclick = () => {
     const p = Object.fromEntries(Object.entries(PARTE).map(([k, id]) => [k, $(id).value.trim()]));
     if (!p.nome) { $("p-nome").focus(); return; }
+    if (!DocId.valido(p.doc)) { $("p-doc").setCustomValidity("Informe um CPF ou CNPJ válido"); $("p-doc").reportValidity(); return; }
+    $("p-doc").setCustomValidity("");
     const m = MODELOS[$("doc-modelo").value];
     const f = Object.fromEntries(m.campos.map(([k]) => [k, ($(`f-${k}`)?.value || "").trim()]));
     $("doc-texto").innerHTML = m.gerar(p, f);
@@ -194,6 +197,7 @@
   $("kit-gerar").onclick = async () => {
     const p = Object.fromEntries(Object.entries(PARTE).map(([k, id]) => [k, $(id).value.trim()]));
     if (!p.nome) { document.querySelector("#v-docs details:not(#meus-dados)").open = true; $("p-nome").focus(); $("kit-status").textContent = "Envie os documentos ou preencha o nome do cliente."; return; }
+    if (!DocId.valido(p.doc)) { document.querySelector("#v-docs details:not(#meus-dados)").open = true; $("p-doc").focus(); $("kit-status").textContent = "Falta o CPF (ou CNPJ) válido do cliente. Envie o documento ou digite o número."; return; }
     const escolhidos = [...document.querySelectorAll("#kit-opcoes input:checked")].map((i) => i.value);
     const hist = $("kit-historia").value.trim(), reu = $("kit-reu").value.trim(), foro = $("kit-foro").value.trim() || adv.cidade;
     const objeto = reu ? `em ação judicial em face de ${reu}` : "";
