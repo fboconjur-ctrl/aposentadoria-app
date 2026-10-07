@@ -274,21 +274,23 @@ async function buscarDjen() {
   CASOS.forEach((c) => { if (so20(c.id).length === 20) processos.add(so20(c.id)); });
   $("djen-status").textContent = "Consultando o DJEN…";
   const consultas = [];
+  const rot = (nome, pr) => pr.then((v) => ((v.rotulo = nome), v), (e) => { e.rotulo = nome; throw e; });
   // Alguns tribunais (ex.: TRT10) gravam a OAB com zeros à esquerda (035332); consulta as duas formas.
-  if (oab) new Set([oab.replace(/^0+/, ""), oab.replace(/^0+/, "").padStart(6, "0")]).forEach((n) => consultas.push(consultaDjen({ numeroOab: n, ufOab: uf, ...datas })));
+  if (oab) new Set([oab.replace(/^0+/, ""), oab.replace(/^0+/, "").padStart(6, "0")]).forEach((n) => consultas.push(rot(`OAB ${n}`, consultaDjen({ numeroOab: n, ufOab: uf, ...datas }))));
   // Alguns tribunais publicam sem vincular a OAB; a busca pelo nome cobre esses casos.
   const nome = $("djen-nome").value.trim();
-  if (nome) consultas.push(consultaDjen({ nomeAdvogado: nome, ...datas }));
+  if (nome) consultas.push(rot("Seu nome", consultaDjen({ nomeAdvogado: nome, ...datas })));
   try { localStorage.setItem(PARTES_KEY, $("djen-partes").value); } catch {}
-  $("djen-partes").value.split(/\n/).map((x) => x.trim()).filter((x) => x.length >= 5).forEach((parte) => consultas.push(consultaDjen({ nomeParte: parte, ...datas })));
-  processos.forEach((p) => consultas.push(consultaDjen({ numeroProcesso: p, ...datas })));
+  $("djen-partes").value.split(/\n/).map((x) => x.trim()).filter((x) => x.length >= 5).forEach((parte) => consultas.push(rot(`Parte "${parte}"`, consultaDjen({ nomeParte: parte, ...datas }))));
+  processos.forEach((p) => consultas.push(rot(`Processo ${mascara(p)}`, consultaDjen({ numeroProcesso: p, ...datas }))));
   const res = await Promise.allSettled(consultas);
   const falhas = res.filter((r) => r.status === "rejected");
   const porId = new Map();
   res.forEach((r) => r.status === "fulfilled" && r.value.forEach((it) => porId.set(it.id ?? JSON.stringify(it).slice(0, 200), it)));
   const pubs = [...porId.values()].sort((a, b) => String(b.data_disponibilizacao || b.datadisponibilizacao).localeCompare(String(a.data_disponibilizacao || a.datadisponibilizacao)));
   const novas = pubs.filter((p) => !vistas.has(String(p.id))).length;
-  $("djen-status").textContent = `${pubs.length} publicação(ões) em ${n} dia(s) · ${novas} nova(s)` + (falhas.length ? ` · ${falhas.length} consulta(s) falharam: ${falhas[0].reason.message}` : "");
+  const detalhe = res.map((r) => r.status === "fulfilled" ? `${r.value.rotulo}: ${r.value.length}` : `${r.reason.rotulo}: ERRO (${r.reason.message})`).join(" · ");
+  $("djen-status").textContent = `${pubs.length} publicação(ões) em ${n} dia(s) · ${novas} nova(s) — ${detalhe}`;
   ultimasDjen = pubs; mostrarTudo();
 }
 
