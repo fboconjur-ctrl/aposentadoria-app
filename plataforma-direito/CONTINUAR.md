@@ -5,7 +5,7 @@ Prévia: https://deploy-preview-1--prevcalculadora.netlify.app/plataforma-direit
 
 ## Princípios combinados
 - Correção acima de tudo: nunca inventar jurisprudência, número, valor ou regra; marcar [COMPLETAR]/[PESQUISAR].
-- Dados de clientes NUNCA no repositório (é público). No painel ficam no navegador até ligar o Firebase.
+- Dados de clientes NUNCA no repositório (é público). No painel ficam no navegador até concluir o Supabase.
 - Revisão jurídica final fica para o fim (conteudo/REVISAO.md).
 - Sem custo inicial; método mais direto possível.
 
@@ -16,13 +16,12 @@ Prévia: https://deploy-preview-1--prevcalculadora.netlify.app/plataforma-direit
 **Rotina**: "Publicações diárias — OAB/DF 35332" (9h44, dias úteis) — falta marcar o conector Gmail nela em claude.ai → Routines.
 
 ## Pendências (em ordem)
-1. **Firebase (login com Google)** — código pronto (`firebase-config.js`, `escritorio/nuvem.js`, `firestore.rules`). Falta:
-   a) criar projeto em console.firebase.google.com; b) Authentication → ativar Google; c) Firestore → criar banco (região southamerica-east1);
-   d) registrar app Web e colar a config em `firebase-config.js`; e) 1º login → copiar UID → colocar em `firestore.rules` e publicar as regras;
-   f) adicionar o domínio do Netlify em Authentication → Settings → Authorized domains.
+1. **Supabase (login por e-mail com link mágico)** — projeto criado (apgrgbotrrhtxfhcjsgq) e código ligado (`supabase-config.js`, `escritorio/nuvem.js`, `supabase.sql`). Falta:
+   a) SQL Editor → colar `supabase.sql` → Run; b) Authentication → URL Configuration: Site URL e Redirect URLs com o endereço do painel no Netlify;
+   c) 1º login no painel → rodar a linha final do `supabase.sql` com o e-mail dela; d) depois, Authentication → desativar novos cadastros.
 2. Repositório privado (GitHub → Settings → Change visibility).
-3. Asaas (boleto/Pix/cartão) ligado ao Financeiro — depende do Firebase/servidor.
-4. Área do cliente com login — depende do Firebase.
+3. Asaas (boleto/Pix/cartão) ligado ao Financeiro — depende do Supabase/servidor.
+4. Área do cliente com login — depende do Supabase.
 5. WhatsApp Cloud API (respostas automáticas, mídia) — decidir número.
 6. Testar skills `peticao` e `protocolo-pje` num caso real (Claude Desktop + Claude in Chrome). Certificado: token A3 (+ "e-token" a confirmar se é em nuvem).
 7. DataJud/DJEN bloqueiam consultas de fora do Brasil: rodar consultas pelo navegador dela ou via Claude in Chrome.

@@ -379,14 +379,11 @@ document.querySelectorAll("[data-calc]").forEach((b) => (b.onclick = () => {
 }));
 $("calc-advogado").onclick = () => { state.text = state.text || "Dúvida sobre prazo ou prescrição (calculadora)"; state.key = null; state.flow = null; state.answers = []; openLawyer(); };
 
-// Se o Firebase estiver configurado, o pedido também cai direto no painel do escritório (coleção "pedidos").
+// Se o Supabase estiver configurado, o pedido também cai direto no painel do escritório (tabela "pedidos").
 async function enviarPedidoNuvem(pacote) {
-  const CFG = window.FIREBASE_CONFIG; if (!CFG) return;
+  const CFG = window.SUPABASE_CONFIG; if (!CFG) return;
   try {
-    const SDK = "https://www.gstatic.com/firebasejs/10.12.2/";
-    const carregar = (f) => new Promise((ok, erro) => { const s = document.createElement("script"); s.src = SDK + f; s.onload = ok; s.onerror = erro; document.head.appendChild(s); });
-    if (!window.firebase) { await carregar("firebase-app-compat.js"); await carregar("firebase-firestore-compat.js"); firebase.initializeApp(CFG); }
-    await firebase.firestore().collection("pedidos").add({ pacote, importado: false, criado: Date.now() });
+    await fetch(CFG.url + "/rest/v1/pedidos", { method: "POST", headers: { apikey: CFG.anonKey, "Content-Type": "application/json", Prefer: "return=minimal" }, body: JSON.stringify({ pacote }) });
   } catch { /* o e-mail do formulário continua sendo o caminho de reserva */ }
 }
 
