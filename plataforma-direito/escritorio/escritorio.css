@@ -67,3 +67,15 @@ body.office { display: grid; grid-template-columns: 240px minmax(0, 1fr); min-he
   .side nav { display: flex; margin: 0; }
   .demo-note { width: 100%; margin: 0; }
 }
+
+.djen-form { display: flex; gap: 12px; flex-wrap: wrap; }
+.djen-form label { display: grid; gap: 4px; font-size: .85rem; }
+.djen-form .search { min-width: 0; width: 120px; }
+.djen-lista { display: grid; gap: 12px; }
+.pub { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); padding: 16px 18px; display: grid; gap: 8px; }
+.pub.nova { border-left: 4px solid var(--amber); }
+.pub header { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.pub .texto { white-space: pre-wrap; font-size: .9rem; max-height: 7.5em; overflow: hidden; }
+.pub.aberta .texto { max-height: none; }
+.pub .acoes { display: flex; gap: 14px; flex-wrap: wrap; }
+.pub .acoes .linkish, .pub .acoes a { font-size: .88rem; }

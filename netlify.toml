@@ -11,3 +11,6 @@
   from = "/simulador/*"
   to = "/aposentadoria-app/:splat"
   status = 200
+
+[functions]
+  directory = "netlify/functions"

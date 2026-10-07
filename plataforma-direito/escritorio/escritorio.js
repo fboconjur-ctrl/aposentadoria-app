@@ -239,6 +239,82 @@ $("imp-ok").onclick = () => {
 };
 $("imp-limpar").onclick = () => { try { localStorage.removeItem(IMP_KEY); } catch {} location.reload(); };
 if (importados.length) document.querySelector(".demo-note").textContent = "Seus casos importados — guardados só neste navegador.";
+// Publicações do DJEN: consulta pela função /api/djen (Netlify), que repassa à API pública do CNJ.
+const VISTAS_KEY = "pd-djen-vistas", MONIT_KEY = "pd-djen-monitorados";
+let vistas = new Set();
+try { vistas = new Set(JSON.parse(localStorage.getItem(VISTAS_KEY) || "[]")); $("djen-monit").value = localStorage.getItem(MONIT_KEY) || ""; } catch {}
+const iso = (x) => x.toISOString().slice(0, 10);
+const so20 = (t) => String(t || "").replace(/\D/g, "");
+const mascara = (n) => (n = so20(n)).length === 20 ? `${n.slice(0, 7)}-${n.slice(7, 9)}.${n.slice(9, 13)}.${n[13]}.${n.slice(14, 16)}.${n.slice(16)}` : n;
+
+async function consultaDjen(params) {
+  const itens = [];
+  for (let pagina = 1; pagina <= 5; pagina++) {
+    const r = await fetch(`/api/djen?${new URLSearchParams({ ...params, pagina, itensPorPagina: 100 })}`);
+    const j = await r.json().catch(() => ({}));
+    if (!r.ok) throw new Error(j.erro || j.message || `DJEN respondeu ${r.status}`);
+    const lote = j.items || j.itens || [];
+    itens.push(...lote);
+    if (lote.length < 100) break;
+  }
+  return itens;
+}
+
+async function buscarDjen() {
+  const oab = $("djen-oab").value.trim(), uf = $("djen-uf").value.trim().toUpperCase();
+  const n = Math.min(60, Math.max(1, +$("djen-dias").value || 7));
+  const datas = { dataDisponibilizacaoInicio: iso(new Date(hoje.getTime() - n * DAY)), dataDisponibilizacaoFim: iso(hoje) };
+  try { localStorage.setItem(MONIT_KEY, $("djen-monit").value); } catch {}
+  const processos = new Set([...$("djen-monit").value.matchAll(CNJ_RE)].map((m) => so20(m[0])));
+  CASOS.forEach((c) => { if (so20(c.id).length === 20) processos.add(so20(c.id)); });
+  $("djen-status").textContent = "Consultando o DJEN…";
+  const consultas = [];
+  if (oab) consultas.push(consultaDjen({ numeroOab: oab, ufOab: uf, ...datas }));
+  processos.forEach((p) => consultas.push(consultaDjen({ numeroProcesso: p, ...datas })));
+  const res = await Promise.allSettled(consultas);
+  const falhas = res.filter((r) => r.status === "rejected");
+  const porId = new Map();
+  res.forEach((r) => r.status === "fulfilled" && r.value.forEach((it) => porId.set(it.id ?? JSON.stringify(it).slice(0, 200), it)));
+  const pubs = [...porId.values()].sort((a, b) => String(b.data_disponibilizacao || b.datadisponibilizacao).localeCompare(String(a.data_disponibilizacao || a.datadisponibilizacao)));
+  const novas = pubs.filter((p) => !vistas.has(String(p.id))).length;
+  $("djen-status").textContent = `${pubs.length} publicação(ões) em ${n} dia(s) · ${novas} nova(s)` + (falhas.length ? ` · ${falhas.length} consulta(s) falharam: ${falhas[0].reason.message}` : "");
+  renderPubs(pubs);
+}
+
+function renderPubs(pubs) {
+  $("djen-lista").innerHTML = pubs.map((p) => {
+    const num = p.numeroprocessocommascara || mascara(p.numero_processo || p.numeroProcesso);
+    const data = String(p.data_disponibilizacao || p.datadisponibilizacao || "").slice(0, 10).split("-").reverse().join("/");
+    const caso = CASOS.find((c) => so20(c.id) === so20(num));
+    const nova = !vistas.has(String(p.id));
+    const advs = (p.destinatarioadvogados || []).map((a) => a.advogado?.nome).filter(Boolean).join(", ");
+    const partes = (p.destinatarios || []).map((x) => x.nome).filter(Boolean).join(", ");
+    return `<article class="pub${nova ? " nova" : ""}" data-pub="${esc(p.id)}">
+      <header>${nova ? `<span class="pill-s amber">nova</span>` : ""}<b>${esc(data)}</b><span class="pill-s">${esc(p.siglaTribunal || "")}</span><span class="pill-s">${esc(p.tipoComunicacao || p.tipoDocumento || "")}</span></header>
+      <div><b>${esc(num)}</b> ${caso ? `· <button class="linkish" data-caso="${esc(caso.id)}">${esc(caso.nome)}</button>` : ""}<br><span class="muted small">${esc(p.nomeOrgao || "")}${p.nomeClasse ? " · " + esc(p.nomeClasse) : ""}</span></div>
+      ${partes ? `<div class="small"><b>Partes:</b> ${esc(partes)}</div>` : ""}${advs ? `<div class="small muted">Advogados: ${esc(advs)}</div>` : ""}
+      <div class="texto">${esc(String(p.texto || "").replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim())}</div>
+      <div class="acoes"><button class="linkish small" data-acao="abrir">Ler inteiro</button><button class="linkish small" data-acao="vista">Marcar como vista</button>
+        ${caso ? "" : `<button class="linkish small" data-acao="add" data-num="${esc(num)}">Adicionar ao painel</button>`}${p.link ? `<a class="small" href="${esc(p.link)}" target="_blank" rel="noopener">Documento no tribunal</a>` : ""}</div>
+      <p class="small muted">Prazo: confira a intimação e lance o prazo no caso — o painel não calcula prazo processual automaticamente.</p></article>`;
+  }).join("") || `<p class="muted">Nenhuma publicação no período.</p>`;
+}
+
+$("djen-buscar").onclick = buscarDjen;
+$("djen-lista").addEventListener("click", (e) => {
+  const b = e.target.closest("[data-acao]"); if (!b) return;
+  const art = b.closest(".pub");
+  if (b.dataset.acao === "abrir") art.classList.toggle("aberta");
+  if (b.dataset.acao === "vista") { vistas.add(art.dataset.pub); art.classList.remove("nova"); art.querySelector(".pill-s.amber")?.remove(); try { localStorage.setItem(VISTAS_KEY, JSON.stringify([...vistas])); } catch {} }
+  if (b.dataset.acao === "add") {
+    const c = casoImportado(importados.length + 1, { processo: b.dataset.num, tribunal: art.querySelector("header .pill-s:not(.amber)")?.textContent, obs: "Adicionado a partir de publicação do DJEN." });
+    if (!importados.length) CASOS.splice(0, CASOS.length);
+    importados.push(c); CASOS.push(c); try { localStorage.setItem(IMP_KEY, JSON.stringify(importados)); } catch {}
+    document.querySelector(".demo-note").textContent = "Seus casos importados — guardados só neste navegador.";
+    b.remove(); renderAll();
+  }
+});
+
 $("voltar").onclick = () => go("funil");
 $("busca").oninput = (e) => renderFunil(e.target.value);
 renderAll();

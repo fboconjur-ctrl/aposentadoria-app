@@ -18,6 +18,7 @@
     <button class="nav on" data-view="hoje">Hoje</button>
     <button class="nav" data-view="funil">Casos</button>
     <button class="nav" data-view="prazos">Prazos</button>
+    <button class="nav" data-view="djen">Publicações (DJEN)</button>
     <button class="nav" data-view="importar">Importar meus casos</button>
   </nav>
   <p class="demo-note">Dados fictícios de demonstração. Os pedidos reais entram aqui na próxima etapa, com acesso protegido.</p>
@@ -43,6 +44,23 @@
   <section id="v-prazos" class="oview">
     <header class="ohead"><div><p class="eyebrow">Controle</p><h1>Prazos</h1></div></header>
     <div class="panel"><table class="table"><thead><tr><th>Prazo</th><th>Caso</th><th>Providência</th><th>Fundamento</th><th>Situação</th></tr></thead><tbody id="tab-prazos"></tbody></table></div>
+  </section>
+
+  <section id="v-djen" class="oview">
+    <header class="ohead"><div><p class="eyebrow">Diário de Justiça Eletrônico Nacional · CNJ</p><h1>Publicações</h1></div>
+      <button class="btn" id="djen-buscar">Buscar agora</button></header>
+    <div class="panel">
+      <div class="djen-form">
+        <label>OAB<input id="djen-oab" class="search" value="35332" inputmode="numeric"></label>
+        <label>UF<input id="djen-uf" class="search" value="DF" maxlength="2"></label>
+        <label>Últimos dias<input id="djen-dias" class="search" type="number" min="1" max="60" value="7"></label>
+      </div>
+      <label class="small">Processos de terceiros para acompanhar (um número por linha)
+        <textarea id="djen-monit" rows="3" class="search" style="width:100%;font-family:monospace" placeholder="0700000-00.2026.8.07.0001"></textarea></label>
+      <p class="small muted">Os processos dos casos importados também são consultados. As publicações já vistas ficam marcadas neste navegador.</p>
+      <p id="djen-status" class="small"></p>
+    </div>
+    <div id="djen-lista" class="djen-lista"></div>
   </section>
 
   <section id="v-importar" class="oview">
