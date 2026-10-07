@@ -372,6 +372,8 @@ $("djen-lista").addEventListener("click", (e) => {
 });
 
 // Acompanhamento por número no DataJud (CNJ): funciona sem a OAB da advogada nos autos.
+// Chave PÚBLICA divulgada pelo CNJ na wiki do DataJud.
+const DATAJUD_CHAVE = "APIKey cDZHYzlZa0JadVREZDJCendQbXY6SkJlTzNjLV9TRENyQk1RdnFKZGRQdw==";
 const ACOMP_KEY = "pd-acomp", UF_TR = ["", "ac", "al", "ap", "am", "ba", "ce", "dft", "es", "go", "ma", "mt", "ms", "mg", "pa", "pb", "pr", "pe", "pi", "rj", "rn", "rs", "ro", "rr", "sc", "se", "sp", "to"];
 function aliasDe(n) {
   const j = n[13], tr = +n.slice(14, 16);
@@ -388,9 +390,18 @@ const listaAcomp = () => { const s = new Set([...$("djen-monit").value.matchAll(
 
 async function consultaDatajud(n) {
   const alias = aliasDe(n); if (!alias) throw new Error("tribunal não reconhecido pelo número");
-  const r = await fetch(`/api/datajud?${new URLSearchParams({ tribunal: alias, numero: n })}`);
+  // 1º direto do navegador (IP brasileiro); se bloquear, tenta pela função do Netlify.
+  let r = null;
+  try {
+    r = await fetch(`https://api-publica.datajud.cnj.jus.br/api_publica_${alias}/_search`, {
+      method: "POST", headers: { Authorization: DATAJUD_CHAVE, "Content-Type": "application/json" },
+      body: JSON.stringify({ query: { match: { numeroProcesso: n } }, size: 5 }),
+    });
+  } catch { r = null; }
+  if (!r || !r.ok) { const v = await fetch(`/api/datajud?${new URLSearchParams({ tribunal: alias, numero: n })}`).catch(() => null); if (v && (v.ok || !r)) r = v; }
+  if (!r) throw new Error("sem conexão com o DataJud");
   const j = await r.json().catch(() => ({}));
-  if (!r.ok) throw new Error(j.erro || `DataJud respondeu ${r.status}`);
+  if (!r.ok) throw new Error(j.erro || `DataJud respondeu ${r.status}${r.status === 504 ? " (o CNJ demorou demais; tente de novo)" : ""}`);
   const hits = (j.hits?.hits || []).map((h) => h._source);
   if (!hits.length) throw new Error("processo não encontrado no DataJud (pode ser sigiloso ou ainda não indexado)");
   // Pode haver um registro por grau/sistema; junta as movimentações de todos.

@@ -9,7 +9,7 @@ export default async (req) => {
   if (!/^[a-z0-9-]{2,8}$/.test(alias) || !/^\d{20}$/.test(numero)) return Response.json({ erro: "Parâmetros inválidos." }, { status: 400 });
   try {
     const r = await fetch(`https://api-publica.datajud.cnj.jus.br/api_publica_${alias}/_search`, {
-      method: "POST", headers: { Authorization: CHAVE, "Content-Type": "application/json" },
+      method: "POST", signal: AbortSignal.timeout(8500), headers: { Authorization: CHAVE, "Content-Type": "application/json" },
       body: JSON.stringify({ query: { match: { numeroProcesso: numero } }, size: 5 }),
     });
     return new Response(await r.text(), { status: r.status, headers: { "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store" } });
