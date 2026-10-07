@@ -14,6 +14,7 @@
   <nav>
     <a href="#como">Como funciona</a>
     <a href="#areas" data-go="home">Áreas atendidas</a>
+    <a href="#" data-go="calculadoras">Calculadoras</a>
     <a href="#" data-go="empresas">Empresas e gestores</a>
     <a href="#" class="btn-ghost" data-go="area">Entrar</a>
   </nav>
@@ -131,6 +132,19 @@
   </section>
 
   <!-- EMPRESAS E GESTORES -->
+  <section id="view-calculadoras" class="view">
+    <div class="b2b">
+      <p class="eyebrow">Ferramentas gratuitas</p>
+      <h1>Calculadoras jurídicas</h1>
+      <p class="muted">Confira quando vence um prazo do seu processo ou se um crime já pode estar prescrito. O cálculo é feito no seu aparelho; nada é enviado.</p>
+      <div class="calc-abas" role="tablist"><button class="on" data-calc="prazo">Prazo processual</button><button data-calc="prescricao">Prescrição penal</button></div>
+      <div class="card" id="calc-prazo" style="margin-top:12px"></div>
+      <div class="card" id="calc-prescricao" style="margin-top:12px" hidden></div>
+      <div class="card decision" style="margin-top:16px"><h2>Ficou com dúvida sobre o resultado?</h2><p class="muted">Prazo perdido e prescrição mudam o rumo do caso. Uma advogada pode conferir para você.</p>
+        <div class="actions"><button class="btn" id="calc-advogado">Falar com advogado</button></div></div>
+    </div>
+  </section>
+
   <section id="view-empresas" class="view">
     <div class="b2b">
       <p class="eyebrow">Plataforma do Direito · Empresas e Gestores</p>
@@ -227,6 +241,9 @@
 <script src="dac.js"></script>
 <script src="cnis.js"></script>
 <script src="docs.js"></script>
+<script src="prazos-calc.js"></script>
+<script src="prescricao.js"></script>
+<script src="calculadoras.js"></script>
 <script src="app.js"></script>
 </body>
 </html>

@@ -355,3 +355,12 @@ $("b2b-form").onsubmit = async (e) => {
   }
   $("b2b-send").disabled = false;
 };
+
+// Calculadoras públicas (prazo processual e prescrição penal).
+Calculadoras.prazo($("calc-prazo"));
+Calculadoras.prescricao($("calc-prescricao"));
+document.querySelectorAll("[data-calc]").forEach((b) => (b.onclick = () => {
+  document.querySelectorAll("[data-calc]").forEach((x) => x.classList.toggle("on", x === b));
+  $("calc-prazo").hidden = b.dataset.calc !== "prazo"; $("calc-prescricao").hidden = b.dataset.calc !== "prescricao";
+}));
+$("calc-advogado").onclick = () => { state.text = state.text || "Dúvida sobre prazo ou prescrição (calculadora)"; state.key = null; state.flow = null; state.answers = []; openLawyer(); };

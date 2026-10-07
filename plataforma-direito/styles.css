@@ -232,3 +232,19 @@ tr:last-child td { border-bottom: 0; }
 .tool .btn { justify-self: start; margin-top: 4px; }
 .badge { justify-self: start; font-size: .74rem; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; background: var(--amber-soft); color: var(--ink); padding: 4px 10px; border-radius: 999px; }
 #b2b-form { max-width: 560px; }
+
+/* Calculadoras (plataforma e escritório) */
+.calc { display: grid; gap: 12px; }
+.calc-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 12px; }
+.calc-grid label { display: grid; gap: 4px; font-size: .9rem; }
+.calc input:not([type=checkbox]), .calc select { padding: 10px 12px; border: 1.5px solid var(--line); border-radius: 10px; font: 1rem var(--font-body); background: var(--surface); color: var(--ink); min-width: 0; }
+.calc-check { display: flex; gap: 8px; align-items: flex-start; font-size: .92rem; }
+.calc-sub { margin: 4px 0 0; font-weight: 600; }
+.calc-res { background: var(--tint); border-radius: var(--r); padding: 16px 18px; display: grid; gap: 8px; }
+.calc-venc { font-size: 1.15rem; margin: 0; }
+.calc-aviso { font-size: .82rem; color: var(--muted); margin: 0; }
+.calc-tab { width: 100%; border-collapse: collapse; font-size: .9rem; }
+.calc-tab th, .calc-tab td { text-align: left; padding: 8px; border-bottom: 1px solid var(--line); vertical-align: top; }
+.calc-abas { display: flex; gap: 8px; flex-wrap: wrap; }
+.calc-abas button { border: 1.5px solid var(--line); background: var(--surface); border-radius: 999px; padding: 8px 16px; font: 600 .95rem var(--font-body); cursor: pointer; color: var(--ink); }
+.calc-abas button.on { border-color: var(--brand); color: var(--brand); }

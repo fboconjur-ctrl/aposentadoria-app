@@ -686,7 +686,7 @@ $("pz-form").onsubmit = (e) => {
   $("pz-res").hidden = false;
   $("pz-res").innerHTML = `<div class="kpi alert" style="margin-top:12px"><span class="muted small">Vencimento</span><strong>${venc.toLocaleDateString("pt-BR", { weekday: "long", day: "2-digit", month: "2-digit", year: "numeric" })}</strong><span class="small">${dias(venc)} dia(s) a partir de hoje</span></div>
     <ol class="small" style="margin:12px 0">${r.passos.map(([t, d]) => `<li><b>${brData(d)}</b> — ${esc(t)}</li>`).join("")}</ol>
-    ${r.pulos.length ? `<details class="small"><summary>${r.pulos.length} dia(s) não contado(s)</summary><ul>${r.pulos.map(([d, m]) => `<li>${brData(d)} — ${esc(m)}</li>`).join("")}</ul></details>` : ""}
+    ${r.pulos.length ? `<details class="small"><summary>${r.pulos.length} dia(s) pulado(s) (sem expediente ou suspensão)</summary><ul>${r.pulos.map(([d, m]) => `<li>${brData(d)} — ${esc(m)}</li>`).join("")}</ul></details>` : ""}
     <p class="small muted">Confira no calendário do tribunal: feriados locais, pontos facultativos e suspensões de expediente variam e não são calculados sem que você os informe acima. A data é uma conferência, não substitui a sua verificação.</p>
     <div style="display:flex;gap:10px;flex-wrap:wrap"><button type="button" class="btn" id="pz-lancar">Lançar no caso + criar tarefa</button></div>`;
   $("pz-lancar").onclick = () => {
@@ -699,6 +699,8 @@ $("pz-form").onsubmit = (e) => {
   };
 };
 $("pz-data").value = iso(hoje);
+Calculadoras.prescricao($("esc-prescricao"));
+$("pz-contagem").onchange = () => { if ($("pz-contagem").value === "penal") $("pz-recesso").parentElement.lastChild.textContent = " Suspensão 20/12–20/01 (CPP, art. 798-A) — desmarque se réu preso, Maria da Penha ou urgente"; };
 
 $("voltar").onclick = () => go("funil");
 $("busca").oninput = (e) => renderFunil(e.target.value);

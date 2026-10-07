@@ -37,7 +37,7 @@ const Prazos = (() => {
     const k = chave(d);
     if (d.getDay() === 0) return "domingo";
     if (d.getDay() === 6) return "sábado";
-    if (op.recesso && noRecesso(d)) return "recesso forense (CPC, art. 220)";
+    if (op.recesso && noRecesso(d)) return op.penal ? "suspensão de 20/12 a 20/01 (CPP, art. 798-A)" : "recesso forense (CPC, art. 220)";
     if (op.extras?.has(k)) return op.extras.get(k);
     const nac = feriadosNacionais(d.getFullYear()).get(k); if (nac) return nac;
     if (op.forenses) { const fo = feriadosForenses(d.getFullYear()).get(k); if (fo) return fo; }
@@ -50,7 +50,8 @@ const Prazos = (() => {
    *            dobro, recesso, forenses, extras: Map(data → motivo) })
    */
   function calcular(o) {
-    const op = { recesso: o.recesso !== false, forenses: o.forenses !== false, extras: o.extras || new Map() };
+    const penal = o.contagem === "penal";
+    const op = { recesso: o.recesso !== false, forenses: o.forenses !== false, extras: o.extras || new Map(), penal };
     const pulos = [], passos = [];
     let marco = dia(o.marco);
     if (o.tipoMarco === "disponibilizacao") {
@@ -65,13 +66,16 @@ const Prazos = (() => {
 
     const total = (+o.dias || 0) * (o.dobro ? 2 : 1);
     const inicio = proximoUtil(soma(marco, 1), op, pulos); // exclui o dia do começo (art. 224)
-    passos.push(["Início da contagem (1º dia útil seguinte — CPC, art. 224, §3º)", chave(inicio)]);
+    passos.push([penal ? "Início da contagem (1º dia útil seguinte — CPP, art. 798, §1º; Súmula 310/STF)" : "Início da contagem (1º dia útil seguinte — CPC, art. 224, §3º)", chave(inicio)]);
     let fim = inicio, contados = 1;
     if (o.contagem === "corridos") { fim = soma(inicio, total - 1); }
+    else if (penal) { // contínuo: conta fins de semana e feriados; só a suspensão do art. 798-A interrompe a contagem
+      while (contados < total) { fim = soma(fim, 1); if (op.recesso && noRecesso(fim)) pulos.push([chave(fim), "suspensão de 20/12 a 20/01 (CPP, art. 798-A)"]); else contados++; }
+    }
     else while (contados < total) { fim = soma(fim, 1); const m = motivoNaoUtil(fim, op); if (m) pulos.push([chave(fim), m]); else contados++; }
     const fimUtil = proximoUtil(fim, op, pulos); // vencimento em dia sem expediente prorroga (art. 224, §1º)
-    if (chave(fimUtil) !== chave(fim)) passos.push(["Vencimento original caiu em dia sem expediente", chave(fim)]);
-    passos.push([`Vencimento (${total} dia${total > 1 ? "s" : ""} ${o.contagem === "corridos" ? "corridos" : "úteis"}${o.dobro ? ", em dobro" : ""})`, chave(fimUtil)]);
+    if (chave(fimUtil) !== chave(fim)) passos.push([penal ? "Vencimento caiu em dia sem expediente — prorrogado (CPP, art. 798, §3º)" : "Vencimento original caiu em dia sem expediente", chave(fim)]);
+    passos.push([`Vencimento (${total} dia${total > 1 ? "s" : ""} ${penal ? "contínuos — CPP, art. 798" : o.contagem === "corridos" ? "corridos" : "úteis"}${o.dobro ? ", em dobro" : ""})`, chave(fimUtil)]);
     const vistos = new Set();
     return { vencimento: chave(fimUtil), inicio: chave(inicio), passos, pulos: pulos.filter(([k]) => !vistos.has(k) && vistos.add(k)) };
   }
