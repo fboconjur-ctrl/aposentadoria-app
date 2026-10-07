@@ -284,3 +284,11 @@ tr:last-child td { border-bottom: 0; }
 }
 .foot { padding-bottom: 90px; }
 .tiles .tile-full { grid-column: 1 / -1; grid-template-columns: auto auto; justify-content: center; align-items: center; gap: 10px; padding: 14px; }
+.extras { max-width: 1160px; margin: 48px auto 40px; padding: 0 16px; }
+.extras h2 { margin-bottom: 16px; }
+.extras-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+.extras-grid a { display: grid; gap: 4px; padding: 18px; background: var(--surface); border: 1.5px solid var(--line); border-radius: var(--r); color: var(--ink); text-decoration: none; box-shadow: var(--shadow); }
+.extras-grid a:hover { border-color: var(--brand); }
+.extras-grid span { font-size: 1.6rem; }
+.extras-grid small { color: var(--muted); font-size: .92rem; }
+@media (max-width: 760px) { .extras-grid { grid-template-columns: 1fr; } }
