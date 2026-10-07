@@ -268,7 +268,7 @@ async function consultaDjen(params) {
 async function buscarDjen() {
   const oab = $("djen-oab").value.trim(), uf = $("djen-uf").value.trim().toUpperCase();
   const n = Math.min(60, Math.max(1, +$("djen-dias").value || 7));
-  const datas = { dataDisponibilizacaoInicio: iso(new Date(hoje.getTime() - n * DAY)), dataDisponibilizacaoFim: iso(hoje) };
+  const datas = { dataDisponibilizacaoInicio: iso(new Date(hoje.getTime() - n * DAY)), dataDisponibilizacaoFim: iso(new Date(hoje.getTime() + DAY)) };
   try { localStorage.setItem(MONIT_KEY, $("djen-monit").value); } catch {}
   const processos = new Set([...$("djen-monit").value.matchAll(CNJ_RE)].map((m) => so20(m[0])));
   CASOS.forEach((c) => { if (so20(c.id).length === 20) processos.add(so20(c.id)); });
