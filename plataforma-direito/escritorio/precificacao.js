@@ -48,8 +48,7 @@
   listaServicos();
 
   let ultima = null;
-  $("pr-form").onsubmit = (e) => {
-    e.preventDefault();
+  $("pr-calcular").onclick = () => {
     const i = item(), t = tab(); if (!i) return;
     const urh = num($("pr-urh").value);
     if (t.urh && i.vm && !urh) { $("pr-urh").focus(); $("pr-res").hidden = false; $("pr-res").innerHTML = `<p>Informe o valor da URH do mês (publicado no site da OAB/DF). Fica salvo.</p>`; return; }
@@ -64,7 +63,8 @@
     const pctExito = +$("pr-exito").value || 0;
     const fixoMisto = Math.max(arred(sugerido * 0.5), arred(piso));
     const parcelas = Math.min(12, Math.max(1, Math.round(sugerido / 1000)));
-    ultima = { servico: i.nome, sugerido, fixoMisto, pctExito, parcelas };
+    ultima = { servico: i.nome, item: i.n, sugerido, fixoMisto, pctExito, parcelas, piso, proveito };
+    window.PrecoAtual = ultima;
     $("pr-res").hidden = false;
     $("pr-res").innerHTML = `
       <div class="kpis">
@@ -73,15 +73,10 @@
         <div class="kpi"><span class="muted small">Opção 2 · Fixo + êxito</span><strong style="font-size:1.6rem">${R(fixoMisto)}</strong><span class="small">+ ${pctExito}% do proveito${proveito ? ` (≈ ${R(proveito * pctExito / 100)})` : ""}</span></div>
       </div>
       ${i.pct && !proveito ? `<p class="small">Este item da tabela prevê percentual sobre o proveito/valor. Informe o proveito estimado para considerar.</p>` : ""}
-      <details class="small"><summary>Como chegamos a esse valor</summary><ul>${bases.map(([t2, v]) => `<li>${esc(t2)}: ${R(v)}</li>`).join("")}
+      <p class="small muted">Esses valores entram na proposta e no contrato do kit (escolha a opção abaixo).</p><details class="small"><summary>Como chegamos a esse valor</summary><ul>${bases.map(([t2, v]) => `<li>${esc(t2)}: ${R(v)}</li>`).join("")}
         <li>Multiplicador dos critérios: ×${mult.toFixed(2).replace(".", ",")}</li><li>Sugestão = a maior das bases, arredondada, nunca abaixo do piso.</li></ul>
         <p>Item: ${esc(i.nome)} (${esc(t.nome)}). Critérios do Código de Ética e Disciplina, art. 49; vedado cobrar abaixo do mínimo da tabela (art. 48, §6º); êxito + sucumbência não podem superar o benefício do cliente (art. 50). Custas e despesas à parte.</p></details>
-      <div style="display:flex;gap:10px;flex-wrap:wrap"><button type="button" class="btn" id="pr-contrato">Usar no contrato</button><button type="button" class="back" id="pr-wa">Copiar proposta</button></div>`;
-    $("pr-contrato").onclick = () => {
-      go("docs"); const d = document.querySelector("#v-docs details:not(#meus-dados)"); if (d) d.open = true;
-      $("doc-modelo").value = "contrato"; $("doc-modelo").dispatchEvent(new Event("change"));
-      setTimeout(() => { if ($("f-fixo")) $("f-fixo").value = String(ultima.sugerido).replace(".", ","); if ($("f-pagamento")) $("f-pagamento").value = ultima.parcelas > 1 ? `em ${ultima.parcelas} parcelas mensais` : "à vista, na assinatura"; if ($("f-objeto")) $("f-objeto").focus(); }, 0);
-    };
+      <div style="display:flex;gap:10px;flex-wrap:wrap"><button type="button" class="back" id="pr-wa">Copiar proposta</button></div>`;
     $("pr-wa").onclick = async () => {
       const txt = `Proposta de honorários — ${i.nome}\n\nOpção 1: ${R(sugerido)} (até ${parcelas}x de ${R(sugerido / parcelas)})\nOpção 2: ${R(fixoMisto)} + ${pctExito}% do valor obtido ao final\n\nCustas e despesas do processo à parte. Fico à disposição para esclarecer.`;
       try { await navigator.clipboard.writeText(txt); $("pr-wa").textContent = "Copiado!"; } catch {}

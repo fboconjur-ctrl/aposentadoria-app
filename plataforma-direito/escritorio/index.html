@@ -16,22 +16,18 @@
   <p class="side-tag">Escritório</p>
   <nav>
     <button class="nav on" data-view="hoje">Hoje</button>
-    <button class="nav" data-view="agenda">Agenda</button>
-    <button class="nav" data-view="tarefas">Tarefas</button>
+    <button class="nav" data-view="docs">Novo caso</button>
     <button class="nav" data-view="funil">Casos</button>
     <button class="nav" data-view="crm">Clientes</button>
-    <button class="nav" data-view="docs">Documentos</button>
+    <button class="nav" data-view="agenda">Agenda e prazos</button>
+    <button class="nav" data-view="djen">Publicações</button>
     <button class="nav" data-view="fin">Financeiro</button>
-    <button class="nav" data-view="preco">Precificação</button>
-    <button class="nav" data-view="prazos">Prazos</button>
-    <button class="nav" data-view="acomp">Acompanhamento</button>
-    <button class="nav" data-view="djen">Publicações (DJEN)</button>
-    <button class="nav" data-view="importar">Importar meus casos</button>
   </nav>
   <p class="demo-note">Dados fictícios de demonstração. Os pedidos reais entram aqui na próxima etapa, com acesso protegido.</p>
 </aside>
 
 <main class="office-main">
+  <nav class="subnav" id="subnav" hidden></nav>
   <section id="v-hoje" class="oview on">
     <header class="ohead"><div><p class="eyebrow" id="hoje-data"></p><h1>Bom dia, Fernanda.</h1></div></header>
     <div class="kpis" id="kpis"></div>
@@ -168,12 +164,30 @@
         <label>Valor da causa (R$)<input id="kit-valor" class="search" inputmode="decimal"></label>
         <label class="wide" style="display:flex;gap:16px;flex-wrap:wrap"><span><input type="checkbox" id="kit-grat"> Justiça gratuita</span><span><input type="checkbox" id="kit-tutela"> Tutela de urgência / liminar</span><span><input type="checkbox" id="kit-prior"> Prioridade (idoso, doença grave, PcD)</span><span><input type="checkbox" id="kit-segredo"> Segredo de justiça</span></label>
       </div>
-      <h2 style="margin-top:12px">3. O que vai no kit</h2>
+      <h2 style="margin-top:12px">3. Honorários e proposta</h2>
+      <div id="pr-form" class="pr-box">
+      
+      <div class="crm-grid">
+        <label class="wide">Serviço (busca na tabela da OAB/DF)<input id="pr-busca" class="search" placeholder="ex.: divórcio, mandado de segurança, INSS, júri, PAD"></label>
+        <label class="wide"><select id="pr-servico" class="search" aria-label="Serviço"></select></label>
+        <p class="wide small" id="pr-item"></p>
+        <label id="pr-urh-box">Valor da URH do mês (R$) — fica salvo<input id="pr-urh" class="search" inputmode="decimal" placeholder="ex.: 362,72 (fev/2025) — confira o atual"></label>
+        <label>Proveito econômico / valor em jogo (R$)<input id="pr-proveito" class="search" inputmode="decimal" placeholder="opcional"></label>
+        <label>Horas estimadas (opcional)<input id="pr-horas" class="search" inputmode="decimal"></label>
+        <label>Seu valor-hora (R$, opcional — mínimo 2 URH)<input id="pr-hora" class="search" inputmode="decimal"></label>
+        <label>Êxito na opção 2 (%)<input id="pr-exito" class="search" type="number" min="0" max="30" value="20"></label>
+      </div>
+      <details class="small" style="margin-top:6px"><summary>Ajustar critérios do caso (CED, art. 49)</summary><div class="crm-grid" id="pr-fatores" style="margin-top:8px"></div></details>
+      <div><button class="btn" type="button" id="pr-calcular">Calcular honorários</button></div>
+      <div id="pr-res" hidden></div>
+    </div>
+      <div class="crm-grid" style="margin-top:8px"><label>No contrato e na proposta, usar<select id="kit-opcao" class="search"><option value="1">Opção 1 — honorários fixos</option><option value="2">Opção 2 — fixo + êxito</option><option value="ambas">As duas opções na proposta; contrato com a opção 1</option></select></label></div>
+      <h2 style="margin-top:12px">4. O que vai no kit</h2>
       <div class="kit-opcoes" id="kit-opcoes"></div>
       <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:12px"><button class="btn" id="kit-gerar">Gerar kit da ação (.zip)</button></div>
       <p id="kit-status" class="small"></p>
     </div>
-    <details class="panel"><summary><b>Gerar um documento avulso / conferir dados</b></summary>
+    <details class="panel" id="doc-avulso"><summary><b>Dados do cliente e documento avulso</b></summary>
       <div class="crm-grid" style="margin-top:12px">
         <label>Modelo<select id="doc-modelo" class="search"></select></label>
       </div>
@@ -234,26 +248,7 @@
       <table class="table"><thead><tr><th>Vencimento</th><th>Descrição</th><th>Valor</th><th>Situação</th><th></th></tr></thead><tbody id="fin-tab"></tbody></table></div>
   </section>
 
-  <section id="v-preco" class="oview">
-    <header class="ohead"><div><p class="eyebrow">Sugestão de honorários ao pegar o caso</p><h1>Precificação</h1></div></header>
-    <form class="panel" id="pr-form">
-      <p class="small muted">Base: Tabela de Honorários da OAB/DF (valores mínimos em URH). O valor da URH é publicado mensalmente no site da OAB/DF.</p>
-      <div class="crm-grid">
-        <label class="wide">Buscar serviço na tabela<input id="pr-busca" class="search" placeholder="ex.: divórcio, mandado de segurança, INSS, júri, PAD"></label>
-        <label class="wide">Serviço<select id="pr-servico" class="search"></select></label>
-        <p class="wide small" id="pr-item"></p>
-        <label id="pr-urh-box">Valor da URH do mês (R$) — fica salvo<input id="pr-urh" class="search" inputmode="decimal" placeholder="ex.: 362,72 (fev/2025) — confira o atual"></label>
-        <label>Proveito econômico / valor em jogo (R$)<input id="pr-proveito" class="search" inputmode="decimal" placeholder="opcional"></label>
-        <label>Horas estimadas (opcional)<input id="pr-horas" class="search" inputmode="decimal"></label>
-        <label>Seu valor-hora (R$, opcional — mínimo 2 URH)<input id="pr-hora" class="search" inputmode="decimal"></label>
-        <label>Êxito na opção 2 (%)<input id="pr-exito" class="search" type="number" min="0" max="30" value="20"></label>
-      </div>
-      <h2 style="margin-top:8px">Critérios do caso (CED, art. 49)</h2>
-      <div class="crm-grid" id="pr-fatores"></div>
-      <div><button class="btn" type="submit">Sugerir valor</button></div>
-      <div id="pr-res" hidden></div>
-    </form>
-  </section>
+
 
   <section id="v-acomp" class="oview">
     <header class="ohead"><div><p class="eyebrow">Movimentações pelo número · DataJud (CNJ)</p><h1>Acompanhamento</h1></div>

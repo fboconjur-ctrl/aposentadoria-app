@@ -139,3 +139,9 @@ body.office { display: grid; grid-template-columns: 240px minmax(0, 1fr); min-he
   .doc-folha { padding: 20px; }
   .timeline-d li { grid-template-columns: 1fr !important; gap: 0 !important; }
 }
+
+.subnav { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 14px; }
+.subnav button { border: 1.5px solid var(--line); background: var(--surface); border-radius: 999px; padding: 6px 14px; font: 600 .9rem var(--font-body); cursor: pointer; color: var(--ink); }
+.subnav button.on { border-color: var(--brand); color: var(--brand); }
+.pr-box { display: grid; gap: 10px; }
+@media (max-width: 860px) { .subnav { flex-wrap: nowrap; overflow-x: auto; } .subnav button { flex: none; } }

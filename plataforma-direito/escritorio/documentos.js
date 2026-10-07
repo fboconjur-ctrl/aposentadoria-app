@@ -182,7 +182,7 @@
         li.lastChild.textContent = achados.length ? `encontrado: ${achados.join(", ")}${d.nascimento ? ` · nasc. ${d.nascimento}` : ""}${d.naturalidade ? ` · ${d.naturalidade}` : ""}` : "não consegui ler dados — confira a nitidez da foto";
       } catch (e) { li.lastChild.textContent = "erro: " + e.message; }
     }
-    document.querySelector("#v-docs details:not(#meus-dados)").open = true;
+    $("doc-avulso").open = true;
   }
   const dz = $("dz");
   $("dz-input").onchange = (e) => processar([...e.target.files]);
@@ -191,13 +191,13 @@
   dz.ondrop = (e) => { e.preventDefault(); dz.classList.remove("over"); processar([...e.dataTransfer.files]); };
 
   // ---------- kit da ação ----------
-  const KIT = [["procuracao", "Procuração", true], ["contrato", "Contrato de honorários", true], ["hipossuficiencia", "Declaração de hipossuficiência", false], ["peticao", "Minuta da petição (pedido pronto para o Claude)", true], ["checklist", "Checklist de documentos", true], ["protocolo", "Ficha de protocolo PJe (e instruções para o Claude)", true]];
+  const KIT = [["proposta", "Proposta de honorários", true], ["procuracao", "Procuração", true], ["contrato", "Contrato de honorários", true], ["hipossuficiencia", "Declaração de hipossuficiência", false], ["peticao", "Minuta da petição (pedido pronto para o Claude)", true], ["checklist", "Checklist de documentos", true], ["protocolo", "Ficha de protocolo PJe (e instruções para o Claude)", true]];
   $("kit-opcoes").innerHTML = KIT.map(([k, n, on]) => `<label><input type="checkbox" value="${k}"${on ? " checked" : ""}> ${n}</label>`).join("");
   const docHtml = (corpo) => `<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word"><head><meta charset="utf-8"><style>body{font:12pt/1.5 "Times New Roman",serif}h3{text-align:center}p{text-align:justify}.ass{text-align:center;margin-top:36pt}</style></head><body>${corpo}</body></html>`;
   $("kit-gerar").onclick = async () => {
     const p = Object.fromEntries(Object.entries(PARTE).map(([k, id]) => [k, $(id).value.trim()]));
-    if (!p.nome) { document.querySelector("#v-docs details:not(#meus-dados)").open = true; $("p-nome").focus(); $("kit-status").textContent = "Envie os documentos ou preencha o nome do cliente."; return; }
-    if (!DocId.valido(p.doc)) { document.querySelector("#v-docs details:not(#meus-dados)").open = true; $("p-doc").focus(); $("kit-status").textContent = "Falta o CPF (ou CNPJ) válido do cliente. Envie o documento ou digite o número."; return; }
+    if (!p.nome) { $("doc-avulso").open = true; $("p-nome").focus(); $("kit-status").textContent = "Envie os documentos ou preencha o nome do cliente."; return; }
+    if (!DocId.valido(p.doc)) { $("doc-avulso").open = true; $("p-doc").focus(); $("kit-status").textContent = "Falta o CPF (ou CNPJ) válido do cliente. Envie o documento ou digite o número."; return; }
     const escolhidos = [...document.querySelectorAll("#kit-opcoes input:checked")].map((i) => i.value);
     const hist = $("kit-historia").value.trim(), reu = $("kit-reu").value.trim(), foro = $("kit-foro").value.trim() || adv.cidade;
     const objeto = reu ? `em ação judicial em face de ${reu}` : "";
@@ -205,8 +205,26 @@
     const zip = new JSZip(); const pasta = zip.folder(`Kit - ${p.nome}`.replace(/[\\/:*?"<>|]/g, ""));
     const n = (i, t) => `${String(i).padStart(2, "0")} - ${t}`;
     let i = 1;
+    const pr = window.PrecoAtual, opc = $("kit-opcao").value;
+    const doContrato = pr ? (opc === "2" ? { fixo: String(pr.fixoMisto).replace(".", ","), exito: String(pr.pctExito) } : { fixo: String(pr.sugerido).replace(".", ","), exito: "" }) : { fixo: "[COMPLETAR]", exito: "" };
+    const pagto = pr ? (opc === "2" ? (pr.fixoMisto >= 2000 ? `em ${Math.min(12, Math.round(pr.fixoMisto / 1000))} parcelas mensais, a primeira na assinatura` : "na assinatura") : (pr.parcelas > 1 ? `em ${pr.parcelas} parcelas mensais, a primeira na assinatura` : "na assinatura")) : "[forma de pagamento]";
+    if (escolhidos.includes("proposta")) {
+      const R = (v) => (+v || 0).toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+      const op1 = pr && `<p><b>Opção 1 — Honorários fixos:</b> ${reais(pr.sugerido)}, ${pr.parcelas > 1 ? `em até ${pr.parcelas} parcelas mensais de ${R(pr.sugerido / pr.parcelas)}` : "na assinatura do contrato"}.</p>`;
+      const op2 = pr && `<p><b>Opção 2 — Fixo + êxito:</b> ${reais(pr.fixoMisto)} na contratação, mais ${pr.pctExito}% (${inteiroExtenso(pr.pctExito)} por cento) sobre o proveito econômico obtido ao final${pr.proveito ? ` (estimativa: ${R(pr.proveito * pr.pctExito / 100)})` : ""}.</p>`;
+      const ops = !pr ? `<p><b>Honorários:</b> [COMPLETAR — calcule no passo 3 do kit].</p>` : opc === "1" ? op1 : opc === "2" ? op2 : op1 + op2;
+      pasta.file(n(i++, "Proposta de honorários.doc"), "\ufeff" + docHtml(`<h3>PROPOSTA DE HONORÁRIOS ADVOCATÍCIOS</h3>
+        <p><b>Cliente:</b> ${esc(p.nome)}${p.doc ? ` — ${p.tipo === "pj" ? "CNPJ" : "CPF"} ${esc(p.doc)}` : ""}</p>
+        <p><b>Serviço:</b> ${esc(pr ? pr.servico.replace(/[,—–-]?\s*\d+%\s*a\s*\d+%.*$/, "").replace(/[\s—–-]+$/, "") : "[descrever]")}${reu ? `, em face de ${esc(reu)}` : ""}.</p>
+        <p><b>O que está incluído:</b> análise do caso e dos documentos, definição da estratégia, elaboração e protocolo das peças, acompanhamento do processo em primeiro grau, audiências e a interposição ou resposta de recurso ao segundo grau. Sustentação oral, recursos aos tribunais superiores, cumprimento de sentença e incidentes não estão incluídos e serão orçados à parte, se necessários.</p>
+        ${ops}
+        <p><b>Honorários de sucumbência:</b> eventualmente fixados pelo juízo, pertencem à advogada (Lei 8.906/1994, art. 23; CPC, art. 85, §14) e não se confundem com os honorários acima.</p>
+        <p><b>Despesas:</b> custas, perícias, cópias, deslocamentos e demais despesas do processo correm por conta do cliente, mediante prévia comunicação.</p>
+        <p><b>Validade da proposta:</b> 15 dias.</p>
+        <p>${esc(foro)}, ${dataExtenso()}.</p>${assinatura(adv.nome, "Advogada OAB " + adv.oab)}`));
+    }
     if (escolhidos.includes("procuracao")) pasta.file(n(i++, "Procuração.doc"), "\ufeff" + docHtml(MODELOS.procuracao.gerar(p, base)));
-    if (escolhidos.includes("contrato")) pasta.file(n(i++, "Contrato de honorários.doc"), "\ufeff" + docHtml(MODELOS.contrato.gerar(p, { ...base, fixo: "[COMPLETAR]", exito: "", pagamento: "[forma de pagamento]" })));
+    if (escolhidos.includes("contrato")) pasta.file(n(i++, "Contrato de honorários.doc"), "\ufeff" + docHtml(MODELOS.contrato.gerar(p, { ...base, ...doContrato, pagamento: pagto })));
     if (escolhidos.includes("hipossuficiencia")) pasta.file(n(i++, "Declaração de hipossuficiência.doc"), "\ufeff" + docHtml(MODELOS.hipossuficiencia.gerar(p, base)));
     if (escolhidos.includes("peticao")) pasta.file(n(i++, "Pedido da petição - colar no Claude.txt"),
       `Petição: monte a petição inicial com a skill "peticao".\n\nCLIENTE (autor):\n${["Nome: " + p.nome, p.nac && "Nacionalidade: " + p.nac, p.civil && "Estado civil: " + p.civil, p.prof && "Profissão: " + p.prof, p.rg && "RG: " + p.rg, p.doc && "CPF/CNPJ: " + p.doc, p.end && "Endereço: " + p.end].filter(Boolean).join("\n")}\n\nRÉU: ${reu || "[informar]"}\nCIDADE/FORO PRETENDIDO: ${foro}\n\nHISTÓRIA DO CASO:\n${hist || "[narrar]"}\n\nUse a jurisprudência do tribunal desse foro, verificada com link. Salve a petição no meu Google Drive.`);
@@ -251,7 +269,7 @@ REGRAS PARA O ROBÔ
     const blob = await zip.generateAsync({ type: "blob" });
     const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = `Kit - ${p.nome}.zip`; document.body.appendChild(a); a.click(); a.remove();
     setTimeout(() => URL.revokeObjectURL(a.href), 3000);
-    $("kit-status").textContent = `Kit gerado com ${i - 1} arquivo(s). Os valores dos honorários ficam para você completar no contrato.`;
+    $("kit-status").textContent = `Kit gerado com ${i - 1} arquivo(s).` + (window.PrecoAtual ? "" : " Calcule os honorários no passo 3 para a proposta e o contrato saírem com valores.");
     const c = clientes.find((x) => semAcento(x.nome) === semAcento(p.nome));
     if (c) { (c.hist ||= []).unshift({ em: new Date().toISOString(), o: "Kit da ação gerado" }); salvarCrm(); renderCrm(); }
   };

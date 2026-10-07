@@ -165,10 +165,20 @@ function salvarEtapaDemo(c) { etapasSalvas[c.id] = c.etapa; try { localStorage.s
 const todosPrazos = () => CASOS.flatMap((c) => c.prazos.map((p) => ({ ...p, caso: c }))).sort((a, b) => a.data - b.data);
 const situacao = (p) => { const n = dias(p.data); return n < 0 ? ["vencido", "red"] : n <= 3 ? [`${n} dia(s)`, "red"] : n <= 7 ? [`${n} dias`, "amber"] : [`${n} dias`, "green"]; };
 
+const GRUPOS = {
+  docs: [["docs", "Kit da ação"]],
+  funil: [["funil", "Funil"], ["acomp", "Acompanhamento"], ["importar", "Importar casos"]],
+  agenda: [["agenda", "Agenda"], ["tarefas", "Tarefas"], ["prazos", "Prazos e calculadoras"]],
+  djen: [["djen", "Publicações"]],
+};
+const grupoDe = (v) => Object.keys(GRUPOS).find((g) => GRUPOS[g].some(([x]) => x === v)) || v;
 function go(view) {
+  const g = grupoDe(view), sub = GRUPOS[g];
+  $("subnav").hidden = !sub || sub.length < 2;
+  if (sub && sub.length > 1) $("subnav").innerHTML = sub.map(([v, n]) => `<button data-sub="${v}" class="${v === view ? "on" : ""}">${n}</button>`).join("");
   document.querySelectorAll(".oview").forEach((v) => v.classList.toggle("on", v.id === "v-" + view));
-  document.querySelectorAll(".nav").forEach((b) => b.classList.toggle("on", b.dataset.view === view));
-  document.querySelector(`.nav[data-view="${view}"]`)?.scrollIntoView({ block: "nearest", inline: "center" });
+  document.querySelectorAll(".nav").forEach((b) => b.classList.toggle("on", b.dataset.view === g));
+  document.querySelector(`.nav[data-view="${g}"]`)?.scrollIntoView({ block: "nearest", inline: "center" });
   window.scrollTo(0, 0);
 }
 
@@ -227,6 +237,7 @@ function renderAll() { renderHoje(); if (typeof renderAgenda === "function" && t
 document.addEventListener("click", (e) => {
   const b = e.target.closest("[data-caso]"); if (b) return abrirCaso(b.dataset.caso);
   const n = e.target.closest(".nav"); if (n) go(n.dataset.view);
+  const sb = e.target.closest("[data-sub]"); if (sb) go(sb.dataset.sub);
 });
 $("imp-arquivo").onchange = async (e) => { const f = e.target.files[0]; if (f) $("imp-texto").value = await f.text(); };
 $("imp-ok").onclick = () => {
