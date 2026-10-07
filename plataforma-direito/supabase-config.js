@@ -3,4 +3,5 @@
 window.SUPABASE_CONFIG = {
   url: "https://apgrgbotrrhtxfhcjsgq.supabase.co",
   anonKey: "sb_publishable_DmfEqquL-n4VPBaTpbPumw_sSC6gmnW",
+  google: false, // vira true quando o login com Google estiver ativado no Supabase
 };

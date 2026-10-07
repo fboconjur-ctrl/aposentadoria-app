@@ -8,6 +8,7 @@
   const capa = document.createElement("div");
   capa.id = "login-capa";
   capa.innerHTML = `<div class="login-box"><h1>Escritório</h1><p class="muted">Acesso restrito.</p>
+    ${CFG.google ? `<button class="btn" type="button" id="login-google">Entrar com Google</button><p class="small muted">ou</p>` : ""}
     <form id="login-form"><input id="login-email" type="email" required placeholder="seu e-mail" autocomplete="email"><br><input id="login-senha" type="password" required minlength="8" placeholder="senha (mín. 8 caracteres)" autocomplete="current-password"><br><button class="btn">Entrar</button></form>
     <p class="small"><button type="button" class="linkish" id="login-criar">Primeiro acesso? Criar minha senha</button></p>
     <p class="small muted" id="login-msg"></p></div>`;
@@ -19,6 +20,7 @@
   s.onerror = () => status("Não foi possível carregar o login");
   s.onload = async () => {
     const sb = supabase.createClient(CFG.url, CFG.anonKey);
+    document.getElementById("login-google")?.addEventListener("click", () => sb.auth.signInWithOAuth({ provider: "google", options: { redirectTo: location.origin + location.pathname } }).then(({ error }) => error && msg(error.message)));
     const dados = () => ({ email: document.getElementById("login-email").value.trim(), password: document.getElementById("login-senha").value });
     document.getElementById("login-form").onsubmit = async (e) => {
       e.preventDefault();
