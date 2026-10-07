@@ -274,7 +274,8 @@ async function buscarDjen() {
   CASOS.forEach((c) => { if (so20(c.id).length === 20) processos.add(so20(c.id)); });
   $("djen-status").textContent = "Consultando o DJEN…";
   const consultas = [];
-  if (oab) consultas.push(consultaDjen({ numeroOab: oab, ufOab: uf, ...datas }));
+  // Alguns tribunais (ex.: TRT10) gravam a OAB com zeros à esquerda (035332); consulta as duas formas.
+  if (oab) new Set([oab.replace(/^0+/, ""), oab.replace(/^0+/, "").padStart(6, "0")]).forEach((n) => consultas.push(consultaDjen({ numeroOab: n, ufOab: uf, ...datas })));
   // Alguns tribunais publicam sem vincular a OAB; a busca pelo nome cobre esses casos.
   const nome = $("djen-nome").value.trim();
   if (nome) consultas.push(consultaDjen({ nomeAdvogado: nome, ...datas }));
