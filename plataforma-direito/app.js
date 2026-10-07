@@ -313,6 +313,7 @@ $("lead-form").onsubmit = async (e) => {
     $("f-protocolo").value = protocolo;
     $("f-pacote").value = "PD1:" + btoa(unescape(encodeURIComponent(JSON.stringify(pacote))));
     const r = await fetch("/", { method: "POST", headers: { "Content-Type": "application/x-www-form-urlencoded" }, body: new URLSearchParams(new FormData(form)).toString() });
+    enviarPedidoNuvem($("f-pacote").value);
     if (!r.ok) throw new Error(r.status);
     $("area-title").textContent = state.flow ? state.flow.caseTitle : "Pergunta enviada à advogada";
     $("area-meeting").textContent = `A combinar — retornaremos em até 1 dia útil · protocolo ${$("f-protocolo").value}`;
@@ -367,3 +368,14 @@ document.querySelectorAll("[data-calc]").forEach((b) => (b.onclick = () => {
   document.querySelectorAll(".calc-painel").forEach((p) => (p.hidden = p.id !== "calc-" + b.dataset.calc));
 }));
 $("calc-advogado").onclick = () => { state.text = state.text || "Dúvida sobre prazo ou prescrição (calculadora)"; state.key = null; state.flow = null; state.answers = []; openLawyer(); };
+
+// Se o Firebase estiver configurado, o pedido também cai direto no painel do escritório (coleção "pedidos").
+async function enviarPedidoNuvem(pacote) {
+  const CFG = window.FIREBASE_CONFIG; if (!CFG) return;
+  try {
+    const SDK = "https://www.gstatic.com/firebasejs/10.12.2/";
+    const carregar = (f) => new Promise((ok, erro) => { const s = document.createElement("script"); s.src = SDK + f; s.onload = ok; s.onerror = erro; document.head.appendChild(s); });
+    if (!window.firebase) { await carregar("firebase-app-compat.js"); await carregar("firebase-firestore-compat.js"); firebase.initializeApp(CFG); }
+    await firebase.firestore().collection("pedidos").add({ pacote, importado: false, criado: Date.now() });
+  } catch { /* o e-mail do formulário continua sendo o caminho de reserva */ }
+}

@@ -1,0 +1,17 @@
+rules_version = '2';
+// Regras do Firestore. Substitua UID_DA_ADVOGADA pelo seu UID (aparece em Authentication → Users após o 1º login).
+service cloud.firestore {
+  match /databases/{db}/documents {
+    // Painel do escritório: só a advogada lê e grava.
+    match /escritorio/{uid}/{doc=**} {
+      allow read, write: if request.auth != null && request.auth.uid == uid && uid == "UID_DA_ADVOGADA";
+    }
+    // Pedidos da plataforma: qualquer visitante pode CRIAR (formulário), só a advogada lê e marca como importado.
+    match /pedidos/{id} {
+      allow create: if request.resource.data.keys().hasOnly(["pacote", "importado", "criado"])
+                    && request.resource.data.pacote is string && request.resource.data.pacote.size() < 60000
+                    && request.resource.data.importado == false;
+      allow read, update: if request.auth != null && request.auth.uid == "UID_DA_ADVOGADA";
+    }
+  }
+}

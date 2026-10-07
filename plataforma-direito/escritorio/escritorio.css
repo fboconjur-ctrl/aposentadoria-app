@@ -145,3 +145,7 @@ body.office { display: grid; grid-template-columns: 240px minmax(0, 1fr); min-he
 .subnav button.on { border-color: var(--brand); color: var(--brand); }
 .pr-box { display: grid; gap: 10px; }
 @media (max-width: 860px) { .subnav { flex-wrap: nowrap; overflow-x: auto; } .subnav button { flex: none; } }
+
+#login-capa { position: fixed; inset: 0; background: var(--bg); z-index: 100; display: grid; place-items: center; }
+#login-capa[hidden] { display: none !important; }
+.login-box { display: grid; gap: 12px; text-align: center; padding: 32px; }

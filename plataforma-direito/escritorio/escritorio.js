@@ -559,10 +559,10 @@ function lerPacote(texto) {
   if (!m) return null;
   try { return JSON.parse(decodeURIComponent(escape(atob(m[1])))); } catch { return null; }
 }
-$("ped-ok").onclick = () => {
-  const pk = lerPacote($("ped-texto").value);
-  if (!pk) { $("ped-msg").textContent = "Não encontrei o pacote do pedido (linha que começa com PD1:)."; return; }
-  if (CASOS.some((c) => c.id === pk.protocolo)) { $("ped-msg").textContent = `O pedido ${pk.protocolo} já foi importado.`; return; }
+function importarPacote(texto) {
+  const pk = lerPacote(texto);
+  if (!pk) { $("ped-msg").textContent = "Não encontrei o pacote do pedido (linha que começa com PD1:)."; return false; }
+  if (CASOS.some((c) => c.id === pk.protocolo)) { $("ped-msg").textContent = `O pedido ${pk.protocolo} já foi importado.`; return true; }
   const area = { previdenciario: "Previdenciário", consumidor: "Consumidor", saude: "Saúde", administrativo: "Administrativo", cartorio: "Cartório/Extrajudicial" }[pk.key] || pk.area || "A classificar";
   const caso = {
     id: pk.protocolo, nome: pk.nome, area, titulo: pk.area || "Pedido da plataforma", atlas: (pk.codigo || "").split(" · ")[0], dac: (pk.codigo || "").split(" · ")[1] || "",
@@ -582,8 +582,9 @@ $("ped-ok").onclick = () => {
   }
   document.querySelector(".demo-note").textContent = "Seus casos importados — guardados só neste navegador.";
   $("ped-texto").value = ""; $("ped-msg").textContent = `Pedido ${pk.protocolo} importado: caso criado e cliente adicionado.`;
-  renderAll();
-};
+  renderAll(); return true;
+}
+$("ped-ok").onclick = () => importarPacote($("ped-texto").value);
 
 // Tarefas: lista simples ligada a caso/cliente; guardada neste navegador.
 const TAREFAS_KEY = "pd-tarefas";

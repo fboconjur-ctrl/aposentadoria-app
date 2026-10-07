@@ -23,6 +23,8 @@
     <button class="nav" data-view="djen">Publicações</button>
     <button class="nav" data-view="fin">Financeiro</button>
   </nav>
+  <p class="small" id="nuvem-status" style="opacity:.8;margin:0"></p>
+  <button class="nav" id="sair" style="opacity:.6">Sair</button>
   <p class="demo-note">Dados fictícios de demonstração. Os pedidos reais entram aqui na próxima etapa, com acesso protegido.</p>
 </aside>
 
@@ -307,6 +309,7 @@
     <div class="dossie" id="dossie"></div>
   </section>
 </main>
+<script src="../firebase-config.js"></script>
 <script src="../documento-id.js"></script>
 <script src="../prazos-calc.js"></script>
 <script src="../prescricao.js"></script>
@@ -317,5 +320,6 @@
 <script src="documentos.js"></script>
 <script src="tabela-oabdf.js"></script>
 <script src="precificacao.js"></script>
+<script src="nuvem.js"></script>
 </body>
 </html>
