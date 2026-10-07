@@ -161,11 +161,11 @@ summary { cursor: pointer; color: var(--brand); font-weight: 600; }
 @media (max-width: 960px) {
   .hero { grid-template-columns: 1fr; gap: 40px; }
   .hero-demo { transform: none; }
-  .grid { grid-template-columns: repeat(2, 1fr); }
+  .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .how { grid-template-columns: 1fr; gap: 20px; }
 }
 @media (max-width: 760px) {
-  .topbar nav a:not(.btn-ghost) { display: none; }
+  .topbar nav a:not(.btn-ghost):not([data-go=calculadoras]) { display: none; }
   .chat-layout { grid-template-columns: 1fr; gap: 20px; }
   .progress { position: static; order: -1; padding: 0; border: 0; background: none; }
   .progress h4 { display: none; }
@@ -250,3 +250,6 @@ tr:last-child td { border-bottom: 0; }
 .calc-abas button.on { border-color: var(--brand); color: var(--brand); }
 .calc-regra { margin: 0; padding: 10px 14px; border-left: 4px solid var(--brand); background: var(--tint); border-radius: 0 10px 10px 0; font-size: .92rem; }
 [hidden] { display: none !important; }
+.calc-res { min-width: 0; overflow-x: auto; }
+.grid h2, .grid h3 { overflow-wrap: anywhere; }
+@media (max-width: 560px) { .topbar nav { gap: 14px; } .calc-tab th, .calc-tab td { padding: 6px 4px; font-size: .82rem; } }

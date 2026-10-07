@@ -113,3 +113,29 @@ body.office { display: grid; grid-template-columns: 240px minmax(0, 1fr); min-he
 
 .v-receita { color: var(--ok); font-weight: 600; } .v-despesa { color: #b42318; font-weight: 600; }
 .fin-acoes { display: flex; gap: 10px; flex-wrap: wrap; }
+
+/* Celular: menu rolável em uma faixa, conteúdo sempre na largura da tela */
+@media (max-width: 860px) {
+  body.office { grid-template-columns: minmax(0, 1fr); }
+  .side { position: sticky; top: 0; z-index: 10; padding: 10px 12px; gap: 8px; min-width: 0; flex-wrap: nowrap; flex-direction: column; align-items: stretch; }
+  .side .brand { font-size: 1rem; }
+  .side-tag { display: none; }
+  .side nav { display: flex; flex-wrap: nowrap; overflow-x: auto; gap: 4px; margin: 0; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+  .side nav::-webkit-scrollbar { display: none; }
+  .nav { white-space: nowrap; flex: none; padding: 8px 12px; }
+  .demo-note { display: none; }
+  .office-main { padding: 18px 16px 48px; }
+  .search { min-width: 0; width: 100%; }
+  .ohead > * { min-width: 0; max-width: 100%; }
+  .two, .dossie { grid-template-columns: minmax(0, 1fr); }
+  .kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .kpi strong { font-size: 1.5rem !important; }
+  .board { grid-auto-columns: 82%; }
+  .crm-grid { grid-template-columns: minmax(0, 1fr); }
+  .panel { padding: 16px; }
+  .panel:has(.table) { padding: 8px; }
+  .table th, .table td { padding: 8px 6px; }
+  .list li { flex-wrap: wrap; }
+  .doc-folha { padding: 20px; }
+  .timeline-d li { grid-template-columns: 1fr !important; gap: 0 !important; }
+}

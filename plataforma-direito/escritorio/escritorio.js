@@ -168,6 +168,7 @@ const situacao = (p) => { const n = dias(p.data); return n < 0 ? ["vencido", "re
 function go(view) {
   document.querySelectorAll(".oview").forEach((v) => v.classList.toggle("on", v.id === "v-" + view));
   document.querySelectorAll(".nav").forEach((b) => b.classList.toggle("on", b.dataset.view === view));
+  document.querySelector(`.nav[data-view="${view}"]`)?.scrollIntoView({ block: "nearest", inline: "center" });
   window.scrollTo(0, 0);
 }
 
