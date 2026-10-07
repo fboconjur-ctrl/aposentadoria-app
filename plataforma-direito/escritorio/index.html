@@ -18,6 +18,7 @@
     <button class="nav on" data-view="hoje">Hoje</button>
     <button class="nav" data-view="funil">Casos</button>
     <button class="nav" data-view="prazos">Prazos</button>
+    <button class="nav" data-view="acomp">Acompanhamento</button>
     <button class="nav" data-view="djen">Publicações (DJEN)</button>
     <button class="nav" data-view="importar">Importar meus casos</button>
   </nav>
@@ -44,6 +45,16 @@
   <section id="v-prazos" class="oview">
     <header class="ohead"><div><p class="eyebrow">Controle</p><h1>Prazos</h1></div></header>
     <div class="panel"><table class="table"><thead><tr><th>Prazo</th><th>Caso</th><th>Providência</th><th>Fundamento</th><th>Situação</th></tr></thead><tbody id="tab-prazos"></tbody></table></div>
+  </section>
+
+  <section id="v-acomp" class="oview">
+    <header class="ohead"><div><p class="eyebrow">Movimentações pelo número · DataJud (CNJ)</p><h1>Acompanhamento</h1></div>
+      <button class="btn" id="acomp-atualizar">Atualizar agora</button></header>
+    <div class="panel">
+      <p class="small">Acompanha processos <b>com ou sem a sua OAB</b> nos autos. Usa a lista de <b>Processos de terceiros</b> (tela Publicações) e os casos importados. Atualiza sozinho ao abrir o painel, se a última checagem tiver mais de 6 horas.</p>
+      <p id="acomp-status" class="small"></p>
+    </div>
+    <div id="acomp-lista" class="djen-lista"></div>
   </section>
 
   <section id="v-djen" class="oview">

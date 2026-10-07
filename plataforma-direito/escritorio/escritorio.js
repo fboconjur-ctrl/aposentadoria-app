@@ -371,6 +371,79 @@ $("djen-lista").addEventListener("click", (e) => {
   }
 });
 
+// Acompanhamento por número no DataJud (CNJ): funciona sem a OAB da advogada nos autos.
+const ACOMP_KEY = "pd-acomp", UF_TR = ["", "ac", "al", "ap", "am", "ba", "ce", "dft", "es", "go", "ma", "mt", "ms", "mg", "pa", "pb", "pr", "pe", "pi", "rj", "rn", "rs", "ro", "rr", "sc", "se", "sp", "to"];
+function aliasDe(n) {
+  const j = n[13], tr = +n.slice(14, 16);
+  if (j === "8") return UF_TR[tr] ? "tj" + UF_TR[tr] : null;
+  if (j === "5") return "trt" + tr;
+  if (j === "4") return "trf" + tr;
+  if (j === "3") return "stj";
+  if (j === "6") return UF_TR[tr] ? "tre-" + UF_TR[tr] : null;
+  return null;
+}
+let acomp = {};
+try { acomp = JSON.parse(localStorage.getItem(ACOMP_KEY) || "{}"); } catch {}
+const listaAcomp = () => { const s = new Set([...$("djen-monit").value.matchAll(CNJ_RE)].map((m) => so20(m[0]))); CASOS.forEach((c) => so20(c.id).length === 20 && s.add(so20(c.id))); return [...s]; };
+
+async function consultaDatajud(n) {
+  const alias = aliasDe(n); if (!alias) throw new Error("tribunal não reconhecido pelo número");
+  const r = await fetch(`/api/datajud?${new URLSearchParams({ tribunal: alias, numero: n })}`);
+  const j = await r.json().catch(() => ({}));
+  if (!r.ok) throw new Error(j.erro || `DataJud respondeu ${r.status}`);
+  const hits = (j.hits?.hits || []).map((h) => h._source);
+  if (!hits.length) throw new Error("processo não encontrado no DataJud (pode ser sigiloso ou ainda não indexado)");
+  // Pode haver um registro por grau/sistema; junta as movimentações de todos.
+  const movs = hits.flatMap((h) => (h.movimentos || []).map((m) => ({ data: m.dataHora, nome: m.nome, compl: (m.complementosTabelados || []).map((c) => c.nome || c.descricao).filter(Boolean).join(", "), grau: h.grau })));
+  movs.sort((a, b) => String(b.data).localeCompare(String(a.data)));
+  const h = hits[0];
+  return { tribunal: (h.tribunal || alias).toUpperCase(), classe: h.classe?.nome || "", orgao: h.orgaoJulgador?.nome || "", ajuizamento: h.dataAjuizamento || "", atualizado: hits.map((x) => x.dataHoraUltimaAtualizacao).sort().pop() || "", assuntos: (h.assuntos || []).map((a) => a.nome).filter(Boolean).join("; "), movs };
+}
+
+async function atualizarAcomp() {
+  const nums = listaAcomp();
+  if (!nums.length) { $("acomp-status").textContent = "Nenhum processo na lista. Cole os números em Publicações → Processos de terceiros."; renderAcomp(); return; }
+  $("acomp-status").textContent = `Consultando ${nums.length} processo(s) no DataJud…`;
+  const res = await Promise.allSettled(nums.map((n) => consultaDatajud(n)));
+  let novos = 0, erros = 0;
+  res.forEach((r, i) => {
+    const n = nums[i], antigo = acomp[n] || {};
+    if (r.status === "rejected") { erros++; acomp[n] = { ...antigo, erro: r.reason.message, checado: new Date().toISOString() }; return; }
+    const ult = r.value.movs[0]?.data || "";
+    const novo = antigo.vistoAte !== undefined && ult > (antigo.vistoAte || "");
+    if (novo) novos++;
+    acomp[n] = { ...r.value, erro: "", checado: new Date().toISOString(), vistoAte: antigo.vistoAte ?? ult };
+  });
+  try { localStorage.setItem(ACOMP_KEY, JSON.stringify(acomp)); localStorage.setItem(ACOMP_KEY + "-ultima", String(Date.now())); } catch {}
+  $("acomp-status").textContent = `${nums.length} processo(s) consultado(s) · ${novos} com movimentação nova` + (erros ? ` · ${erros} com erro` : "") + ` · ${new Date().toLocaleString("pt-BR")}`;
+  renderAcomp();
+}
+
+function renderAcomp() {
+  const fmtDH = (x) => x ? new Date(x).toLocaleDateString("pt-BR") : "—";
+  $("acomp-lista").innerHTML = listaAcomp().map((n) => {
+    const a = acomp[n] || {}, caso = CASOS.find((c) => so20(c.id) === n);
+    const novas = (a.movs || []).filter((m) => m.data > (a.vistoAte || "9"));
+    return `<article class="pub${novas.length ? " nova" : ""}" data-proc="${n}">
+      <header>${novas.length ? `<span class="pill-s amber">${novas.length} nova(s)</span>` : ""}<b>${esc(mascara(n))}</b>${a.tribunal ? `<span class="pill-s">${esc(a.tribunal)}</span>` : ""}${caso ? `<button class="linkish small" data-caso="${esc(caso.id)}">${esc(caso.nome)}</button>` : ""}</header>
+      ${a.erro ? `<p class="small" style="color:#b42318">${esc(a.erro)}</p>` : ""}
+      ${a.classe ? `<div class="small"><b>${esc(a.classe)}</b> · ${esc(a.orgao)}<br><span class="muted">${esc(a.assuntos)} · ajuizado em ${fmtDH(a.ajuizamento)} · base atualizada em ${fmtDH(a.atualizado)}</span></div>` : ""}
+      ${(a.movs || []).length ? `<ul class="small">${a.movs.slice(0, 8).map((m) => `<li${m.data > (a.vistoAte || "9") ? ' style="font-weight:600"' : ""}><b>${fmtDH(m.data)}</b> — ${esc(m.nome)}${m.compl ? ` <span class="muted">(${esc(m.compl)})</span>` : ""}</li>`).join("")}</ul>` : ""}
+      <div class="acoes">${novas.length ? `<button class="linkish small" data-acao="lido">Marcar como lido</button>` : ""}</div></article>`;
+  }).join("") || `<p class="muted">Nenhum processo acompanhado ainda.</p>`;
+}
+
+$("acomp-atualizar").onclick = atualizarAcomp;
+$("djen-monit").addEventListener("input", () => { try { localStorage.setItem(MONIT_KEY, $("djen-monit").value); } catch {} renderAcomp(); });
+$("acomp-lista").addEventListener("click", (e) => {
+  const b = e.target.closest("[data-acao=lido]"); if (!b) return;
+  const n = b.closest("[data-proc]").dataset.proc; const a = acomp[n];
+  a.vistoAte = a.movs?.[0]?.data || a.vistoAte; try { localStorage.setItem(ACOMP_KEY, JSON.stringify(acomp)); } catch {}
+  renderAcomp();
+});
+renderAcomp();
+try { if (listaAcomp().length && Date.now() - +(localStorage.getItem(ACOMP_KEY + "-ultima") || 0) > 6 * 3600e3) atualizarAcomp(); } catch {}
+
 $("voltar").onclick = () => go("funil");
 $("busca").oninput = (e) => renderFunil(e.target.value);
 renderAll();
