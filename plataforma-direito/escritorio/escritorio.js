@@ -287,7 +287,7 @@ async function buscarDjen() {
   const pubs = [...porId.values()].sort((a, b) => String(b.data_disponibilizacao || b.datadisponibilizacao).localeCompare(String(a.data_disponibilizacao || a.datadisponibilizacao)));
   const novas = pubs.filter((p) => !vistas.has(String(p.id))).length;
   $("djen-status").textContent = `${pubs.length} publicação(ões) em ${n} dia(s) · ${novas} nova(s)` + (falhas.length ? ` · ${falhas.length} consulta(s) falharam: ${falhas[0].reason.message}` : "");
-  renderPubs(pubs);
+  ultimasDjen = pubs; mostrarTudo();
 }
 
 function renderPubs(pubs) {
@@ -299,7 +299,7 @@ function renderPubs(pubs) {
     const advs = (p.destinatarioadvogados || []).map((a) => a.advogado?.nome).filter(Boolean).join(", ");
     const partes = (p.destinatarios || []).map((x) => x.nome).filter(Boolean).join(", ");
     return `<article class="pub${nova ? " nova" : ""}" data-pub="${esc(p.id)}">
-      <header>${nova ? `<span class="pill-s amber">nova</span>` : ""}<b>${esc(data)}</b><span class="pill-s">${esc(p.siglaTribunal || "")}</span><span class="pill-s">${esc(p.tipoComunicacao || p.tipoDocumento || "")}</span></header>
+      <header>${nova ? `<span class="pill-s amber">nova</span>` : ""}<b>${esc(data)}</b><span class="pill-s">${esc(p.siglaTribunal || "")}</span><span class="pill-s">${esc(p.tipoComunicacao || p.tipoDocumento || "")}</span>${p.fonte ? `<span class="pill-s">${esc(p.fonte)}</span>` : ""}</header>
       <div><b>${esc(num)}</b> ${caso ? `· <button class="linkish" data-caso="${esc(caso.id)}">${esc(caso.nome)}</button>` : ""}<br><span class="muted small">${esc(p.nomeOrgao || "")}${p.nomeClasse ? " · " + esc(p.nomeClasse) : ""}</span></div>
       ${partes ? `<div class="small"><b>Partes:</b> ${esc(partes)}</div>` : ""}${advs ? `<div class="small muted">Advogados: ${esc(advs)}</div>` : ""}
       <div class="texto">${esc(String(p.texto || "").replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim())}</div>
@@ -308,6 +308,45 @@ function renderPubs(pubs) {
       <p class="small muted">Prazo: confira a intimação e lance o prazo no caso — o painel não calcula prazo processual automaticamente.</p></article>`;
   }).join("") || `<p class="muted">Nenhuma publicação no período.</p>`;
 }
+
+// Recorte Digital da OAB/DF colado do e-mail: vira publicações no mesmo formato do DJEN.
+const REC_KEY = "pd-recorte-pubs";
+let recorte = [];
+try { recorte = JSON.parse(localStorage.getItem(REC_KEY) || "[]"); } catch {}
+let ultimasDjen = [];
+function lerRecorte(txt) {
+  const t = String(txt).replace(/\|/g, " ").replace(/[ \t]+/g, " ");
+  return t.split(/Publica[çc][ãa]o:\s*\d+\s*\./i).slice(1).map((b) => {
+    const pega = (re) => (b.match(re) || [])[1]?.trim() || "";
+    const disp = pega(/Disponibiliza[çc][ãa]o:\s*(\d{2}\/\d{2}\/\d{4})/i);
+    const trib = pega(/Tribunal:\s*([^\n]+?)\s*(?:Vara:|\n)/i);
+    const m = [...b.matchAll(CNJ_RE)][0];
+    const corpo = pega(/T[íi]tulo:[\s\S]*?Publica[çc][ãa]o:\s*([\s\S]+?)(?:Total de Publica|$)/i) || pega(/Publica[çc][ãa]o:\s*([\s\S]+)/i) || b;
+    const intimado = pega(/Intimado \(s\)[^-]*-\s*([^|\n]+?)\s*(?:POLO|$)/i);
+    return {
+      id: "rec-" + (m ? so20(m[0]) : "") + "-" + (pega(/Identificador do documento:\s*(\d+)/i) || disp + corpo.length),
+      data_disponibilizacao: disp.split("/").reverse().join("-"), siglaTribunal: (trib.split(" - ").pop() || "").trim(),
+      tipoComunicacao: pega(/T[íi]tulo:\s*([A-Za-zÀ-ú ]+?)\s*(?:Publica|\n)/i) || "Publicação", nomeOrgao: pega(/Vara:\s*([^\n]+?)\s*(?:P[áa]gina:|\n)/i),
+      numeroprocessocommascara: m ? fmtCnj(m) : "", texto: corpo, link: pega(/Acesso ao documento:\s*(https?:\/\/\S+)/i),
+      destinatarios: intimado ? [{ nome: intimado }] : [], fonte: "Recorte OAB/DF",
+    };
+  }).filter((p) => p.numeroprocessocommascara || p.texto);
+}
+function mostrarTudo() {
+  const ids = new Set(ultimasDjen.map((p) => so20(p.numeroprocessocommascara || p.numero_processo) + String(p.data_disponibilizacao || "").slice(0, 10)));
+  const extra = recorte.filter((p) => !ids.has(so20(p.numeroprocessocommascara) + p.data_disponibilizacao));
+  renderPubs([...ultimasDjen, ...extra].sort((a, b) => String(b.data_disponibilizacao || "").localeCompare(String(a.data_disponibilizacao || ""))));
+}
+$("rec-ok").onclick = () => {
+  const novas = lerRecorte($("rec-texto").value);
+  if (!novas.length) { $("djen-status").textContent = "Não encontrei publicações nesse texto. Copie o e-mail inteiro do Recorte Digital."; return; }
+  const porId = new Map([...recorte, ...novas].map((p) => [p.id, p]));
+  recorte = [...porId.values()].filter((p) => new Date(p.data_disponibilizacao) > new Date(hoje.getTime() - 60 * DAY));
+  try { localStorage.setItem(REC_KEY, JSON.stringify(recorte)); } catch {}
+  $("rec-texto").value = ""; $("djen-status").textContent = `${novas.length} publicação(ões) lida(s) do Recorte Digital.`;
+  mostrarTudo();
+};
+if (recorte.length) mostrarTudo();
 
 $("djen-buscar").onclick = buscarDjen;
 $("djen-lista").addEventListener("click", (e) => {
