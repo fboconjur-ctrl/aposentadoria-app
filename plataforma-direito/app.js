@@ -133,8 +133,8 @@ function openLawyer() {
   go("lawyer");
 }
 
-function answerQuestion(text) {
-  const f = findFaq(text);
+function answerQuestion(text, faqFixa) {
+  const f = faqFixa || findFaq(text);
   state.faqId = f ? f.id : null;
   const key = (f && f.area) || classify(text);
   state.key = key;
@@ -413,4 +413,25 @@ $("outro").onclick = () => {
   $("start-form").hidden = false;
   $("outro").setAttribute("aria-pressed", "true");
   $("start-text").focus();
+};
+
+// "Dívidas e bancos": a pessoa escolhe a situação e cai direto na resposta verificada correspondente.
+const DIVIDAS = [
+  ["Tenho muitas dívidas e não consigo pagar", "superendividamento"],
+  ["Apareceu empréstimo ou desconto que não fiz", "consignado-nao-contratado"],
+  ["Caí em golpe no Pix", "pix-golpe"],
+  ["O banco quer tomar meu carro", "busca-apreensao"],
+  ["Outro problema com banco ou cobrança", null],
+];
+$("dividas").onclick = () => {
+  Object.assign(state, { text: "", answers: [], qi: 0, flow: null, followSummary: null, cnisSummary: null, docSummary: null, faqId: null });
+  $("messages").innerHTML = "";
+  $("qcount").textContent = ""; $("voltar").hidden = true;
+  go("chat"); setStep(1);
+  say("Vamos lá. Qual destas situações é a sua?");
+  offer(DIVIDAS.map((d) => d[0]), (o) => {
+    const [txt, id] = DIVIDAS.find((d) => d[0] === o);
+    const f = id && FAQ.find((x) => x.id === id);
+    if (f) answerQuestion(txt, f); else begin("consumidor");
+  });
 };
