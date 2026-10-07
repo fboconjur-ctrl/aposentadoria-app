@@ -85,7 +85,7 @@
         <p><b>CONTRATADA:</b> ${advQualif()}.</p>
         <p>As partes resolvem celebrar o presente Contrato Particular de Prestação de Serviços Advocatícios, que será regido pelas cláusulas seguintes.</p>
         ${cl("DO OBJETO")}<p>Constitui objeto do presente contrato a prestação de serviços advocatícios visando à defesa dos interesses da CONTRATANTE ${esc(f.objeto || "[descrever]")}, compreendendo a elaboração da estratégia, análise documental, elaboração das peças necessárias, acompanhamento do processo, manifestações, audiências, recursos eventualmente cabíveis e demais providências necessárias ao regular andamento da demanda.</p>
-        ${f.fixo ? `${cl("DOS HONORÁRIOS CONTRATUAIS")}<p>Pelos serviços ora contratados, a CONTRATANTE pagará à CONTRATADA honorários advocatícios fixos no valor de <b>${reais(f.fixo)}</b>${f.pagamento ? `, ${esc(f.pagamento)}` : ""}.</p>` : ""}
+        ${f.fixo ? `${cl("DOS HONORÁRIOS CONTRATUAIS")}<p>Pelos serviços ora contratados, a CONTRATANTE pagará à CONTRATADA honorários advocatícios fixos no valor de <b>${reais(f.fixo) || "R$ [COMPLETAR] ([valor por extenso])"}</b>${f.pagamento ? `, ${esc(f.pagamento)}` : ""}.</p>` : ""}
         ${pct ? `${cl("DOS HONORÁRIOS DE ÊXITO")}<p>${f.fixo ? "Além dos honorários previstos na cláusula anterior, a" : "A"} CONTRATANTE pagará à CONTRATADA honorários correspondentes a <b>${pct}</b> sobre todo o proveito econômico obtido, compreendendo indenizações, acordos judiciais ou extrajudiciais, restituição de valores, pagamentos espontâneos, cumprimento de sentença, precatórios, requisições de pequeno valor e qualquer outro benefício econômico decorrente da atuação profissional.</p>` : ""}
         ${cl("DOS HONORÁRIOS SUCUMBENCIAIS")}<p>Os honorários sucumbenciais eventualmente arbitrados pelo Juízo pertencem exclusivamente à CONTRATADA, nos termos do art. 85, §14, do Código de Processo Civil e do Estatuto da Advocacia (Lei n.º 8.906/94), não se confundindo com os honorários contratuais previstos neste instrumento.</p>
         ${cl("DAS DESPESAS")}<p>Custas processuais, diligências, despesas com cópias, autenticações, deslocamentos, correios, perícias, taxas e quaisquer outras despesas necessárias ao desenvolvimento da demanda correrão por conta da CONTRATANTE, mediante prévia comunicação.</p>
@@ -157,6 +157,60 @@
   };
   $("doc-pdf").onclick = () => window.print();
   $("doc-copiar").onclick = async () => { try { await navigator.clipboard.writeText($("doc-texto").innerText); $("doc-copiar").textContent = "Copiado!"; setTimeout(() => ($("doc-copiar").textContent = "Copiar texto"), 1500); } catch {} };
+
+  // ---------- leitura dos documentos do cliente ----------
+  const MAPA = { nome: "p-nome", cpf: "p-doc", endereco: "p-end" };
+  async function processar(files) {
+    for (const f of files) {
+      const li = document.createElement("li"); li.innerHTML = `<span class="when">${esc(f.name.slice(0, 28))}</span><span>lendo…</span>`; $("dz-lista").appendChild(li);
+      try {
+        const txt = await LeituraDocs.lerArquivo(f, (pc) => (li.lastChild.textContent = `lendo… ${pc}%`));
+        const d = LeituraDocs.extrair(txt);
+        const achados = [];
+        Object.entries(MAPA).forEach(([k, id]) => { if (d[k] && !$(id).value) { $(id).value = d[k]; $(id).classList.add("preenchido"); achados.push(k); } });
+        if (d.rg && !$("p-rg").value) { $("p-rg").value = d.rg + (d.orgao ? ` ${d.orgao}` : ""); $("p-rg").classList.add("preenchido"); achados.push("RG"); }
+        if (d.cep && !$("p-end").value) { $("p-end").value = `[COMPLETAR], CEP ${d.cep}`; achados.push("CEP"); }
+        $("p-tipo").value = "pf"; tipoParte();
+        li.lastChild.textContent = achados.length ? `encontrado: ${achados.join(", ")}${d.nascimento ? ` · nasc. ${d.nascimento}` : ""}${d.naturalidade ? ` · ${d.naturalidade}` : ""}` : "não consegui ler dados — confira a nitidez da foto";
+      } catch (e) { li.lastChild.textContent = "erro: " + e.message; }
+    }
+    document.querySelector("#v-docs details:not(#meus-dados)").open = true;
+  }
+  const dz = $("dz");
+  $("dz-input").onchange = (e) => processar([...e.target.files]);
+  dz.ondragover = (e) => { e.preventDefault(); dz.classList.add("over"); };
+  dz.ondragleave = () => dz.classList.remove("over");
+  dz.ondrop = (e) => { e.preventDefault(); dz.classList.remove("over"); processar([...e.dataTransfer.files]); };
+
+  // ---------- kit da ação ----------
+  const KIT = [["procuracao", "Procuração", true], ["contrato", "Contrato de honorários", true], ["hipossuficiencia", "Declaração de hipossuficiência", false], ["peticao", "Minuta da petição (pedido pronto para o Claude)", true], ["checklist", "Checklist de documentos", true]];
+  $("kit-opcoes").innerHTML = KIT.map(([k, n, on]) => `<label><input type="checkbox" value="${k}"${on ? " checked" : ""}> ${n}</label>`).join("");
+  const docHtml = (corpo) => `<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word"><head><meta charset="utf-8"><style>body{font:12pt/1.5 "Times New Roman",serif}h3{text-align:center}p{text-align:justify}.ass{text-align:center;margin-top:36pt}</style></head><body>${corpo}</body></html>`;
+  $("kit-gerar").onclick = async () => {
+    const p = Object.fromEntries(Object.entries(PARTE).map(([k, id]) => [k, $(id).value.trim()]));
+    if (!p.nome) { document.querySelector("#v-docs details:not(#meus-dados)").open = true; $("p-nome").focus(); $("kit-status").textContent = "Envie os documentos ou preencha o nome do cliente."; return; }
+    const escolhidos = [...document.querySelectorAll("#kit-opcoes input:checked")].map((i) => i.value);
+    const hist = $("kit-historia").value.trim(), reu = $("kit-reu").value.trim(), foro = $("kit-foro").value.trim() || adv.cidade;
+    const objeto = reu ? `em ação judicial em face de ${reu}` : "";
+    const base = { cidade: foro, foro, objeto, especial: reu ? `Especialmente para propor e acompanhar ação judicial em face de ${reu}.` : "" };
+    const zip = new JSZip(); const pasta = zip.folder(`Kit - ${p.nome}`.replace(/[\\/:*?"<>|]/g, ""));
+    const n = (i, t) => `${String(i).padStart(2, "0")} - ${t}`;
+    let i = 1;
+    if (escolhidos.includes("procuracao")) pasta.file(n(i++, "Procuração.doc"), "\ufeff" + docHtml(MODELOS.procuracao.gerar(p, base)));
+    if (escolhidos.includes("contrato")) pasta.file(n(i++, "Contrato de honorários.doc"), "\ufeff" + docHtml(MODELOS.contrato.gerar(p, { ...base, fixo: "[COMPLETAR]", exito: "", pagamento: "[forma de pagamento]" })));
+    if (escolhidos.includes("hipossuficiencia")) pasta.file(n(i++, "Declaração de hipossuficiência.doc"), "\ufeff" + docHtml(MODELOS.hipossuficiencia.gerar(p, base)));
+    if (escolhidos.includes("peticao")) pasta.file(n(i++, "Pedido da petição - colar no Claude.txt"),
+      `Petição: monte a petição inicial com a skill "peticao".\n\nCLIENTE (autor):\n${["Nome: " + p.nome, p.nac && "Nacionalidade: " + p.nac, p.civil && "Estado civil: " + p.civil, p.prof && "Profissão: " + p.prof, p.rg && "RG: " + p.rg, p.doc && "CPF/CNPJ: " + p.doc, p.end && "Endereço: " + p.end].filter(Boolean).join("\n")}\n\nRÉU: ${reu || "[informar]"}\nCIDADE/FORO PRETENDIDO: ${foro}\n\nHISTÓRIA DO CASO:\n${hist || "[narrar]"}\n\nUse a jurisprudência do tribunal desse foro, verificada com link. Salve a petição no meu Google Drive.`);
+    if (escolhidos.includes("checklist")) pasta.file(n(i++, "Checklist.txt"),
+      `KIT DA AÇÃO — ${p.nome}${reu ? " x " + reu : ""}\nGerado em ${new Date().toLocaleString("pt-BR")}\n\nDOCUMENTOS DO CLIENTE\n[${p.doc ? "x" : " "}] CPF\n[${p.rg ? "x" : " "}] RG / CNH\n[${p.end ? "x" : " "}] Comprovante de endereço\n[ ] Provas do fato (contratos, prints, notas, protocolos)\n\nPARA ASSINAR\n[ ] Procuração\n[ ] Contrato de honorários (preencher valores)\n${escolhidos.includes("hipossuficiencia") ? "[ ] Declaração de hipossuficiência\n" : ""}\nPETIÇÃO\n[ ] Colar o arquivo "Pedido da petição" no Claude e revisar a minuta\n[ ] Conferir o quadro de verificação da jurisprudência\n[ ] Completar os campos [COMPLETAR]\n`);
+    for (const f of $("dz-input").files || []) pasta.folder("Documentos do cliente").file(f.name, f);
+    const blob = await zip.generateAsync({ type: "blob" });
+    const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = `Kit - ${p.nome}.zip`; document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(a.href), 3000);
+    $("kit-status").textContent = `Kit gerado com ${i - 1} arquivo(s). Os valores dos honorários ficam para você completar no contrato.`;
+    const c = clientes.find((x) => semAcento(x.nome) === semAcento(p.nome));
+    if (c) { (c.hist ||= []).unshift({ em: new Date().toISOString(), o: "Kit da ação gerado" }); salvarCrm(); renderCrm(); }
+  };
 
   camposModelo(); tipoParte(); listaClientes();
   window.__reais = reais; // usado nos testes

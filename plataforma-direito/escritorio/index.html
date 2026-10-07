@@ -90,7 +90,23 @@
         <label>Cidade/UF padrão<input id="adv-cidade" class="search"></label>
       </div></details>
     <div class="panel">
-      <div class="crm-grid">
+      <h2>1. Documentos do cliente</h2>
+      <label class="dropzone" id="dz"><input type="file" id="dz-input" multiple accept="image/*,application/pdf" hidden>
+        <b>Arraste aqui RG, CPF, CNH e comprovante de endereço</b><br><span class="small muted">fotos ou PDF · a leitura acontece neste navegador, nada é enviado</span></label>
+      <ul class="list small" id="dz-lista"></ul>
+      <h2 style="margin-top:12px">2. A história do caso</h2>
+      <textarea id="kit-historia" rows="6" class="search" style="width:100%" placeholder="Conte o caso como contaria a um colega: o que aconteceu, quando, contra quem, o que o cliente quer. Isso vai para a minuta da petição."></textarea>
+      <div class="crm-grid" style="margin-top:8px">
+        <label>Réu / parte contrária<input id="kit-reu" class="search"></label>
+        <label>Cidade onde a ação será proposta<input id="kit-foro" class="search"></label>
+      </div>
+      <h2 style="margin-top:12px">3. O que vai no kit</h2>
+      <div class="kit-opcoes" id="kit-opcoes"></div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:12px"><button class="btn" id="kit-gerar">Gerar kit da ação (.zip)</button></div>
+      <p id="kit-status" class="small"></p>
+    </div>
+    <details class="panel"><summary><b>Gerar um documento avulso / conferir dados</b></summary>
+      <div class="crm-grid" style="margin-top:12px">
         <label>Modelo<select id="doc-modelo" class="search"></select></label>
         <label>Cliente cadastrado (opcional)<select id="doc-cliente" class="search"></select></label>
       </div>
@@ -109,7 +125,7 @@
       </div>
       <div id="doc-campos" class="crm-grid" style="margin-top:12px"></div>
       <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:12px"><button class="btn" id="doc-gerar">Gerar documento</button></div>
-    </div>
+    </details>
     <div class="panel" id="doc-saida" hidden>
       <div style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn" id="doc-word">Baixar Word</button><button class="back" id="doc-pdf">Imprimir / salvar PDF</button><button class="back" id="doc-copiar">Copiar texto</button></div>
       <p class="small muted">Você pode editar o texto abaixo antes de baixar. Revise sempre antes de assinar.</p>
@@ -175,6 +191,8 @@
   </section>
 </main>
 <script src="escritorio.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="leitura-docs.js"></script>
 <script src="documentos.js"></script>
 </body>
 </html>

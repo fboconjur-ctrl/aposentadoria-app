@@ -1,11 +1,16 @@
 ---
 name: peticao
-description: Monta petição inicial (ou contestação/recurso) a partir da narrativa da advogada Fernanda Borges Oliveira (OAB/DF 35.332), com jurisprudência VERIFICADA do tribunal onde a ação será proposta. Use quando ela narrar um caso, por texto ou áudio, e pedir petição, inicial, ação, peça ou minuta.
+description: Monta o KIT DA AÇÃO (petição inicial + procuração + contrato de honorários + declaração de hipossuficiência + checklist) ou só a petição inicial (ou contestação/recurso) a partir da narrativa da advogada Fernanda Borges Oliveira (OAB/DF 35.332), com jurisprudência VERIFICADA do tribunal onde a ação será proposta. Use quando ela narrar um caso, por texto ou áudio, e pedir petição, inicial, ação, peça ou minuta.
 ---
 
 # Petição a partir da narrativa
 
 Objetivo: transformar o relato da advogada em uma peça pronta para revisão, no estilo dela, com jurisprudência real e conferida do foro competente. **Correção acima de tudo: nunca invente julgado, número, relator, data, ementa ou súmula.**
+
+## 0. Kit completo (quando ela enviar documentos do cliente ou pedir "kit")
+- Leia as fotos/PDFs de RG, CPF, CNH e comprovante de endereço enviados: extraia nome, nacionalidade, estado civil (se constar), RG e órgão expedidor, CPF (confira os dígitos verificadores), data de nascimento e endereço completo com CEP. Liste o que não estava legível como [COMPLETAR].
+- Gere, além da petição: **Procuração**, **Contrato de honorários** (valores como [COMPLETAR] se ela não informar) e, se houver pedido de gratuidade, **Declaração de hipossuficiência**, usando a redação dos modelos dela no Drive ("PROCURAÇÃO", "Contrato de Prestação de Serviços", "minuta recibo"). Use os dados profissionais que constam nesses modelos.
+- Se o Drive estiver conectado, crie uma pasta "Kit — <cliente> x <réu> — <data>" com todos os documentos em Google Docs e um "Checklist" (documentos recebidos, o que falta, o que assinar). Senão, entregue cada documento separado na conversa.
 
 ## 1. Escuta e lacunas (antes de escrever)
 Extraia da narrativa: partes (autor/réu, PF/PJ), fatos em ordem cronológica, datas, valores, documentos disponíveis, pedido pretendido e urgência.

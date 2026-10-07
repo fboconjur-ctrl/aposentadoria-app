@@ -92,3 +92,9 @@ body.office { display: grid; grid-template-columns: 240px minmax(0, 1fr); min-he
 .doc-folha p { margin: 0 0 12px; text-align: justify; }
 .doc-folha .ass { text-align: center; margin-top: 48px; }
 @media print { body.office > *:not(main), .office-main > section:not(#v-docs), #v-docs > *:not(#doc-saida), #doc-saida > *:not(#doc-texto) { display: none !important; } .doc-folha { border: 0; padding: 0; } body.office { display: block; } }
+
+.dropzone { display: block; border: 2px dashed var(--line); border-radius: var(--r); padding: 28px; text-align: center; cursor: pointer; background: var(--tint); }
+.dropzone.over { border-color: var(--brand); }
+.kit-opcoes { display: flex; flex-wrap: wrap; gap: 8px 18px; }
+.kit-opcoes label { display: flex; gap: 6px; align-items: center; }
+.preenchido { outline: 2px solid color-mix(in srgb, var(--ok) 60%, transparent); }
