@@ -16,6 +16,7 @@
   <p class="side-tag">Escritório</p>
   <nav>
     <button class="nav on" data-view="hoje">Hoje</button>
+    <button class="nav" data-view="tarefas">Tarefas</button>
     <button class="nav" data-view="funil">Casos</button>
     <button class="nav" data-view="crm">Clientes</button>
     <button class="nav" data-view="docs">Documentos</button>
@@ -35,11 +36,27 @@
       <div class="panel"><h2>Agenda de hoje</h2><ul class="list" id="agenda"></ul></div>
       <div class="panel"><h2>Prazos mais próximos</h2><ul class="list" id="prazos-hoje"></ul></div>
     </div>
+    <div class="panel"><h2>Tarefas de hoje e atrasadas</h2><ul class="list" id="tarefas-hoje"></ul></div>
     <div class="panel"><h2>Novos pedidos da plataforma</h2>
       <details><summary class="small"><b>Importar pedido recebido por e-mail</b> — cole o e-mail do formulário (ou só a linha "pacote")</summary>
         <textarea id="ped-texto" rows="4" class="search" style="width:100%;margin-top:8px" placeholder="PD1:..."></textarea>
         <button class="btn" id="ped-ok" style="margin-top:8px">Importar pedido</button> <span id="ped-msg" class="small"></span></details>
       <ul class="list" id="novos"></ul></div>
+  </section>
+
+  <section id="v-tarefas" class="oview">
+    <header class="ohead"><div><p class="eyebrow">O que fazer e até quando</p><h1>Tarefas</h1></div>
+      <select id="t-filtro" class="search" style="min-width:0"><option value="abertas">Abertas</option><option value="hoje">Hoje e atrasadas</option><option value="feitas">Concluídas</option><option value="todas">Todas</option></select></header>
+    <form class="panel" id="t-form">
+      <div class="crm-grid">
+        <label class="wide">Tarefa<input id="t-texto" class="search" placeholder="Ex.: protocolar réplica, ligar para cliente, juntar procuração" required></label>
+        <label>Para quando<input id="t-quando" class="search" type="date"></label>
+        <label>Prioridade<select id="t-prio" class="search"><option value="2">Normal</option><option value="1">Alta</option><option value="3">Baixa</option></select></label>
+        <label>Caso / cliente<select id="t-vinculo" class="search"></select></label>
+      </div>
+      <div><button class="btn" type="submit">Adicionar tarefa</button></div>
+    </form>
+    <div class="panel"><ul class="list" id="t-lista"></ul></div>
   </section>
 
   <section id="v-funil" class="oview">

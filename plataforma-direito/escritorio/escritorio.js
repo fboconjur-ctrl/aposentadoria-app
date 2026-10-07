@@ -570,6 +570,55 @@ $("ped-ok").onclick = () => {
   renderAll();
 };
 
+// Tarefas: lista simples ligada a caso/cliente; guardada neste navegador.
+const TAREFAS_KEY = "pd-tarefas";
+let tarefas = [];
+try { tarefas = JSON.parse(localStorage.getItem(TAREFAS_KEY) || "[]"); } catch {}
+const salvarTarefas = () => { try { localStorage.setItem(TAREFAS_KEY, JSON.stringify(tarefas)); } catch {} };
+function opcoesVinculo() {
+  $("t-vinculo").innerHTML = `<option value="">— nenhum —</option>` +
+    CASOS.map((c) => `<option value="caso:${esc(c.id)}">${esc(c.nome)} · ${esc(c.titulo)}</option>`).join("") +
+    clientes.filter((c) => !c.caso).map((c) => `<option value="cli:${c.id}">${esc(c.nome)} (cliente)</option>`).join("");
+}
+function rotuloVinculo(v) {
+  if (!v) return "";
+  const [tipo, id] = v.split(/:(.+)/);
+  if (tipo === "caso") { const c = CASOS.find((x) => x.id === id); return c ? `<button class="linkish small" data-caso="${esc(c.id)}">${esc(c.nome)}</button>` : ""; }
+  const c = clientes.find((x) => x.id === id); return c ? `<span class="small muted">${esc(c.nome)}</span>` : "";
+}
+function itemTarefa(t) {
+  const hojeIso = iso(hoje), atras = !t.feita && t.quando && t.quando < hojeIso;
+  return `<li class="tarefa${t.feita ? " feita" : ""}${t.prio === "1" ? " prio-1" : ""}" data-tarefa="${t.id}">
+    <input type="checkbox"${t.feita ? " checked" : ""} aria-label="Concluir">
+    <div class="t-txt">${esc(t.texto)}<br>${t.quando ? `<span class="small ${atras ? "atrasada" : "muted"}">${atras ? "atrasada · " : ""}${fmt(new Date(t.quando + "T12:00"))}</span> ` : ""}${rotuloVinculo(t.vinculo)}</div>
+    <button class="del" title="Excluir" aria-label="Excluir">×</button></li>`;
+}
+function renderTarefas() {
+  const f = $("t-filtro").value, hojeIso = iso(hoje);
+  const vis = tarefas.filter((t) => f === "todas" || (f === "feitas" ? t.feita : !t.feita && (f !== "hoje" || (t.quando && t.quando <= hojeIso))))
+    .sort((a, b) => (a.quando || "9999").localeCompare(b.quando || "9999") || a.prio.localeCompare(b.prio));
+  $("t-lista").innerHTML = vis.map(itemTarefa).join("") || `<li class="muted">Nenhuma tarefa aqui.</li>`;
+  const doDia = tarefas.filter((t) => !t.feita && t.quando && t.quando <= hojeIso).sort((a, b) => a.quando.localeCompare(b.quando));
+  $("tarefas-hoje").innerHTML = doDia.map(itemTarefa).join("") || `<li class="muted">Nada para hoje.</li>`;
+}
+$("t-form").onsubmit = (e) => {
+  e.preventDefault();
+  tarefas.push({ id: "T-" + Date.now().toString(36), texto: $("t-texto").value.trim(), quando: $("t-quando").value, prio: $("t-prio").value, vinculo: $("t-vinculo").value, feita: false, criada: new Date().toISOString() });
+  salvarTarefas(); $("t-texto").value = ""; $("t-texto").focus(); renderTarefas();
+};
+$("t-filtro").onchange = renderTarefas;
+$("t-vinculo").onfocus = opcoesVinculo;
+document.addEventListener("change", (e) => {
+  const li = e.target.closest("[data-tarefa]"); if (!li || e.target.type !== "checkbox") return;
+  const t = tarefas.find((x) => x.id === li.dataset.tarefa); t.feita = e.target.checked; t.concluida = t.feita ? new Date().toISOString() : null;
+  salvarTarefas(); renderTarefas();
+});
+document.addEventListener("click", (e) => {
+  const b = e.target.closest(".tarefa .del"); if (!b) return;
+  tarefas = tarefas.filter((x) => x.id !== b.closest("[data-tarefa]").dataset.tarefa); salvarTarefas(); renderTarefas();
+});
+$("t-quando").value = iso(hoje); opcoesVinculo(); renderTarefas();
+
 $("voltar").onclick = () => go("funil");
 $("busca").oninput = (e) => renderFunil(e.target.value);
 renderAll();
