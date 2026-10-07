@@ -139,8 +139,7 @@
     const c = clientes.find((x) => x.id === $("doc-cliente").value); if (!c) return;
     $("p-nome").value = c.nome;
     if (c.cpf) { $("p-doc").value = c.cpf; $("p-tipo").value = DocId.cnpj(c.cpf) ? "pj" : "pf"; tipoParte(); }
-    const caso = CASOS.find((k) => k.id === c.caso);
-    if (caso && !$("kit-historia").value) $("kit-historia").value = [caso.resumo, ...(caso.orientacoes || [])].filter((x) => x && x !== "—").join("\n");
+    if (!$("kit-historia").value) $("kit-historia").value = [c.resumo, c.notas].filter(Boolean).join("\n");
   };
 
   const PARTE = { tipo: "p-tipo", nome: "p-nome", nac: "p-nac", civil: "p-civil", prof: "p-prof", rg: "p-rg", doc: "p-doc", end: "p-end", rep: "p-rep", menor: "p-menor" };
