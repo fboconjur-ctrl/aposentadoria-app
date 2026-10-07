@@ -86,3 +86,9 @@ body.office { display: grid; grid-template-columns: 240px minmax(0, 1fr); min-he
 .crm-grid .search { min-width: 0; width: 100%; }
 .wa-btn { background: #1f8f4e; color: #fff; border: 0; border-radius: 999px; padding: 6px 12px; font: 600 .85rem var(--font-body); cursor: pointer; }
 .atrasada { color: #b42318; font-weight: 600; }
+
+.doc-folha { background: #fff; color: #111; font: 12pt/1.6 "Times New Roman", serif; padding: 48px 56px; border: 1px solid var(--line); border-radius: 8px; max-width: 800px; outline: none; }
+.doc-folha h3 { text-align: center; font-size: 13pt; margin: 0 0 20px; }
+.doc-folha p { margin: 0 0 12px; text-align: justify; }
+.doc-folha .ass { text-align: center; margin-top: 48px; }
+@media print { body.office > *:not(main), .office-main > section:not(#v-docs), #v-docs > *:not(#doc-saida), #doc-saida > *:not(#doc-texto) { display: none !important; } .doc-folha { border: 0; padding: 0; } body.office { display: block; } }

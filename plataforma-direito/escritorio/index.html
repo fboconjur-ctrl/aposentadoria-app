@@ -18,6 +18,7 @@
     <button class="nav on" data-view="hoje">Hoje</button>
     <button class="nav" data-view="funil">Casos</button>
     <button class="nav" data-view="crm">Clientes</button>
+    <button class="nav" data-view="docs">Documentos</button>
     <button class="nav" data-view="prazos">Prazos</button>
     <button class="nav" data-view="acomp">Acompanhamento</button>
     <button class="nav" data-view="djen">Publicações (DJEN)</button>
@@ -79,6 +80,43 @@
     </div>
   </section>
 
+  <section id="v-docs" class="oview">
+    <header class="ohead"><div><p class="eyebrow">Gerador de documentos · nada sai deste navegador</p><h1>Documentos</h1></div></header>
+    <details class="panel" id="meus-dados"><summary><b>Meus dados</b> <span class="small muted">(preencha uma vez; ficam só neste navegador)</span></summary>
+      <div class="crm-grid" style="margin-top:12px">
+        <label>Nome<input id="adv-nome" class="search"></label>
+        <label>OAB (número/UF)<input id="adv-oab" class="search"></label>
+        <label class="wide">Endereço profissional completo<input id="adv-end" class="search"></label>
+        <label>Cidade/UF padrão<input id="adv-cidade" class="search"></label>
+      </div></details>
+    <div class="panel">
+      <div class="crm-grid">
+        <label>Modelo<select id="doc-modelo" class="search"></select></label>
+        <label>Cliente cadastrado (opcional)<select id="doc-cliente" class="search"></select></label>
+      </div>
+      <h2 style="margin-top:8px">Outorgante / Contratante</h2>
+      <div class="crm-grid">
+        <label>Tipo<select id="p-tipo" class="search"><option value="pf">Pessoa física</option><option value="pj">Pessoa jurídica</option></select></label>
+        <label>Nome / Razão social<input id="p-nome" class="search"></label>
+        <label class="pf">Nacionalidade<input id="p-nac" class="search" value="brasileiro(a)"></label>
+        <label class="pf">Estado civil<input id="p-civil" class="search"></label>
+        <label class="pf">Profissão<input id="p-prof" class="search"></label>
+        <label class="pf">RG e órgão expedidor<input id="p-rg" class="search"></label>
+        <label>CPF / CNPJ<input id="p-doc" class="search"></label>
+        <label class="wide">Endereço completo (com CEP)<input id="p-end" class="search"></label>
+        <label class="pj wide">Representante legal (nome, nacionalidade, estado civil, profissão, CPF)<input id="p-rep" class="search"></label>
+        <label class="pf wide">Representa menor? (nome e CPF do menor — deixe vazio se não)<input id="p-menor" class="search"></label>
+      </div>
+      <div id="doc-campos" class="crm-grid" style="margin-top:12px"></div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:12px"><button class="btn" id="doc-gerar">Gerar documento</button></div>
+    </div>
+    <div class="panel" id="doc-saida" hidden>
+      <div style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn" id="doc-word">Baixar Word</button><button class="back" id="doc-pdf">Imprimir / salvar PDF</button><button class="back" id="doc-copiar">Copiar texto</button></div>
+      <p class="small muted">Você pode editar o texto abaixo antes de baixar. Revise sempre antes de assinar.</p>
+      <article id="doc-texto" class="doc-folha" contenteditable="true"></article>
+    </div>
+  </section>
+
   <section id="v-acomp" class="oview">
     <header class="ohead"><div><p class="eyebrow">Movimentações pelo número · DataJud (CNJ)</p><h1>Acompanhamento</h1></div>
       <button class="btn" id="acomp-atualizar">Atualizar agora</button></header>
@@ -137,5 +175,6 @@
   </section>
 </main>
 <script src="escritorio.js"></script>
+<script src="documentos.js"></script>
 </body>
 </html>
