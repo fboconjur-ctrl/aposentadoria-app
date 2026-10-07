@@ -326,7 +326,7 @@ $("lead-form").onsubmit = async (e) => {
     enviarPedidoNuvem($("f-pacote").value);
     if (!r.ok) throw new Error(r.status);
     $("area-title").textContent = state.flow ? state.flow.caseTitle : "Pergunta enviada à advogada";
-    $("area-meeting").textContent = `A combinar — retornaremos em até 1 dia útil · protocolo ${$("f-protocolo").value}`;
+    $("area-protocolo").textContent = $("f-protocolo").value;
     go("area");
   } catch {
     $("f-msg").textContent = "Não conseguimos enviar agora. Verifique a conexão e tente de novo.";

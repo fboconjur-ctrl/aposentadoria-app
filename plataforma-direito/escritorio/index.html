@@ -46,7 +46,18 @@
 
   <section id="v-ficha" class="oview">
     <header class="ohead"><div><button class="back" data-view="clientes">← Clientes</button><h1 id="fi-nome"></h1><p class="muted" id="fi-sub"></p></div>
-      <div class="fi-acoes"><select id="fi-etapa" class="search" aria-label="Etapa"></select><button class="wa-btn" id="fi-wa">WhatsApp</button><button class="back" id="fi-editar">Editar dados</button><button class="back" id="fi-docs">Documentos / kit</button></div></header>
+      <div class="fi-acoes"><select id="fi-etapa" class="search" aria-label="Etapa"></select><button class="wa-btn" id="fi-wa">WhatsApp</button><button class="back" id="fi-editar">Editar dados</button><button class="back" id="fi-docs">Documentos / kit</button><button class="back" id="fi-ind-abrir">Indicar a colega</button></div></header>
+    <form class="panel" id="fi-ind" hidden>
+      <h2>Indicar a colega</h2>
+      <div class="crm-grid">
+        <label>Colega<input id="ind-nome" class="search" list="ind-lista" required placeholder="Nome do(a) advogado(a)"></label>
+        <label>WhatsApp do colega<input id="ind-tel" class="search" inputmode="tel" required placeholder="61 99999-9999"></label>
+        <label class="wide" style="display:flex;gap:8px;align-items:center"><input type="checkbox" id="ind-ok" required> O cliente autorizou o repasse do caso e do contato dele (LGPD e sigilo).</label>
+      </div>
+      <datalist id="ind-lista"></datalist>
+      <div style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn">Abrir WhatsApp do colega</button><button class="back" type="button" id="ind-x">Cancelar</button></div>
+      <p class="small muted">A mensagem vai pronta com o resumo do caso; você confere antes de enviar. O cliente fica marcado como "Indicado a colega".</p>
+    </form>
     <div class="panel" id="crm-form" hidden>
       <h2 id="crm-form-titulo">Novo cliente</h2>
       <div class="crm-grid">

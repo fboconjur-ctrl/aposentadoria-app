@@ -272,7 +272,7 @@ function abrirFicha(id, { manterScroll } = {}) {
   $("fi-notas").value = c.notas || "";
   $("fi-hist").innerHTML = (c.hist || []).map((h) => `<li><span class="when">${fmt(new Date(h.em))}</span><span>${esc(h.o)}</span></li>`).join("") || `<li class="muted">Sem registros.</li>`;
   $("fi-wa").hidden = !telWa(c.tel);
-  $("crm-form").hidden = true; $("crm-wa").hidden = true;
+  $("crm-form").hidden = true; $("crm-wa").hidden = true; $("fi-ind").hidden = true;
 }
 $("fi-etapa").onchange = () => { const c = cliPorId(fichaAtual); c.etapa = $("fi-etapa").value; (c.hist ||= []).unshift({ em: new Date().toISOString(), o: `Etapa: ${c.etapa}` }); salvarCrm(); renderTudo(); };
 let notasTimer;
@@ -338,6 +338,29 @@ $("wa-abrir").onclick = () => {
   const c = cliPorId(fichaAtual);
   window.open(`https://wa.me/${telWa(c.tel)}?text=${encodeURIComponent($("wa-texto").value)}`, "_blank", "noopener");
   (c.hist ||= []).unshift({ em: new Date().toISOString(), o: `WhatsApp: ${$("wa-modelo").value}` }); salvarCrm(); abrirFicha(c.id, { manterScroll: true });
+};
+
+// Indicar a colega: manda o caso pronto pelo WhatsApp e registra na ficha.
+let colegas = ler("pd-colegas", []);
+$("fi-ind-abrir").onclick = () => {
+  $("ind-lista").innerHTML = colegas.map((k) => `<option value="${esc(k.nome)}">`).join("");
+  $("fi-ind").hidden = false; $("crm-wa").hidden = true; $("ind-nome").focus();
+};
+$("ind-nome").oninput = () => { const k = colegas.find((x) => x.nome === $("ind-nome").value); if (k) $("ind-tel").value = k.tel; };
+$("ind-x").onclick = () => ($("fi-ind").hidden = true);
+$("fi-ind").onsubmit = (e) => {
+  e.preventDefault();
+  const c = cliPorId(fichaAtual), nome = $("ind-nome").value.trim(), tel = $("ind-tel").value.trim();
+  if (!telWa(tel)) { $("ind-tel").setCustomValidity("Informe o WhatsApp com DDD"); $("ind-tel").reportValidity(); return; }
+  $("ind-tel").setCustomValidity("");
+  const txt = [`Olá, ${primeiroNome(nome.replace(/^(dra?\.?|doutora?)\s+/i, ""))}! Tudo bem? Aqui é a Fernanda Borges (OAB/DF 35.332). Gostaria de te indicar um caso:`, "",
+    `*Cliente:* ${c.nome}${c.tel ? ` — ${c.tel}` : ""}`, `*Área:* ${c.area || "—"}${c.assunto ? ` · ${c.assunto}` : ""}`,
+    c.resumo ? `*Resumo:* ${c.resumo.slice(0, 600)}` : "", procsDe(c).length ? `*Processo(s):* ${procsDe(c).map(mascara).join(", ")}` : "", "",
+    "O cliente já autorizou o repasse. Consegue atender?"].filter((x) => x !== null).join("\n").replace(/\n{3,}/g, "\n\n");
+  window.open(`https://wa.me/${telWa(tel)}?text=${encodeURIComponent(txt)}`, "_blank", "noopener");
+  colegas = [{ nome, tel }, ...colegas.filter((k) => k.nome !== nome)]; gravar("pd-colegas", colegas);
+  c.etapa = "Indicado a colega"; (c.hist ||= []).unshift({ em: new Date().toISOString(), o: `Indicado a ${nome}` }); salvarCrm();
+  $("fi-ind").hidden = true; $("ind-ok").checked = false; abrirFicha(c.id, { manterScroll: true });
 };
 
 // ---------- Pedido vindo do site ----------
