@@ -275,6 +275,9 @@ async function buscarDjen() {
   $("djen-status").textContent = "Consultando o DJEN…";
   const consultas = [];
   if (oab) consultas.push(consultaDjen({ numeroOab: oab, ufOab: uf, ...datas }));
+  // Alguns tribunais publicam sem vincular a OAB; a busca pelo nome cobre esses casos.
+  const nome = $("djen-nome").value.trim();
+  if (nome) consultas.push(consultaDjen({ nomeAdvogado: nome, ...datas }));
   processos.forEach((p) => consultas.push(consultaDjen({ numeroProcesso: p, ...datas })));
   const res = await Promise.allSettled(consultas);
   const falhas = res.filter((r) => r.status === "rejected");
