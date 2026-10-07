@@ -218,6 +218,7 @@ function abrirCaso(id) {
   $("caso-etapa").innerHTML = ETAPAS.map((e) => `<option${e === c.etapa ? " selected" : ""}>${e}</option>`).join("");
   $("caso-etapa").onchange = (e) => { c.etapa = e.target.value; salvarEtapa(c); renderAll(); };
   const li = (a) => (a || []).length ? a.map((x) => `<li>${esc(x)}</li>`).join("") : `<li class="muted" style="list-style:none">A preencher na consulta.</li>`;
+  $("caso-kit").onclick = () => abrirKitDoCaso(c);
   $("dossie").innerHTML = `
     <div class="panel wide"><h2>Resumo executivo</h2><p>${esc(c.resumo)}</p><p><b>Objetivo do cliente:</b> ${esc(c.objetivo)}</p>
       <div class="codes">${c.atlas ? `<span class="pill-s">Atlas ${esc(c.atlas)}</span>` : ""}${c.dac ? `<span class="pill-s">DAC ${esc(c.dac)}</span>` : ""}</div></div>
@@ -798,6 +799,20 @@ $("fin-csv").onclick = () => {
 };
 $("fin-mes").value = iso(hoje).slice(0, 7); $("fin-mes").onchange = renderFin;
 $("fh-venc").value = $("fl-data").value = iso(hoje); opcoesFin(); renderFin();
+
+// Do caso (inclusive pedido vindo da plataforma) direto para o kit: cliente, CPF, história, réu e serviço sugerido.
+const SERVICO_POR_AREA = { "Previdenciário": "postulação administrativa", "Saúde": "ações contenciosas", "Consumidor": "juizados especiais petição inicial", "Administrativo": "processo administrativo", "Cartório/Extrajudicial": "inventários", "Trabalhista": "reclamante", "Penal": "ação penal" };
+function abrirKitDoCaso(c) {
+  let cli = clientes.find((x) => x.caso === c.id) || clientes.find((x) => semAcento(x.nome) === semAcento(c.nome));
+  if (!cli) { cli = { id: "CL-" + Date.now().toString(36), caso: c.id, criado: new Date().toISOString(), nome: c.nome, cpf: "", tel: c.contato?.telefone || "", email: c.contato?.email || "", area: c.area, origem: c.origem, etapa: c.etapa, acao: "", quando: "", procs: "", notas: "", hist: [] }; clientes.push(cli); salvarCrm(); renderCrm(); }
+  go("docs");
+  $("doc-cliente").dispatchEvent(new Event("focus")); $("doc-cliente").value = cli.id; $("doc-cliente").dispatchEvent(new Event("change"));
+  if (!$("kit-historia").value) $("kit-historia").value = [c.resumo, ...(c.orientacoes || [])].filter((x) => x && x !== "—").join("\n");
+  const reu = (c.partes || []).find((p) => p !== c.nome); if (reu && !$("kit-reu").value) $("kit-reu").value = reu;
+  const termo = SERVICO_POR_AREA[c.area]; if (termo) { $("pr-busca").value = termo; $("pr-busca").dispatchEvent(new Event("input")); }
+  if (!DocId.valido(cli.cpf)) { $("doc-avulso").open = true; $("kit-status").textContent = "Falta o CPF do cliente: arraste o documento (passo 1) ou digite em “Dados do cliente”."; }
+  window.scrollTo(0, 0);
+}
 
 $("voltar").onclick = () => go("funil");
 $("busca").oninput = (e) => renderFunil(e.target.value);
