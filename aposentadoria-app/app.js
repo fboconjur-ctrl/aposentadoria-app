@@ -204,7 +204,23 @@ function setupFieldAssists() {
   updateDurationHints();
 }
 
+// Preenche sozinho o tempo em 2019 e a carência, a partir do tempo total (a pessoa pode ajustar em "Ajustes avançados").
+function preencherAutomatico() {
+  const el = form.elements, total = (+el.contribYears.value || 0) * 12 + (+el.contribMonths.value || 0);
+  const antes = form.querySelector('[name="antes2019"]:checked')?.value !== "nao";
+  el.startedBeforeReform.checked = antes;
+  if (!el.carencia.dataset.manual) el.carencia.value = total;
+  if (!el.contrib2019Years.dataset.manual && !el.contrib2019Months.dataset.manual) {
+    const desde = new Date(2019, 10, 13), hoje = new Date();
+    const passados = (hoje.getFullYear() - desde.getFullYear()) * 12 + hoje.getMonth() - desde.getMonth();
+    const em2019 = antes ? Math.max(0, total - passados) : 0;
+    el.contrib2019Years.value = Math.floor(em2019 / 12); el.contrib2019Months.value = em2019 % 12;
+  }
+}
+["carencia", "contrib2019Years", "contrib2019Months"].forEach((n) => form.elements[n].addEventListener("input", (e) => (e.target.dataset.manual = "1")));
+
 function normalizeFormData() {
+  preencherAutomatico();
   const data = Object.fromEntries(new FormData(form).entries());
   data.isTeacher = form.elements.isTeacher.checked;
   data.isSpecial = form.elements.isSpecial.checked;
@@ -237,25 +253,19 @@ function renderBest(result) {
   }
 
   const best = result.best;
+  const temSalario = +form.elements.averageSalary.value > 0;
+  const WA = "https://wa.me/5561999733111?text=" + encodeURIComponent(`Olá! Vim pelo simulador da Plataforma do Direito. O resultado indicou: ${best.title}${best.eligible ? " (já cumpro os requisitos)" : `, a partir de ${RetirementRules.formatDate(best.eligibleDate)}`}. Gostaria que a advogada analisasse meu caso.`);
   bestResult.innerHTML = `
-    <p class="eyebrow">Regra mais favorável</p>
-    <h2>${best.title}</h2>
-    <p>${best.eligible ? "A pessoa já aparece como elegível nessa regra." : `Data estimada de elegibilidade: ${RetirementRules.formatDate(best.eligibleDate)}.`}</p>
-    <div class="metric-grid">
-      <div class="metric">
-        <span>Prazo</span>
-        <strong>${best.eligible ? "Agora" : RetirementRules.formatMonths(best.monthsUntil)}</strong>
-      </div>
-      <div class="metric">
-        <span>Renda estimada</span>
-        <strong>${money(best.estimatedBenefit)}</strong>
-      </div>
-      <div class="metric">
-        <span>Critério</span>
-        <strong>${best.eligible ? "Cumprido" : "A cumprir"}</strong>
-      </div>
+    <p class="eyebrow">Pelas regras e pelos números que você informou</p>
+    <h2>${best.eligible ? "Você já pode ter direito a se aposentar" : `Você pode se aposentar a partir de ${RetirementRules.formatDate(best.eligibleDate)}`}</h2>
+    <p>Regra que chega primeiro: <strong>${best.title}</strong>.${best.eligible ? "" : ` Faltam cerca de ${RetirementRules.formatMonths(best.monthsUntil)}.`}</p>
+    ${temSalario ? `<p>Valor estimado: <strong>${money(best.estimatedBenefit)}</strong> por mês (aproximado).</p>` : `<p class="pd-dica">Informe a média dos salários para ver uma estimativa de valor.</p>`}
+    <div class="pd-cta">
+      <p><strong>Para ter certeza, consulte a advogada.</strong> A simulação usa só os números digitados; o CNIS pode ter períodos faltando ou que contam diferente — e isso muda a data e o valor.</p>
+      <a class="pd-btn" href="${WA}" target="_blank" rel="noopener">Quero que a advogada confira meu caso</a>
     </div>
   `;
+  document.getElementById("todasRegras").hidden = false;
 }
 
 function renderRules(result) {

@@ -150,48 +150,57 @@
 
             <div class="section-title">
               <span>02</span>
-              <h2>Tempo e carência</h2>
+              <h2>Suas contribuições</h2>
             </div>
 
-            <div class="grid two">
-              <label>
-                Tempo total de contribuição
+            <label>
+                Quanto tempo você já contribuiu para o INSS, somando tudo?
                 <div class="inline-fields">
-                  <input name="contribYears" type="number" min="0" max="60" value="30" aria-label="Anos de contribuição" />
+                  <input name="contribYears" type="number" min="0" max="60" value="" placeholder="0" required aria-label="Anos de contribuição" />
                   <span>anos</span>
                   <input name="contribMonths" type="number" min="0" max="11" value="0" aria-label="Meses de contribuição" />
                   <span>meses</span>
                 </div>
+                <small class="pd-dica">Não sabe? Está no extrato do CNIS, no Meu INSS. Pode usar um número aproximado.</small>
               </label>
 
-              <label>
-                Carência
+            <fieldset class="pd-pergunta">
+              <legend>Você já contribuía antes de 13 de novembro de 2019 (Reforma da Previdência)?</legend>
+              <label class="check"><input type="radio" name="antes2019" value="sim" checked /> <span>Sim</span></label>
+              <label class="check"><input type="radio" name="antes2019" value="nao" /> <span>Não, comecei depois</span></label>
+              <small class="pd-dica">Quem já contribuía antes pode usar as regras de transição, que costumam ser mais vantajosas.</small>
+            </fieldset>
+
+            <label>
+                Média aproximada dos seus salários (opcional)
                 <div class="inline-fields">
-                  <input name="carencia" type="number" min="0" max="720" value="180" />
-                  <span>meses</span>
+                  <input name="averageSalary" type="number" min="0" step="0.01" value="" placeholder="Ex.: 2500" />
+                  <span>R$ por mês</span>
                 </div>
+                <small class="pd-dica">Serve só para estimar o valor. Sem ele, mostramos apenas a data.</small>
               </label>
-            </div>
 
-            <div class="grid two">
+            <details class="pd-opcional" id="ajustesAvancados"><summary>Ajustes avançados (tempo exato em 2019 e carência)</summary>
+              <p class="pd-dica">Calculamos sozinhos a partir do tempo total. Só mude se tiver os números do CNIS.</p>
+              <div class="grid two">
               <label>
                 Tempo em 13/11/2019
                 <div class="inline-fields">
-                  <input name="contrib2019Years" type="number" min="0" max="60" value="28" aria-label="Anos em 13 de novembro de 2019" />
+                  <input name="contrib2019Years" type="number" min="0" max="60" value="0" aria-label="Anos em 13 de novembro de 2019" />
                   <span>anos</span>
                   <input name="contrib2019Months" type="number" min="0" max="11" value="0" aria-label="Meses em 13 de novembro de 2019" />
                   <span>meses</span>
                 </div>
               </label>
-
               <label>
-                Salários considerados
+                Carência (meses pagos em dia)
                 <div class="inline-fields">
-                  <input name="averageSalary" type="number" min="0" step="0.01" value="2500" />
-                  <span>R$ média</span>
+                  <input name="carencia" type="number" min="0" max="720" value="0" />
+                  <span>meses</span>
                 </div>
               </label>
-            </div>
+              </div>
+            </details>
 
             <details class="pd-opcional"><summary>Professor(a), atividade especial ou deficiência? Toque aqui</summary>
 <div class="section-title">
@@ -200,7 +209,7 @@
             </div>
 
             <div class="switch-row">
-              <label class="check">
+              <label class="check" hidden>
                 <input name="startedBeforeReform" type="checkbox" checked />
                 <span>Já tinha filiação/contribuição antes de 13/11/2019</span>
               </label>
@@ -316,7 +325,7 @@
             </details>
             <div class="actions">
               <button type="submit">Ver quando posso me aposentar</button>
-              <button type="button" class="secondary" id="fillExample">Exemplo</button>
+              <button type="button" class="secondary linkish" id="fillExample">Ver um exemplo preenchido</button>
               <button type="button" class="secondary next-step" data-next-tab="reportTab">Próxima etapa</button>
             </div>
           </form>
@@ -324,17 +333,14 @@
           <section class="results">
             <div class="panel summary-card" id="bestResult">
               <p class="eyebrow">Resultado</p>
-              <h2>Preencha os dados para comparar as regras.</h2>
-              <p>O app avalia idade, tempo comum, especial, rural, PcD, incapacidade, carência, pontos e pedágios, depois ordena pela data mais próxima e por estimativa de renda.</p>
+              <h2>Preencha ao lado e toque em “Ver quando posso me aposentar”.</h2>
+              <p>Comparamos todas as regras do INSS com os seus números e mostramos a que chega primeiro.</p>
             </div>
 
-            <div class="panel">
-              <div class="section-title compact">
-                <span>04</span>
-                <h2>Comparativo das regras</h2>
-              </div>
+            <details class="panel pd-todas" id="todasRegras" hidden>
+              <summary>Ver todas as regras comparadas</summary>
               <div id="rulesList" class="rules-list"></div>
-            </div>
+            </details>
           </section>
           </div>
         </section>

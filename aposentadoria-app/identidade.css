@@ -27,3 +27,12 @@ input,select,textarea{border-radius:10px;border-color:var(--line);background:var
 .pd-opcional summary{cursor:pointer;font-weight:600;color:var(--brand)}
 .pd-opcional[open] summary{margin-bottom:10px}
 @media (max-width:640px){.app-shell{padding:16px}}
+.pd-dica{display:block;color:var(--muted);font-size:.85rem;font-weight:400;margin-top:4px}
+.pd-pergunta{border:0;padding:0;margin:14px 0;display:grid;gap:8px}
+.pd-pergunta legend{font-weight:600;margin-bottom:6px}
+.pd-cta{background:var(--accent-soft);border-radius:12px;padding:14px;margin-top:14px;display:grid;gap:10px}
+.pd-btn{display:inline-block;text-align:center;background:var(--brand);color:#fff;padding:12px 18px;border-radius:999px;text-decoration:none;font-weight:600}
+.pd-todas summary{cursor:pointer;font-weight:600;color:var(--brand)}
+.pd-todas[open] summary{margin-bottom:12px}
+.linkish{background:none!important;border:0!important;color:var(--brand)!important;text-decoration:underline;padding:6px!important}
+.tabs{flex-wrap:nowrap;overflow-x:auto}.tab-button{min-height:0!important;height:auto!important;padding:8px 14px!important;white-space:nowrap;font-size:.95rem}.pd-todas{padding:14px 18px}

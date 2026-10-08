@@ -148,7 +148,7 @@
         `Pontuação aproximada atual: ${currentPoints.toFixed(1)}`,
       ],
       notes: teacher ? ["Aplicável quando todo o tempo informado for de magistério na educação básica."] : ["Soma idade e tempo de contribuição."],
-      disqualifier: teacher && !input.isTeacher ? "Marque professor(a) para avaliar esta regra." : null,
+      disqualifier: !input.startedBeforeReform ? "Regra de transição: só vale para quem já contribuía até 13/11/2019." : teacher && !input.isTeacher ? "Marque professor(a) para avaliar esta regra." : null,
     });
   }
 
@@ -167,7 +167,7 @@
         `Tempo mínimo: ${formatMonths(contribReq)}`,
       ],
       notes: teacher ? ["A idade progressiva do professor atinge limite menor que a regra comum."] : ["A idade sobe seis meses por ano ate o limite legal."],
-      disqualifier: teacher && !input.isTeacher ? "Marque professor(a) para avaliar esta regra." : null,
+      disqualifier: !input.startedBeforeReform ? "Regra de transição: só vale para quem já contribuía até 13/11/2019." : teacher && !input.isTeacher ? "Marque professor(a) para avaliar esta regra." : null,
     });
   }
 
@@ -187,7 +187,7 @@
         `Tempo final estimado: ${formatMonths(required)}`,
       ],
       notes: ["Regra restrita a quem estava a até dois anos do tempo mínimo na Reforma."],
-      disqualifier: isAllowed ? null : "Não se enquadra porque faltavam mais de 2 anos ou já havia tempo completo em 13/11/2019.",
+      disqualifier: !input.startedBeforeReform ? "Regra de transição: só vale para quem já contribuía até 13/11/2019." : isAllowed ? null : "Não se enquadra porque faltavam mais de 2 anos ou já havia tempo completo em 13/11/2019.",
     });
   }
 
@@ -209,7 +209,7 @@
         `Pedágio calculado: ${formatMonths(missingAtReform)}`,
       ],
       notes: ["Pode ser interessante por cálculo de renda, mas exige idade e pedágio integral."],
-      disqualifier: null,
+      disqualifier: !input.startedBeforeReform ? "Regra de transição: só vale para quem já contribuía até 13/11/2019." : null,
     });
   }
 
