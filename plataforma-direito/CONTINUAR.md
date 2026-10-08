@@ -33,3 +33,7 @@ Prévia: https://deploy-preview-1--prevcalculadora.netlify.app/plataforma-direit
 7. DataJud/DJEN bloqueiam consultas de fora do Brasil: rodar consultas pelo navegador dela ou via Claude in Chrome.
 8. Calibrar os critérios de precificação (multiplicadores) com ela; URH do mês.
 9. Revisão jurídica final de `conteudo/REVISAO.md`; salário mínimo 2026 [VALIDAR].
+
+## Leitura do relato com IA (/api/analisar)
+- Função `netlify/functions/analisar.mjs`. Precisa da variável `ANTHROPIC_API_KEY` no Netlify (Site settings → Environment variables). Sem a chave, o portal usa a leitura por palavras-chave.
+- A IA só organiza os fatos, aponta o que a pessoa já fez e escolhe, entre os trechos JÁ REVISADOS dos roteiros, os que se relacionam com o relato. Não conclui nada sobre o caso. O texto não é guardado.

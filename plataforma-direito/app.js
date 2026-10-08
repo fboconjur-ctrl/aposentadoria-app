@@ -188,6 +188,7 @@ function mostrarRoteiro(f, R, text, an) {
       ${R.perguntas.map((p, i) => `<div class="rt-q" data-i="${i}"><p><strong>${esc(p.q)}</strong></p><div class="answers">${p.a.map((a) => `<button type="button" data-r="${esc(a)}">${esc(a)}</button>`).join("")}</div>${ajudaHtml(p.ajuda)}</div>`).join("")}
       <p class="small muted">Suas respostas vão junto com o pedido, para a advogada. <button type="button" class="linkish small" id="rt-pular">Pular e ver as informações</button></p>
     </div>
+    ${an && an.ia ? `<section class="card rt-relacao" id="rt-relacao"><h2>O que a lei e os tribunais dizem sobre os pontos do seu relato</h2><p class="muted">Lendo o conteúdo à luz do que você contou…</p></section>` : ""}
     <div id="rt-conteudo"${an ? "" : " hidden"}>
       ${R.explica ? `<section class="rt-bloco rt-explica card"><h2>${esc(R.explica.titulo)}</h2><ol>${publico(R.explica.itens).map((x) => { const i = x.indexOf(": "); return `<li>${i > 0 && i < 60 ? `<strong>${esc(x.slice(0, i))}:</strong> ${esc(x.slice(i + 2))}` : esc(x)}</li>`; }).join("")}</ol></section>` : ""}
       ${bloco("O que a lei diz", R.lei)}
@@ -195,7 +196,7 @@ function mostrarRoteiro(f, R, text, an) {
       ${bloco("Onde os tribunais ainda divergem", R.divergencia, "rt-diverge")}
       ${bloco("Prazos que importam", R.prazos, "rt-prazo")}
       ${publico(R.docs).length ? `<section class="rt-bloco"><h2>Documentos para separar</h2><ul class="rt-check">${publico(R.docs).map((x) => `<li><label><input type="checkbox"> ${esc(x)}</label></li>`).join("")}</ul></section>` : ""}
-      ${passos.length ? `<section class="rt-bloco"><h2>${an && an.feitos.length ? "Próximos passos (sem repetir o que você já fez)" : "O que fazer agora"}</h2><ol>${passos.map((x) => `<li>${esc(x)}</li>`).join("")}</ol></section>` : ""}
+      ${passos.length ? `<section class="rt-bloco"><h2>${an && an.feitos.length ? "Próximos passos (sem repetir o que você já fez)" : "O que fazer agora"}</h2><ol>${passos.map((x) => `<li data-ref="passos.${publico(R.passos).indexOf(x)}">${esc(x)}</li>`).join("")}</ol></section>` : ""}
       ${bloco("Quando é urgente procurar a advogada", R.urgente, "rt-urgente")}
       <div class="card decision"><h2>Para ter certeza da avaliação no seu caso, consulte a advogada.</h2>
         <p class="muted">As informações acima são gerais. O que vale para você depende dos documentos e dos detalhes do caso.</p>
@@ -214,6 +215,7 @@ function mostrarRoteiro(f, R, text, an) {
     if (R.perguntas.every((_, k) => resp[k])) revelar();
   })));
   $("rt-pular").onclick = () => { registrar(); revelar(); };
+  if (an && an.ia) relacionarTrechos(f, R, text);
   if (an) { state.followSummary = `${f.q} — relato: ${text}`; document.querySelectorAll("[data-outro]").forEach((b) => (b.onclick = () => { const id = b.dataset.outro; mostrarRoteiro({ id, q: b.textContent, area: f.area, sources: [] }, ROTEIROS[id], text, { ...an }); window.scrollTo(0, 0); })); }
   $("rt-guia").onclick = (e) => { e.preventDefault(); go("guia"); };
   $("to-lawyer").onclick = () => { registrar(); openLawyer(); };
@@ -582,17 +584,64 @@ function lerRelato(t) {
 function analiseHtml(an, atual) {
   const outros = (an.ids || []).filter((id) => id !== atual);
   const nomes = {}; Object.values(SITUACOES).flat().forEach(([txt, id]) => (nomes[id] = txt));
+  const tentou = an.tentou || an.feitos.map((c) => `Reclamou em ${c.nome}`);
   return `<div class="card rt-analise"><h2>O que entendemos do seu relato</h2>
     ${an.fatos.length ? `<ul>${an.fatos.map((x) => `<li>${esc(x)}</li>`).join("")}</ul>` : ""}
-    ${an.feitos.length ? `<p><strong>Você já reclamou em:</strong> ${esc(an.feitos.map((c) => c.nome).join(", "))}. Por isso não repetimos esses passos abaixo.</p>` : ""}
-    ${outros.length ? `<p><strong>Seu relato também envolve:</strong></p><div class="answers">${outros.map((id) => `<button type="button" data-outro="${id}">${esc(nomes[id] || id)}</button>`).join("")}</div>` : ""}
-    <p class="small muted">Se entendemos algo errado, a advogada corrige na análise.</p></div>`;
+    ${tentou.length ? `<p><strong>O que você já fez:</strong></p><ul>${tentou.map((x) => `<li>${esc(x)}</li>`).join("")}</ul><p class="small muted">Por isso não repetimos esses passos.</p>` : ""}
+    ${outros.length ? `<p><strong>Seu relato também envolve:</strong></p><div class="answers">${outros.map((id) => `<button type="button" data-outro="${id}">${esc(nomes[id] || titulo(id))}</button>`).join("")}</div>` : ""}
+    ${(an.faltando || []).length ? `<p><strong>O que a advogada provavelmente vai querer saber:</strong></p><ul>${an.faltando.map((x) => `<li>${esc(x)}</li>`).join("")}</ul>` : ""}
+    <p class="small muted">${an.ia ? "Leitura feita por inteligência artificial apenas para organizar o seu relato; o texto não é guardado. " : ""}Se entendemos algo errado, a advogada corrige na análise.</p></div>`;
+}
+// Catálogo de assuntos com roteiro (para a IA escolher) e título de cada um.
+function catalogo() {
+  const m = {};
+  Object.values(SITUACOES).flat().forEach(([txt, id]) => { if (ROTEIROS[id]) m[id] = txt.replace(/\s*→$/, ""); });
+  FAQ.forEach((f) => { if (ROTEIROS[f.id] && !m[f.id]) m[f.id] = f.q; });
+  return m;
+}
+function titulo(id) { return catalogo()[id] || id; }
+async function api(corpo, ms = 25000) {
+  const c = new AbortController(); const t = setTimeout(() => c.abort(), ms);
+  try { const r = await fetch("/api/analisar", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(corpo), signal: c.signal }); return r.ok ? await r.json() : null; }
+  catch { return null; } finally { clearTimeout(t); }
+}
+async function analisarComIA(t) {
+  const cat = catalogo();
+  const d = await api({ modo: "triagem", relato: t, catalogo: Object.entries(cat).map(([id, titulo]) => ({ id, titulo })) });
+  if (!d || !Array.isArray(d.assuntos)) return null;
+  const ids = d.assuntos.map((a) => a.id).filter((id) => cat[id] && ROTEIROS[id]).slice(0, 3);
+  if (!ids.length) return null;
+  return { ia: true, ids, fatos: (d.fatos || []).slice(0, 8), tentou: (d.ja_tentou || []).slice(0, 6), faltando: (d.faltando || []).slice(0, 3), feitos: [] };
+}
+async function relacionarTrechos(f, R, text) {
+  const trechos = [];
+  const add = (k, lista) => publico(lista || []).forEach((x, i) => trechos.push({ ref: `${k}.${i}`, texto: x }));
+  if (R.explica) add("explica", R.explica.itens);
+  add("lei", R.lei); add("juris", R.juris); add("divergencia", R.divergencia); add("prazos", R.prazos); add("passos", R.passos);
+  const d = await api({ modo: "relacionar", relato: text, titulo: f.q, trechos });
+  const box = $("rt-relacao"); if (!box) return;
+  const por = Object.fromEntries(trechos.map((x) => [x.ref, x.texto]));
+  const itens = (d && d.trechos || []).filter((x) => por[x.ref] && !x.ref.startsWith("passos"));
+  if (!itens.length) { box.remove(); return; }
+  box.innerHTML = `<h2>O que a lei e os tribunais dizem sobre os pontos do seu relato</h2>
+    <ol>${itens.map((x) => `<li><p><strong>${esc(x.ligacao)}</strong></p><p class="muted">${esc(por[x.ref])}</p></li>`).join("")}</ol>
+    <p><strong>Para ter certeza da avaliação no seu caso, consulte a advogada.</strong></p>`;
+  (d.ja_feitos || []).forEach((ref) => document.querySelector(`[data-ref="${ref}"]`)?.remove());
+  state.followSummary = (state.followSummary || "") + " | Pontos relacionados: " + itens.map((x) => x.ligacao).join(" / ");
 }
 function sugerirSituacoes(t) {
   const n = norm(t);
   const nomes = {}; Object.values(SITUACOES).flat().forEach(([txt, id]) => (nomes[id] = txt));
   const ids = Object.entries(PISTAS).map(([id, ks]) => [id, ks.filter((k) => n.includes(k)).length]).filter(([id, sc]) => sc && ROTEIROS[id] && nomes[id]).sort((a, b) => b[1] - a[1]).slice(0, 3).map(([id]) => id);
-  const an = { ...lerRelato(t), ids };
+  if (t.length >= 60) {
+    say("Lendo seu relato com atenção…");
+    analisarComIA(t).then((ai) => mostrarAnalise(t, ai || { ...lerRelato(t), ids }));
+    return;
+  }
+  mostrarAnalise(t, { ...lerRelato(t), ids });
+}
+function mostrarAnalise(t, an) {
+  const ids = an.ids, nomes = catalogo();
   // Relato curto e sem pistas: aí sim faz perguntas.
   if (!ids.length && t.length < 120) return ask();
   setStep(2);
