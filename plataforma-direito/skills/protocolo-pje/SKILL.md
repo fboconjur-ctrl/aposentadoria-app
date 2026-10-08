@@ -1,6 +1,6 @@
 ---
 name: protocolo-pje
-description: Protocola petições no PJe (TJDFT, TRT10, TRF1/JEF, TJPB e outros) para a advogada Fernanda Borges Oliveira usando o navegador dela (Claude in Chrome) — preenche autuação, partes e anexos a partir da "Ficha de protocolo PJe" do kit da ação e PARA antes da assinatura. Use quando ela pedir para protocolar, peticionar, distribuir ação ou juntar petição no PJe.
+description: Protocola petições no PJe (TJDFT, TRT10, TRF1/JEF, TJPB e outros) para a advogada usando o navegador dela (Claude in Chrome) — preenche autuação, partes e anexos a partir da "Ficha de protocolo PJe" do kit da ação e PARA antes da assinatura. Use quando ela pedir para protocolar, peticionar, distribuir ação ou juntar petição no PJe.
 ---
 
 # Protocolo no PJe (preencher até a assinatura)

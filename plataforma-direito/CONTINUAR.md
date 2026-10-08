@@ -1,6 +1,6 @@
 # Plataforma do Direito — onde paramos (passagem de sessão)
 
-Advogada: Fernanda Borges Oliveira (OAB/DF 35.332). Branch: `claude/plataforma-direito-blueprint-x906s0`.
+Advogada: dados (nome/OAB) ficam só em "Meus dados" no painel — NUNCA no código ou no site (pedido dela: golpes contra advogados). Branch: `claude/plataforma-direito-blueprint-x906s0`.
 Prévia: https://deploy-preview-1--prevcalculadora.netlify.app/plataforma-direito/ · Painel: `/plataforma-direito/escritorio/`.
 
 ## Princípios combinados
@@ -14,7 +14,7 @@ Prévia: https://deploy-preview-1--prevcalculadora.netlify.app/plataforma-direit
 **Plataforma pública** (`index.html`, `app.js`…): triagem por área, 101 respostas (FAQ), continuações, leitura de CNIS/carta INSS/negativa de plano/PAD, Atlas e DAC, calculadoras (prazo cível, prazo penal, prescrição penal), pedido com CPF validado + pacote do caso (PD1:…) + protocolo.
 **Painel do escritório** (`escritorio/`), reorganizado em volta do CLIENTE: só 3 menus (Hoje · Clientes · Mais) + barra "＋ Anotar" sempre visível (entende "Maria audiência 15/10 14h", "João pagou 500", "réplica vence 20/10"; 1º Enter mostra, 2º salva). Ficha única do cliente (com "Indicar a colega": WhatsApp do colega com o resumo, exige marcar autorização do cliente, lista de colegas em `pd-colegas`): a fazer (prazos, compromissos, tarefas), processos (DataJud + publicações), pagamentos, história/anotações, WhatsApp, kit de documentos. Hoje = atrasado/hoje, 7 dias, novidades (pedidos do site, publicações, movimentações). "Mais" = financeiro do mês, publicações (DJEN/Recorte), calculadora de prazos, documentos, importar. Dados: `pd-crm` (clientes), `pd-itens` (prazo/compromisso/tarefa, campo `cli`), `pd-financeiro` (campo `cli`); migração automática do formato antigo (`pd-migrado-v2`). Sem dados fictícios.
 **Skills** (`skills/`): `peticao` (kit + petição com jurisprudência verificada do foro) e `protocolo-pje` (preenche o PJe e PARA antes da assinatura).
-**Rotina**: "Publicações diárias — OAB/DF 35332" (9h44, dias úteis) — falta marcar o conector Gmail nela em claude.ai → Routines.
+**Rotina**: "Publicações diárias" (9h44, dias úteis) — falta marcar o conector Gmail nela em claude.ai → Routines.
 
 ## Pendências (em ordem)
 0. **PRÓXIMO PASSO — Login com Google (fazer pelo Claude in Chrome, ela pediu que o Claude faça):**

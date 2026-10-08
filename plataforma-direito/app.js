@@ -105,7 +105,7 @@ function renderResult() {
     <details><summary>Ver fundamento jurídico e fontes →</summary><ul>${sources}</ul></details>
     <div class="card decision">
       <h2>E no seu caso?</h2>
-      <p>As informações acima são gerais. O que vale para o seu caso depende dos documentos e dos detalhes, e só uma advogada pode dizer. Se quiser, a Dra. Fernanda analisa o seu caso.</p>
+      <p>As informações acima são gerais. O que vale para o seu caso depende dos documentos e dos detalhes, e só uma advogada pode dizer. Se quiser, a advogada analisa o seu caso.</p>
       <div class="actions">
         <button class="btn" id="to-lawyer">Quero que a advogada analise meu caso</button>
         <button class="btn secondary" id="alone">Só queria a informação</button>

@@ -84,7 +84,7 @@ function money(value) {
 }
 
 function getReportOwner() {
-  return reportForm?.elements.reportOwner?.value.trim() || "Fernanda Borges Oliveira";
+  return reportForm?.elements.reportOwner?.value.trim() || "[nome do(a) advogado(a)]";
 }
 
 function syncReportOwner() {
@@ -626,7 +626,7 @@ function renderContract(data) {
   return `
     <h1>Contrato de Honorários Advocatícios</h1>
     <p><strong>CONTRATANTE:</strong> ${escapeHtml(qualification)}.</p>
-    <p><strong>CONTRATADA:</strong> ${escapeHtml(data.lawyerName || "Fernanda Borges Oliveira")}, advogada, ${escapeHtml(data.lawyerOab || "OAB nº [informar]")}, com endereço profissional em ${escapeHtml(data.lawyerAddress || "[endereço profissional]")}.</p>
+    <p><strong>CONTRATADA:</strong> ${escapeHtml(data.lawyerName || "[nome do(a) advogado(a)]")}, advogada, ${escapeHtml(data.lawyerOab || "OAB nº [informar]")}, com endereço profissional em ${escapeHtml(data.lawyerAddress || "[endereço profissional]")}.</p>
     <h2>Cláusula 1ª - Objeto</h2>
     <p>A CONTRATADA prestará serviços advocatícios consistentes em ${escapeHtml(service)}, inclusive análise documental, cálculo previdenciário, elaboração de peças, protocolo, acompanhamento e orientação estratégica.</p>
     <h2>Cláusula 2ª - Benefício e estimativa econômica</h2>
@@ -644,7 +644,7 @@ function renderContract(data) {
     <p>${escapeHtml(data.signaturePlace || "Brasília/DF")}, ${escapeHtml(formatDateLong(data.signatureDate))}.</p>
     <div class="signature-lines">
       <div class="signature-line">${escapeHtml(data.name || "CONTRATANTE")}</div>
-      <div class="signature-line">${escapeHtml(data.lawyerName || "Fernanda Borges Oliveira")}<br>${escapeHtml(data.lawyerOab || "OAB nº [informar]")}</div>
+      <div class="signature-line">${escapeHtml(data.lawyerName || "[nome do(a) advogado(a)]")}<br>${escapeHtml(data.lawyerOab || "OAB nº [informar]")}</div>
     </div>
   `;
 }
@@ -654,7 +654,7 @@ function renderPowerOfAttorney(data) {
   return `
     <h1>Procuração Ad Judicia et Extra</h1>
     <p><strong>OUTORGANTE:</strong> ${escapeHtml(qualification)}.</p>
-    <p><strong>OUTORGADA:</strong> ${escapeHtml(data.lawyerName || "Fernanda Borges Oliveira")}, advogada, ${escapeHtml(data.lawyerOab || "OAB nº [informar]")}, com endereço profissional em ${escapeHtml(data.lawyerAddress || "[endereço profissional]")}.</p>
+    <p><strong>OUTORGADA:</strong> ${escapeHtml(data.lawyerName || "[nome do(a) advogado(a)]")}, advogada, ${escapeHtml(data.lawyerOab || "OAB nº [informar]")}, com endereço profissional em ${escapeHtml(data.lawyerAddress || "[endereço profissional]")}.</p>
     <p>Por este instrumento particular, o(a) OUTORGANTE nomeia e constitui sua bastante procuradora a OUTORGADA acima qualificada, conferindo-lhe poderes para o foro em geral, com a cláusula <em>ad judicia et extra</em>, para representá-lo(a) em matéria previdenciária, administrativa e judicial.</p>
     <p>Os poderes abrangem atuação perante o INSS, Justiça Federal, Juizados Especiais Federais, Tribunais, bancos, órgãos públicos, entidades privadas, plataformas digitais, sistemas eletrônicos, Meu INSS, Gov.br, PrevJud, PJe, eproc, e demais sistemas necessários à defesa dos interesses do(a) OUTORGANTE.</p>
     <p>A OUTORGADA poderá requerer benefícios, revisar atos, apresentar recursos, cumprir exigências, juntar documentos, retirar cópias, solicitar informações, assinar declarações, receber intimações, substabelecer com ou sem reserva de poderes, transigir, desistir, firmar acordos, receber e dar quitação, quando juridicamente adequado e mediante observância dos interesses do(a) OUTORGANTE.</p>
@@ -1089,3 +1089,12 @@ clientsList.addEventListener("change", (event) => {
   renderClients();
 });
 renderClients();
+
+// Nome de quem emite o relatório: fica salvo neste navegador (não fica no código, que é público).
+try {
+  const campoDono = reportForm?.elements.reportOwner;
+  if (campoDono) {
+    campoDono.value ||= localStorage.getItem("sim-report-owner") || "";
+    campoDono.addEventListener("input", () => localStorage.setItem("sim-report-owner", campoDono.value.trim()));
+  }
+} catch {}

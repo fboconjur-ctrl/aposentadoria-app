@@ -1,7 +1,7 @@
 // Gerador de documentos: modelos baseados na redação da advogada. Tudo roda no navegador.
 (() => {
   const ADV_KEY = "pd-adv";
-  const ADV_PADRAO = { nome: "FERNANDA BORGES OLIVEIRA", oab: "35.332/DF", end: "", cidade: "Brasília/DF" };
+  const ADV_PADRAO = { nome: "", oab: "", end: "", cidade: "Brasília/DF" }; // preenchido em "Meus dados" (fica na conta, não no código)
   let adv = { ...ADV_PADRAO };
   try { adv = { ...adv, ...JSON.parse(localStorage.getItem(ADV_KEY) || "{}") }; } catch {}
   const ADV_CAMPOS = { nome: "adv-nome", oab: "adv-oab", end: "adv-end", cidade: "adv-cidade" };
@@ -9,7 +9,7 @@
     $(id).value = adv[k] || "";
     $(id).oninput = () => { adv[k] = $(id).value; try { localStorage.setItem(ADV_KEY, JSON.stringify(adv)); } catch {} };
   });
-  if (!adv.end) $("meus-dados").open = true;
+  if (!adv.end || !adv.nome) $("meus-dados").open = true;
 
   // Valor por extenso em reais (até bilhões).
   const UN = ["", "um", "dois", "três", "quatro", "cinco", "seis", "sete", "oito", "nove", "dez", "onze", "doze", "treze", "quatorze", "quinze", "dezesseis", "dezessete", "dezoito", "dezenove"];

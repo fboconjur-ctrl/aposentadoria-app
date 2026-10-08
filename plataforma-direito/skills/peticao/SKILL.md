@@ -1,6 +1,6 @@
 ---
 name: peticao
-description: Monta o KIT DA AÇÃO (petição inicial + procuração + contrato de honorários + declaração de hipossuficiência + checklist) ou só a petição inicial (ou contestação/recurso) a partir da narrativa da advogada Fernanda Borges Oliveira (OAB/DF 35.332), com jurisprudência VERIFICADA do tribunal onde a ação será proposta. Use quando ela narrar um caso, por texto ou áudio, e pedir petição, inicial, ação, peça ou minuta.
+description: Monta o KIT DA AÇÃO (petição inicial + procuração + contrato de honorários + declaração de hipossuficiência + checklist) ou só a petição inicial (ou contestação/recurso) a partir da narrativa da advogada (OAB dela), com jurisprudência VERIFICADA do tribunal onde a ação será proposta. Use quando ela narrar um caso, por texto ou áudio, e pedir petição, inicial, ação, peça ou minuta.
 ---
 
 # Petição a partir da narrativa

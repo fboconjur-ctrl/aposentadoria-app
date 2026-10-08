@@ -29,7 +29,7 @@
   </div>
 
   <section id="v-hoje" class="oview on">
-    <header class="ohead"><div><p class="eyebrow" id="hoje-data"></p><h1>Bom dia, Fernanda.</h1></div></header>
+    <header class="ohead"><div><p class="eyebrow" id="hoje-data"></p><h1 id="hoje-ola">Bom dia.</h1></div></header>
     <div class="panel"><h2>Atrasado e hoje</h2><ul class="list" id="h-agora"></ul></div>
     <div class="panel"><h2>Próximos 7 dias</h2><ul class="list" id="h-semana"></ul></div>
     <div class="panel"><h2>Novidades</h2><ul class="list" id="h-novidades"></ul>
@@ -248,9 +248,9 @@
       <button class="btn" id="djen-buscar">Buscar agora</button></header>
     <div class="panel">
       <div class="djen-form">
-        <label>OAB<input id="djen-oab" class="search" value="35332" inputmode="numeric"></label>
+        <label>OAB<input id="djen-oab" class="search" inputmode="numeric" placeholder="só números"></label>
         <label>UF<input id="djen-uf" class="search" value="DF" maxlength="2"></label>
-        <label>Nome (busca extra)<input id="djen-nome" class="search" style="width:240px" value="Fernanda Borges Oliveira"></label>
+        <label>Nome (busca extra)<input id="djen-nome" class="search" style="width:240px" placeholder="seu nome completo"></label>
         <label>Últimos dias<input id="djen-dias" class="search" type="number" min="1" max="60" value="7"></label>
       </div>
       <label class="small">Processos de terceiros para acompanhar (um número por linha)

@@ -315,10 +315,13 @@ $("crm-excluir").onclick = () => {
   salvarCrm(); salvarItens(); salvarFin(); fecharForm(); fichaAtual = null; go("clientes");
 };
 
-// WhatsApp com mensagem pronta
+// WhatsApp com mensagem pronta. Nome e OAB vêm de "Meus dados" (não ficam no código, que é público).
+const meusDados = () => window.DocGerador?.adv() || {};
+const nomeProprio = (n) => String(n || "").toLowerCase().replace(/(^|\s)\S/g, (x) => x.toUpperCase());
+const eu = () => { const a = meusDados(); return a.nome ? `${nomeProprio(a.nome)}, advogada${a.oab ? ` (OAB ${a.oab})` : ""}` : "a sua advogada"; };
 const telWa = (t) => { const d = soDig(t); return d.length >= 12 ? d : d.length >= 10 ? "55" + d : ""; };
 const MODELOS_WA = {
-  "Primeiro contato": (c) => `Olá, ${primeiroNome(c.nome)}! Aqui é a Fernanda Borges Oliveira, advogada (OAB/DF 35.332). Recebi seu pedido${c.assunto ? ` sobre ${c.assunto.toLowerCase()}` : ""} e gostaria de entender melhor o seu caso. Qual o melhor horário para conversarmos?`,
+  "Primeiro contato": (c) => `Olá, ${primeiroNome(c.nome)}! Aqui é ${eu()}. Recebi seu pedido${c.assunto ? ` sobre ${c.assunto.toLowerCase()}` : ""} e gostaria de entender melhor o seu caso. Qual o melhor horário para conversarmos?`,
   "Confirmar consulta": (c) => { const p = itens.find((x) => x.cli === c.id && x.tipo === "compromisso" && !x.feita && x.quando >= hojeIso); return `Olá, ${primeiroNome(c.nome)}! Confirmando nossa conversa${p ? ` em ${fmt(deIso(p.quando))}${p.hora ? ` às ${p.hora}` : ""}` : ""}. Se puder, separe os documentos que tiver sobre o caso.`; },
   "Pedir documentos": (c) => `Olá, ${primeiroNome(c.nome)}! Para darmos andamento, preciso dos seguintes documentos:\n- \n- \nPode enviar foto ou PDF por aqui mesmo. Obrigada!`,
   "Proposta de honorários": (c) => `Olá, ${primeiroNome(c.nome)}! Conforme conversamos, segue a proposta para atuação no seu caso. Fico à disposição para qualquer dúvida.`,
@@ -353,7 +356,7 @@ $("fi-ind").onsubmit = (e) => {
   const c = cliPorId(fichaAtual), nome = $("ind-nome").value.trim(), tel = $("ind-tel").value.trim();
   if (!telWa(tel)) { $("ind-tel").setCustomValidity("Informe o WhatsApp com DDD"); $("ind-tel").reportValidity(); return; }
   $("ind-tel").setCustomValidity("");
-  const txt = [`Olá, ${primeiroNome(nome.replace(/^(dra?\.?|doutora?)\s+/i, ""))}! Tudo bem? Aqui é a Fernanda Borges (OAB/DF 35.332). Gostaria de te indicar um caso:`, "",
+  const txt = [`Olá, ${primeiroNome(nome.replace(/^(dra?\.?|doutora?)\s+/i, ""))}! Tudo bem? Aqui é ${eu()}. Gostaria de te indicar um caso:`, "",
     `*Cliente:* ${c.nome}${c.tel ? ` — ${c.tel}` : ""}`, `*Área:* ${c.area || "—"}${c.assunto ? ` · ${c.assunto}` : ""}`,
     c.resumo ? `*Resumo:* ${c.resumo.slice(0, 600)}` : "", procsDe(c).length ? `*Processo(s):* ${procsDe(c).map(mascara).join(", ")}` : "", "",
     "O cliente já autorizou o repasse. Consegue atender?"].filter((x) => x !== null).join("\n").replace(/\n{3,}/g, "\n\n");
@@ -422,6 +425,16 @@ let vistas = new Set(ler(VISTAS_KEY, []));
 let recorte = ler(REC_KEY, []);
 let ultimasDjen = [];
 try { $("djen-monit").value = localStorage.getItem(MONIT_KEY) || ""; $("djen-partes").value = localStorage.getItem(PARTES_KEY) || ""; } catch {}
+// OAB e nome para a busca no DJEN: ficam salvos na conta; se vazios, vêm de "Meus dados".
+const DJEN_ID_KEY = "pd-djen-id";
+setTimeout(() => {
+  const salvo = ler(DJEN_ID_KEY, {}), a = meusDados();
+  $("djen-oab").value = salvo.oab || soDig(a.oab || "");
+  $("djen-uf").value = salvo.uf || ((a.oab || "").match(/[A-Z]{2}/i)?.[0] || "DF").toUpperCase();
+  $("djen-nome").value = salvo.nome || nomeProprio(a.nome || "");
+  if (a.nome) $("hoje-ola").textContent = `Bom dia, ${primeiroNome(nomeProprio(a.nome))}.`;
+  ["djen-oab", "djen-uf", "djen-nome"].forEach((id) => ($(id).oninput = () => gravar(DJEN_ID_KEY, { oab: $("djen-oab").value.trim(), uf: $("djen-uf").value.trim(), nome: $("djen-nome").value.trim() })));
+}, 0);
 const numPub = (p) => p.numeroprocessocommascara || mascara(p.numero_processo || p.numeroProcesso || "");
 const todosProcs = () => { const s = new Set([...$("djen-monit").value.matchAll(CNJ_RE)].map((m) => so20(m[0]))); clientes.forEach((c) => procsDe(c).forEach((n) => s.add(n))); return [...s]; };
 
@@ -449,7 +462,7 @@ async function buscarDjen() {
   $("djen-status").textContent = "Consultando o DJEN…";
   const consultas = [];
   const rot = (nome, pr) => pr.then((v) => ((v.rotulo = nome), v), (e) => { e.rotulo = nome; throw e; });
-  // Alguns tribunais (ex.: TRT10) gravam a OAB com zeros à esquerda (035332); consulta as duas formas.
+  // Alguns tribunais (ex.: TRT10) gravam a OAB com zeros à esquerda (ex.: 012345); consulta as duas formas.
   if (oab) new Set([oab.replace(/^0+/, ""), oab.replace(/^0+/, "").padStart(6, "0")]).forEach((x) => consultas.push(rot(`OAB ${x}`, consultaDjen({ numeroOab: x, ufOab: uf, ...datas }))));
   const nome = $("djen-nome").value.trim();
   if (nome) consultas.push(rot("Seu nome", consultaDjen({ nomeAdvogado: nome, ...datas })));
