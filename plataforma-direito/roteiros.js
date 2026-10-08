@@ -32,7 +32,7 @@ const GLOSSARIO = {
   "sindicância": "Apuração mais simples que o PAD. Pode arquivar o caso, aplicar advertência ou suspensão de até 30 dias, ou levar à abertura de PAD.",
   "jari": "Junta Administrativa de Recursos de Infrações: julga o recurso contra multa de trânsito em 1ª instância.",
   "cetran": "Conselho Estadual de Trânsito: julga o recurso em 2ª instância, depois da JARI (no DF, Contrandife).",
-  "mínimo existencial": "Parte da renda que precisa ficar livre de dívidas para a pessoa viver (alimentação, moradia, saúde). Hoje o valor de referência é R$ 600, segundo decreto mantido pelo STF em 2026.",
+  "mínimo existencial": "Parte da renda que precisa ficar livre de dívidas para a pessoa viver (alimentação, moradia, saúde). O valor de referência nacional é R$ 600 (decreto mantido pelo STF em 2026), mas, para quem tem salário, muitos juízes preservam um percentual da renda.",
   "repactuação": "Renegociação de todas as dívidas de consumo juntas, num plano de pagamento de até 5 anos, feita em audiência com todos os credores.",
   "med": "Mecanismo Especial de Devolução do Pix: procedimento do Banco Central para bloquear e tentar devolver valores de Pix em caso de golpe. Pedido feito ao seu banco, de preferência na hora.",
   "alienação fiduciária": "Quando o carro (ou outro bem) fica em nome do banco como garantia até o fim do financiamento. Se as parcelas atrasam, o banco pode pedir a busca e apreensão.",
@@ -457,6 +457,7 @@ const ROTEIROS = {
     perguntas: [
       { q: "Suas dívidas são principalmente de:", a: ["Cartão, cheque especial e empréstimos", "Consignado", "Contas de consumo (luz, água, lojas)", "Financiamento de casa ou carro", "Várias delas"] },
       { q: "Depois de pagar as parcelas, sobra o suficiente para comida, moradia e saúde?", a: ["Não", "Muito pouco", "Sim"], ajuda: ["mínimo existencial"] },
+      { q: "Você é:", a: ["Servidor(a) público(a)", "Aposentado(a) ou pensionista do INSS", "Empregado(a) com carteira", "Outro"] },
       { q: "Você já tentou renegociar?", a: ["Sim, sem sucesso", "Não", "Estou negociando"] },
     ],
     lei: [
@@ -467,10 +468,16 @@ const ROTEIROS = {
     ],
     juris: [
       "STF, ADPFs 1005, 1006 e 1097 (2026): manteve o valor de referência de R$ 600 para o mínimo existencial e determinou que o Conselho Monetário Nacional o revise periodicamente.",
+      "Para quem tem salário ou benefício, vários tribunais limitam os descontos de empréstimos consignados a um percentual da renda líquida — em geral 30% a 35%, com mais 5% para cartão consignado —, tomando como base a Lei 10.820/2003 e o caráter alimentar do salário.",
+      "STJ, Tema 1085: esse limite de percentual não se aplica, por analogia, a empréstimos comuns descontados em conta-corrente com autorização do cliente — mas a autorização pode ser revogada, e o superendividamento continua podendo ser discutido.",
     ],
-    divergencia: ["Se o valor de R$ 600 é critério absoluto: há quem entenda que o juiz pode considerar a realidade concreta da família ao analisar o caso."],
+    divergencia: [
+      "O valor de R$ 600 é muito criticado por ser baixo. Para servidores e assalariados, muitos juízes não o aplicam de forma literal e preservam um percentual da renda líquida (há decisões preservando de 25% a 40%), considerando a realidade da família.",
+      "Outros tribunais aplicam o valor de referência de forma mais estrita, olhando quanto sobra da renda depois das dívidas.",
+      "[CONFERIR] Margem consignável do servidor no estatuto do ente (federal, distrital, estadual ou municipal).",
+    ],
     prazos: ["Não há prazo para pedir. Mas, quanto antes, menos juros se acumulam."],
-    docs: ["Lista de todas as dívidas (credor, valor, parcela)", "Contracheque ou comprovante de renda", "Comprovantes dos gastos básicos (aluguel, remédios, escola)", "Contratos e extratos"],
+    docs: ["Lista de todas as dívidas (credor, valor, parcela)", "Contracheques dos últimos meses (com todos os descontos)", "Extrato bancário mostrando débitos de empréstimos em conta", "Comprovantes dos gastos básicos (aluguel, remédios, escola)", "Contratos e extratos"],
     passos: ["Liste todas as dívidas e todos os gastos essenciais.", "Procure o Procon ou o centro de conciliação (Cejusc) do tribunal para a repactuação.", "Não faça novos empréstimos para pagar os antigos.", "Procure a advogada se os credores não aceitarem o plano."],
     urgente: ["Salário ou benefício quase todo comprometido", "Ameaça de corte de serviços essenciais", "Novos empréstimos para pagar os antigos"],
     fontes: [["Código de Defesa do Consumidor", "https://www.planalto.gov.br/ccivil_03/leis/l8078compilado.htm"], ["Lei 14.181/2021", "https://www.planalto.gov.br/ccivil_03/_ato2019-2022/2021/lei/l14181.htm"], ["STF — mínimo existencial", "https://noticias.stf.jus.br/"]],

@@ -1507,3 +1507,4 @@ Revisar: superendividamento, consignado-nao-contratado, pix-golpe, busca-apreens
 Novo bloco "Onde os tribunais ainda divergem" (Pix: REsp 2.215.907/SP x transações fora do perfil; Tema 1132 e "não procurado"; R$ 600 absoluto ou não; dívida prescrita em plataformas; chip e senha).
 Oculto até revisão [CONFERIR]: prazo máximo do MED no regulamento atual do Pix (MED 2.0 obrigatório desde 02/2026).
 Conferir: STF ADPFs 1005/1006/1097 (23/04/2026, R$ 600 + revisão pelo CMN); STJ Temas 722 e 1132; REsp 1.622.555; EAREsp 676.608 (modulação 30/03/2021).
+- Superendividamento: servidor/assalariado — percentual da renda (30-35% + 5% cartão; Lei 10.820/2003), STJ Tema 1085 (não se aplica a débito em conta). Oculto [CONFERIR]: margem consignável no estatuto de cada ente.
