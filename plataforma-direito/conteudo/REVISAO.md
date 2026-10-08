@@ -1529,3 +1529,7 @@ Saúde: carencia-urgencia (Súm. 597 e 609), sus-remedio, bariatrica (Tema 1069)
 Ocultos [CONFERIR]: DUT da bariátrica; reembolso integral pela RN 566; coparticipação em internação psiquiátrica; congelamento de óvulos pré-quimioterapia; prazo de resposta da portabilidade.
 Adm: pad-prescricao, licitacao-recurso (14.133 arts. 164-165), orgao-nao-paga (arts. 137 e 141), heteroidentificacao (ADC 41), tribunal-contas (Tema 899), improbidade (Tema 1199), desapropriacao, lai, auto-infracao (Leis 9.784 e 9.873).
 Ocultos [CONFERIR]: nova lei de cotas em concursos (2025); prazo de defesa na citação do tribunal de contas.
+
+## Aprofundamento — INSS (18)
+pcd-grau, pontos-2026, calculo-valor, recurso-prazo, especial-ppp (Temas 555 e 709), salario-maternidade, ir-doenca-grave (Súm. 627 e 598; ADI 6025), pericia-inss, servidor-aposentadoria, periodo-graca, auxilio-acidente (Tema 416), rural (Súm. 149; Tema 1007), conversao-especial (Tema 422), auxilio-reclusao, vida-toda (ADIs 2110/2111), adicional-25 (Tema 1095), complementacao, tempo-militar (TCU Súm. 96).
+Ocultos [CONFERIR]: pontuação 2026 de professores; carência do salário-maternidade após ADIs 2110/2111; Atestmed; idades/pontos de servidores federais e regras do DF; efeitos para quem já tinha decisão na vida toda.
