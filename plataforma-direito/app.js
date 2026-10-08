@@ -257,7 +257,7 @@ function answerQuestion(text, faqFixa) {
         <div class="actions">
           ${key === "previdenciario" ? `<a class="btn" href="/simulador/">Abrir o simulador</a>` : ""}
           <button class="btn secondary" id="to-flow">Analisar meu caso</button>
-          <button class="btn secondary" id="to-lawyer">Falar com advogado</button>
+          <button class="btn secondary" id="to-lawyer">Falar com a advogada</button>
         </div>
       </div>
       <p class="muted small">Resposta informativa e geral (conteúdo em validação jurídica). Não substitui a análise do seu caso concreto.</p>`;
