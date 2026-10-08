@@ -32,7 +32,7 @@ const GLOSSARIO = {
   "sindicância": "Apuração mais simples que o PAD. Pode arquivar o caso, aplicar advertência ou suspensão de até 30 dias, ou levar à abertura de PAD.",
   "jari": "Junta Administrativa de Recursos de Infrações: julga o recurso contra multa de trânsito em 1ª instância.",
   "cetran": "Conselho Estadual de Trânsito: julga o recurso em 2ª instância, depois da JARI (no DF, Contrandife).",
-  "mínimo existencial": "Parte da renda que precisa ficar livre de dívidas para a pessoa viver (alimentação, moradia, saúde). O decreto fixa R$ 600; em 2026 o STF não definiu valor novo, mas mandou o Conselho Monetário Nacional revisá-lo periodicamente. Para quem tem salário, muitos juízes preservam um percentual da renda.",
+  "mínimo existencial": "Parte da renda que precisa ficar livre de dívidas para a pessoa viver (alimentação, moradia, saúde). O decreto fixa R$ 600; em 2026 o STF não definiu valor novo, mas mandou o Conselho Monetário Nacional revisá-lo periodicamente. Na prática, para quem tem salário, muitos juízes limitam os descontos a 30% da renda líquida.",
   "repactuação": "Renegociação de todas as dívidas de consumo juntas, num plano de pagamento de até 5 anos, feita em audiência com todos os credores.",
   "med": "Mecanismo Especial de Devolução do Pix: procedimento do Banco Central para bloquear e tentar devolver valores de Pix em caso de golpe. Pedido feito ao seu banco, de preferência na hora.",
   "alienação fiduciária": "Quando o carro (ou outro bem) fica em nome do banco como garantia até o fim do financiamento. Se as parcelas atrasam, o banco pode pedir a busca e apreensão.",
@@ -468,7 +468,7 @@ const ROTEIROS = {
     ],
     juris: [
       "STF, ADPFs 1005, 1006 e 1097 (2026): não fixou um valor novo para o mínimo existencial. Considerou possível defini-lo por decreto, mas determinou que o Conselho Monetário Nacional faça estudos técnicos e revise o valor periodicamente; até lá, segue o valor previsto no decreto (R$ 600).",
-      "Para quem tem salário ou benefício, vários tribunais limitam os descontos de empréstimos consignados a um percentual da renda líquida — em geral 30% a 35%, com mais 5% para cartão consignado —, tomando como base a Lei 10.820/2003 e o caráter alimentar do salário.",
+      "Diante desse cenário, muitos juízes limitam o total dos descontos de empréstimos a 30% da renda líquida (alguns admitem 35%, com mais 5% para cartão consignado), considerando o caráter alimentar do salário e a Lei 10.820/2003.",
       "STJ, Tema 1085: esse limite de percentual não se aplica, por analogia, a empréstimos comuns descontados em conta-corrente com autorização do cliente — mas a autorização pode ser revogada, e o superendividamento continua podendo ser discutido.",
     ],
     divergencia: [
