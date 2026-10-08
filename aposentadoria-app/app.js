@@ -330,7 +330,12 @@ function updateSpecialVisibility() {
 form.addEventListener("submit", (event) => {
   event.preventDefault();
   calculate();
+  bestResult.scrollIntoView({ behavior: "smooth", block: "start" });
 });
+// Resultado aparece sozinho assim que os 3 dados essenciais estão preenchidos.
+["input", "change"].forEach((ev) => form.addEventListener(ev, () => {
+  if (form.elements.birthDate.value && form.elements.contribYears.value !== "" && form.checkValidity()) calculate();
+}));
 
 specialToggle.addEventListener("change", updateSpecialVisibility);
 conditionalGroups.forEach((group) => group.toggle.addEventListener("change", updateSpecialVisibility));

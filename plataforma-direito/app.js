@@ -95,6 +95,7 @@ function ask() {
   const qs = [...state.flow.questions, OBJECTIVE_Q];
   if (state.qi >= qs.length) return finish();
   const { q, a } = qs[state.qi];
+  if (state.qi === 0) say(`São só ${qs.length} perguntas de um toque. No fim, você vê o que a lei diz, os documentos e os prazos do seu assunto.`);
   $("qcount").textContent = `Pergunta ${state.qi + 1} de ${qs.length}`;
   $("voltar").hidden = state.qi === 0;
   say(q);
@@ -193,12 +194,8 @@ function mostrarRoteiro(f, R, text, an) {
     <h1>${esc(an ? f.q : text)}</h1>
     <p class="lead">${esc(R.acolhe)}</p>
     ${an ? analiseHtml(an, f.id) : ""}
-    <div class="card rt-perguntas"${an ? " hidden" : ""}><h2>Para entender melhor, responda rapidinho</h2>
-      ${R.perguntas.map((p, i) => `<div class="rt-q" data-i="${i}"><p><strong>${esc(p.q)}</strong></p><div class="answers">${p.a.map((a) => `<button type="button" data-r="${esc(a)}">${esc(a)}</button>`).join("")}</div>${ajudaHtml(p.ajuda)}</div>`).join("")}
-      <p class="small muted">Suas respostas vão junto com o pedido, para a advogada. <button type="button" class="linkish small" id="rt-pular">Pular e ver as informações</button></p>
-    </div>
     ${an && an.ia ? `<section class="card rt-relacao" id="rt-relacao"><h2>O que a lei e os tribunais dizem sobre os pontos do seu relato</h2><p class="muted">Lendo o conteúdo à luz do que você contou…</p></section>` : ""}
-    <div id="rt-conteudo"${an ? "" : " hidden"}>
+    <div id="rt-conteudo">
       ${R.explica ? `<section class="rt-bloco rt-explica card"><h2>${esc(R.explica.titulo)}</h2><ol>${publico(R.explica.itens).map((x) => { const i = x.indexOf(": "); return `<li>${i > 0 && i < 60 ? `<strong>${esc(x.slice(0, i))}:</strong> ${esc(x.slice(i + 2))}` : esc(x)}</li>`; }).join("")}</ol></section>` : ""}
       ${bloco("O que a lei diz", R.lei)}
       ${bloco("Como os tribunais têm decidido", R.juris)}
@@ -207,6 +204,9 @@ function mostrarRoteiro(f, R, text, an) {
       ${publico(R.docs).length ? `<section class="rt-bloco"><h2>Documentos para separar</h2><ul class="rt-check">${publico(R.docs).map((x) => `<li><label><input type="checkbox"> ${esc(x)}</label></li>`).join("")}</ul></section>` : ""}
       ${passos.length ? `<section class="rt-bloco"><h2>${an && an.feitos.length ? "Próximos passos (sem repetir o que você já fez)" : "O que fazer agora"}</h2><ol>${passos.map((x) => `<li data-ref="passos.${publico(R.passos).indexOf(x)}">${esc(x)}</li>`).join("")}</ol></section>` : ""}
       ${bloco("Quando é urgente procurar a advogada", R.urgente, "rt-urgente")}
+    <div class="card rt-perguntas"${an ? " hidden" : ""}><h2>Quer adiantar seu atendimento?</h2><p class="muted">Opcional: ${R.perguntas.length} toques, menos de 1 minuto. Suas respostas vão junto se você pedir a avaliação da advogada.</p>
+        ${R.perguntas.map((p, i) => `<div class="rt-q" data-i="${i}"><p><strong>${esc(p.q)}</strong></p><div class="answers">${p.a.map((a) => `<button type="button" data-r="${esc(a)}">${esc(a)}</button>`).join("")}</div>${ajudaHtml(p.ajuda)}</div>`).join("")}
+      </div>
       <div class="card decision"><h2>Para ter certeza da avaliação no seu caso, consulte a advogada.</h2>
         <p class="muted">As informações acima são gerais. O que vale para você depende dos documentos e dos detalhes do caso.</p>
         <div class="actions"><button class="btn" id="to-lawyer">Quero a avaliação da advogada</button><a href="#" class="btn btn-wa" data-wa>Falar no WhatsApp</a></div>
@@ -215,15 +215,13 @@ function mostrarRoteiro(f, R, text, an) {
       <p class="muted small">Informação geral com base na lei e na jurisprudência. Não constitui orientação jurídica nem substitui a análise do seu caso pela advogada.</p>
       ${seloRevisao(f.id)}
     </div>`;
-  const revelar = () => { const c = $("rt-conteudo"); if (!c.hidden) return; c.hidden = false; c.scrollIntoView({ behavior: "smooth", block: "start" }); };
   const registrar = () => { state.followSummary = `${f.q} — ` + R.perguntas.map((p, i) => `${p.q} ${resp[i] || "(sem resposta)"}`).join(" | "); state.answers = resp.filter(Boolean); };
   document.querySelectorAll(".rt-q").forEach((el) => el.querySelectorAll("[data-r]").forEach((b) => (b.onclick = () => {
     const i = +el.dataset.i; resp[i] = b.dataset.r;
     el.querySelectorAll("[data-r]").forEach((x) => x.classList.toggle("on", x === b));
     registrar();
-    if (R.perguntas.every((_, k) => resp[k])) revelar();
+    if (R.perguntas.every((_, k) => resp[k])) el.closest(".rt-perguntas").querySelector("h2").textContent = "Pronto! Suas respostas vão junto com o pedido.";
   })));
-  $("rt-pular").onclick = () => { registrar(); revelar(); };
   if (an && an.ia) relacionarTrechos(f, R, text);
   document.querySelectorAll("[data-an-lawyer]").forEach((b) => (b.onclick = openLawyer));
   if (an) { state.followSummary = `${f.q} — ${state.followSummary || "relato: " + text}`; document.querySelectorAll("[data-outro]").forEach((b) => (b.onclick = () => { const id = b.dataset.outro; mostrarRoteiro({ id, q: b.textContent, area: f.area, sources: [] }, ROTEIROS[id], text, { ...an }); window.scrollTo(0, 0); })); }
