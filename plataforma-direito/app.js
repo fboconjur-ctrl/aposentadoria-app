@@ -84,7 +84,7 @@ function pedirHistoria() {
     state.text = t; box.innerHTML = ""; say(t, "user");
     // Pergunta formulada como dúvida e com resposta pronta: mostra a informação geral direto.
     if (isQuestion(t) && findFaq(t)) return setTimeout(() => answerQuestion(t), 350);
-    setTimeout(ask, 350);
+    setTimeout(() => sugerirSituacoes(t), 350);
   };
   $("hist-pular").onclick = () => { box.innerHTML = ""; setTimeout(ask, 200); };
 }
@@ -504,7 +504,7 @@ const SITUACOES = {
   administrativo: [["Passei no concurso e não fui chamado(a)", "concurso-vagas"], ["Fui eliminado(a) em etapa do concurso", "concurso-eliminacao"], ["Respondo a processo disciplinar (PAD)", "pad-prazo"], ["Sou servidor(a) e um direito meu foi negado", "direitos-servidor"], ["Multa de trânsito ou suspensão da CNH", "multa-transito"], ["O poder público me causou prejuízo", "responsabilidade-estado"]],
   dividas: [["Tenho muitas dívidas e não consigo pagar", "superendividamento"], ["Apareceu empréstimo ou desconto que não fiz", "consignado-nao-contratado"], ["Caí em golpe no Pix", "pix-golpe"], ["O banco quer tomar meu carro", "busca-apreensao"], ["Meu nome foi negativado", "negativado"], ["Compras no cartão que eu não fiz", "compra-nao-reconhecida"]],
   consumidor: [["Produto com defeito", "defeito"], ["Troca e devolução de produtos", "troca-devolucao"], ["Comprei pela internet e não recebi", "compra-nao-entregue"], ["Quero desistir de uma compra", "arrependimento"], ["Cobrança indevida", "cobranca-dobro"], ["Ligações demais de cobrança ou telemarketing", "ligacoes-cobranca"], ["Cancelei curso ou faculdade e querem cobrar tudo", "cancelamento-curso"], ["Luz, água, gás ou telefone →", "@servicos"], ["Voo atrasado ou cancelado", "voo"]],
-  servicos: [["Falta de energia ou aparelho queimado", "falta-energia"], ["Conta de luz ou de água muito alta", "conta-alta"], ["Me acusaram de fraude no medidor (recuperação de consumo)", "fraude-medidor"], ["Dívida repassada a empresa de cobrança, juros altos ou corte", "contas-essenciais"], ["Problema com operadora de celular ou internet", "telefonia"]],
+  servicos: [["Falta de energia ou aparelho queimado", "falta-energia"], ["Conta de luz ou de água muito alta", "conta-alta"], ["Me acusaram de fraude no medidor (recuperação de consumo)", "fraude-medidor"], ["Dívida de luz ou água: parcelamento, cobrança, negativação ou corte", "contas-essenciais"], ["Problema com operadora de celular ou internet", "telefonia"]],
   cartorio: [["Inventário de quem faleceu", "inventario-cartorio"], ["Divórcio", "divorcio-cartorio"], ["União estável", "uniao-estavel"], ["Sacar FGTS ou saldo de quem faleceu", "alvara-valores"], ["Imóvel: registro, escritura, matrícula, usucapião →", "@imovel"], ["Meu nome foi protestado em cartório", "protesto"]],
   imovel: [["Regularizar ou registrar meu imóvel", "reurb"], ["Paguei o imóvel e não recebi a escritura (adjudicação)", "adjudicacao"], ["Moro há anos e não tenho documento (usucapião)", "usucapiao"], ["Tirar a certidão de matrícula", "certidao-matricula"]],
 };
@@ -524,6 +524,45 @@ function mostrarSituacoes(tema) {
     // Situação com roteiro próprio, mesmo sem pergunta frequente correspondente.
     const f = FAQ.find((x) => x.id === id) || (ROTEIROS[id] && { id, q: txt, area: key, sources: [] });
     if (f) answerQuestion(txt, f); else begin(key);
+  });
+}
+// Relato livre: aponta as situações com roteiro que combinam com o que a pessoa escreveu.
+const PISTAS = {
+  "contas-essenciais": ["energisa", "neoenergia", "energia eletrica", "conta de luz", "contas de energia", "caesb", "conta de agua", "parcelamento", "concessionaria", "corte"],
+  negativado: ["negativ", "nome sujo", "serasa", "spc", "score"],
+  "ligacoes-cobranca": ["ligac", "ligam", "liga todo", "cobrancas insistentes", "insistent", "telemarketing", "mensagens de cobranca"],
+  "cobranca-dobro": ["cobranca indevida", "cobrado indevid", "cobraram", "nao devo", "ja paguei", "cobranca errada"],
+  superendividamento: ["muitas dividas", "nao consigo pagar", "superendivid", "endividad", "salario todo"],
+  "consignado-nao-contratado": ["emprestimo que nao fiz", "consignado", "nao contratei"],
+  "pix-golpe": ["pix", "golpe"],
+  "busca-apreensao": ["tomar meu carro", "busca e apreensao", "apreens"],
+  "compra-nao-reconhecida": ["nao reconhec", "cartao clonado", "compras que nao fiz"],
+  protesto: ["protest"],
+  defeito: ["defeito", "quebrou", "estragou"],
+  "troca-devolucao": ["troca", "devolu"],
+  "compra-nao-entregue": ["nao recebi", "nao chegou", "nao entreg"],
+  arrependimento: ["desistir", "arrepend"],
+  "cancelamento-curso": ["curso", "faculdade", "academia"],
+  "falta-energia": ["falta de energia", "queimou", "queimado"],
+  "conta-alta": ["conta alta", "conta muito alta", "conta veio"],
+  "fraude-medidor": ["medidor", "recuperacao de consumo"],
+  telefonia: ["operadora", "internet", "celular"],
+  voo: ["voo", "companhia aerea", "bagagem"],
+  "plano-negou": ["plano negou", "negou a cirurgia", "negou o exame", "negou cobertura"],
+  indeferido: ["inss negou", "indeferid", "negaram meu beneficio"],
+  "descontos-beneficio": ["desconto na aposentadoria", "descontando", "desconto no beneficio"],
+};
+function sugerirSituacoes(t) {
+  const n = norm(t);
+  const nomes = {}; Object.values(SITUACOES).flat().forEach(([txt, id]) => (nomes[id] = txt));
+  const achados = Object.entries(PISTAS).map(([id, ks]) => [id, ks.filter((k) => n.includes(k)).length]).filter(([id, sc]) => sc && ROTEIROS[id] && nomes[id]).sort((a, b) => b[1] - a[1]).slice(0, 3).map(([id]) => id);
+  if (!achados.length) return ask();
+  const NENHUMA = "Nenhuma dessas — seguir com perguntas";
+  say(achados.length > 1 ? "Pelo que você contou, pode envolver mais de um assunto. Por qual quer começar?" : "Pelo que você contou, parece ser este assunto:");
+  offer([...achados.map((id) => nomes[id]), NENHUMA], (o) => {
+    if (o === NENHUMA) return ask();
+    const id = achados.find((x) => nomes[x] === o);
+    answerQuestion(t, FAQ.find((x) => x.id === id) || { id, q: o, area: state.key, sources: [] });
   });
 }
 $("dividas").onclick = () => mostrarSituacoes("dividas");
