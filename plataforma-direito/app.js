@@ -59,7 +59,7 @@ function startChat(text, forcedKey, skipQuestion) {
 function begin(key) {
   state.key = key;
   state.flow = FLOWS[key];
-  say(state.flow.understood + "\n\nPara conseguir orientar os próximos passos, preciso saber algumas coisas.");
+  say(state.flow.understood + "\n\nPara mostrar as informações certas, preciso saber algumas coisas.");
   setTimeout(ask, 500);
 }
 
@@ -84,20 +84,19 @@ $("voltar").onclick = () => {
 function finish() {
   setStep(2);
   $("qcount").textContent = ""; $("voltar").hidden = true;
-  say("Obrigado. Já tenho o suficiente para uma orientação inicial.");
+  say("Obrigado. Separei as informações sobre o seu assunto.");
   setTimeout(() => { renderResult(); go("result"); setStep(3); }, 700);
 }
 
 function renderResult() {
   const f = state.flow;
-  const lawyer = f.needsLawyer(state.answers);
   const steps = f.steps.filter((s) => !s.when || s.when(state.answers)).map((s) => `<li><strong>${esc(s.t)}</strong><br><span class="muted">${esc(s.d)}</span>${s.link ? `<br><a href="${s.link[1]}" ${s.link[1].startsWith("http") ? ' target="_blank" rel="noopener"' : ""}>${esc(s.link[0])} →</a>` : ""}</li>`).join("");
   const sources = f.sources.map(([n, u]) => `<li><a href="${u}" target="_blank" rel="noopener">${esc(n)}</a></li>`).join("");
   $("result").innerHTML = `
-    <h1>Entendemos sua situação</h1>
+    <h1>Informações sobre o seu assunto</h1>
     <p><span class="tag">${esc(f.subject)}</span></p>
     ${state.text ? `<p class="muted">“${esc(state.text)}”</p>` : ""}
-    <h2>O que você pode fazer agora</h2>
+    <h2>Passos e documentos que costumam ser necessários</h2>
     <ol class="steps-list">${steps}</ol>
     ${docCard(state.key)}
     ${state.key === "previdenciario" ? CNIS_CARD : ""}
@@ -106,25 +105,23 @@ function renderResult() {
     <details><summary>Ver fundamento jurídico e fontes →</summary><ul>${sources}</ul></details>
     <div class="card decision">
       <h2>E no seu caso?</h2>
-      <p>${lawyer
-        ? "Pela situação que você descreveu, existem elementos que justificam uma análise individual dos documentos por um advogado."
-        : "Pelo que você descreveu, é possível tentar resolver esta etapa sozinho(a) seguindo os passos acima. Se não der certo, estamos aqui."}</p>
+      <p>As informações acima são gerais. O que vale para o seu caso depende dos documentos e dos detalhes, e só uma advogada pode dizer. Se quiser, a Dra. Fernanda analisa o seu caso.</p>
       <div class="actions">
-        <button class="btn${lawyer ? "" : " secondary"}" id="to-lawyer">Conversar com um advogado</button>
-        <button class="btn${lawyer ? " secondary" : ""}" id="alone">Continuar sozinho</button>
+        <button class="btn" id="to-lawyer">Quero que a advogada analise meu caso</button>
+        <button class="btn secondary" id="alone">Só queria a informação</button>
       </div>
     </div>
-    <p class="muted small">Orientação inicial informativa, gerada a partir do que você contou. Não substitui a análise individual por advogado.</p>`;
+    <p class="muted small">Informações gerais, organizadas a partir de fontes oficiais. Não constituem orientação jurídica nem substituem a análise do seu caso pela advogada.</p>`;
   bindCnis();
   bindDoc(state.key);
   $("to-lawyer").onclick = openLawyer;
-  $("alone").onclick = () => (e => { e.target.textContent = "Orientação salva ✓"; e.target.disabled = true; })(event);
+  $("alone").onclick = () => (e => { e.target.textContent = "Informações salvas ✓"; e.target.disabled = true; })(event);
 }
 
 function openLawyer() {
   const n = state.answers.length;
   $("case-summary").innerHTML = (n
-    ? ["Relato", `${n} perguntas respondidas`, "Documentos necessários identificados", "Orientação inicial concluída"]
+    ? ["Relato", `${n} perguntas respondidas`, "Documentos necessários identificados", "Informações gerais consultadas"]
     : ["Sua pergunta", "Área identificada"]).map((t) => `<li>${t}</li>`).join("");
   $("f-area").value = state.flow ? state.flow.subject : "Pergunta sem resposta pronta";
   const code = (state.faqId && ATLAS[state.faqId]) || ATLAS_AREA[state.key] || "";
@@ -143,7 +140,7 @@ function answerQuestion(text, faqFixa) {
   if (f) {
     const table = f.table ? `<div class="table-wrap"><table><thead><tr>${f.table.head.map((h) => `<th>${esc(h)}</th>`).join("")}</tr></thead><tbody>${f.table.rows.map((r) => `<tr>${r.map((c) => `<td>${esc(c)}</td>`).join("")}</tr>`).join("")}</tbody></table></div><p class="muted small">${esc(f.table.note)}</p>` : "";
     $("result").innerHTML = `
-      <p class="eyebrow">Resposta</p>
+      <p class="eyebrow">Informação geral</p>
       <h1>${esc(f.q)}</h1>
       <p class="muted">Você perguntou: “${esc(text)}”</p>
       <div class="answer">${f.a.map((p) => `<p>${esc(p)}</p>`).join("")}</div>
@@ -253,7 +250,7 @@ function finishFollowUp(fu, ans) {
   box.innerHTML = `<h3>${esc(r.headline)}</h3><ul>${r.items.map((t) => `<li>${esc(t)}</li>`).join("")}</ul>
     <div class="actions"><button class="btn" id="fu-help">${r.lawyer ? "Quero ajuda com meu caso" : "Quero que um advogado confira"}</button>
     ${state.key === "previdenciario" ? `<a class="btn secondary" href="/simulador/">Simular no detalhe</a>` : ""}</div>
-    ${r.lawyer ? `<p class="small">Pelo que você respondeu, uma análise profissional pode fazer diferença no resultado. Seu caso chega organizado ao advogado.</p>` : ""}`;
+    <p class="small muted">Estimativa automática e geral, feita a partir das suas respostas. Não é orientação jurídica: só a análise da advogada, com os documentos, diz o que vale no seu caso.</p>`;
   $("followup").appendChild(box);
   $("fu-help").onclick = openLawyer;
   $("faq-cta").hidden = true;
