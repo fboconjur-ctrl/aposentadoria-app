@@ -187,6 +187,7 @@ function mostrarRoteiro(f, R, text) {
       <p class="small muted">Suas respostas vão junto com o pedido, para a advogada. <button type="button" class="linkish small" id="rt-pular">Pular e ver as informações</button></p>
     </div>
     <div id="rt-conteudo" hidden>
+      ${R.explica ? `<section class="rt-bloco rt-explica card"><h2>${esc(R.explica.titulo)}</h2><ol>${publico(R.explica.itens).map((x) => { const i = x.indexOf(": "); return `<li>${i > 0 && i < 60 ? `<strong>${esc(x.slice(0, i))}:</strong> ${esc(x.slice(i + 2))}` : esc(x)}</li>`; }).join("")}</ol></section>` : ""}
       ${bloco("O que a lei diz", R.lei)}
       ${bloco("Como os tribunais têm decidido", R.juris)}
       ${bloco("Onde os tribunais ainda divergem", R.divergencia, "rt-diverge")}
