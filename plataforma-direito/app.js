@@ -35,7 +35,7 @@ function offer(options, onPick) {
 }
 
 function startChat(text, forcedKey, skipQuestion) {
-  Object.assign(state, { text, answers: [], qi: 0, flow: null, followSummary: null, cnisSummary: null, docSummary: null, faqId: null });
+  Object.assign(state, { text, answers: [], qi: 0, flow: null, followSummary: null, cnisSummary: null, docSummary: null, faqId: null, assunto: null, analise: null });
   if (text && !forcedKey && !skipQuestion && isQuestion(text)) return answerQuestion(text);
   $("messages").innerHTML = "";
   $("qcount").textContent = ""; $("voltar").hidden = true;
@@ -148,11 +148,16 @@ function renderResult(an) {
 }
 
 function openLawyer() {
-  const n = state.answers.length;
-  $("case-summary").innerHTML = (n
-    ? ["Relato", `${n} perguntas respondidas`, "Documentos necessários identificados", "Informações gerais consultadas"]
-    : ["Sua pergunta", "Área identificada"]).map((t) => `<li>${t}</li>`).join("");
-  $("f-area").value = state.flow ? state.flow.subject : "Pergunta sem resposta pronta";
+  const n = state.answers.length, curto = (x, k) => (x.length > k ? x.slice(0, k - 1) + "…" : x);
+  const itens = [
+    (state.assunto || state.flow?.subject) && `Assunto: ${state.assunto || state.flow.subject}`,
+    state.text && state.text.length >= 40 && `Você contou: “${curto(state.text, 140)}”`,
+    state.analise?.fatos?.length && `${state.analise.fatos.length} fatos organizados do seu relato`,
+    n && `${n} ${n > 1 ? "respostas suas" : "resposta sua"}`,
+    (state.cnisSummary || state.docSummary) && "Dados lidos do seu documento",
+  ].filter(Boolean);
+  $("case-summary").innerHTML = (itens.length ? itens : ["Sua pergunta", "Área identificada"]).map((t) => `<li>${esc(t)}</li>`).join("");
+  $("f-area").value = state.assunto || (state.flow ? state.flow.subject : "Pergunta sem resposta pronta");
   const code = (state.faqId && ATLAS[state.faqId]) || ATLAS_AREA[state.key] || "";
   $("f-codigo").value = [code, state.faqId ? dacResumo(state.faqId) : ""].filter(Boolean).join(" · ");
   $("f-resumo").value = [state.text && `Relato: ${state.text}`, ...(state.cnisSummary ? [state.cnisSummary] : []), ...(state.docSummary ? [state.docSummary] : []), ...(state.followSummary ? [state.followSummary, ...state.answers] : state.answers.map((r, i) => `${i + 1}. ${[...state.flow.questions, OBJECTIVE_Q][i].q} ${r}`))].filter(Boolean).join("\n");
@@ -179,6 +184,7 @@ document.addEventListener("click", (e) => {
 
 function mostrarRoteiro(f, R, text, an) {
   const resp = [];
+  state.assunto = f.q;
   const passos = an ? publico(R.passos).filter((x) => !an.feitos.some((c) => c.re.test(norm(x)))) : publico(R.passos);
   go("result");
   const bloco = (titulo, itens, cls = "") => publico(itens).length ? `<section class="rt-bloco ${cls}"><h2>${titulo}</h2><ul>${publico(itens).map((x) => `<li>${esc(x)}</li>`).join("")}</ul></section>` : "";
@@ -484,12 +490,13 @@ async function enviarPedidoNuvem(pacote) {
 const WA_NUMERO = "5561999733111";
 function waTexto() {
   const linhas = ["Olá! Vim pela Plataforma do Direito."];
-  if (state.flow) linhas.push(`Assunto: ${state.flow.subject}`);
+  if (state.assunto || state.flow) linhas.push(`Assunto: ${state.assunto || state.flow.subject}`);
   if (state.text) linhas.push(`Meu caso: ${state.text}`);
   if (state.answers.length && !state.followSummary && state.flow) {
     const qs = [...state.flow.questions, OBJECTIVE_Q];
     state.answers.forEach((r, i) => qs[i] && linhas.push(`- ${qs[i].q} ${r}`));
   }
+  if (state.followSummary) linhas.push(state.followSummary.slice(0, 900));
   if ($("f-protocolo").value) linhas.push(`Protocolo: ${$("f-protocolo").value}`);
   return linhas.join("\n");
 }
@@ -520,7 +527,7 @@ const SITUACOES = {
 const OUTRA = "Outra situação — contar com minhas palavras";
 function mostrarSituacoes(tema) {
   const key = tema === "dividas" || tema === "servicos" ? "consumidor" : tema === "imovel" ? "cartorio" : tema;
-  Object.assign(state, { text: "", answers: [], qi: 0, key, flow: FLOWS[key], followSummary: null, cnisSummary: null, docSummary: null, faqId: null });
+  Object.assign(state, { text: "", answers: [], qi: 0, key, flow: FLOWS[key], followSummary: null, cnisSummary: null, docSummary: null, faqId: null, assunto: null, analise: null });
   $("messages").innerHTML = "";
   $("qcount").textContent = ""; $("voltar").hidden = true;
   go("chat"); setStep(1);
@@ -704,6 +711,6 @@ bindHomeDoc();
 (() => {
   const hero = $("wa-hero"), fl = document.querySelector(".wa-float");
   if (!hero || !fl) return;
-  const ver = () => { const r = hero.getBoundingClientRect(); fl.classList.toggle("oculto", r.height > 0 && r.top < innerHeight && r.bottom > 0 || r.height > 0 && r.top >= innerHeight); };
+  const ver = () => { const r = hero.getBoundingClientRect(); fl.classList.toggle("oculto", !!$("view-lawyer")?.offsetParent || r.height > 0 && r.top < innerHeight && r.bottom > 0 || r.height > 0 && r.top >= innerHeight); };
   addEventListener("scroll", ver, { passive: true }); addEventListener("resize", ver); setInterval(ver, 800); ver();
 })();
