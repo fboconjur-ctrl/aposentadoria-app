@@ -66,7 +66,7 @@ function analyzeCnis(text, today = new Date()) {
   const raw = text.replace(/\r/g, "");
   const nit = raw.match(/\b\d{3}\.\d{5}\.\d{2}-\d\b/)?.[0] || "";
   const name = raw.match(/Nome:\s*([A-ZÀ-Ü ]{5,})/)?.[1]?.trim() || "";
-  const birth = raw.match(/Nascimento:?\s*(\d{2})\/(\d{2})\/(\d{4})/);
+  const birth = raw.match(/Nascimento:?\s*(\d{2})\/(\d{2})\/(\d{4})/i);
   const birthDate = birth ? toDate(birth[1], birth[2], birth[3]) : null;
   const declared = /Relações Previdenciárias Declaradas/i.test(raw);
   // Extrato CNIS: cada vínculo começa com "Seq." (número) seguido do NIT.
@@ -101,6 +101,8 @@ function analyzeCnis(text, today = new Date()) {
   const last = merged[merged.length - 1];
   const monthsSinceLast = last ? Math.max(0, monthsBetween(last[1], today) - 1) : null;
   const before2019 = merged.some(([s]) => s < new Date(2019, 10, 13));
+  const reforma = new Date(2019, 10, 13);
+  const monthsAtReform = merged.reduce((acc, [s, e]) => (s >= reforma ? acc : acc + Math.max(0, monthsBetween(s, e < reforma ? e : reforma))), 0);
 
   const findings = [];
   vinculos.forEach((v) => v.indicators.forEach((k) => findings.push({ vinculo: v.origem, code: k, ...CNIS_INDICATORS[k] })));
@@ -112,5 +114,5 @@ function analyzeCnis(text, today = new Date()) {
   const benefits = vinculos.filter((v) => v.tipo === "Benefício");
   if (pcdHint) findings.unshift({ vinculo: vinculos.find((v) => /defici|apae|pcd|cego|surdo/i.test(v.origem)).origem, code: "PcD?", label: "Vínculo com entidade de pessoas com deficiência", fix: "Se você tem deficiência, pode ter direito à aposentadoria da pessoa com deficiência (LC 142/2013), com tempo menor e sem idade mínima. Vale avaliar." });
   benefits.forEach((v) => findings.push({ vinculo: `${fmtDate(v.start)} a ${v.end ? fmtDate(v.end) : "atual"}`, code: "BENEFÍCIO", label: "Período recebendo benefício", fix: "Benefício por incapacidade conta como tempo e carência quando fica entre períodos de contribuição. Confira de qual benefício se trata." }));
-  return { declared, ageYears, pcdHint, nit, name, vinculos, totalMonths, totalText: fmtMonths(totalMonths), gaps, monthsSinceLast, before2019, findings, readable: vinculos.length > 0 };
+  return { declared, ageYears, birthDate, pcdHint, nit, name, vinculos, totalMonths, totalText: fmtMonths(totalMonths), monthsAtReform, gaps, monthsSinceLast, before2019, findings, readable: vinculos.length > 0 };
 }

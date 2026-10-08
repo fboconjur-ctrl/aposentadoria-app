@@ -254,12 +254,13 @@ function renderBest(result) {
 
   const best = result.best;
   const temSalario = +form.elements.averageSalary.value > 0;
-  const WA = "https://wa.me/5561999733111?text=" + encodeURIComponent(`Olá! Vim pelo simulador da Plataforma do Direito. O resultado indicou: ${best.title}${best.eligible ? " (já cumpro os requisitos)" : `, a partir de ${RetirementRules.formatDate(best.eligibleDate)}`}. Gostaria que a advogada analisasse meu caso.`);
+  const WA = "https://wa.me/5561999733111?text=" + encodeURIComponent(`Olá! Vim pelo simulador da Plataforma do Direito. O resultado indicou: ${best.title}${best.eligible ? " (já cumpro os requisitos)" : `, a partir de ${RetirementRules.formatDate(best.eligibleDate)}`}. ${cnisLido ? ` Enviei meu CNIS no simulador: ${cnisLido.vinculos.length} vínculos, ${cnisLido.totalText}, ${cnisLido.findings.length} ponto(s) de atenção.` : ""} Gostaria que a advogada analisasse meu caso.`);
   bestResult.innerHTML = `
     <p class="eyebrow">Pelas regras e pelos números que você informou</p>
     <h2>${best.eligible ? "Você já pode ter direito a se aposentar" : `Você pode se aposentar a partir de ${RetirementRules.formatDate(best.eligibleDate)}`}</h2>
     <p>Regra que chega primeiro: <strong>${best.title}</strong>.${best.eligible ? "" : ` Faltam cerca de ${RetirementRules.formatMonths(best.monthsUntil)}.`}</p>
     ${temSalario ? `<p>Valor estimado: <strong>${money(best.estimatedBenefit)}</strong> por mês (aproximado).</p>` : `<p class="pd-dica">Informe a média dos salários para ver uma estimativa de valor.</p>`}
+    ${cnisLido && cnisLido.findings.length ? `<div class="pd-alerta"><strong>Seu CNIS tem ${cnisLido.findings.length} ponto(s) de atenção</strong> que podem mudar a data e o valor:<ul>${cnisLido.findings.slice(0, 5).map((f) => `<li>${escapeHtml(f.label)}${f.vinculo ? ` <span class="pd-dica">(${escapeHtml(f.vinculo)})</span>` : ""}</li>`).join("")}</ul></div>` : ""}
     <div class="pd-cta">
       <p><strong>Para ter certeza, consulte a advogada.</strong> A simulação usa só os números digitados; o CNIS pode ter períodos faltando ou que contam diferente — e isso muda a data e o valor.</p>
       <a class="pd-btn" href="${WA}" target="_blank" rel="noopener">Quero que a advogada confira meu caso</a>
@@ -332,6 +333,30 @@ form.addEventListener("submit", (event) => {
   calculate();
   bestResult.scrollIntoView({ behavior: "smooth", block: "start" });
 });
+// CNIS na tela principal: lê no aparelho (leitor do portal) e preenche os campos.
+let cnisLido = null;
+document.getElementById("simCnis")?.addEventListener("change", async (e) => {
+  const file = e.target.files[0], msg = document.getElementById("simCnisMsg");
+  if (!file || typeof analyzeCnis !== "function") return;
+  msg.textContent = "Lendo seu extrato…";
+  try {
+    const r = analyzeCnis(await extractPdfText(file));
+    if (!r.readable) throw new Error();
+    cnisLido = r;
+    const el = form.elements;
+    el.contribYears.value = Math.floor(r.totalMonths / 12); el.contribMonths.value = r.totalMonths % 12;
+    form.querySelector(`[name="antes2019"][value="${r.before2019 ? "sim" : "nao"}"]`).checked = true;
+    el.contrib2019Years.value = Math.floor(r.monthsAtReform / 12); el.contrib2019Months.value = r.monthsAtReform % 12;
+    el.carencia.value = r.totalMonths;
+    if (r.birthDate && !el.birthDate.value) el.birthDate.value = r.birthDate.toISOString().slice(0, 10);
+    ["carencia", "contrib2019Years", "contrib2019Months"].forEach((n) => (el[n].dataset.manual = "1"));
+    msg.innerHTML = `✓ Lemos <strong>${r.vinculos.length} vínculo(s)</strong>: cerca de <strong>${escapeHtml(r.totalText)}</strong> de contribuição.${r.findings.length ? ` Encontramos <strong>${r.findings.length} ponto(s) de atenção</strong> — veja no resultado.` : ""}${el.birthDate.value ? "" : " Agora só falta a data de nascimento."}`;
+    form.dispatchEvent(new Event("change"));
+  } catch {
+    msg.textContent = "Não consegui ler esse PDF (pode ser imagem escaneada). Baixe de novo pelo Meu INSS ou preencha os campos abaixo.";
+  }
+});
+
 // Resultado aparece sozinho assim que os 3 dados essenciais estão preenchidos.
 ["input", "change"].forEach((ev) => form.addEventListener(ev, () => {
   if (form.elements.birthDate.value && form.elements.contribYears.value !== "" && form.checkValidity()) calculate();
@@ -977,29 +1002,28 @@ function evaluateBenefits(data) {
 }
 
 function renderBenefits(results) {
-  const okCount = results.filter((item) => item.status === "ok").length;
-  benefitsSummary.innerHTML = `
-    <p class="eyebrow">Benefícios</p>
-    <h2>${okCount ? `${okCount} hipótese${okCount === 1 ? "" : "s"} forte${okCount === 1 ? "" : "s"} encontrada${okCount === 1 ? "" : "s"}.` : "Há hipóteses que precisam de mais dados."}</h2>
-    <p>Os cards indicam triagem inicial, requisitos e documentos que devem ser conferidos antes do requerimento.</p>
-  `;
-  benefitsList.innerHTML = results
-    .map(
-      (item) => `
+  const card = (item) => `
         <article class="rule-card ${item.status === "ok" ? "best" : ""}">
           <div class="rule-head">
             <h3>${escapeHtml(item.title)}</h3>
-            <span class="tag ${item.status === "ok" ? "ok" : "wait"}">${item.status === "ok" ? "Hipótese forte" : "Conferir"}</span>
+            <span class="tag ${item.status === "ok" ? "ok" : "wait"}">${item.status === "ok" ? "Combina com o que você marcou" : "Depende de mais dados"}</span>
           </div>
           <p>${escapeHtml(item.summary)}</p>
           <ul>
             ${item.requirements.map((req) => `<li>${escapeHtml(req)}</li>`).join("")}
             ${item.notes.map((note) => `<li>${escapeHtml(note)}</li>`).join("")}
           </ul>
-        </article>
-      `,
-    )
-    .join("");
+        </article>`;
+  const fortes = results.filter((item) => item.status === "ok"), outros = results.filter((item) => item.status !== "ok");
+  const WA = "https://wa.me/5561999733111?text=" + encodeURIComponent(`Olá! Vim pelo simulador da Plataforma do Direito.${fortes.length ? ` O mapa de benefícios indicou: ${fortes.map((f) => f.title).join(", ")}.` : ""} Gostaria que a advogada analisasse meu caso.`);
+  benefitsSummary.innerHTML = `
+    <p class="eyebrow">Pelo que você marcou</p>
+    <h2>${fortes.length ? `${fortes.length === 1 ? "Este benefício combina" : "Estes benefícios combinam"} com a sua situação: ${escapeHtml(fortes.map((f) => f.title).join(", "))}` : "Ainda não dá para apontar um benefício."}</h2>
+    <p>${fortes.length ? "Veja abaixo o que a lei exige para cada um." : "Marque acima o que se aplica a você (atestado, acidente, falecimento na família, doença grave…)."}</p>
+    <div class="pd-cta"><p><strong>Para ter certeza, consulte a advogada.</strong> Quase todos dependem de documentos e, às vezes, de perícia.</p>
+      <a class="pd-btn" href="${WA}" target="_blank" rel="noopener">Quero que a advogada confira meu caso</a></div>
+  `;
+  benefitsList.innerHTML = fortes.map(card).join("") + (outros.length ? `<details class="pd-todas"><summary>Outros benefícios (dependem de mais dados)</summary>${outros.map(card).join("")}</details>` : "");
 }
 
 reportForm.addEventListener("submit", generateReport);

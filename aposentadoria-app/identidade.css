@@ -36,3 +36,8 @@ input,select,textarea{border-radius:10px;border-color:var(--line);background:var
 .pd-todas[open] summary{margin-bottom:12px}
 .linkish{background:none!important;border:0!important;color:var(--brand)!important;text-decoration:underline;padding:6px!important}
 .tabs{flex-wrap:nowrap;overflow-x:auto}.tab-button{min-height:0!important;height:auto!important;padding:8px 14px!important;white-space:nowrap;font-size:.95rem}.pd-todas{padding:14px 18px}
+.pd-cnis{border:2px dashed var(--brand);border-radius:14px;padding:16px;display:grid;gap:8px;text-align:center;margin-bottom:6px}
+.pd-cnis .pd-btn{cursor:pointer;justify-self:center}
+.pd-alerta{border-left:4px solid var(--accent);background:var(--panel);padding:10px 14px;margin-top:12px;border-radius:8px}
+.pd-alerta ul{margin:6px 0 0;padding-left:18px}
+.tab-button[hidden]{display:none!important}

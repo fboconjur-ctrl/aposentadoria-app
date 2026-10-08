@@ -33,7 +33,7 @@
                 <span>Aposentadorias</span>
                 <small>Quando e por qual regra</small>
               </button>
-              <button class="tab-button" type="button" data-route="relatorio" data-tab="reportTab">
+              <button class="tab-button" type="button" data-route="relatorio" data-tab="reportTab" hidden>
                 <span>Tenho o CNIS</span>
                 <small>Cole o extrato e veja os vínculos</small>
               </button>
@@ -78,6 +78,14 @@
           </div>
           <div class="layout">
           <form id="retirementForm" class="panel form-panel">
+            <div class="pd-cnis">
+              <strong>Tem o extrato do CNIS?</strong>
+              <span class="pd-dica">Envie o PDF e preenchemos o tempo de contribuição para você. O arquivo é lido no seu aparelho e não é enviado. Baixe no Meu INSS → Extrato de Contribuição (CNIS).</span>
+              <label class="pd-btn" for="simCnis">Enviar PDF do CNIS</label>
+              <input type="file" id="simCnis" accept="application/pdf" hidden />
+              <div id="simCnisMsg" class="pd-dica"></div>
+            </div>
+            <p class="pd-dica" style="text-align:center">ou preencha você mesmo:</p>
             <div class="section-title">
               <span>01</span>
               <h2>Você</h2>
@@ -472,6 +480,7 @@
                 </label>
               </div>
 
+<details class="pd-opcional"><summary>Alguém da família faleceu? (pensão por morte)</summary>
               <div class="section-title">
                 <span>02</span>
                 <h2>Pensão e dependentes</h2>
@@ -507,6 +516,8 @@
                 </label>
               </div>
 
+</details>
+<details class="pd-opcional"><summary>Doença grave, isenção de IR ou ajuda de terceiros?</summary>
               <div class="section-title">
                 <span>03</span>
                 <h2>Isenções e acréscimos</h2>
@@ -555,6 +566,8 @@
                 </select>
               </label>
 
+</details>
+<div class="pd-escritorio" hidden>
               <div class="section-title">
                 <span>04</span>
                 <h2>Documentos e contratação</h2>
@@ -603,9 +616,10 @@
                 <span>Autorizo o tratamento dos dados pessoais e sensíveis para análise previdenciária, elaboração de documentos, contato profissional e eventual prestação de serviços advocatícios.</span>
               </label>
 
+</div>
               <div class="actions">
-                <button type="submit">Analisar benefícios</button>
-                <button type="button" class="secondary" id="generateDocuments">Gerar documentos</button>
+                <button type="submit">Ver quais benefícios posso ter</button>
+                <button type="button" class="secondary" id="generateDocuments" hidden>Gerar documentos</button>
                 <button type="button" class="secondary next-step" data-next-tab="clientsTab">Ver atendimento salvo</button>
               </div>
             </form>
@@ -623,7 +637,7 @@
                 </div>
                 <div id="benefitsList" class="rules-list"></div>
               </div>
-              <div class="panel document-panel" id="documentPreviewPanel">
+              <div class="panel document-panel" id="documentPreviewPanel" hidden>
                 <div class="section-title compact">
                   <span>05</span>
                   <h2>Pré-visualização dos documentos</h2>
@@ -687,6 +701,7 @@
 
     <script src="rules.js?v=docs1"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-    <script src="app.js?v=flow1"></script>
+    <script src="/plataforma-direito/cnis.js"></script>
+    <script src="app.js?v=flow2"></script>
   </body>
 </html>
