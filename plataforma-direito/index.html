@@ -43,6 +43,14 @@
         </form>
         <a href="#" class="btn btn-wa" data-wa>Prefiro falar no WhatsApp</a>
         <p class="trust">Sem cadastro · Sem juridiquês · Análise do caso sempre feita pela advogada</p>
+        <section class="cnis-card doc-card home-doc" id="home-doc">
+          <h2>Recebeu carta, citação, notificação ou decisão? Envie que a gente lê</h2>
+          <p class="muted">Carta do INSS, negativa do plano de saúde, citação em processo administrativo, notificação ou decisão. A leitura acontece no seu aparelho; o arquivo não é enviado.</p>
+          <label class="btn" for="home-doc-file">Escolher PDF</label>
+          <input type="file" id="home-doc-file" accept="application/pdf" hidden>
+          <details><summary>Prefere colar o texto?</summary><textarea id="home-doc-text" rows="5"></textarea><button class="btn secondary" id="home-doc-paste" type="button">Ler texto</button></details>
+          <div id="home-doc-out" aria-live="polite"></div>
+        </section>
         <a href="#" class="b2b-card" data-go="empresas"><b>🏢 Empresas e gestores públicos — Direito Administrativo</b><span>Licitações, contratos públicos, improbidade e controle externo →</span></a>
       </div>
 

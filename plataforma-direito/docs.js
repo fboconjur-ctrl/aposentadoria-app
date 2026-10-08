@@ -112,6 +112,51 @@ function docCard(key) {
   </section>`;
 }
 
+function htmlLeitura(r, btnId) {
+  return `<dl class="facts">${r.facts.map(([k, v]) => `<div><dt>${esc(k)}</dt><dd>${esc(v)}</dd></div>`).join("")}</dl>
+      <div class="fu-result info"><h3>O que a lei diz sobre esse tipo de documento</h3><ul>${r.items.map((i) => `<li>${esc(String(i).replace(/\s*\[(VALIDAR|COMPLETAR|PESQUISAR|CONFERIR)[^\]]*\]/g, ""))}</li>`).join("")}</ul>
+      <p><strong>Para ter certeza da avaliação no seu caso, consulte a advogada.</strong> Os dados lidos já vão junto com o pedido.</p>
+      <div class="actions"><button class="btn" id="${btnId}">Quero a avaliação da advogada</button></div></div>
+      <p class="muted small">Leitura automática do arquivo, só para organizar os dados. Não é análise nem orientação jurídica.</p>`;
+}
+
+// Página inicial: qualquer documento (carta do INSS, negativa do plano, citação, notificação, decisão) — descobre o tipo e lê.
+function bindHomeDoc() {
+  const out = $("home-doc-out"); if (!out) return;
+  const run = (text) => {
+    // Descobre o tipo pelas palavras do documento e tenta o leitor mais provável primeiro.
+    const t = String(text || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+    const pontos = {
+      saude: (t.match(/plano de saude|operadora|\bans\b|beneficiario|rol |cobertura|procedimento|carencia/g) || []).length,
+      previdenciario: (t.match(/\binss\b|previdencia|seguro social|segurado|aposentadoria|auxilio|beneficio|nb\b|cnis/g) || []).length,
+      administrativo: (t.match(/citac|notificac|intimac|processo administrativo|disciplinar|\bpad\b|sindicancia|comissao|auto de infracao|multa|decisao/g) || []).length,
+    };
+    const ordem = Object.keys(pontos).sort((a, b) => pontos[b] - pontos[a]).filter((k) => pontos[k] > 0);
+    for (const key of ordem) {
+      const r = DOC_READERS[key].analyze(text || "");
+      if (!r) continue;
+      Object.assign(state, { key, flow: FLOWS[key], docSummary: r.summary, text: state.text || `Documento enviado: ${r.facts?.[0]?.[1] || "documento"}` });
+      out.innerHTML = htmlLeitura(r, "home-doc-help");
+      $("home-doc-help").onclick = openLawyer;
+      return;
+    }
+    if (typeof analyzeCnis === "function" && analyzeCnis(text || "").readable) {
+      out.innerHTML = `<p>Este é um <strong>extrato do CNIS</strong>. <button class="linkish" id="home-doc-cnis">Abrir a leitura do CNIS</button></p>`;
+      $("home-doc-cnis").onclick = () => { $("home-doc-cnis").closest("section").scrollIntoView(); document.querySelector('[data-topic=previdenciario]').click(); };
+      return;
+    }
+    Object.assign(state, { key: null, flow: null, docSummary: "Documento enviado pela página inicial (tipo não reconhecido automaticamente).", text: state.text || "Documento enviado para análise" });
+    out.innerHTML = `<p class="warn-text">Não reconheci automaticamente este documento — mas a advogada pode analisar.</p><div class="actions"><button class="btn" id="home-doc-help">Enviar para a advogada</button></div>`;
+    $("home-doc-help").onclick = openLawyer;
+  };
+  $("home-doc-file").onchange = async (e) => {
+    const f = e.target.files[0]; if (!f) return;
+    out.innerHTML = "<p>Lendo o documento…</p>";
+    try { run(await extractPdfText(f)); } catch { out.innerHTML = `<p class="warn-text">Não consegui ler esse PDF (pode ser imagem escaneada). Cole o texto abaixo.</p>`; }
+  };
+  $("home-doc-paste").onclick = () => run($("home-doc-text").value);
+}
+
 function bindDoc(key) {
   const out = $("doc-out");
   if (!out) return;
@@ -119,11 +164,7 @@ function bindDoc(key) {
     const r = DOC_READERS[key].analyze(text || "");
     if (!r) { out.innerHTML = `<p class="warn-text">Não reconheci este documento. Confira se é o arquivo certo ou cole o texto.</p>`; return; }
     state.docSummary = r.summary;
-    out.innerHTML = `<dl class="facts">${r.facts.map(([k, v]) => `<div><dt>${esc(k)}</dt><dd>${esc(v)}</dd></div>`).join("")}</dl>
-      <div class="fu-result info"><h3>O que a lei diz sobre esse tipo de documento</h3><ul>${r.items.map((i) => `<li>${esc(String(i).replace(/\s*\[(VALIDAR|COMPLETAR|PESQUISAR)[^\]]*\]/g, ""))}</li>`).join("")}</ul>
-      <p><strong>Para ter certeza da avaliação no seu caso, consulte a advogada.</strong> Os dados lidos já vão junto com o pedido.</p>
-      <div class="actions"><button class="btn" id="doc-help">Quero a avaliação da advogada</button></div></div>
-      <p class="muted small">Leitura automática do arquivo, só para organizar os dados. Não é análise nem orientação jurídica.</p>`;
+    out.innerHTML = htmlLeitura(r, "doc-help");
     $("doc-help").onclick = openLawyer;
   };
   $("doc-file").onchange = async (e) => {

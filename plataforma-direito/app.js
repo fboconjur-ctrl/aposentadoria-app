@@ -504,3 +504,5 @@ function mostrarSituacoes(tema) {
   });
 }
 $("dividas").onclick = () => mostrarSituacoes("dividas");
+
+bindHomeDoc();
