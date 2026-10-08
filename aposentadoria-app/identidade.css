@@ -1,0 +1,29 @@
+/* Identidade da Plataforma do Direito aplicada ao simulador. */
+:root{--ink:#16224a;--muted:#6b7393;--line:#dfe3f0;--soft:#f7f8fc;--panel:#fff;--brand:#2340b8;--brand-dark:#16224a;--accent:#e9a23b;--accent-soft:#fdf1dc;--good:#16865a;
+--shadow:0 1px 2px rgba(22,34,74,.06),0 12px 32px -12px rgba(22,34,74,.18);font-family:"Figtree",system-ui,sans-serif}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--ink:#e9ecf8;--muted:#8f98bb;--line:#29335a;--soft:#0d1226;--panel:#151c36;--brand:#7d93ff;--brand-dark:#c3c9e2;--accent-soft:#2e2615;--good:#4cc58e;color-scheme:dark}}
+body{background:var(--soft);font-size:17px;line-height:1.55}
+h1,h2,h3{font-family:"Bricolage Grotesque",system-ui,sans-serif;letter-spacing:-.02em}
+h1{font-size:clamp(2rem,5vw,3.2rem);line-height:1.05;font-weight:800;margin:.2em 0}
+h1 em{font-style:normal;color:var(--brand)}
+.pd-brand{font-family:"Bricolage Grotesque",sans-serif;font-weight:800;color:var(--ink);text-decoration:none}
+.pd-brand::before{content:"§ ";color:var(--brand)}
+.pd-lead{color:var(--muted);max-width:60ch}
+.eyebrow,.page-heading .eyebrow,.section-title span{color:var(--brand)}
+.panel,.notice{border-radius:16px;border-color:var(--line);background:var(--panel)}
+.notice{background:var(--accent-soft);color:var(--ink)}
+button,.tab-button,.workflow-step{border-radius:999px}
+button[type=submit],.actions button:not(.secondary){background:var(--brand);color:#fff;border-color:var(--brand)}
+input,select,textarea{border-radius:10px;border-color:var(--line);background:var(--panel);color:var(--ink)}
+.status-pill{display:none}
+/* Simplificação: menos telas, menos campos */
+.workflow-strip,.sidebar-note,.tab-button[data-tab="clientsTab"],.next-step,.page-heading{display:none!important}
+.portal-grid{display:block}
+.tabs{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}
+.tab-button{width:auto;padding:10px 16px}
+.tab-button small{display:none}
+.tab-button.active{background:var(--brand);color:#fff;border-color:var(--brand)}
+.pd-opcional{border:1px dashed var(--line);border-radius:12px;padding:10px 14px;margin:12px 0}
+.pd-opcional summary{cursor:pointer;font-weight:600;color:var(--brand)}
+.pd-opcional[open] summary{margin-bottom:10px}
+@media (max-width:640px){.app-shell{padding:16px}}

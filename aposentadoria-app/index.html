@@ -4,22 +4,26 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Simulador Previdenciário</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Figtree:wght@400;500;600&display=swap" />
     <link rel="stylesheet" href="styles.css?v=flow1" />
+    <link rel="stylesheet" href="identidade.css?v=1" />
   </head>
   <body>
     <main class="app-shell">
       <section class="workspace">
         <header class="topbar">
           <div class="portal-title">
-            <p class="eyebrow">RGPS urbano | regras gerais e transições</p>
-            <h1>Simulador Previdenciário</h1>
+            <a class="pd-brand" href="/plataforma-direito/">Plataforma do Direito</a>
+            <h1>Quando posso me <em>aposentar?</em></h1>
+            <p class="pd-lead">Informe sua data de nascimento e quanto tempo já contribuiu. O simulador compara as regras do INSS com os dados que você digitar. Nada é salvo nem enviado.</p>
           </div>
           <div class="status-pill" id="referenceDate"></div>
         </header>
 
         <section class="notice">
-          <strong>Uso técnico preliminar.</strong>
-          Este app não substitui análise jurídica, CNIS completo nem simulação oficial do Meu INSS. Ele ajuda a comparar regras com os dados informados.
+          <strong>Caráter informativo.</strong>
+          O resultado mostra o que dizem as regras para os números informados. Não substitui o CNIS completo, a simulação oficial do Meu INSS nem a análise do seu caso — para ter certeza, consulte a advogada.
         </section>
 
         <div class="portal-grid">
@@ -27,18 +31,18 @@
             <nav class="tabs" aria-label="Módulos do simulador">
               <button class="tab-button active" type="button" data-route="aposentadorias" data-tab="retirementTab">
                 <span>Aposentadorias</span>
-                <small>Regras, transições e melhor caminho</small>
+                <small>Quando e por qual regra</small>
               </button>
               <button class="tab-button" type="button" data-route="relatorio" data-tab="reportTab">
-                <span>Relatório CNIS</span>
-                <small>Leitura previdenciária e pendências</small>
+                <span>Tenho o CNIS</span>
+                <small>Cole o extrato e veja os vínculos</small>
               </button>
               <button class="tab-button" type="button" data-route="beneficios" data-tab="benefitsTab">
                 <span>Benefícios e pensões</span>
                 <small>Auxílios, pensão, IR e acréscimos</small>
               </button>
               <button class="tab-button" type="button" data-route="clientes" data-tab="clientsTab">
-                <span>Clientes / Atendimentos</span>
+                <span>Atendimentos salvos</span>
                 <small>Registros salvos, busca e exportação</small>
               </button>
             </nav>
@@ -76,10 +80,11 @@
           <form id="retirementForm" class="panel form-panel">
             <div class="section-title">
               <span>01</span>
-              <h2>Identificação</h2>
+              <h2>Você</h2>
             </div>
 
-            <label>
+            <details class="pd-opcional"><summary>Dados pessoais para o relatório (opcional)</summary>
+<label>
               NIS/PIS/PASEP
               <input name="nis" inputmode="numeric" placeholder="000.00000.00-0" />
             </label>
@@ -127,6 +132,7 @@
               </label>
             </div>
 
+            </details>
             <div class="grid two">
               <label>
                 Sexo cadastral
@@ -187,7 +193,8 @@
               </label>
             </div>
 
-            <div class="section-title">
+            <details class="pd-opcional"><summary>Professor(a), atividade especial ou deficiência? Toque aqui</summary>
+<div class="section-title">
               <span>03</span>
               <h2>Condições especiais</h2>
             </div>
@@ -306,8 +313,9 @@
               </label>
             </div>
 
+            </details>
             <div class="actions">
-              <button type="submit">Calcular melhor regra</button>
+              <button type="submit">Ver quando posso me aposentar</button>
               <button type="button" class="secondary" id="fillExample">Exemplo</button>
               <button type="button" class="secondary next-step" data-next-tab="reportTab">Próxima etapa</button>
             </div>
