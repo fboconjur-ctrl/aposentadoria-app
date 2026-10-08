@@ -505,11 +505,12 @@ const SITUACOES = {
   dividas: [["Tenho muitas dívidas e não consigo pagar", "superendividamento"], ["Apareceu empréstimo ou desconto que não fiz", "consignado-nao-contratado"], ["Caí em golpe no Pix", "pix-golpe"], ["O banco quer tomar meu carro", "busca-apreensao"], ["Meu nome foi negativado", "negativado"], ["Compras no cartão que eu não fiz", "compra-nao-reconhecida"]],
   consumidor: [["Produto com defeito", "defeito"], ["Troca e devolução de produtos", "troca-devolucao"], ["Comprei pela internet e não recebi", "compra-nao-entregue"], ["Quero desistir de uma compra", "arrependimento"], ["Cobrança indevida", "cobranca-dobro"], ["Ligações demais de cobrança ou telemarketing", "ligacoes-cobranca"], ["Cancelei curso ou faculdade e querem cobrar tudo", "cancelamento-curso"], ["Luz, água, gás ou telefone →", "@servicos"], ["Voo atrasado ou cancelado", "voo"]],
   servicos: [["Falta de energia ou aparelho queimado", "falta-energia"], ["Conta de luz ou de água muito alta", "conta-alta"], ["Me acusaram de fraude no medidor (recuperação de consumo)", "fraude-medidor"], ["Dívida repassada a empresa de cobrança, juros altos ou corte", "contas-essenciais"], ["Problema com operadora de celular ou internet", "telefonia"]],
-  cartorio: [["Inventário de quem faleceu", "inventario-cartorio"], ["Divórcio", "divorcio-cartorio"], ["União estável", "uniao-estavel"], ["Regularizar imóvel (usucapião)", "usucapiao"], ["Paguei o imóvel e não recebi a escritura", "adjudicacao"], ["Sacar FGTS ou saldo de quem faleceu", "alvara-valores"]],
+  cartorio: [["Inventário de quem faleceu", "inventario-cartorio"], ["Divórcio", "divorcio-cartorio"], ["União estável", "uniao-estavel"], ["Sacar FGTS ou saldo de quem faleceu", "alvara-valores"], ["Imóvel: registro, escritura, matrícula, usucapião →", "@imovel"], ["Meu nome foi protestado em cartório", "protesto"]],
+  imovel: [["Regularizar ou registrar meu imóvel", "reurb"], ["Paguei o imóvel e não recebi a escritura (adjudicação)", "adjudicacao"], ["Moro há anos e não tenho documento (usucapião)", "usucapiao"], ["Tirar a certidão de matrícula", "certidao-matricula"]],
 };
 const OUTRA = "Outra situação — contar com minhas palavras";
 function mostrarSituacoes(tema) {
-  const key = tema === "dividas" || tema === "servicos" ? "consumidor" : tema;
+  const key = tema === "dividas" || tema === "servicos" ? "consumidor" : tema === "imovel" ? "cartorio" : tema;
   Object.assign(state, { text: "", answers: [], qi: 0, key, flow: FLOWS[key], followSummary: null, cnisSummary: null, docSummary: null, faqId: null });
   $("messages").innerHTML = "";
   $("qcount").textContent = ""; $("voltar").hidden = true;

@@ -63,6 +63,11 @@ const GLOSSARIO = {
   "ata notarial": "Documento em que o tabelião registra o que viu e constatou (ex.: a posse no imóvel, o conteúdo de prints e conversas). Serve como prova.",
   "adjudicação compulsória": "Procedimento para obrigar a transferência do imóvel para o nome de quem pagou tudo, quando o vendedor não assina a escritura.",
   "dependentes habilitados": "Pessoas registradas como dependentes do falecido no INSS (ou no órgão do servidor). A certidão é emitida pelo próprio INSS.",
+  "protesto": "Registro oficial, no Tabelionato de Protesto, de que uma dívida (boleto, cheque, nota promissória, contrato) não foi paga. Fica público e costuma levar à negativação.",
+  "carta de anuência": "Declaração do credor dizendo que a dívida foi paga e que ele concorda com o cancelamento do protesto, com firma reconhecida.",
+  "matrícula": "A “certidão de nascimento” do imóvel no Cartório de Registro de Imóveis: mostra quem é o dono, as medidas, as dívidas e as garantias (hipoteca, penhora).",
+  "averbação": "Anotação feita na matrícula do imóvel para registrar uma mudança (construção, casamento, divórcio, demolição, novo número da rua).",
+  "reurb": "Regularização Fundiária Urbana: procedimento da prefeitura para legalizar núcleos urbanos informais e entregar o título de propriedade aos moradores (Lei 13.465/2017).",
   "responsabilidade objetiva": "O Estado responde pelo dano causado por seus agentes sem que a vítima precise provar culpa: basta provar o dano e a relação com a ação do Estado.",
 };
 
@@ -1033,7 +1038,7 @@ const ROTEIROS = {
     docs: ["Provas da posse e do tempo (contas, IPTU, fotos, declarações de vizinhos)", "Contrato de compra e venda ou cessão, se houver", "Planta e memorial descritivo assinados por profissional", "Certidões do imóvel e dos confrontantes"],
     passos: ["Reúna provas de todo o tempo de posse.", "Contrate a planta e o memorial descritivo.", "A advogada providencia a ata notarial e o pedido no Registro de Imóveis.", "Se houver oposição, o caso vai para a Justiça."],
     urgente: ["Ação de reintegração de posse contra você", "Proprietário anterior tentando vender o imóvel"],
-    fontes: [["Código Civil, arts. 1.238 a 1.244", "https://www.planalto.gov.br/ccivil_03/leis/2002/l10406compilada.htm"], ["Lei 6.015/1973, art. 216-A", "https://www.planalto.gov.br/ccivil_03/leis/l6015compilada.htm"]],
+    fontes: [["CNJ — Código Nacional de Normas do Foro Extrajudicial (Provimento 149/2023)", "https://atos.cnj.jus.br/"], ["Código Civil, arts. 1.238 a 1.244", "https://www.planalto.gov.br/ccivil_03/leis/2002/l10406compilada.htm"], ["Lei 6.015/1973, art. 216-A", "https://www.planalto.gov.br/ccivil_03/leis/l6015compilada.htm"]],
   },
 
   "adjudicacao": {
@@ -1045,14 +1050,14 @@ const ROTEIROS = {
     ],
     lei: [
       "Quem tem promessa de compra e venda sem cláusula de arrependimento e pagou o preço pode exigir a transferência do imóvel (Código Civil, arts. 1.417 e 1.418).",
-      "Desde a Lei 14.382/2022, a adjudicação compulsória pode ser feita direto no Cartório de Registro de Imóveis, com advogado e ata notarial (Lei 6.015/1973, art. 216-B).",
+      "Desde a Lei 14.382/2022, a adjudicação compulsória pode ser feita direto no Cartório de Registro de Imóveis, com advogado e ata notarial (Lei 6.015/1973, art. 216-B), conforme regulamentado pelo CNJ (Provimento 150/2023, no Código Nacional de Normas).",
     ],
     juris: ["STJ, Súmula 239: o direito à adjudicação compulsória não depende de o contrato estar registrado no cartório."],
     prazos: ["Reúna a prova do pagamento integral antes de iniciar."],
     docs: ["Contrato de compra e venda ou promessa", "Comprovantes de pagamento de todas as parcelas", "Matrícula atualizada do imóvel", "Certidão de óbito do vendedor, se for o caso", "Notificação feita ao vendedor"],
     passos: ["Notifique o vendedor (ou herdeiros) para assinar a escritura.", "Sem resposta, a advogada pode iniciar a adjudicação no cartório ou na Justiça.", "Pague os impostos de transferência (ITBI) no município."],
     urgente: ["Imóvel penhorado ou vendido a outra pessoa", "Vendedor falecido com inventário em andamento"],
-    fontes: [["Código Civil, arts. 1.417 e 1.418", "https://www.planalto.gov.br/ccivil_03/leis/2002/l10406compilada.htm"], ["Lei 6.015/1973, art. 216-B", "https://www.planalto.gov.br/ccivil_03/leis/l6015compilada.htm"]],
+    fontes: [["CNJ — Código Nacional de Normas do Foro Extrajudicial (Provimento 149/2023)", "https://atos.cnj.jus.br/"], ["Código Civil, arts. 1.417 e 1.418", "https://www.planalto.gov.br/ccivil_03/leis/2002/l10406compilada.htm"], ["Lei 6.015/1973, art. 216-B", "https://www.planalto.gov.br/ccivil_03/leis/l6015compilada.htm"]],
   },
 
   "alvara-valores": {
@@ -1073,5 +1078,81 @@ const ROTEIROS = {
     passos: ["Peça ao INSS a certidão de dependentes habilitados.", "Com ela, solicite os valores na Caixa (FGTS/PIS) e nos bancos.", "Consulte o Valores a Receber (Banco Central) com a conta gov.br.", "Sem dependentes, a advogada pede o alvará judicial."],
     urgente: ["Família sem renda após o falecimento", "Banco exigindo inventário para valores pequenos"],
     fontes: [["Lei 6.858/1980", "https://www.planalto.gov.br/ccivil_03/leis/l6858.htm"], ["Meu INSS", "https://meu.inss.gov.br"]],
+  },
+
+  "protesto": {
+    acolhe: "Protesto em cartório pesa no crédito, mas tem caminho certo para cancelar — e, se for indevido, pode gerar indenização.",
+    perguntas: [
+      { q: "A dívida protestada:", a: ["Já foi paga", "Não reconheço / é indevida", "É real e ainda não paguei"], ajuda: ["protesto"] },
+      { q: "Você tem o título original ou a carta de anuência do credor?", a: ["Tenho o título", "Tenho a carta de anuência", "Não tenho nenhum"], ajuda: ["carta de anuência"] },
+      { q: "Você recebeu a intimação do cartório antes do protesto?", a: ["Sim", "Não", "Não sei"] },
+    ],
+    lei: [
+      "Antes de protestar, o cartório deve intimar o devedor, que tem 3 dias úteis para pagar ou se manifestar (Lei 9.492/1997, arts. 12 e 14).",
+      "O cancelamento é pedido no Tabelionato de Protesto com o título original ou com a carta de anuência do credor, com firma reconhecida (Lei 9.492/1997, art. 26).",
+      "Se o motivo não for o pagamento (ex.: dívida indevida), o cancelamento é feito por ordem judicial (Lei 9.492/1997, art. 26, §3º).",
+      "As regras dos cartórios de protesto estão consolidadas no Código Nacional de Normas do Foro Extrajudicial (Provimento CNJ 149/2023), que também prevê medidas de incentivo à renegociação de dívidas protestadas.",
+    ],
+    juris: [
+      "STJ, Tema 725: se o protesto foi legítimo, cabe ao devedor, depois de pagar, providenciar o cancelamento — salvo combinação diferente com o credor.",
+      "Protesto indevido (dívida inexistente ou já paga antes do protesto) costuma gerar dano moral presumido para pessoa física, segundo a jurisprudência do STJ.",
+    ],
+    divergencia: ["Quem paga as taxas do cancelamento quando o protesto é declarado indevido na Justiça: há decisões que impõem o custo ao credor e outras que condicionam o cancelamento ao pagamento dos emolumentos."],
+    prazos: ["Na intimação, você tem 3 dias úteis para pagar no cartório e evitar o protesto.", "Depois de pagar ao credor, peça logo a carta de anuência."],
+    docs: ["Intimação do cartório", "Comprovante de pagamento", "Título original ou carta de anuência com firma reconhecida", "Certidão de protesto (consultável gratuitamente em sites oficiais dos tabeliães)"],
+    passos: ["Consulte gratuitamente se há protesto no seu CPF no site oficial dos tabeliães de protesto.", "Se pagou, peça ao credor a carta de anuência e leve ao cartório.", "Se a dívida é indevida, procure a advogada: pode caber pedido urgente de suspensão e indenização."],
+    urgente: ["Protesto de dívida que você não reconhece", "Crédito negado ou empréstimo/financiamento travado", "Intimação recebida com prazo de 3 dias correndo"],
+    fontes: [["Lei 9.492/1997 (protesto)", "https://www.planalto.gov.br/ccivil_03/leis/l9492.htm"], ["STJ — Tema 725", "https://processo.stj.jus.br/repetitivos/temas_repetitivos/"], ["CNJ — Código Nacional de Normas (Provimento 149/2023)", "https://atos.cnj.jus.br/"]],
+  },
+
+  "reurb": {
+    acolhe: "Muita gente mora em imóvel sem escritura ou em área irregular. Há caminhos para regularizar — individualmente ou com o bairro todo.",
+    perguntas: [
+      { q: "Qual é a situação?", a: ["Comprei e nunca registrei a escritura", "Tenho só contrato de gaveta", "Moro em loteamento ou área irregular", "Construí e a obra não está na matrícula"], ajuda: ["matrícula", "averbação"] },
+      { q: "Há outras famílias na mesma situação no local?", a: ["Sim, o bairro todo", "Não, é só o meu imóvel"], ajuda: ["reurb"] },
+      { q: "O imóvel é:", a: ["Urbano", "Rural"] },
+    ],
+    explica: {
+      titulo: "Qual caminho serve para o seu caso",
+      itens: [
+        "Tem escritura, mas não registrou: leve a escritura ao Cartório de Registro de Imóveis. Só quem registra é dono perante todos (Código Civil, art. 1.245).",
+        "Tem contrato e pagou tudo, mas o vendedor não assina a escritura: adjudicação compulsória — na Justiça ou no cartório (veja o roteiro próprio).",
+        "Mora há muitos anos como dono, sem documento: usucapião — na Justiça ou no cartório (veja o roteiro próprio).",
+        "Bairro ou loteamento inteiro irregular: Regularização Fundiária Urbana (Reurb), pedida à prefeitura, que pode ser gratuita para famílias de baixa renda (Reurb-S) (Lei 13.465/2017).",
+        "Construiu ou reformou e a obra não aparece: averbação da construção na matrícula, com o habite-se da prefeitura e a documentação da obra (Lei 6.015/1973).",
+      ],
+    },
+    lei: [
+      "A propriedade do imóvel só se transfere com o registro do título no Cartório de Registro de Imóveis (Código Civil, art. 1.245).",
+      "A Reurb pode ser de interesse social (Reurb-S, para população de baixa renda, com isenção de custas e emolumentos) ou de interesse específico (Reurb-E) (Lei 13.465/2017, art. 13).",
+      "Os procedimentos dos cartórios de registro de imóveis estão consolidados no Código Nacional de Normas do Foro Extrajudicial (Provimento CNJ 149/2023).",
+    ],
+    juris: ["Contrato de gaveta não transfere a propriedade, mas os tribunais o reconhecem como prova da posse e da compra — útil na usucapião e na adjudicação compulsória."],
+    prazos: ["Quanto antes registrar, menor o risco: imóvel não registrado pode ser penhorado por dívida do antigo dono ou vendido de novo."],
+    docs: ["Escritura ou contrato de compra e venda", "Certidão de matrícula atualizada", "Comprovantes de pagamento e de posse (IPTU, contas)", "Planta, habite-se e documentos da obra (para averbação)"],
+    passos: ["Peça a certidão de matrícula para ver em nome de quem o imóvel está.", "Identifique o caminho certo no quadro acima.", "Para Reurb, procure a prefeitura ou a associação de moradores.", "Procure a advogada para os casos de adjudicação, usucapião ou documentação incompleta."],
+    urgente: ["Imóvel penhorado por dívida do antigo dono", "Antigo dono falecido ou empresa falida", "Ameaça de despejo ou de reintegração de posse"],
+    fontes: [["Lei 13.465/2017 (Reurb)", "https://www.planalto.gov.br/ccivil_03/_ato2015-2018/2017/lei/l13465.htm"], ["Código Civil, art. 1.245", "https://www.planalto.gov.br/ccivil_03/leis/2002/l10406compilada.htm"], ["Lei 6.015/1973 (registros públicos)", "https://www.planalto.gov.br/ccivil_03/leis/l6015compilada.htm"]],
+  },
+
+  "certidao-matricula": {
+    acolhe: "A certidão de matrícula é o documento mais importante de um imóvel — e hoje pode ser pedida pela internet, de qualquer lugar do país.",
+    perguntas: [
+      { q: "Para que você precisa?", a: ["Comprar ou vender imóvel", "Inventário ou divórcio", "Financiamento", "Saber de quem é o imóvel", "Processo judicial"], ajuda: ["matrícula"] },
+      { q: "Você sabe o número da matrícula e o cartório?", a: ["Sim", "Só o endereço", "Não"] },
+      { q: "Precisa da certidão de ônus (dívidas e penhoras)?", a: ["Sim", "Não sei"] },
+    ],
+    lei: [
+      "Qualquer pessoa pode pedir certidão de matrícula, sem precisar explicar o motivo (Lei 6.015/1973, arts. 16 e 17).",
+      "A certidão pode ser pedida pela internet, em todo o país, pelo Serviço de Atendimento Eletrônico Compartilhado (SAEC), mantido pelo Operador Nacional do Registro Eletrônico de Imóveis (ONR) (Lei 11.977/2009 e Lei 14.382/2022).",
+      "A certidão de inteiro teor reproduz toda a matrícula; a de ônus reais mostra hipotecas, penhoras e outras restrições.",
+      "[CONFERIR] Prazo de validade da certidão exigido para escrituras e financiamentos (em regra, 30 dias).",
+    ],
+    juris: ["Na compra de imóvel, a falta de pesquisa da matrícula e das certidões do vendedor pode impedir que o comprador seja considerado de boa-fé se houver dívida ou penhora registrada."],
+    prazos: ["Para escrituras e financiamentos, use certidão recente — os cartórios e bancos costumam exigir emissão nos últimos 30 dias."],
+    docs: ["Número da matrícula e cartório, se souber", "Endereço completo do imóvel", "CPF ou CNPJ do proprietário (ajuda na busca)"],
+    passos: ["Acesse o serviço oficial de registro eletrônico de imóveis (registradores.onr.org.br).", "Escolha o estado, o cartório e o tipo de certidão.", "Pague a taxa e baixe a certidão em PDF.", "Na compra, peça também as certidões pessoais do vendedor e procure a advogada para analisar."],
+    urgente: ["Compra de imóvel prestes a ser assinada", "Matrícula com penhora ou indisponibilidade"],
+    fontes: [["Lei 6.015/1973", "https://www.planalto.gov.br/ccivil_03/leis/l6015compilada.htm"], ["ONR — registro eletrônico de imóveis", "https://registradores.onr.org.br"]],
   },
 };

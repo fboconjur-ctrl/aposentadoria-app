@@ -1521,3 +1521,5 @@ Conferir: Res. ANAC 400/2016 (arts. 11, 21, 26, 27); CBA art. 251-A; STF Temas 2
 Revisar: inventario-cartorio, divorcio-cartorio, uniao-estavel, usucapiao, adjudicacao, alvara-valores.
 Ocultos [CONFERIR]: ITCD-DF (faixas 4–6% e multa por atraso); inventário em cartório com testamento após a Res. CNJ 571/2024; divórcio em cartório com filhos menores após resolução judicial de guarda/alimentos.
 Conferir: Res. CNJ 35/2007 art. 12-A (571/2024); Provimento CNJ 141/2023 (termo de união estável no RCPN); Lei 6.015 arts. 216-A e 216-B; Lei 6.858/1980; STF Tema 809; STJ Súmula 239.
+- Cartório ampliado: protesto (Lei 9.492/1997; STJ Tema 725), reurb/regularização e registro (CC 1.245; Lei 13.465/2017; averbação), certidao-matricula (Lei 6.015 arts. 16-17; SAEC/ONR). Base consolidada: Código Nacional de Normas do Foro Extrajudicial (Provimento CNJ 149/2023; adjudicação: Provimento 150/2023).
+  Oculto [CONFERIR]: validade da certidão de matrícula para escrituras/financiamentos (em regra 30 dias). Conferir: prazo de 3 dias úteis da intimação de protesto (arts. 12 e 14) e medidas de renegociação no CNN.
