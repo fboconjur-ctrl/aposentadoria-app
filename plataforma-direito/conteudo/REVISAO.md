@@ -1516,3 +1516,8 @@ Conferir: Res. ANAC 400/2016 (arts. 11, 21, 26, 27); CBA art. 251-A; STF Temas 2
 - Grupo "Luz, água, gás ou telefone" (submenu): falta-energia, conta-alta, fraude-medidor (Tema 699; TOI sem presunção nos TJs), contas-essenciais, telefonia.
   Ocultos [CONFERIR]: prazos do ressarcimento de danos elétricos (ANEEL); nova regra de pagamento por interrupção >24h; custo/prazo da aferição de medidor e hidrômetro; desconto por vazamento oculto na agência local.
 - cancelamento-curso (nova): CDC 51 IV, 53, 49, 39 V; teto de 10% das parcelas restantes (posição do Idec) — confirmar jurisprudência do TJDFT/STJ.
+
+## Roteiros — lote Divórcio, inventário e cartório (6 situações)
+Revisar: inventario-cartorio, divorcio-cartorio, uniao-estavel, usucapiao, adjudicacao, alvara-valores.
+Ocultos [CONFERIR]: ITCD-DF (faixas 4–6% e multa por atraso); inventário em cartório com testamento após a Res. CNJ 571/2024; divórcio em cartório com filhos menores após resolução judicial de guarda/alimentos.
+Conferir: Res. CNJ 35/2007 art. 12-A (571/2024); Provimento CNJ 141/2023 (termo de união estável no RCPN); Lei 6.015 arts. 216-A e 216-B; Lei 6.858/1980; STF Tema 809; STJ Súmula 239.

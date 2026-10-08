@@ -55,6 +55,14 @@ const GLOSSARIO = {
   "toi": "Termo de Ocorrência e Inspeção: documento que a distribuidora de energia faz quando diz ter encontrado irregularidade no medidor. Sozinho, os tribunais costumam entender que não prova fraude.",
   "recuperação de consumo": "Cobrança que a distribuidora faz de energia que, segundo ela, foi consumida e não registrada (por defeito ou fraude no medidor).",
   "aferição do medidor": "Teste do medidor (de luz ou de água) para ver se ele marca o consumo corretamente. Você pode pedir; em geral, se o medidor estiver certo, pode haver custo.",
+  "escritura pública": "Documento feito no Cartório de Notas pelo tabelião. No inventário e no divórcio em cartório, substitui a sentença do juiz.",
+  "itcmd": "Imposto sobre herança e doação, cobrado pelo estado (no DF, ITCD). A alíquota varia conforme o estado e o valor, com teto de 8%.",
+  "partilha": "Divisão dos bens entre os herdeiros (no inventário) ou entre o casal (no divórcio).",
+  "meação": "Metade dos bens comuns do casal que já pertence ao cônjuge ou companheiro(a) — não é herança.",
+  "usucapião": "Forma de se tornar dono de um imóvel pela posse prolongada, mansa e pacífica, como se fosse dono, pelo tempo previsto em lei.",
+  "ata notarial": "Documento em que o tabelião registra o que viu e constatou (ex.: a posse no imóvel, o conteúdo de prints e conversas). Serve como prova.",
+  "adjudicação compulsória": "Procedimento para obrigar a transferência do imóvel para o nome de quem pagou tudo, quando o vendedor não assina a escritura.",
+  "dependentes habilitados": "Pessoas registradas como dependentes do falecido no INSS (ou no órgão do servidor). A certidão é emitida pelo próprio INSS.",
   "responsabilidade objetiva": "O Estado responde pelo dano causado por seus agentes sem que a vítima precise provar culpa: basta provar o dano e a relação com a ação do Estado.",
 };
 
@@ -940,5 +948,130 @@ const ROTEIROS = {
     passos: ["Peça o cancelamento por escrito e guarde o protocolo.", "Peça a planilha do que estão cobrando.", "Reclame no consumidor.gov.br ou Procon.", "Procure a advogada se houver negativação ou cobrança do curso inteiro."],
     urgente: ["Negativação pela cobrança", "Valores altos (pós, MBA, medicina)"],
     fontes: [["Código de Defesa do Consumidor", "https://www.planalto.gov.br/ccivil_03/leis/l8078compilado.htm"], ["Idec — cancelamento de cursos", "https://idec.org.br/"]],
+  },
+
+  // ---------------- Divórcio, inventário e cartório ----------------
+  "inventario-cartorio": {
+    acolhe: "O inventário em cartório costuma ser bem mais rápido que o judicial — e, desde 2024, ficou possível em mais situações.",
+    perguntas: [
+      { q: "Os herdeiros estão de acordo com a divisão?", a: ["Sim, todos", "Não", "Ainda não conversamos"], ajuda: ["partilha"] },
+      { q: "Há herdeiro menor de idade ou incapaz?", a: ["Não", "Sim"] },
+      { q: "Há quanto tempo foi o falecimento?", a: ["Menos de 2 meses", "Mais de 2 meses"] },
+    ],
+    lei: [
+      "Se todos os herdeiros forem capazes e estiverem de acordo, o inventário e a partilha podem ser feitos por escritura pública em cartório, com a presença de advogado (CPC, art. 610, §§1º e 2º).",
+      "Desde a Resolução CNJ 571/2024, o inventário em cartório também é possível com herdeiro menor ou incapaz, desde que a parte dele seja paga em fração ideal de cada bem e haja manifestação favorável do Ministério Público (Resolução CNJ 35/2007, art. 12-A).",
+      "O inventário deve ser aberto em até 2 meses do falecimento (CPC, art. 611); o atraso pode gerar multa sobre o imposto, conforme a lei de cada estado.",
+      "O imposto sobre a herança (ITCMD; no DF, ITCD) deve ser pago antes da escritura. A alíquota é definida por cada estado, com teto nacional de 8%.",
+      "[CONFERIR] No DF, alíquotas progressivas de 4% a 6% (Lei distrital 3.804/2006, com a Lei 5.549/2015): faixas vigentes e multa por atraso.",
+    ],
+    juris: ["O cônjuge ou companheiro(a) tem a sua meação (metade dos bens comuns), que não entra como herança; e, conforme o regime de bens, também pode ser herdeiro (Código Civil, art. 1.829)."],
+    divergencia: ["[CONFERIR] Inventário em cartório quando há testamento: requisitos atuais após a Resolução CNJ 571/2024."],
+    prazos: ["2 meses do falecimento para abrir o inventário.", "Imposto: prazos e multas conforme a lei do estado."],
+    docs: ["Certidão de óbito", "Documentos pessoais e certidões de todos os herdeiros e do cônjuge", "Certidões dos imóveis (matrícula atualizada) e documentos de veículos", "Extratos bancários e de investimentos", "Certidões negativas de débitos do falecido"],
+    passos: ["Reúna os documentos do falecido, dos herdeiros e dos bens.", "Confirme se todos concordam com a divisão.", "Escolha um Cartório de Notas (pode ser qualquer um do país).", "Calcule e pague o imposto estadual.", "A advogada prepara a minuta e assina a escritura com todos."],
+    urgente: ["Prazo de 2 meses passando", "Herdeiros em conflito", "Bens que precisam ser vendidos ou administrados"],
+    fontes: [["Código de Processo Civil, art. 610", "https://www.planalto.gov.br/ccivil_03/_ato2015-2018/2015/lei/l13105.htm"], ["CNJ — Resolução 35/2007 (atualizada)", "https://atos.cnj.jus.br/atos/detalhar/179"], ["Código Civil", "https://www.planalto.gov.br/ccivil_03/leis/2002/l10406compilada.htm"]],
+  },
+
+  "divorcio-cartorio": {
+    acolhe: "Quando há acordo, o divórcio em cartório é rápido e não exige prazo nem motivo.",
+    perguntas: [
+      { q: "Vocês estão de acordo com o divórcio e a divisão dos bens?", a: ["Sim", "Não", "Só sobre o divórcio"], ajuda: ["partilha"] },
+      { q: "Há filhos menores ou incapazes, ou gravidez?", a: ["Não", "Sim"] },
+      { q: "Há bens a dividir?", a: ["Sim", "Não"] },
+    ],
+    lei: [
+      "Não é preciso esperar nenhum prazo nem apontar culpa para se divorciar (Constituição, art. 226, §6º, com a Emenda 66/2010).",
+      "Sem filhos menores ou incapazes e sem gravidez, o divórcio consensual pode ser feito por escritura pública em cartório, com advogado (CPC, art. 733).",
+      "Com filhos menores, a guarda, a convivência e a pensão precisam passar pela Justiça. [CONFERIR] Em que situações, depois disso, o divórcio pode ser concluído em cartório (Resolução CNJ 35/2007, atualizada).",
+      "A partilha dos bens pode ficar para depois do divórcio (Código Civil, art. 1.581).",
+    ],
+    juris: ["Sem acordo, o divórcio é judicial — mas pode ser decretado logo no início do processo, deixando a discussão dos bens para depois (divórcio como direito potestativo, reconhecido pela jurisprudência)."],
+    prazos: ["Não há prazo para pedir o divórcio."],
+    docs: ["Certidão de casamento atualizada", "Documentos pessoais do casal", "Pacto antenupcial, se houver", "Documentos dos bens (imóveis, veículos, contas)"],
+    passos: ["Conversem sobre bens, nome (manter ou voltar ao de solteiro) e pensão entre vocês.", "Escolham um Cartório de Notas.", "A advogada prepara a minuta e acompanha a assinatura da escritura.", "Depois, a escritura é averbada na certidão de casamento."],
+    urgente: ["Violência doméstica (procure ajuda imediata: 180 ou 190)", "Risco de um dos dois vender ou esconder bens"],
+    fontes: [["Código de Processo Civil, art. 733", "https://www.planalto.gov.br/ccivil_03/_ato2015-2018/2015/lei/l13105.htm"], ["CNJ — Resolução 35/2007 (atualizada)", "https://atos.cnj.jus.br/atos/detalhar/179"]],
+  },
+
+  "uniao-estavel": {
+    acolhe: "União estável existe mesmo sem papel — mas formalizar evita muita dor de cabeça, principalmente na herança e na pensão.",
+    perguntas: [
+      { q: "O que você quer fazer?", a: ["Formalizar (registrar) a união", "Desfazer (dissolver) a união", "Converter em casamento"], ajuda: ["união estável"] },
+      { q: "Há filhos menores?", a: ["Não", "Sim"] },
+      { q: "Vocês querem escolher o regime de bens?", a: ["Sim", "Não", "Não sei o que é"] },
+    ],
+    lei: [
+      "A união estável é a convivência pública, contínua e duradoura, com objetivo de formar família (Código Civil, art. 1.723).",
+      "Sem contrato escrito, vale o regime da comunhão parcial de bens (Código Civil, art. 1.725).",
+      "Pode ser formalizada por escritura pública no Cartório de Notas ou por termo declaratório no Cartório de Registro Civil (Provimento CNJ 141/2023).",
+      "A dissolução consensual, sem filhos menores ou incapazes, também pode ser feita em cartório, com advogado (CPC, art. 733).",
+    ],
+    juris: ["STF, Tema 809: companheiro(a) e cônjuge têm os mesmos direitos na herança — a regra antiga que diferenciava foi declarada inconstitucional."],
+    prazos: ["Não há prazo mínimo de convivência na lei — o que importa é a intenção de constituir família."],
+    docs: ["Documentos pessoais dos dois", "Comprovantes de vida em comum (mesmo endereço, contas, filhos, plano de saúde)", "Documentos dos bens, se for dividir"],
+    passos: ["Decidam a data de início da união e o regime de bens.", "Façam a escritura (Notas) ou o termo (Registro Civil).", "Para desfazer com acordo, a advogada acompanha a escritura de dissolução."],
+    urgente: ["Falecimento do(a) companheiro(a) sem a união formalizada (pensão e herança)", "Disputa sobre bens"],
+    fontes: [["Código Civil, arts. 1.723 a 1.727", "https://www.planalto.gov.br/ccivil_03/leis/2002/l10406compilada.htm"], ["STF — Tema 809", "https://portal.stf.jus.br/jurisprudenciaRepercussao/"]],
+  },
+
+  "usucapiao": {
+    acolhe: "Mora ou usa o imóvel há anos como dono, mas não tem a escritura? A usucapião pode resolver — inclusive direto no cartório.",
+    perguntas: [
+      { q: "Há quanto tempo você tem a posse do imóvel?", a: ["Menos de 5 anos", "5 a 10 anos", "10 a 15 anos", "Mais de 15 anos"], ajuda: ["usucapião"] },
+      { q: "É sua moradia?", a: ["Sim", "Não"] },
+      { q: "O imóvel é:", a: ["Urbano, até 250 m²", "Urbano, maior", "Rural"] },
+    ],
+    lei: [
+      "Prazos, conforme o caso: 15 anos de posse (ou 10, se é moradia ou houve obras) — usucapião extraordinária (Código Civil, art. 1.238); 10 anos com justo título e boa-fé (ou 5, em situações específicas) — ordinária (art. 1.242); 5 anos para imóvel urbano de até 250 m² usado como moradia, se a pessoa não tiver outro imóvel (Constituição, art. 183; Código Civil, art. 1.240); 2 anos na usucapião familiar, quando o ex-cônjuge abandona o lar (art. 1.240-A).",
+      "A usucapião pode ser feita direto no Cartório de Registro de Imóveis, com advogado, ata notarial, planta e memorial descritivo (Lei 6.015/1973, art. 216-A).",
+      "Se os vizinhos confrontantes notificados não se manifestarem, o silêncio é considerado concordância (Lei 6.015/1973, art. 216-A, com a Lei 13.465/2017).",
+    ],
+    juris: ["Imóveis públicos não podem ser adquiridos por usucapião (Constituição, arts. 183, §3º, e 191, parágrafo único)."],
+    prazos: ["O tempo de posse pode somar o de quem estava antes de você, se houver continuidade (Código Civil, art. 1.243)."],
+    docs: ["Provas da posse e do tempo (contas, IPTU, fotos, declarações de vizinhos)", "Contrato de compra e venda ou cessão, se houver", "Planta e memorial descritivo assinados por profissional", "Certidões do imóvel e dos confrontantes"],
+    passos: ["Reúna provas de todo o tempo de posse.", "Contrate a planta e o memorial descritivo.", "A advogada providencia a ata notarial e o pedido no Registro de Imóveis.", "Se houver oposição, o caso vai para a Justiça."],
+    urgente: ["Ação de reintegração de posse contra você", "Proprietário anterior tentando vender o imóvel"],
+    fontes: [["Código Civil, arts. 1.238 a 1.244", "https://www.planalto.gov.br/ccivil_03/leis/2002/l10406compilada.htm"], ["Lei 6.015/1973, art. 216-A", "https://www.planalto.gov.br/ccivil_03/leis/l6015compilada.htm"]],
+  },
+
+  "adjudicacao": {
+    acolhe: "Pagou o imóvel e o vendedor não passa a escritura (ou faleceu, ou sumiu)? Há como obrigar a transferência — hoje, até em cartório.",
+    perguntas: [
+      { q: "Você pagou todo o preço?", a: ["Sim", "Falta pouco", "Não"] },
+      { q: "Tem contrato de compra e venda (ou promessa)?", a: ["Sim, registrado no cartório", "Sim, mas não registrado", "Não, só recibos"], ajuda: ["adjudicação compulsória"] },
+      { q: "Onde está o vendedor?", a: ["Se recusa a assinar", "Faleceu", "Não encontro", "Empresa fechou"] },
+    ],
+    lei: [
+      "Quem tem promessa de compra e venda sem cláusula de arrependimento e pagou o preço pode exigir a transferência do imóvel (Código Civil, arts. 1.417 e 1.418).",
+      "Desde a Lei 14.382/2022, a adjudicação compulsória pode ser feita direto no Cartório de Registro de Imóveis, com advogado e ata notarial (Lei 6.015/1973, art. 216-B).",
+    ],
+    juris: ["STJ, Súmula 239: o direito à adjudicação compulsória não depende de o contrato estar registrado no cartório."],
+    prazos: ["Reúna a prova do pagamento integral antes de iniciar."],
+    docs: ["Contrato de compra e venda ou promessa", "Comprovantes de pagamento de todas as parcelas", "Matrícula atualizada do imóvel", "Certidão de óbito do vendedor, se for o caso", "Notificação feita ao vendedor"],
+    passos: ["Notifique o vendedor (ou herdeiros) para assinar a escritura.", "Sem resposta, a advogada pode iniciar a adjudicação no cartório ou na Justiça.", "Pague os impostos de transferência (ITBI) no município."],
+    urgente: ["Imóvel penhorado ou vendido a outra pessoa", "Vendedor falecido com inventário em andamento"],
+    fontes: [["Código Civil, arts. 1.417 e 1.418", "https://www.planalto.gov.br/ccivil_03/leis/2002/l10406compilada.htm"], ["Lei 6.015/1973, art. 216-B", "https://www.planalto.gov.br/ccivil_03/leis/l6015compilada.htm"]],
+  },
+
+  "alvara-valores": {
+    acolhe: "FGTS, PIS e pequenos saldos de quem faleceu podem ser sacados sem inventário, por um caminho mais simples.",
+    perguntas: [
+      { q: "O que você quer sacar?", a: ["FGTS ou PIS/Pasep", "Saldo em banco ou poupança", "Restituição de Imposto de Renda", "Várias coisas"] },
+      { q: "A pessoa deixou dependentes no INSS (cônjuge, filhos menores)?", a: ["Sim", "Não", "Não sei"], ajuda: ["dependentes habilitados"] },
+      { q: "Ela deixou outros bens (imóvel, carro)?", a: ["Não", "Sim"] },
+    ],
+    lei: [
+      "FGTS, PIS/Pasep e, nos limites da lei, saldos bancários, poupança e restituição de Imposto de Renda são pagos aos dependentes habilitados no INSS, sem inventário (Lei 6.858/1980, arts. 1º e 2º).",
+      "Se não houver dependentes habilitados, os sucessores pedem por alvará judicial, independentemente de inventário (Lei 6.858/1980, art. 1º).",
+      "Se houver outros bens, esses valores podem entrar no inventário — em cartório ou judicial.",
+    ],
+    juris: ["O alvará para levantamento desses valores costuma tramitar na Justiça Estadual, em procedimento simples (jurisdição voluntária)."],
+    prazos: ["Não há prazo curto, mas valores parados podem perder rendimento — e o Valores a Receber do Banco Central ajuda a achar dinheiro esquecido."],
+    docs: ["Certidão de óbito", "Certidão de dependentes habilitados (INSS)", "Documentos dos dependentes ou herdeiros", "Extratos ou informações das contas"],
+    passos: ["Peça ao INSS a certidão de dependentes habilitados.", "Com ela, solicite os valores na Caixa (FGTS/PIS) e nos bancos.", "Consulte o Valores a Receber (Banco Central) com a conta gov.br.", "Sem dependentes, a advogada pede o alvará judicial."],
+    urgente: ["Família sem renda após o falecimento", "Banco exigindo inventário para valores pequenos"],
+    fontes: [["Lei 6.858/1980", "https://www.planalto.gov.br/ccivil_03/leis/l6858.htm"], ["Meu INSS", "https://meu.inss.gov.br"]],
   },
 };
