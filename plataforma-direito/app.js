@@ -114,14 +114,14 @@ function finish() {
   setTimeout(() => { renderResult(); go("result"); setStep(3); }, 700);
 }
 
-function renderResult() {
+function renderResult(an) {
   const f = state.flow;
-  const steps = f.steps.filter((s) => !s.when || s.when(state.answers)).map((s) => `<li><strong>${esc(s.t)}</strong><br><span class="muted">${esc(s.d)}</span>${s.link ? `<br><a href="${s.link[1]}" ${s.link[1].startsWith("http") ? ' target="_blank" rel="noopener"' : ""}>${esc(s.link[0])} →</a>` : ""}</li>`).join("");
+  const steps = f.steps.filter((s) => (!s.when || s.when(state.answers)) && !(an && an.feitos.some((c) => c.re.test(norm(s.t + " " + s.d))))).map((s) => `<li><strong>${esc(s.t)}</strong><br><span class="muted">${esc(s.d)}</span>${s.link ? `<br><a href="${s.link[1]}" ${s.link[1].startsWith("http") ? ' target="_blank" rel="noopener"' : ""}>${esc(s.link[0])} →</a>` : ""}</li>`).join("");
   const sources = f.sources.map(([n, u]) => `<li><a href="${u}" target="_blank" rel="noopener">${esc(n)}</a></li>`).join("");
   $("result").innerHTML = `
     <h1>Informações sobre o seu assunto</h1>
     <p><span class="tag">${esc(f.subject)}</span></p>
-    ${state.text ? `<p class="muted">“${esc(state.text)}”</p>` : ""}
+    ${an ? analiseHtml(an) : state.text ? `<p class="muted">“${esc(state.text)}”</p>` : ""}
     <h2>Passos e documentos que costumam ser necessários</h2>
     <ol class="steps-list">${steps}</ol>
     ${docCard(state.key)}
@@ -174,26 +174,28 @@ document.addEventListener("click", (e) => {
   window.open(`https://wa.me/${WA_NUMERO}?text=${encodeURIComponent(`Olá! Vi no site uma informação que pode estar desatualizada.\nPágina: ${titulo}\nO que encontrei: `)}`, "_blank", "noopener");
 });
 
-function mostrarRoteiro(f, R, text) {
+function mostrarRoteiro(f, R, text, an) {
   const resp = [];
+  const passos = an ? publico(R.passos).filter((x) => !an.feitos.some((c) => c.re.test(norm(x)))) : publico(R.passos);
   go("result");
   const bloco = (titulo, itens, cls = "") => publico(itens).length ? `<section class="rt-bloco ${cls}"><h2>${titulo}</h2><ul>${publico(itens).map((x) => `<li>${esc(x)}</li>`).join("")}</ul></section>` : "";
   $("result").innerHTML = `
     <p class="eyebrow">Sua situação</p>
-    <h1>${esc(text)}</h1>
+    <h1>${esc(an ? f.q : text)}</h1>
     <p class="lead">${esc(R.acolhe)}</p>
-    <div class="card rt-perguntas"><h2>Para entender melhor, responda rapidinho</h2>
+    ${an ? analiseHtml(an, f.id) : ""}
+    <div class="card rt-perguntas"${an ? " hidden" : ""}><h2>Para entender melhor, responda rapidinho</h2>
       ${R.perguntas.map((p, i) => `<div class="rt-q" data-i="${i}"><p><strong>${esc(p.q)}</strong></p><div class="answers">${p.a.map((a) => `<button type="button" data-r="${esc(a)}">${esc(a)}</button>`).join("")}</div>${ajudaHtml(p.ajuda)}</div>`).join("")}
       <p class="small muted">Suas respostas vão junto com o pedido, para a advogada. <button type="button" class="linkish small" id="rt-pular">Pular e ver as informações</button></p>
     </div>
-    <div id="rt-conteudo" hidden>
+    <div id="rt-conteudo"${an ? "" : " hidden"}>
       ${R.explica ? `<section class="rt-bloco rt-explica card"><h2>${esc(R.explica.titulo)}</h2><ol>${publico(R.explica.itens).map((x) => { const i = x.indexOf(": "); return `<li>${i > 0 && i < 60 ? `<strong>${esc(x.slice(0, i))}:</strong> ${esc(x.slice(i + 2))}` : esc(x)}</li>`; }).join("")}</ol></section>` : ""}
       ${bloco("O que a lei diz", R.lei)}
       ${bloco("Como os tribunais têm decidido", R.juris)}
       ${bloco("Onde os tribunais ainda divergem", R.divergencia, "rt-diverge")}
       ${bloco("Prazos que importam", R.prazos, "rt-prazo")}
       ${publico(R.docs).length ? `<section class="rt-bloco"><h2>Documentos para separar</h2><ul class="rt-check">${publico(R.docs).map((x) => `<li><label><input type="checkbox"> ${esc(x)}</label></li>`).join("")}</ul></section>` : ""}
-      ${publico(R.passos).length ? `<section class="rt-bloco"><h2>O que fazer agora</h2><ol>${publico(R.passos).map((x) => `<li>${esc(x)}</li>`).join("")}</ol></section>` : ""}
+      ${passos.length ? `<section class="rt-bloco"><h2>${an && an.feitos.length ? "Próximos passos (sem repetir o que você já fez)" : "O que fazer agora"}</h2><ol>${passos.map((x) => `<li>${esc(x)}</li>`).join("")}</ol></section>` : ""}
       ${bloco("Quando é urgente procurar a advogada", R.urgente, "rt-urgente")}
       <div class="card decision"><h2>Para ter certeza da avaliação no seu caso, consulte a advogada.</h2>
         <p class="muted">As informações acima são gerais. O que vale para você depende dos documentos e dos detalhes do caso.</p>
@@ -212,6 +214,7 @@ function mostrarRoteiro(f, R, text) {
     if (R.perguntas.every((_, k) => resp[k])) revelar();
   })));
   $("rt-pular").onclick = () => { registrar(); revelar(); };
+  if (an) { state.followSummary = `${f.q} — relato: ${text}`; document.querySelectorAll("[data-outro]").forEach((b) => (b.onclick = () => { const id = b.dataset.outro; mostrarRoteiro({ id, q: b.textContent, area: f.area, sources: [] }, ROTEIROS[id], text, { ...an }); window.scrollTo(0, 0); })); }
   $("rt-guia").onclick = (e) => { e.preventDefault(); go("guia"); };
   $("to-lawyer").onclick = () => { registrar(); openLawyer(); };
   state.text = state.text || text;
@@ -552,18 +555,52 @@ const PISTAS = {
   indeferido: ["inss negou", "indeferid", "negaram meu beneficio"],
   "descontos-beneficio": ["desconto na aposentadoria", "descontando", "desconto no beneficio"],
 };
+// Lê o relato e separa o que a pessoa já contou: o que aconteceu, valores e onde já reclamou.
+const CANAIS = [
+  { nome: "a própria empresa", re: /reclam\w* (junto )?(a|à|com a|na) empresa|sac\b|ouvidoria/, passo: /reclame com a empresa|sac\b|ouvidoria/ },
+  { nome: "o consumidor.gov.br", re: /consumidor\.?gov/, passo: /consumidor\.?gov/ },
+  { nome: "o Procon", re: /procon/, passo: /procon/ },
+  { nome: "o Banco Central", re: /banco central|bacen/, passo: /banco central|bacen/ },
+  { nome: "a Aneel", re: /aneel/, passo: /aneel/ },
+  { nome: "a Anatel", re: /anatel/, passo: /anatel/ },
+  { nome: "a ANS", re: /\bans\b/, passo: /\bans\b/ },
+];
+function lerRelato(t) {
+  const n = norm(t), fatos = [];
+  const empresa = (t.match(/\b(Energisa|Neoenergia|CEB|Caesb|Enel|Light|Cemig|Sabesp|Vivo|Claro|Tim|Oi|Nubank|Ita[uú]|Bradesco|Santander|Caixa|Banco do Brasil|Serasa)\b/i) || [])[0];
+  if (empresa) fatos.push(`Empresa envolvida: ${empresa[0].toUpperCase() + empresa.slice(1)}`);
+  const valor = (t.match(/(R\$\s*)?\d[\d.,]*\s*(mil\s*)?(reais)?/gi) || []).find((v) => /R\$|reais|mil/i.test(v));
+  if (valor) fatos.push(`Valor mencionado: ${valor.trim()}`);
+  if (/parcel/.test(n)) fatos.push("Havia um parcelamento da dívida");
+  if (/mud\w* de endereco|mudanca de endereco|me mudei/.test(n)) fatos.push("Houve mudança de endereço");
+  if (/negativ|serasa|spc|nome sujo/.test(n)) fatos.push("Seu nome foi negativado");
+  if (/cobranca|ligac|ligam/.test(n) && /insistent|diari|todo dia|varias vezes/.test(n)) fatos.push("Você recebe cobranças insistentes");
+  if (/cort/.test(n)) fatos.push("Há corte ou ameaça de corte do serviço");
+  const feitos = CANAIS.filter((c) => c.re.test(n)).map((c) => ({ nome: c.nome, re: c.passo }));
+  return { fatos, feitos };
+}
+function analiseHtml(an, atual) {
+  const outros = (an.ids || []).filter((id) => id !== atual);
+  const nomes = {}; Object.values(SITUACOES).flat().forEach(([txt, id]) => (nomes[id] = txt));
+  return `<div class="card rt-analise"><h2>O que entendemos do seu relato</h2>
+    ${an.fatos.length ? `<ul>${an.fatos.map((x) => `<li>${esc(x)}</li>`).join("")}</ul>` : ""}
+    ${an.feitos.length ? `<p><strong>Você já reclamou em:</strong> ${esc(an.feitos.map((c) => c.nome).join(", "))}. Por isso não repetimos esses passos abaixo.</p>` : ""}
+    ${outros.length ? `<p><strong>Seu relato também envolve:</strong></p><div class="answers">${outros.map((id) => `<button type="button" data-outro="${id}">${esc(nomes[id] || id)}</button>`).join("")}</div>` : ""}
+    <p class="small muted">Se entendemos algo errado, a advogada corrige na análise.</p></div>`;
+}
 function sugerirSituacoes(t) {
   const n = norm(t);
   const nomes = {}; Object.values(SITUACOES).flat().forEach(([txt, id]) => (nomes[id] = txt));
-  const achados = Object.entries(PISTAS).map(([id, ks]) => [id, ks.filter((k) => n.includes(k)).length]).filter(([id, sc]) => sc && ROTEIROS[id] && nomes[id]).sort((a, b) => b[1] - a[1]).slice(0, 3).map(([id]) => id);
-  if (!achados.length) return ask();
-  const NENHUMA = "Nenhuma dessas — seguir com perguntas";
-  say(achados.length > 1 ? "Pelo que você contou, pode envolver mais de um assunto. Por qual quer começar?" : "Pelo que você contou, parece ser este assunto:");
-  offer([...achados.map((id) => nomes[id]), NENHUMA], (o) => {
-    if (o === NENHUMA) return ask();
-    const id = achados.find((x) => nomes[x] === o);
-    answerQuestion(t, FAQ.find((x) => x.id === id) || { id, q: o, area: state.key, sources: [] });
-  });
+  const ids = Object.entries(PISTAS).map(([id, ks]) => [id, ks.filter((k) => n.includes(k)).length]).filter(([id, sc]) => sc && ROTEIROS[id] && nomes[id]).sort((a, b) => b[1] - a[1]).slice(0, 3).map(([id]) => id);
+  const an = { ...lerRelato(t), ids };
+  // Relato curto e sem pistas: aí sim faz perguntas.
+  if (!ids.length && t.length < 120) return ask();
+  setStep(2);
+  say("Li seu relato. Separei o que entendemos e as informações que se aplicam.");
+  setTimeout(() => {
+    if (ids.length) return mostrarRoteiro({ id: ids[0], q: nomes[ids[0]], area: state.key, sources: [] }, ROTEIROS[ids[0]], t, an);
+    state.answers = []; renderResult(an); go("result"); setStep(3);
+  }, 600);
 }
 $("dividas").onclick = () => mostrarSituacoes("dividas");
 
