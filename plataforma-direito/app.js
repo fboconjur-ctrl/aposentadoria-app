@@ -197,7 +197,8 @@ function mostrarRoteiro(f, R, text) {
       ${bloco("Quando é urgente procurar a advogada", R.urgente, "rt-urgente")}
       <div class="card decision"><h2>Para ter certeza da avaliação no seu caso, consulte a advogada.</h2>
         <p class="muted">As informações acima são gerais. O que vale para você depende dos documentos e dos detalhes do caso.</p>
-        <div class="actions"><button class="btn" id="to-lawyer">Quero a avaliação da advogada</button><a href="#" class="btn btn-wa" data-wa>Falar no WhatsApp</a></div></div>
+        <div class="actions"><button class="btn" id="to-lawyer">Quero a avaliação da advogada</button><a href="#" class="btn btn-wa" data-wa>Falar no WhatsApp</a></div>
+        <p class="small"><a href="#" id="rt-guia">Onde reclamar e como consultar (Procon, Banco Central, agências, Registrato) →</a></p></div>
       ${R.fontes ? `<details><summary>Fontes oficiais →</summary><ul>${R.fontes.map(([n, u]) => `<li><a href="${u}" target="_blank" rel="noopener">${esc(n)}</a></li>`).join("")}</ul></details>` : ""}
       <p class="muted small">Informação geral com base na lei e na jurisprudência. Não constitui orientação jurídica nem substitui a análise do seu caso pela advogada.</p>
       ${seloRevisao(f.id)}
@@ -211,6 +212,7 @@ function mostrarRoteiro(f, R, text) {
     if (R.perguntas.every((_, k) => resp[k])) revelar();
   })));
   $("rt-pular").onclick = () => { registrar(); revelar(); };
+  $("rt-guia").onclick = (e) => { e.preventDefault(); go("guia"); };
   $("to-lawyer").onclick = () => { registrar(); openLawyer(); };
   state.text = state.text || text;
 }
