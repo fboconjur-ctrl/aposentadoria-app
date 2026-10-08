@@ -60,6 +60,14 @@
         .then(({ error }) => status(error ? "Erro ao sincronizar — tente recarregar" : `Sincronizado · ${user.email}`));
     };
 
+    // Exclusão a pedido do cliente: apaga também o pedido original guardado no banco.
+    window.apagarPedidoNuvem = async (protocolo) => {
+      if (!protocolo) return 0;
+      const { data } = await sb.from("pedidos").select("id, pacote");
+      const ids = (data || []).filter((p) => { try { return JSON.parse(decodeURIComponent(escape(atob(String(p.pacote).replace(/^PD1:/, ""))))).protocolo === protocolo; } catch { return false; } }).map((p) => p.id);
+      if (ids.length) await sb.from("pedidos").delete().in("id", ids);
+      return ids.length;
+    };
     // 3) Pedidos da plataforma chegam sozinhos (verifica ao abrir e a cada minuto).
     const buscarPedidos = async () => {
       const { data } = await sb.from("pedidos").select("id, pacote").eq("importado", false);

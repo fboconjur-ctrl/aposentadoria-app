@@ -37,6 +37,8 @@ drop policy if exists pedidos_advogada_le on public.pedidos;
 create policy pedidos_advogada_le on public.pedidos for select to authenticated using (public.eh_admin());
 drop policy if exists pedidos_advogada_marca on public.pedidos;
 create policy pedidos_advogada_marca on public.pedidos for update to authenticated using (public.eh_admin()) with check (public.eh_admin());
+drop policy if exists pedidos_advogada_apaga on public.pedidos;
+create policy pedidos_advogada_apaga on public.pedidos for delete to authenticated using (public.eh_admin());
 
 -- DEPOIS que a advogada criar a senha no painel ("Primeiro acesso"), liberar o acesso (trocar o e-mail):
 -- update auth.users set email_confirmed_at = coalesce(email_confirmed_at, now()) where email = 'SEU_EMAIL_AQUI';

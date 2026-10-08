@@ -309,10 +309,16 @@ $("crm-salvar").onclick = () => {
   salvarCrm(); fecharForm(); abrirFicha(c.id);
   if (procsDe(c).some((n) => !acomp[n])) atualizarAcomp(procsDe(c));
 };
-$("crm-excluir").onclick = () => {
-  if (!editando || !confirm(`Excluir ${editando.nome}? Prazos, tarefas e pagamentos dele também serão apagados.`)) return;
-  const id = editando.id; clientes = clientes.filter((c) => c.id !== id); itens = itens.filter((x) => x.cli !== id); fin = fin.filter((l) => l.cli !== id);
-  salvarCrm(); salvarItens(); salvarFin(); fecharForm(); fichaAtual = null; go("clientes");
+// "Apagar dados deste cliente" (LGPD): ficha, prazos, tarefas, pagamentos, notas e o pedido original no banco.
+$("crm-excluir").onclick = async () => {
+  if (!editando || !confirm(`Apagar TODOS os dados de ${editando.nome}?\n\nFicha, prazos, tarefas, pagamentos, anotações e o pedido recebido pelo site. Não dá para desfazer.`)) return;
+  const c = editando, id = c.id;
+  clientes = clientes.filter((x) => x.id !== id); itens = itens.filter((x) => x.cli !== id); fin = fin.filter((l) => l.cli !== id);
+  salvarCrm(); salvarItens(); salvarFin();
+  let nuvem = "";
+  try { if (window.apagarPedidoNuvem && c.protocolo) nuvem = (await window.apagarPedidoNuvem(c.protocolo)) ? " e o pedido original no banco" : ""; } catch {}
+  fecharForm(); fichaAtual = null; go("clientes");
+  alert(`Dados de ${c.nome} apagados do painel${nuvem}.` + (c.origem === "Plataforma" ? "\n\nSe o pedido também chegou por e-mail, apague a mensagem e a entrada em Netlify → Forms." : ""));
 };
 
 // WhatsApp com mensagem pronta. Nome e OAB vêm de "Meus dados" (não ficam no código, que é público).
