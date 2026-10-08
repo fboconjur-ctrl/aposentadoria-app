@@ -43,6 +43,8 @@ function startChat(text, forcedKey, skipQuestion) {
   setStep(1);
   if (text) say(text, "user");
   const key = forcedKey || classify(text);
+  // Relato com conteúdo: lê a história antes de qualquer pergunta.
+  if (text && text.length >= 40) { state.key = key; state.flow = key ? FLOWS[key] : null; return setTimeout(() => sugerirSituacoes(text), 400); }
   setTimeout(() => {
     if (!key) {
       say("Com quem é a questão?");
@@ -555,6 +557,17 @@ const PISTAS = {
   "fraude-medidor": ["medidor", "recuperacao de consumo"],
   telefonia: ["operadora", "internet", "celular"],
   voo: ["voo", "companhia aerea", "bagagem"],
+  "concurso-vagas": ["concurso", "dentro das vagas", "nao me chamaram", "nao fui chamad", "nomeac", "cadastro reserva"],
+  "concurso-eliminacao": ["eliminad", "reprovad", "teste fisico", "psicotecnico", "heteroidentificacao"],
+  "pad-prazo": ["processo disciplinar", "\\bpad\\b", "sindicancia"],
+  "direitos-servidor": ["servidor", "licenca", "progressao", "adicional", "abono de permanencia"],
+  "multa-transito": ["multa", "cnh", "detran", "suspensao da carteira"],
+  "inventario-cartorio": ["faleceu", "falecimento", "inventario", "partilha", "heranca"],
+  "divorcio-cartorio": ["divorcio", "separar", "separacao"],
+  "uniao-estavel": ["uniao estavel"],
+  usucapiao: ["usucapiao", "moro ha", "sem escritura"],
+  "bpc-renda": ["bpc", "loas"],
+  "pensao-duracao": ["pensao por morte"],
   "plano-negou": ["plano negou", "negou a cirurgia", "negou o exame", "negou cobertura"],
   indeferido: ["inss negou", "indeferid", "negaram meu beneficio"],
   "descontos-beneficio": ["desconto na aposentadoria", "descontando", "desconto no beneficio"],
@@ -646,13 +659,26 @@ async function relacionarTrechos(f, R, text) {
 function sugerirSituacoes(t) {
   const n = norm(t);
   const nomes = {}; Object.values(SITUACOES).flat().forEach(([txt, id]) => (nomes[id] = txt));
-  const ids = Object.entries(PISTAS).map(([id, ks]) => [id, ks.filter((k) => n.includes(k)).length]).filter(([id, sc]) => sc && ROTEIROS[id] && nomes[id]).sort((a, b) => b[1] - a[1]).slice(0, 3).map(([id]) => id);
-  if (t.length >= 60) {
+  const cat = catalogo();
+  let ids = Object.entries(PISTAS).map(([id, ks]) => [id, ks.filter((k) => new RegExp("\\b" + k).test(n)).length]).filter(([id, sc]) => sc && cat[id]).sort((a, b) => b[1] - a[1]).map(([id]) => id);
+  // Também usa as palavras-chave das perguntas frequentes (cobre todos os assuntos com roteiro).
+  const fq = findFaq(t);
+  if (fq && cat[fq.id] && !ids.includes(fq.id)) ids.splice(ids.length ? 1 : 0, 0, fq.id);
+  ids = ids.slice(0, 3);
+  if (t.length >= 60 && window.SUPABASE_CONFIG?.ia !== false) {
     say("Lendo seu relato com atenção…");
     analisarComIA(t).then((ai) => mostrarAnalise(t, ai || { ...lerRelato(t), ids }));
     return;
   }
   mostrarAnalise(t, { ...lerRelato(t), ids });
+}
+function perguntarArea() {
+  say("Com quem é a questão?");
+  offer(["INSS", "Órgão público", "Plano de saúde ou SUS", "Uma empresa ou banco", "Cartório", "Outro"], (o) => {
+    const map = { "INSS": "previdenciario", "Órgão público": "administrativo", "Plano de saúde ou SUS": "saude", "Uma empresa ou banco": "consumidor", "Cartório": "cartorio" };
+    if (!map[o]) { say("Esse assunto talvez não esteja entre os temas deste portal. A advogada pode avaliar se ajuda ou indicar um(a) colega."); return offer(["Quero falar com a advogada"], openLawyer); }
+    state.key = map[o]; state.flow = FLOWS[map[o]]; ask();
+  });
 }
 function mostrarAnalise(t, an) {
   if (an.fora) {
@@ -663,7 +689,7 @@ function mostrarAnalise(t, an) {
   const ids = an.ids, nomes = catalogo();
   state.analise = an;
   // Relato curto e sem pistas: aí sim faz perguntas.
-  if (!ids.length && t.length < 120) return ask();
+  if (!ids.length && (t.length < 120 || !state.flow)) return state.flow ? ask() : perguntarArea();
   setStep(2);
   say("Li seu relato. Separei o que entendemos e as informações que se aplicam.");
   setTimeout(() => {
@@ -674,3 +700,10 @@ function mostrarAnalise(t, an) {
 $("dividas").onclick = () => mostrarSituacoes("dividas");
 
 bindHomeDoc();
+// Botão flutuante do WhatsApp só aparece quando o da página inicial sai da tela (não cobre os assuntos).
+(() => {
+  const hero = $("wa-hero"), fl = document.querySelector(".wa-float");
+  if (!hero || !fl) return;
+  const ver = () => { const r = hero.getBoundingClientRect(); fl.classList.toggle("oculto", r.height > 0 && r.top < innerHeight && r.bottom > 0 || r.height > 0 && r.top >= innerHeight); };
+  addEventListener("scroll", ver, { passive: true }); addEventListener("resize", ver); setInterval(ver, 800); ver();
+})();
