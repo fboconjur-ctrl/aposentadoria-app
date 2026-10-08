@@ -157,7 +157,7 @@ function openLawyer() {
 }
 
 // Roteiro completo da situação: perguntas (com "ⓘ O que é isso?") e, depois, lei, tribunais, prazos, documentos e passos.
-const publico = (lista) => (lista || []).filter((x) => !/^\[CONFERIR\]/.test(x));
+const publico = (lista) => (lista || []).filter((x) => !/\[CONFERIR\]/.test(x));
 function ajudaHtml(termos) {
   return (termos || []).filter((t) => GLOSSARIO[t]).map((t) => `<details class="ajuda"><summary>ⓘ O que é ${esc(t)}?</summary><p>${esc(GLOSSARIO[t])}</p></details>`).join("");
 }
