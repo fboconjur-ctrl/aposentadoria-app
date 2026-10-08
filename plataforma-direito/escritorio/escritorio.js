@@ -383,11 +383,12 @@ function importarPacote(texto) {
   if (!pk) { $("ped-msg").textContent = "Não encontrei o pacote do pedido (linha que começa com PD1:)."; return false; }
   if (clientes.some((c) => c.protocolo === pk.protocolo)) { $("ped-msg").textContent = `O pedido ${pk.protocolo} já foi importado.`; return true; }
   const area = { previdenciario: "Previdenciário", consumidor: "Consumidor", saude: "Saúde", administrativo: "Administrativo", cartorio: "Cartório/Extrajudicial" }[pk.key] || pk.area || "Outra";
-  const resumo = [pk.relato && `Relato: ${pk.relato}`, pk.cnis, pk.documento, pk.continuacao, ...(pk.respostas || [])].filter(Boolean).join("\n");
+  const resumo = [pk.relato && `Relato: ${pk.relato}`, pk.cnis, pk.documento, ...String(pk.continuacao || "").split(" | "), ...(pk.respostas || [])].filter(Boolean).join("\n");
   const c = { id: novoId("CL-"), protocolo: pk.protocolo, criado: new Date().toISOString(), nome: pk.nome, cpf: pk.cpf || "", tel: pk.telefone, email: pk.email || "", area, origem: "Plataforma",
     etapa: "Novo pedido", assunto: pk.area || "", resumo, notas: `Protocolo ${pk.protocolo}${pk.periodo ? ` · prefere ${String(pk.periodo).toLowerCase()}` : ""}`, procs: "", hist: [{ em: pk.criado, o: "Pedido pela plataforma" }] };
   clientes.push(c); salvarCrm();
-  itens.push({ id: novoId("I-"), tipo: "tarefa", texto: `Retornar contato${pk.periodo ? ` (prefere ${String(pk.periodo).toLowerCase()})` : ""}`, quando: hojeIso, cli: c.id, feita: false }); salvarItens();
+  const falta = (pk.faltaSaber || []).length ? ` — perguntar: ${pk.faltaSaber.join("; ")}` : "";
+  itens.push({ id: novoId("I-"), tipo: "tarefa", texto: `Retornar contato${pk.periodo ? ` (prefere ${String(pk.periodo).toLowerCase()})` : ""}${falta}`, quando: hojeIso, cli: c.id, feita: false }); salvarItens();
   $("ped-texto").value = ""; $("ped-msg").textContent = `Pedido ${pk.protocolo} importado.`;
   renderTudo(); return true;
 }

@@ -417,6 +417,7 @@ $("lead-form").onsubmit = async (e) => {
     const protocolo = "PD-" + new Date().toISOString().slice(2, 10).replace(/-/g, "") + "-" + Math.random().toString(36).slice(2, 6).toUpperCase();
     const pacote = { v: 1, protocolo, criado: new Date().toISOString(), area: $("f-area").value, key: state.key, faqId: state.faqId || null, codigo: $("f-codigo").value,
       relato: state.text, cnis: state.cnisSummary || "", documento: state.docSummary || "", continuacao: state.followSummary || "",
+      faltaSaber: state.analise?.faltando || [],
       respostas: state.followSummary ? state.answers : state.answers.map((r, i) => `${[...(state.flow?.questions || []), OBJECTIVE_Q][i]?.q || ""} ${r}`),
       nome: $("f-nome").value.trim(), cpf: "", email: "", telefone: $("f-tel").value.trim(), periodo: $("f-periodo").value };
     $("f-protocolo").value = protocolo;
