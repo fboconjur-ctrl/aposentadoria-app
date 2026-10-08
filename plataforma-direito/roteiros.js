@@ -39,6 +39,15 @@ const GLOSSARIO = {
   "notificação extrajudicial": "Carta enviada pelo banco, antes da ação, para avisar formalmente do atraso. É obrigatória para a busca e apreensão.",
   "dano moral": "Indenização por ofensa à honra, à imagem ou à tranquilidade da pessoa — além do prejuízo em dinheiro.",
   "chargeback": "Contestação de uma compra no cartão: o banco estorna o valor enquanto apura se a compra foi legítima.",
+  "vício do produto": "Defeito que torna o produto impróprio ou diminui o seu valor (ex.: geladeira que não gela). Diferente do “fato do produto”, que é o defeito que causa acidente ou dano à pessoa.",
+  "garantia legal": "Prazo que a própria lei dá para reclamar de defeito: 30 dias para produtos e serviços não duráveis e 90 dias para duráveis. Vale mesmo sem certificado de garantia.",
+  "garantia contratual": "Garantia extra oferecida pelo fabricante ou loja (ex.: 1 ano). Ela se soma à garantia legal.",
+  "direito de arrependimento": "Direito de desistir, em 7 dias, de compra feita fora da loja física (internet, telefone, catálogo, em domicílio), sem precisar dar motivo.",
+  "marketplace": "Site que vende produtos de várias lojas (ex.: grandes plataformas de compra). A compra é com o vendedor, mas a plataforma pode responder junto.",
+  "assistência material": "O que a companhia aérea deve oferecer durante a espera: comunicação (a partir de 1h), alimentação (a partir de 2h) e hospedagem e transporte (a partir de 4h, se precisar pernoitar).",
+  "anatel": "Agência que regula as empresas de telefone, internet e TV por assinatura. Recebe reclamações pelo site, app ou 1331.",
+  "não me perturbe": "Cadastro gratuito (naomeperturbe.com.br) para bloquear ligações de telemarketing de empresas de telefonia, internet, TV e de ofertas de empréstimo consignado.",
+  "0303": "Prefixo obrigatório nas ligações de telemarketing ativo. Ver 0303 na tela já mostra que é oferta — e permite bloquear no celular.",
   "responsabilidade objetiva": "O Estado responde pelo dano causado por seus agentes sem que a vítima precise provar culpa: basta provar o dano e a relação com a ação do Estado.",
 };
 
@@ -616,5 +625,183 @@ const ROTEIROS = {
     passos: ["Bloqueie o cartão no app e conteste as compras (chargeback), anotando o protocolo.", "Registre boletim de ocorrência.", "Se o banco negar o estorno, reclame no consumidor.gov.br e no Banco Central.", "Procure a advogada para cobrar a devolução e, se for o caso, indenização."],
     urgente: ["Valor alto", "Banco cobrando as compras contestadas", "Nome ameaçado de negativação"],
     fontes: [["Código de Defesa do Consumidor", "https://www.planalto.gov.br/ccivil_03/leis/l8078compilado.htm"], ["Banco Central — reclamações", "https://www.bcb.gov.br/meubc/registrar_reclamacao"]],
+  },
+
+  // ---------------- Problema com uma empresa (consumidor) ----------------
+  "defeito": {
+    acolhe: "Produto com defeito tem regras claras no Código de Defesa do Consumidor — e prazo para reclamar.",
+    perguntas: [
+      { q: "O produto é:", a: ["Durável (eletrônico, móvel, carro, roupa)", "Não durável (alimento, cosmético, remédio)"], ajuda: ["garantia legal"] },
+      { q: "Há quanto tempo você percebeu o defeito?", a: ["Menos de 30 dias", "Entre 30 e 90 dias", "Mais de 90 dias"] },
+      { q: "Você já levou à loja ou à assistência técnica?", a: ["Sim, há mais de 30 dias e não consertaram", "Sim, está lá", "Não", "Recusaram receber"], ajuda: ["vício do produto"] },
+    ],
+    lei: [
+      "Loja e fabricante respondem juntos pelo defeito. O fornecedor tem até 30 dias para consertar; se não consertar, você escolhe: troca por outro produto, devolução do dinheiro corrigido ou desconto proporcional no preço (CDC, art. 18, §1º).",
+      "Se o produto é essencial ou o conserto pode comprometer a qualidade, você pode exigir a troca ou o dinheiro na hora, sem esperar os 30 dias (CDC, art. 18, §3º).",
+      "Prazo para reclamar: 30 dias para não duráveis e 90 dias para duráveis, contados da entrega — ou, se o defeito estava escondido, de quando apareceu (CDC, art. 26).",
+      "A garantia do fabricante se soma à garantia legal (CDC, art. 50).",
+      "Se o defeito causou acidente ou dano a você, a responsabilidade é do fabricante, e o prazo para pedir indenização é de 5 anos (CDC, arts. 12 e 27).",
+    ],
+    juris: ["O STJ já decidiu que a loja não pode se recusar a receber o produto com defeito: ela deve recebê-lo e encaminhá-lo à assistência técnica, porque responde junto com o fabricante."],
+    prazos: ["Reclame dentro de 30 ou 90 dias — e por escrito: a reclamação comprovada suspende o prazo até a resposta da empresa (CDC, art. 26, §2º, I).", "Conte os 30 dias de conserto a partir da entrega na loja ou assistência — guarde a ordem de serviço."],
+    docs: ["Nota fiscal", "Certificado de garantia", "Ordem de serviço da assistência (com data)", "Fotos ou vídeos do defeito", "Protocolos de reclamação"],
+    passos: ["Reclame por escrito na loja ou fabricante e guarde o protocolo.", "Entregue para conserto e peça a ordem de serviço datada.", "Passados 30 dias sem conserto, escolha: troca, dinheiro de volta ou desconto.", "Se negarem, registre no consumidor.gov.br ou Procon e procure a advogada."],
+    urgente: ["Produto essencial (geladeira, fogão, celular de trabalho)", "Defeito que causou acidente ou dano", "Prazo de reclamação acabando"],
+    fontes: [["Código de Defesa do Consumidor", "https://www.planalto.gov.br/ccivil_03/leis/l8078compilado.htm"], ["consumidor.gov.br", "https://www.consumidor.gov.br"]],
+  },
+
+  "troca-devolucao": {
+    acolhe: "Troca e devolução geram muita confusão: a resposta muda conforme o motivo e o lugar da compra.",
+    perguntas: [
+      { q: "Por que você quer trocar ou devolver?", a: ["Não gostei, tamanho ou cor errados", "O produto tem defeito", "Me arrependi da compra"] },
+      { q: "Onde comprou?", a: ["Na loja física", "Pela internet, telefone ou catálogo"], ajuda: ["direito de arrependimento"] },
+      { q: "A loja divulgou uma política de troca?", a: ["Sim", "Não", "Não sei"] },
+    ],
+    explica: {
+      titulo: "Troca, devolução e arrependimento: qual é o seu caso",
+      itens: [
+        "Não gostou (cor, tamanho, modelo), comprou em loja física: a lei não obriga a troca — é cortesia da loja. Mas, se a loja anunciou ou prometeu a troca (etiqueta, placa, nota), ela é obrigada a cumprir (CDC, art. 30).",
+        "Comprou fora da loja física (internet, telefone, catálogo): você pode desistir em 7 dias do recebimento, sem dar motivo, e receber tudo de volta, inclusive o frete (CDC, art. 49).",
+        "O produto tem defeito, em qualquer tipo de compra: a loja ou o fabricante têm 30 dias para consertar; se não consertarem, você escolhe troca, dinheiro de volta ou desconto (CDC, art. 18).",
+        "Cuidado com regras da loja que contrariam a lei, como “não trocamos produto com defeito” ou “só vale crédito na loja” em caso de arrependimento: essas cláusulas são inválidas (CDC, art. 51).",
+      ],
+    },
+    lei: [
+      "A informação e a oferta da loja vinculam: o que foi prometido deve ser cumprido (CDC, arts. 30 e 35).",
+      "No comércio eletrônico, a loja deve informar de forma clara como exercer o arrependimento (Decreto 7.962/2013, art. 5º).",
+    ],
+    juris: ["O STJ entende que as despesas de envio e devolução, no arrependimento, ficam com o fornecedor, e não com o consumidor."],
+    prazos: ["Arrependimento: 7 dias do recebimento do produto (ou da contratação do serviço).", "Defeito: 30 dias (não duráveis) ou 90 dias (duráveis) para reclamar."],
+    docs: ["Nota fiscal ou comprovante", "Anúncio, etiqueta ou política de troca da loja (foto)", "Protocolo do pedido de troca ou devolução"],
+    passos: ["Identifique o seu caso pelos itens acima.", "Faça o pedido por escrito (e-mail, chat, formulário) e guarde o protocolo.", "Se negarem, reclame no consumidor.gov.br ou Procon."],
+    urgente: ["Prazo de 7 dias acabando", "Loja recusando devolver o dinheiro no arrependimento"],
+    fontes: [["Código de Defesa do Consumidor", "https://www.planalto.gov.br/ccivil_03/leis/l8078compilado.htm"], ["Decreto 7.962/2013 (comércio eletrônico)", "https://www.planalto.gov.br/ccivil_03/_ato2011-2014/2013/decreto/d7962.htm"]],
+  },
+
+  "arrependimento": {
+    acolhe: "Comprou fora da loja e se arrependeu? A lei garante a desistência em 7 dias, sem precisar dar motivo.",
+    perguntas: [
+      { q: "Como você comprou?", a: ["Pela internet ou app", "Por telefone", "Vendedor em casa", "Na loja física"], ajuda: ["direito de arrependimento"] },
+      { q: "Há quantos dias recebeu o produto (ou contratou)?", a: ["Até 7 dias", "Mais de 7 dias"] },
+      { q: "É passagem aérea?", a: ["Sim", "Não"] },
+    ],
+    lei: [
+      "Em compras fora do estabelecimento, você pode desistir em 7 dias, contados da assinatura ou do recebimento do produto ou serviço (CDC, art. 49).",
+      "Os valores pagos devem ser devolvidos imediatamente e corrigidos (CDC, art. 49, parágrafo único).",
+      "Passagem aérea: a ANAC garante desistir em até 24 horas da compra sem custo, se a compra foi feita com pelo menos 7 dias de antecedência do voo (Resolução ANAC 400/2016, art. 11).",
+    ],
+    juris: ["Para o STJ, o frete de envio e de devolução fica por conta do fornecedor."],
+    divergencia: ["Se os 7 dias do CDC valem também para passagens aéreas compradas pela internet: há decisões que aplicam só a regra das 24 horas da ANAC."],
+    prazos: ["7 dias do recebimento (ou da contratação).", "Passagem aérea: 24 horas da compra, com voo a 7 dias ou mais."],
+    docs: ["Comprovante da compra", "Pedido de cancelamento por escrito (e-mail, chat) com data", "Comprovante de devolução do produto"],
+    passos: ["Peça o cancelamento por escrito dentro do prazo.", "Devolva o produto pelo meio indicado pela loja e guarde o comprovante.", "Se o dinheiro não voltar, peça o estorno à operadora do cartão e reclame no consumidor.gov.br."],
+    urgente: ["Prazo de 7 dias terminando", "Loja oferecendo só crédito em vez do dinheiro"],
+    fontes: [["Código de Defesa do Consumidor, art. 49", "https://www.planalto.gov.br/ccivil_03/leis/l8078compilado.htm"], ["ANAC — direitos do passageiro", "https://www.gov.br/anac/pt-br/assuntos/passageiros"]],
+  },
+
+  "compra-nao-entregue": {
+    acolhe: "Pagou e não recebeu? A lei dá a você o direito de escolher o que fazer.",
+    perguntas: [
+      { q: "Onde comprou?", a: ["Loja virtual da própria empresa", "Marketplace (plataforma com vários vendedores)", "Rede social ou WhatsApp"], ajuda: ["marketplace"] },
+      { q: "O prazo de entrega já passou?", a: ["Sim", "Não, mas a loja sumiu", "Não sei"] },
+      { q: "Como pagou?", a: ["Cartão de crédito", "Pix", "Boleto"] },
+    ],
+    lei: [
+      "Se a empresa não cumpre a oferta, você escolhe: exigir a entrega, aceitar outro produto equivalente ou cancelar e receber o dinheiro de volta corrigido, além de perdas e danos (CDC, art. 35).",
+      "O site deve informar com clareza nome, CNPJ e endereço do vendedor (Decreto 7.962/2013, art. 2º).",
+    ],
+    juris: ["Todos que participam da venda respondem juntos perante o consumidor (CDC, art. 7º, parágrafo único)."],
+    divergencia: ["Se o marketplace responde junto com o vendedor: muitos tribunais responsabilizam a plataforma, sobretudo quando ela recebe o pagamento ou anuncia o produto; outros a tratam como mera intermediária."],
+    prazos: ["Pagou com cartão: conteste logo com a operadora (chargeback).", "Pix ou boleto para golpista: avise o banco na hora (veja o roteiro do golpe do Pix)."],
+    docs: ["Comprovante do pedido e do pagamento", "Prints do anúncio e do prazo de entrega", "Conversas com a loja", "Código de rastreio"],
+    passos: ["Cobre a loja por escrito e guarde o protocolo.", "Pagou com cartão: peça o estorno (chargeback).", "Reclame no consumidor.gov.br, Procon e na plataforma.", "Procure a advogada se o valor for alto ou houver prejuízo."],
+    urgente: ["Loja fora do ar ou que parou de responder", "Valor alto pago por Pix"],
+    fontes: [["Código de Defesa do Consumidor", "https://www.planalto.gov.br/ccivil_03/leis/l8078compilado.htm"], ["Decreto 7.962/2013", "https://www.planalto.gov.br/ccivil_03/_ato2011-2014/2013/decreto/d7962.htm"]],
+  },
+
+  "voo": {
+    acolhe: "Voo atrasado ou cancelado dá direitos imediatos de assistência — e, conforme o caso, indenização.",
+    perguntas: [
+      { q: "O que aconteceu?", a: ["Atraso", "Cancelamento", "Overbooking (não deixaram embarcar)", "Bagagem extraviada ou danificada"] },
+      { q: "Quanto tempo você esperou?", a: ["Menos de 2 horas", "De 2 a 4 horas", "Mais de 4 horas"], ajuda: ["assistência material"] },
+      { q: "O voo era:", a: ["Nacional", "Internacional"] },
+    ],
+    lei: [
+      "Durante a espera, a companhia deve dar assistência: comunicação a partir de 1 hora, alimentação a partir de 2 horas e hospedagem e transporte a partir de 4 horas, se precisar pernoitar (Resolução ANAC 400/2016, arts. 26 e 27).",
+      "Em atraso de mais de 4 horas, cancelamento ou preterição, você escolhe entre reacomodação, reembolso integral ou outro meio de transporte (Resolução ANAC 400/2016, art. 21).",
+      "Para indenização por dano moral, a lei exige demonstrar o prejuízo efetivo — não basta o atraso em si (Código Brasileiro de Aeronáutica, art. 251-A, incluído pela Lei 14.034/2020).",
+    ],
+    juris: [
+      "STJ: o dano moral por atraso de voo não é presumido; depende das circunstâncias (tempo de espera, assistência prestada, compromisso perdido).",
+      "STF, Tema 210: em voos internacionais, as Convenções de Varsóvia e Montreal prevalecem sobre o CDC para danos materiais (ex.: bagagem) e para o prazo de 2 anos para a ação.",
+      "STF, Tema 1240: essas convenções não se aplicam aos danos morais em voos internacionais.",
+    ],
+    prazos: ["Voo internacional: 2 anos para ação de danos materiais (Convenção de Montreal).", "Bagagem: registre o problema no aeroporto, antes de sair da área de desembarque (RIB)."],
+    docs: ["Cartão de embarque e reserva", "Comprovantes de gastos (alimentação, hotel, transporte)", "Prints dos avisos da companhia", "Prova do compromisso perdido (reunião, evento, conexão)", "Registro de bagagem (RIB), se for o caso"],
+    passos: ["Peça a assistência no balcão e guarde todos os recibos.", "Escolha reacomodação ou reembolso por escrito.", "Reclame no consumidor.gov.br.", "Procure a advogada se houve prejuízo relevante (compromisso, noite no aeroporto, perda de conexão)."],
+    urgente: ["Criança, idoso ou pessoa com deficiência sem assistência", "Perda de compromisso importante", "Bagagem com remédios ou documentos"],
+    fontes: [["ANAC — Resolução 400/2016", "https://www.gov.br/anac/pt-br/assuntos/passageiros"], ["Código Brasileiro de Aeronáutica", "https://www.planalto.gov.br/ccivil_03/leis/l7565compilado.htm"]],
+  },
+
+  "telefonia": {
+    acolhe: "Problema com operadora de celular, internet ou TV é das reclamações mais comuns — e a Anatel tem regras específicas.",
+    perguntas: [
+      { q: "Qual é o problema?", a: ["Não consigo cancelar", "Cobrança de serviço que não contratei", "Serviço não funciona ou é lento", "Multa de fidelidade"], ajuda: ["anatel"] },
+      { q: "Você já reclamou na operadora?", a: ["Sim, tenho protocolo", "Sim, sem protocolo", "Não"] },
+      { q: "É plano de pessoa física?", a: ["Sim", "Não, de empresa"] },
+    ],
+    lei: [
+      "O cancelamento deve ser possível sem precisar falar com atendente, e vale imediatamente após o pedido (Regulamento Geral de Direitos do Consumidor de Telecomunicações — Resolução Anatel 765/2023).",
+      "Toda reclamação deve gerar número de protocolo, que a operadora deve informar.",
+      "Cobrança indevida deve ser devolvida em dobro, salvo engano justificável (CDC, art. 42, parágrafo único).",
+    ],
+    juris: ["STJ (EAREsp 676.608, 2021 — caso de telefonia): a devolução em dobro não depende de provar má-fé."],
+    prazos: ["Guarde os protocolos: a operadora tem prazos curtos para responder.", "Valores cobrados a mais podem ser cobrados de volta mesmo meses depois — junte as faturas."],
+    docs: ["Faturas", "Números de protocolo", "Prints de testes de velocidade ou da falha", "Contrato e termo de fidelidade"],
+    passos: ["Reclame na operadora e anote o protocolo.", "Sem solução, reclame na Anatel (site, app ou 1331).", "Peça a devolução em dobro do que pagou indevidamente.", "Procure a advogada se houver negativação ou prejuízo (ex.: trabalho sem internet)."],
+    urgente: ["Negativação por cobrança indevida", "Linha ou internet essencial para o trabalho cortada"],
+    fontes: [["Anatel — direitos do consumidor", "https://www.gov.br/anatel/pt-br/consumidor"], ["Código de Defesa do Consumidor", "https://www.planalto.gov.br/ccivil_03/leis/l8078compilado.htm"]],
+  },
+
+  "cobranca-dobro": {
+    acolhe: "Pagou o que não devia? Em muitos casos, a lei manda devolver em dobro.",
+    perguntas: [
+      { q: "Você chegou a pagar a cobrança?", a: ["Sim", "Não, só recebi a cobrança"] },
+      { q: "De quem é a cobrança?", a: ["Banco ou cartão", "Telefonia, luz ou água", "Loja ou serviço", "Plano de saúde"] },
+      { q: "Quando pagou?", a: ["Depois de março de 2021", "Antes de março de 2021", "Não sei"] },
+    ],
+    lei: [
+      "Quem cobra e recebe valor indevido deve devolver o dobro do que você pagou a mais, corrigido, salvo engano justificável (CDC, art. 42, parágrafo único).",
+      "Para a devolução em dobro do CDC, é preciso ter pago; se só houve cobrança, você pode exigir o cancelamento.",
+      "Quem cobra na Justiça dívida já paga deve pagar ao devedor o dobro do que cobrou (Código Civil, art. 940).",
+    ],
+    juris: ["STJ (EAREsp 676.608, 2021): a devolução em dobro não exige prova de má-fé — basta a cobrança contrária à boa-fé. A regra vale para cobranças a partir de 30/03/2021; para as anteriores, os tribunais costumam exigir má-fé."],
+    prazos: ["Guarde os comprovantes de pagamento: eles são a prova do valor a devolver."],
+    docs: ["Faturas ou boletos cobrados", "Comprovantes de pagamento", "Contrato", "Protocolos de reclamação"],
+    passos: ["Peça por escrito o cancelamento e a devolução em dobro.", "Reclame no consumidor.gov.br ou no órgão do setor (Anatel, ANS, Banco Central).", "Procure a advogada se não devolverem ou se houver negativação."],
+    urgente: ["Cobrança com ameaça de negativação ou corte", "Valores altos ou repetidos todo mês"],
+    fontes: [["Código de Defesa do Consumidor, art. 42", "https://www.planalto.gov.br/ccivil_03/leis/l8078compilado.htm"], ["Código Civil, art. 940", "https://www.planalto.gov.br/ccivil_03/leis/2002/l10406compilada.htm"]],
+  },
+
+  "ligacoes-cobranca": {
+    acolhe: "Ligações sem parar, de cobrança ou de oferta, cansam — e há limites na lei para isso.",
+    perguntas: [
+      { q: "As ligações são de:", a: ["Cobrança de dívida minha", "Cobrança de dívida de outra pessoa", "Ofertas (telemarketing, empréstimo)"], ajuda: ["0303"] },
+      { q: "Quantas vezes por dia, mais ou menos?", a: ["Até 2", "3 a 10", "Mais de 10"] },
+      { q: "Há ameaças, constrangimento ou ligações para o trabalho ou para parentes?", a: ["Sim", "Não"] },
+    ],
+    lei: [
+      "Na cobrança, o consumidor não pode ser exposto ao ridículo nem sofrer constrangimento ou ameaça (CDC, art. 42).",
+      "É crime cobrar dívida com ameaça, coação, constrangimento ou de forma que interfira no trabalho, descanso ou lazer da pessoa (CDC, art. 71).",
+      "Telemarketing ativo deve usar o prefixo 0303, e você pode bloquear ofertas de telefonia, internet, TV e empréstimo consignado no cadastro Não Me Perturbe.",
+      "Você pode perguntar à empresa de onde ela obteve seus dados e pedir a exclusão, se não houver base legal (Lei Geral de Proteção de Dados, art. 18).",
+    ],
+    juris: ["Os tribunais têm reconhecido indenização por dano moral quando as ligações são excessivas, insistentes ou feitas a quem não é o devedor."],
+    divergencia: ["Quantas ligações configuram abuso: não há número fixo; os juízes avaliam a frequência, os horários, a insistência e se a pessoa pediu para parar."],
+    prazos: ["Comece já a registrar: data, hora e número de cada ligação."],
+    docs: ["Prints do histórico de chamadas (com data e hora)", "Gravações ou mensagens recebidas", "Protocolo do pedido para parar as ligações", "Comprovante de cadastro no Não Me Perturbe"],
+    passos: ["Peça à empresa, por escrito, que pare de ligar e anote o protocolo.", "Cadastre seu número no naomeperturbe.com.br e bloqueie o 0303 no celular.", "Registre reclamação no consumidor.gov.br ou Procon.", "Se houver ameaça ou ligações a parentes ou ao trabalho, procure a advogada."],
+    urgente: ["Ameaças ou exposição a colegas e parentes", "Ligações de madrugada", "Cobrança de dívida que não é sua"],
+    fontes: [["Código de Defesa do Consumidor, arts. 42 e 71", "https://www.planalto.gov.br/ccivil_03/leis/l8078compilado.htm"], ["Não Me Perturbe", "https://www.naomeperturbe.com.br"], ["LGPD", "https://www.planalto.gov.br/ccivil_03/_ato2015-2018/2018/lei/l13709.htm"]],
   },
 };

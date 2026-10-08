@@ -1508,3 +1508,7 @@ Novo bloco "Onde os tribunais ainda divergem" (Pix: REsp 2.215.907/SP x transaç
 MED: 80 dias da transação (Guia MED/BCB), análise em 7 dias, devolução em até 11 dias (Res. BCB 493/2025), rastreio em até 5 camadas — conferir no Guia oficial e na Resolução.
 Conferir: STF ADPFs 1005/1006/1097 (23/04/2026): não redefiniu o valor; determinou revisão periódica pelo CMN; até lá vale o decreto (R$ 600); STJ Temas 722 e 1132; REsp 1.622.555; EAREsp 676.608 (modulação 30/03/2021).
 - Superendividamento: servidor/assalariado — percentual da renda (30-35% + 5% cartão; Lei 10.820/2003), STJ Tema 1085 (não se aplica a débito em conta). Oculto [CONFERIR]: margem consignável no estatuto de cada ente.
+
+## Roteiros — lote Problema com uma empresa (8 situações)
+Revisar: defeito, troca-devolucao (nova), arrependimento, compra-nao-entregue, cobranca-dobro, ligacoes-cobranca (nova), voo, telefonia.
+Conferir: Res. ANAC 400/2016 (arts. 11, 21, 26, 27); CBA art. 251-A; STF Temas 210 e 1240; Res. Anatel 765/2023 (cancelamento sem atendente); STJ sobre frete no arrependimento e loja receber produto com defeito; Não Me Perturbe e prefixo 0303.

@@ -501,7 +501,7 @@ const SITUACOES = {
   saude: [["O plano negou exame, cirurgia ou tratamento", "plano-negou"], ["O plano demora para marcar consulta ou cirurgia", "prazo-atendimento"], ["Remédio caro: plano ou SUS não fornecem", "liminar-medicamento"], ["A mensalidade do plano aumentou muito", "reajuste-idade"], ["Terapias para autismo (TEA)", "tea-terapia"], ["Fui demitido(a) ou me aposentei e quero manter o plano", "manter-plano"]],
   administrativo: [["Passei no concurso e não fui chamado(a)", "concurso-vagas"], ["Fui eliminado(a) em etapa do concurso", "concurso-eliminacao"], ["Respondo a processo disciplinar (PAD)", "pad-prazo"], ["Sou servidor(a) e um direito meu foi negado", "direitos-servidor"], ["Multa de trânsito ou suspensão da CNH", "multa-transito"], ["O poder público me causou prejuízo", "responsabilidade-estado"]],
   dividas: [["Tenho muitas dívidas e não consigo pagar", "superendividamento"], ["Apareceu empréstimo ou desconto que não fiz", "consignado-nao-contratado"], ["Caí em golpe no Pix", "pix-golpe"], ["O banco quer tomar meu carro", "busca-apreensao"], ["Meu nome foi negativado", "negativado"], ["Compras no cartão que eu não fiz", "compra-nao-reconhecida"]],
-  consumidor: [["Produto com defeito", "defeito"], ["Comprei pela internet e não recebi", "compra-nao-entregue"], ["Quero desistir de uma compra", "arrependimento"], ["Voo atrasado ou cancelado", "voo"], ["Problema com operadora de celular ou internet", "telefonia"], ["Cobrança indevida", "cobranca-dobro"]],
+  consumidor: [["Produto com defeito", "defeito"], ["Troca e devolução de produtos", "troca-devolucao"], ["Comprei pela internet e não recebi", "compra-nao-entregue"], ["Quero desistir de uma compra", "arrependimento"], ["Cobrança indevida", "cobranca-dobro"], ["Ligações demais de cobrança ou telemarketing", "ligacoes-cobranca"], ["Voo atrasado ou cancelado", "voo"], ["Problema com operadora de celular ou internet", "telefonia"]],
   cartorio: [["Inventário de quem faleceu", "inventario-cartorio"], ["Divórcio", "divorcio-cartorio"], ["União estável", "uniao-estavel"], ["Regularizar imóvel (usucapião)", "usucapiao"], ["Paguei o imóvel e não recebi a escritura", "adjudicacao"], ["Sacar FGTS ou saldo de quem faleceu", "alvara-valores"]],
 };
 const OUTRA = "Outra situação — contar com minhas palavras";
@@ -516,7 +516,8 @@ function mostrarSituacoes(tema) {
   offer([...lista.map((x) => x[0]), OUTRA], (o) => {
     if (o === OUTRA) return pedirHistoria();
     const [txt, id] = lista.find((x) => x[0] === o);
-    const f = FAQ.find((x) => x.id === id);
+    // Situação com roteiro próprio, mesmo sem pergunta frequente correspondente.
+    const f = FAQ.find((x) => x.id === id) || (ROTEIROS[id] && { id, q: txt, area: key, sources: [] });
     if (f) answerQuestion(txt, f); else begin(key);
   });
 }
