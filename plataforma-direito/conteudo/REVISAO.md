@@ -1533,3 +1533,7 @@ Ocultos [CONFERIR]: nova lei de cotas em concursos (2025); prazo de defesa na ci
 ## Aprofundamento — INSS (18)
 pcd-grau, pontos-2026, calculo-valor, recurso-prazo, especial-ppp (Temas 555 e 709), salario-maternidade, ir-doenca-grave (Súm. 627 e 598; ADI 6025), pericia-inss, servidor-aposentadoria, periodo-graca, auxilio-acidente (Tema 416), rural (Súm. 149; Tema 1007), conversao-especial (Tema 422), auxilio-reclusao, vida-toda (ADIs 2110/2111), adicional-25 (Tema 1095), complementacao, tempo-militar (TCU Súm. 96).
 Ocultos [CONFERIR]: pontuação 2026 de professores; carência do salário-maternidade após ADIs 2110/2111; Atestmed; idades/pontos de servidores federais e regras do DF; efeitos para quem já tinha decisão na vida toda.
+
+## Lote Consumidor (9) + Cartório (12)
+- Todas as perguntas frequentes agora têm roteiro.
+- Itens ocultos por [CONFERIR]: ITCD no DF; mudança de regime de bens em cartório; jurisprudência sobre herança digital.
