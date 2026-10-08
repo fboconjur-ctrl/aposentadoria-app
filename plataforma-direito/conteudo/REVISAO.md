@@ -1512,3 +1512,4 @@ Conferir: STF ADPFs 1005/1006/1097 (23/04/2026): não redefiniu o valor; determi
 ## Roteiros — lote Problema com uma empresa (8 situações)
 Revisar: defeito, troca-devolucao (nova), arrependimento, compra-nao-entregue, cobranca-dobro, ligacoes-cobranca (nova), voo, telefonia.
 Conferir: Res. ANAC 400/2016 (arts. 11, 21, 26, 27); CBA art. 251-A; STF Temas 210 e 1240; Res. Anatel 765/2023 (cancelamento sem atendente); STJ sobre frete no arrependimento e loja receber produto com defeito; Não Me Perturbe e prefixo 0303.
+- contas-essenciais (nova): luz, água, gás e telefone; dívida repassada a cobradora (cessão, Lei de Usura, Lei 4.595, CDC 52/46). Ocultos [CONFERIR]: aviso prévio de corte de água (Lei 11.445/2007 + agência local); suspensão em telefonia (Anatel) e gás (agência estadual). Conferir na REN ANEEL 1.000/2021 a numeração dos artigos (multa 2%, juros 1% a.m., aviso 15 dias, vedação após 90 dias).

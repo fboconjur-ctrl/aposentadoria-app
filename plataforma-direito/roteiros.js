@@ -49,6 +49,9 @@ const GLOSSARIO = {
   "anatel": "Agência que regula as empresas de telefone, internet e TV por assinatura. Recebe reclamações pelo site, app ou 1331.",
   "não me perturbe": "Cadastro gratuito (naomeperturbe.com.br) para bloquear ligações de telemarketing de empresas de telefonia, internet, TV e de ofertas de empréstimo consignado.",
   "0303": "Prefixo obrigatório nas ligações de telemarketing ativo. Ver 0303 na tela já mostra que é oferta — e permite bloquear no celular.",
+  "cessão de crédito": "Quando a empresa “vende” ou repassa a sua dívida para outra (ex.: uma empresa de cobrança). A dívida continua a mesma: a nova cobradora não pode aumentar o valor por conta própria.",
+  "lei de usura": "Lei de 1933 que limita os juros a 12% ao ano para quem não é banco ou financeira autorizada pelo Banco Central.",
+  "cet": "Custo Efetivo Total: o custo real de um parcelamento ou empréstimo, somando juros, tarifas e encargos. Deve ser informado antes de você aceitar.",
   "responsabilidade objetiva": "O Estado responde pelo dano causado por seus agentes sem que a vítima precise provar culpa: basta provar o dano e a relação com a ação do Estado.",
 };
 
@@ -804,5 +807,46 @@ const ROTEIROS = {
     passos: ["Peça à empresa, por escrito, que pare de ligar e anote o protocolo.", "Cadastre seu número no naomeperturbe.com.br e bloqueie o 0303 no celular.", "Registre reclamação no consumidor.gov.br ou Procon.", "Se houver ameaça ou ligações a parentes ou ao trabalho, procure a advogada."],
     urgente: ["Ameaças ou exposição a colegas e parentes", "Ligações de madrugada", "Cobrança de dívida que não é sua"],
     fontes: [["Código de Defesa do Consumidor, arts. 42 e 71", "https://www.planalto.gov.br/ccivil_03/leis/l8078compilado.htm"], ["Não Me Perturbe", "https://www.naomeperturbe.com.br"], ["LGPD", "https://www.planalto.gov.br/ccivil_03/_ato2015-2018/2018/lei/l13709.htm"]],
+  },
+
+  "contas-essenciais": {
+    acolhe: "Luz, água, gás e telefone são serviços essenciais — e a cobrança deles tem limites, mesmo quando a dívida é repassada a uma empresa de cobrança.",
+    perguntas: [
+      { q: "Qual é a conta?", a: ["Energia elétrica", "Água e esgoto", "Gás", "Telefone ou internet"] },
+      { q: "Quem está cobrando agora?", a: ["A própria concessionária", "Uma empresa de cobrança ou “parceira”", "Não sei"], ajuda: ["cessão de crédito"] },
+      { q: "O valor cobrado:", a: ["Aumentou muito (dobrou ou mais)", "Tem juros que não foram explicados", "Está correto, só preciso negociar"], ajuda: ["cet"] },
+      { q: "Há ameaça de corte?", a: ["Sim", "Não", "Já cortaram"] },
+    ],
+    explica: {
+      titulo: "Quando a dívida da conta é repassada a uma empresa de cobrança",
+      itens: [
+        "A dívida não muda: quando a concessionária repassa (cede) a dívida a outra empresa, a nova cobradora recebe a dívida como ela era — com os encargos que a lei permite. E você pode alegar contra ela tudo o que alegaria contra a concessionária (Código Civil, arts. 290 e 294).",
+        "Encargos da conta de luz: em atraso, a distribuidora pode cobrar multa de 2%, juros de 1% ao mês e atualização monetária (regras da ANEEL e Lei 9.427/1996). Triplicar a dívida dificilmente cabe nesses limites.",
+        "Parcelar com juros é crédito: se alguém cobra juros para parcelar, isso é operação de crédito. Só bancos e financeiras autorizados pelo Banco Central podem fazer isso (Lei 4.595/1964, arts. 17 e 18).",
+        "Quem não é autorizado tem limite de juros: a empresa que não é instituição financeira autorizada fica sujeita à Lei de Usura — juros de no máximo 12% ao ano (Decreto 22.626/1933; STF, Súmula 596, que só isenta as instituições financeiras).",
+        "Sem informação clara, não vale: no parcelamento, o consumidor deve ser informado antes da taxa de juros, dos encargos, do número de parcelas e do total a pagar (CDC, art. 52). Cláusula que não foi informada não obriga (CDC, art. 46).",
+        "Como checar: no site do Banco Central há a consulta de instituições autorizadas a funcionar. Se a cobradora não aparece lá e cobra juros de parcelamento, há um forte indício de irregularidade.",
+      ],
+    },
+    lei: [
+      "Os serviços públicos devem ser adequados, eficientes, seguros e contínuos (CDC, art. 22).",
+      "É abusivo exigir vantagem manifestamente excessiva, e o valor cobrado indevidamente deve ser devolvido em dobro (CDC, arts. 39, V, e 42, parágrafo único).",
+      "Energia: a suspensão por falta de pagamento exige aviso prévio de 15 dias e não pode ocorrer depois de 90 dias do vencimento da fatura, nem às sextas, fins de semana, feriados ou vésperas (Resolução Normativa ANEEL 1.000/2021).",
+      "Água e esgoto: a interrupção por falta de pagamento é permitida com aviso prévio, preservando condições mínimas para usuários em situação especial (Lei 11.445/2007, art. 40). [CONFERIR] prazo do aviso prévio e regras da agência local.",
+      "[CONFERIR] Regras de suspensão por inadimplência em telefonia (Anatel) e gás canalizado (agência estadual).",
+    ],
+    juris: [
+      "STJ: o corte do serviço essencial é admitido pela conta atual, depois de aviso prévio — não para cobrar dívidas antigas, que devem ser cobradas pelos meios comuns.",
+      "STF, Súmula 596: a limitação de juros da Lei de Usura não se aplica às instituições financeiras — o que significa que ela continua valendo para quem não é instituição autorizada.",
+    ],
+    divergencia: [
+      "Se o parcelamento oferecido por empresa “parceira” da concessionária é financiamento (sujeito às regras do sistema financeiro) ou simples acordo de pagamento: depende de como foi contratado e do que foi informado ao consumidor.",
+      "Se a concessionária responde junto com a cobradora pelos abusos: há decisões que reconhecem a responsabilidade solidária de quem integra a cadeia de serviço (CDC, art. 7º, parágrafo único).",
+    ],
+    prazos: ["Ameaça de corte: aja antes da data do aviso.", "Guarde todas as faturas e propostas: elas mostram quanto era a dívida original."],
+    docs: ["Faturas originais em atraso", "Proposta ou contrato de parcelamento (com taxa e total, se houver)", "Cartas, mensagens e boletos da empresa de cobrança", "Aviso de corte, se recebeu", "Print da consulta de instituições autorizadas no site do Banco Central"],
+    passos: ["Peça por escrito, à concessionária e à cobradora, o contrato, a memória de cálculo e o custo efetivo total.", "Consulte no site do Banco Central se a cobradora é instituição autorizada.", "Reclame na ouvidoria da concessionária, na agência reguladora (ANEEL 167, Anatel 1331, agência de água ou gás do seu estado), no Procon e no consumidor.gov.br.", "Ofereça pagar o valor original com os encargos legais, por escrito.", "Procure a advogada: pode caber revisão da dívida, devolução em dobro, denúncia ao Banco Central e pedido urgente contra o corte."],
+    urgente: ["Corte marcado ou já feito", "Pessoa doente que depende de aparelho elétrico", "Negativação pela cobradora"],
+    fontes: [["Código de Defesa do Consumidor", "https://www.planalto.gov.br/ccivil_03/leis/l8078compilado.htm"], ["ANEEL — Resolução Normativa 1.000/2021", "https://www2.aneel.gov.br/cedoc/ren20211000.html"], ["ANEEL — como resolver", "https://www.gov.br/aneel/pt-br/consumidores/como-resolver"], ["Lei 11.445/2007 (saneamento)", "https://www.planalto.gov.br/ccivil_03/_ato2007-2010/2007/lei/l11445.htm"], ["Decreto 22.626/1933 (Lei de Usura)", "https://www.planalto.gov.br/ccivil_03/decreto/d22626.htm"], ["Lei 4.595/1964", "https://www.planalto.gov.br/ccivil_03/leis/l4595.htm"]],
   },
 };
