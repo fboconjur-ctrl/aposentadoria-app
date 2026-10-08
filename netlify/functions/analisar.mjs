@@ -3,12 +3,16 @@
 // Não conclui nada sobre o caso, não diz se a pessoa tem direito e não recomenda conduta:
 // isso é análise jurídica, que é da advogada (Código de Ética da OAB / Provimento 205/2021).
 // Nada é guardado: o relato só passa por aqui e segue para a API, sem registro.
-const MODELO = "claude-sonnet-5-5";
+// Modelo menor e barato: a tarefa é só organizar e selecionar conteúdo já escrito.
+const MODELO = "claude-haiku-5-5";
+// Só aceita chamadas do próprio portal (evita que terceiros usem a chave).
+const ORIGENS = [/^https:\/\/(www\.)?plataformadodireito\.com\.br$/, /^https:\/\/[\w-]+(--[\w-]+)?\.netlify\.app$/, /^http:\/\/localhost(:\d+)?$/];
 
 const REGRAS = `Você ajuda um portal jurídico informativo brasileiro a ORGANIZAR o relato de um visitante.
 Regras obrigatórias (ética da OAB):
 - Nunca diga se a pessoa tem ou não direito, se vai ganhar, se deve processar, quanto vai receber, nem recomende conduta.
 - Nunca invente fatos: use só o que está escrito no relato. Se algo não foi dito, não presuma.
+- Trate apenas dos assuntos do catálogo do portal. Se o relato for sobre outro tema, ou não for um problema jurídico (ex.: pedido de conversa, tarefa, pergunta geral), marque fora_do_tema e não organize nada.
 - Escreva em português simples, frases curtas, tratando a pessoa por "você".
 - Os fatos devem ser reformulados de modo neutro ("Você contou que...").
 - Ao relacionar trechos da lei, explique só a ligação entre o fato contado e o tema do trecho, sem concluir o resultado ("Isso se relaciona com o que você contou sobre X").`;
@@ -22,13 +26,14 @@ const FERRAMENTAS = {
       properties: {
         fatos: { type: "array", items: { type: "string" }, description: "Fatos relevantes que a pessoa contou, em ordem cronológica, reformulados de modo neutro. Até 8." },
         ja_tentou: { type: "array", items: { type: "string" }, description: "Providências que a pessoa disse que já tomou (ex.: 'Reclamou no consumidor.gov.br'). Vazio se nenhuma." },
+        fora_do_tema: { type: "boolean", description: "true se o relato não tem relação com nenhum assunto do catálogo (ou não é um relato de problema jurídico)." },
         assuntos: {
           type: "array", description: "Até 3 ids do catálogo que se relacionam com o relato, do mais central ao menos. Só ids existentes.",
           items: { type: "object", properties: { id: { type: "string" }, motivo: { type: "string", description: "Uma frase: qual parte do relato liga a este assunto." } }, required: ["id", "motivo"] },
         },
         faltando: { type: "array", items: { type: "string" }, description: "Até 3 informações que NÃO aparecem no relato e que a advogada provavelmente vai precisar (perguntas curtas)." },
       },
-      required: ["fatos", "ja_tentou", "assuntos", "faltando"],
+      required: ["fora_do_tema", "fatos", "ja_tentou", "assuntos", "faltando"],
     },
   },
   relacionar: {
@@ -52,10 +57,12 @@ const curto = (s, n) => String(s || "").slice(0, n);
 
 export default async (req) => {
   if (req.method !== "POST") return Response.json({ erro: "Use POST." }, { status: 405 });
+  const origem = req.headers.get("origin") || "";
+  if (!ORIGENS.some((re) => re.test(origem))) return Response.json({ erro: "Origem não permitida." }, { status: 403 });
   const chave = process.env.ANTHROPIC_API_KEY;
   if (!chave) return Response.json({ erro: "Análise indisponível." }, { status: 503 });
   let e; try { e = await req.json(); } catch { return Response.json({ erro: "JSON inválido." }, { status: 400 }); }
-  const relato = curto(e.relato, 4000).trim();
+  const relato = curto(e.relato, 2500).trim();
   if (relato.length < 20) return Response.json({ erro: "Relato curto demais." }, { status: 400 });
   const ferramenta = FERRAMENTAS[e.modo];
   if (!ferramenta) return Response.json({ erro: "Modo inválido." }, { status: 400 });
@@ -65,7 +72,7 @@ export default async (req) => {
     const cat = (Array.isArray(e.catalogo) ? e.catalogo : []).slice(0, 250).map((c) => `${curto(c.id, 60)} — ${curto(c.titulo, 160)}`).join("\n");
     conteudo = `Catálogo de assuntos do portal (id — título):\n${cat}\n\nRelato do visitante:\n"""${relato}"""`;
   } else {
-    const t = (Array.isArray(e.trechos) ? e.trechos : []).slice(0, 80).map((x) => `[${curto(x.ref, 20)}] ${curto(x.texto, 600)}`).join("\n");
+    const t = (Array.isArray(e.trechos) ? e.trechos : []).slice(0, 60).map((x) => `[${curto(x.ref, 20)}] ${curto(x.texto, 600)}`).join("\n");
     conteudo = `Assunto: ${curto(e.titulo, 160)}\nConteúdo revisado do portal, em trechos:\n${t}\n\nRelato do visitante:\n"""${relato}"""`;
   }
 
@@ -73,7 +80,7 @@ export default async (req) => {
     const r = await fetch("https://api.anthropic.com/v1/messages", {
       method: "POST",
       headers: { "x-api-key": chave, "anthropic-version": "2023-06-01", "content-type": "application/json" },
-      body: JSON.stringify({ model: MODELO, max_tokens: 1500, system: REGRAS, tools: [ferramenta], tool_choice: { type: "tool", name: ferramenta.name }, messages: [{ role: "user", content: conteudo }] }),
+      body: JSON.stringify({ model: MODELO, max_tokens: 900, system: REGRAS, tools: [ferramenta], tool_choice: { type: "tool", name: ferramenta.name }, messages: [{ role: "user", content: conteudo }] }),
     });
     if (!r.ok) return Response.json({ erro: "Análise indisponível no momento." }, { status: 502 });
     const d = await r.json();

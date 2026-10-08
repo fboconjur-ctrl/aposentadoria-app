@@ -141,6 +141,7 @@ function renderResult(an) {
   bindCnis();
   bindDoc(state.key);
   $("to-lawyer").onclick = openLawyer;
+  document.querySelectorAll("[data-an-lawyer]").forEach((b) => (b.onclick = openLawyer));
   $("alone").onclick = () => (e => { e.target.textContent = "Informações salvas ✓"; e.target.disabled = true; })(event);
 }
 
@@ -216,9 +217,10 @@ function mostrarRoteiro(f, R, text, an) {
   })));
   $("rt-pular").onclick = () => { registrar(); revelar(); };
   if (an && an.ia) relacionarTrechos(f, R, text);
-  if (an) { state.followSummary = `${f.q} — relato: ${text}`; document.querySelectorAll("[data-outro]").forEach((b) => (b.onclick = () => { const id = b.dataset.outro; mostrarRoteiro({ id, q: b.textContent, area: f.area, sources: [] }, ROTEIROS[id], text, { ...an }); window.scrollTo(0, 0); })); }
+  document.querySelectorAll("[data-an-lawyer]").forEach((b) => (b.onclick = openLawyer));
+  if (an) { state.followSummary = `${f.q} — ${state.followSummary || "relato: " + text}`; document.querySelectorAll("[data-outro]").forEach((b) => (b.onclick = () => { const id = b.dataset.outro; mostrarRoteiro({ id, q: b.textContent, area: f.area, sources: [] }, ROTEIROS[id], text, { ...an }); window.scrollTo(0, 0); })); }
   $("rt-guia").onclick = (e) => { e.preventDefault(); go("guia"); };
-  $("to-lawyer").onclick = () => { registrar(); openLawyer(); };
+  $("to-lawyer").onclick = () => { if (!an) registrar(); openLawyer(); };
   state.text = state.text || text;
 }
 
@@ -585,11 +587,14 @@ function analiseHtml(an, atual) {
   const outros = (an.ids || []).filter((id) => id !== atual);
   const nomes = {}; Object.values(SITUACOES).flat().forEach(([txt, id]) => (nomes[id] = txt));
   const tentou = an.tentou || an.feitos.map((c) => `Reclamou em ${c.nome}`);
+  state.followSummary = [an.fatos.length && "Fatos: " + an.fatos.join("; "), tentou.length && "Já fez: " + tentou.join("; "), (an.faltando || []).length && "Falta saber: " + an.faltando.join("; ")].filter(Boolean).join(" | ");
   return `<div class="card rt-analise"><h2>O que entendemos do seu relato</h2>
     ${an.fatos.length ? `<ul>${an.fatos.map((x) => `<li>${esc(x)}</li>`).join("")}</ul>` : ""}
     ${tentou.length ? `<p><strong>O que você já fez:</strong></p><ul>${tentou.map((x) => `<li>${esc(x)}</li>`).join("")}</ul><p class="small muted">Por isso não repetimos esses passos.</p>` : ""}
     ${outros.length ? `<p><strong>Seu relato também envolve:</strong></p><div class="answers">${outros.map((id) => `<button type="button" data-outro="${id}">${esc(nomes[id] || titulo(id))}</button>`).join("")}</div>` : ""}
     ${(an.faltando || []).length ? `<p><strong>O que a advogada provavelmente vai querer saber:</strong></p><ul>${an.faltando.map((x) => `<li>${esc(x)}</li>`).join("")}</ul>` : ""}
+    <div class="an-cta"><p><strong>Seu caso já está organizado.</strong> Se quiser, envie para a advogada: ela recebe este resumo e retorna para avaliar o seu caso.</p>
+      <div class="actions"><button class="btn" type="button" data-an-lawyer>Enviar meu caso para a advogada</button><a href="#" class="btn btn-wa" data-wa>WhatsApp</a></div></div>
     <p class="small muted">${an.ia ? "Leitura feita por inteligência artificial apenas para organizar o seu relato; o texto não é guardado. " : ""}Se entendemos algo errado, a advogada corrige na análise.</p></div>`;
 }
 // Catálogo de assuntos com roteiro (para a IA escolher) e título de cada um.
@@ -606,8 +611,15 @@ async function api(corpo, ms = 25000) {
   catch { return null; } finally { clearTimeout(t); }
 }
 async function analisarComIA(t) {
+  // Limite por aparelho: a leitura com IA é para quem traz um caso real, não para uso livre.
+  const hoje = new Date().toISOString().slice(0, 10);
+  let uso = {}; try { uso = JSON.parse(localStorage.getItem("pd-ia-uso") || "{}"); } catch {}
+  if (uso.dia !== hoje) uso = { dia: hoje, n: 0 };
+  if (uso.n >= 3) return null;
+  uso.n++; try { localStorage.setItem("pd-ia-uso", JSON.stringify(uso)); } catch {}
   const cat = catalogo();
   const d = await api({ modo: "triagem", relato: t, catalogo: Object.entries(cat).map(([id, titulo]) => ({ id, titulo })) });
+  if (d && d.fora_do_tema) return { fora: true };
   if (!d || !Array.isArray(d.assuntos)) return null;
   const ids = d.assuntos.map((a) => a.id).filter((id) => cat[id] && ROTEIROS[id]).slice(0, 3);
   if (!ids.length) return null;
@@ -625,7 +637,9 @@ async function relacionarTrechos(f, R, text) {
   if (!itens.length) { box.remove(); return; }
   box.innerHTML = `<h2>O que a lei e os tribunais dizem sobre os pontos do seu relato</h2>
     <ol>${itens.map((x) => `<li><p><strong>${esc(x.ligacao)}</strong></p><p class="muted">${esc(por[x.ref])}</p></li>`).join("")}</ol>
-    <p><strong>Para ter certeza da avaliação no seu caso, consulte a advogada.</strong></p>`;
+    <p><strong>Para ter certeza da avaliação no seu caso, consulte a advogada.</strong></p>
+    <div class="actions"><button class="btn" type="button" data-an-lawyer>Quero que a advogada avalie meu caso</button></div>`;
+  box.querySelector("[data-an-lawyer]").onclick = openLawyer;
   (d.ja_feitos || []).forEach((ref) => document.querySelector(`[data-ref="${ref}"]`)?.remove());
   state.followSummary = (state.followSummary || "") + " | Pontos relacionados: " + itens.map((x) => x.ligacao).join(" / ");
 }
@@ -641,7 +655,13 @@ function sugerirSituacoes(t) {
   mostrarAnalise(t, { ...lerRelato(t), ids });
 }
 function mostrarAnalise(t, an) {
+  if (an.fora) {
+    say("Esse assunto não está entre os temas que este portal explica. Se quiser, conte para a advogada: ela avalia se pode ajudar ou indica um(a) colega da área.");
+    offer(["Quero falar com a advogada", "Ver os temas do portal"], (o) => (o.startsWith("Quero") ? openLawyer() : go("home")));
+    return;
+  }
   const ids = an.ids, nomes = catalogo();
+  state.analise = an;
   // Relato curto e sem pistas: aí sim faz perguntas.
   if (!ids.length && t.length < 120) return ask();
   setStep(2);
