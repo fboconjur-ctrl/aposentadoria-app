@@ -1496,3 +1496,8 @@ Conferir redação oficial: ADI 7265 (requisitos), RN 623/2024 (prazos de respos
 Revisar: indeferido, idade-minima, descontos-beneficio, pcd-quem, bpc-renda, pensao-duracao.
 Ocultos até revisão [CONFERIR]: faixas de duração da pensão por idade (portaria vigente); se o acordo administrativo de devolução dos descontos associativos ainda está aberto (último prazo encontrado: 20/06/2026).
 Conferir: pontos (93/103) e idade progressiva (59a6m/64a6m) em 2026; LOAS art. 20, §§ 3º, 11 e 12; Decreto 3.048, art. 305 (30 dias).
+
+## Roteiros — lote Servidor, concurso e órgão público (6 situações)
+Revisar: concurso-vagas, concurso-eliminacao, pad-prazo, direitos-servidor, multa-transito, responsabilidade-estado.
+Conferir: STF Temas 161, 784, 973, 940, 1097; SV 44 e 5; STJ Súmulas 635, 641, 85, 312, 127; CTB arts. 165-A, 261 (Lei 14.071/2020), 281.
+Para marcar um roteiro como revisado: em roteiros.js, ROTEIROS_REVISADOS = { "id-da-situacao": "AAAA-MM-DD" }.

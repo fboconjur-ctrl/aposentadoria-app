@@ -161,6 +161,19 @@ const publico = (lista) => (lista || []).filter((x) => !/\[CONFERIR\]/.test(x));
 function ajudaHtml(termos) {
   return (termos || []).filter((t) => GLOSSARIO[t]).map((t) => `<details class="ajuda"><summary>ⓘ O que é ${esc(t)}?</summary><p>${esc(GLOSSARIO[t])}</p></details>`).join("");
 }
+// Transparência: quando as fontes foram conferidas, se a advogada já revisou e um canal para apontar erro.
+function seloRevisao(id) {
+  const rev = typeof ROTEIROS_REVISADOS !== "undefined" && ROTEIROS_REVISADOS[id];
+  const quando = rev ? `Revisado pela advogada em ${rev.split("-").reverse().join("/")}.` : `Fontes oficiais conferidas em ${typeof ROTEIROS_CONFERIDO !== "undefined" ? ROTEIROS_CONFERIDO : "2026"}. Revisão da advogada em andamento.`;
+  return `<p class="selo-rev small">🗓️ ${quando} <a href="#" data-avisar="${esc(id)}">Encontrou algo desatualizado? Avise</a></p>`;
+}
+document.addEventListener("click", (e) => {
+  const a = e.target.closest("[data-avisar]"); if (!a) return;
+  e.preventDefault();
+  const titulo = document.querySelector("#result h1")?.textContent || a.dataset.avisar;
+  window.open(`https://wa.me/${WA_NUMERO}?text=${encodeURIComponent(`Olá! Vi no site uma informação que pode estar desatualizada.\nPágina: ${titulo}\nO que encontrei: `)}`, "_blank", "noopener");
+});
+
 function mostrarRoteiro(f, R, text) {
   const resp = [];
   go("result");
@@ -185,6 +198,7 @@ function mostrarRoteiro(f, R, text) {
         <div class="actions"><button class="btn" id="to-lawyer">Quero a avaliação da advogada</button><a href="#" class="btn btn-wa" data-wa>Falar no WhatsApp</a></div></div>
       ${R.fontes ? `<details><summary>Fontes oficiais →</summary><ul>${R.fontes.map(([n, u]) => `<li><a href="${u}" target="_blank" rel="noopener">${esc(n)}</a></li>`).join("")}</ul></details>` : ""}
       <p class="muted small">Informação geral com base na lei e na jurisprudência. Não constitui orientação jurídica nem substitui a análise do seu caso pela advogada.</p>
+      ${seloRevisao(f.id)}
     </div>`;
   const revelar = () => { const c = $("rt-conteudo"); if (!c.hidden) return; c.hidden = false; c.scrollIntoView({ behavior: "smooth", block: "start" }); };
   const registrar = () => { state.followSummary = `${f.q} — ` + R.perguntas.map((p, i) => `${p.q} ${resp[i] || "(sem resposta)"}`).join(" | "); state.answers = resp.filter(Boolean); };
@@ -217,6 +231,7 @@ function answerQuestion(text, faqFixa) {
       ${table}
       ${f.tips ? `<h2>Dicas práticas</h2><ul class="tips">${f.tips.map((t) => `<li>${esc(t)}</li>`).join("")}</ul>` : ""}
       <details open><summary>Fundamento jurídico e fontes</summary><ul>${sources(f.sources)}</ul></details>
+      ${seloRevisao(f.id)}
       ${f.followUp ? `<section class="followup" id="followup"><p class="eyebrow">Próximo passo</p><h2>${esc(f.followUp.title)}</h2><p class="muted">${esc(f.followUp.intro)}</p><div id="fu-log" class="fu-log"></div><div id="fu-answers" class="answers"></div></section>` : ""}
       ${docCard(key)}
       ${key === "previdenciario" ? CNIS_CARD : ""}

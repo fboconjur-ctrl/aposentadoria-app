@@ -24,7 +24,20 @@ const GLOSSARIO = {
   "pedágio": "Tempo extra de contribuição exigido em algumas regras de transição da Reforma de 2019, calculado sobre o que faltava em 13/11/2019.",
   "união estável": "Convivência pública, contínua e duradoura com intenção de formar família, mesmo sem casamento no papel.",
   "consignado": "Empréstimo descontado direto do benefício ou do salário.",
+  "mandado de segurança": "Ação rápida na Justiça contra ato ilegal de autoridade, quando o direito pode ser provado só com documentos. Deve ser proposta em até 120 dias do ato.",
+  "cadastro reserva": "Lista de aprovados além das vagas do edital, chamados se surgirem novas vagas durante a validade do concurso.",
+  "preterição": "Quando alguém aprovado é passado para trás — por exemplo, a administração nomeia candidato pior classificado ou contrata temporários para a mesma função.",
+  "edital": "Documento com as regras do concurso: vagas, etapas, critérios e prazos de recurso.",
+  "pad": "Processo Administrativo Disciplinar: o processo que apura falta de servidor público e pode levar a advertência, suspensão ou demissão.",
+  "sindicância": "Apuração mais simples que o PAD. Pode arquivar o caso, aplicar advertência ou suspensão de até 30 dias, ou levar à abertura de PAD.",
+  "jari": "Junta Administrativa de Recursos de Infrações: julga o recurso contra multa de trânsito em 1ª instância.",
+  "cetran": "Conselho Estadual de Trânsito: julga o recurso em 2ª instância, depois da JARI (no DF, Contrandife).",
+  "responsabilidade objetiva": "O Estado responde pelo dano causado por seus agentes sem que a vítima precise provar culpa: basta provar o dano e a relação com a ação do Estado.",
 };
+
+// Data em que as fontes foram conferidas; "revisado" só é preenchido quando a advogada revisar.
+const ROTEIROS_CONFERIDO = "outubro de 2026";
+const ROTEIROS_REVISADOS = {}; // ex.: { "plano-negou": "2026-11-10" }
 
 const ROTEIROS = {
   "plano-negou": {
@@ -290,5 +303,143 @@ const ROTEIROS = {
     passos: ["Peça a pensão pelo Meu INSS ou 135 o quanto antes.", "Junte as provas da união estável, se for o caso.", "Se negar, recorra em 30 dias ou procure a advogada."],
     urgente: ["Prazo de 90 dias acabando", "União estável sem documentos", "Disputa com outro dependente"],
     fontes: [["Lei 8.213/1991", "https://www.planalto.gov.br/ccivil_03/leis/l8213cons.htm"], ["EC 103/2019", "https://www.planalto.gov.br/ccivil_03/constituicao/emendas/emc/emc103.htm"]],
+  },
+
+  // ---------------- Servidor, concurso e órgão público ----------------
+  "concurso-vagas": {
+    acolhe: "Ser aprovado e não ser chamado é angustiante — mas, em várias situações, a nomeação é um direito.",
+    perguntas: [
+      { q: "Em que posição você foi aprovado(a)?", a: ["Dentro do número de vagas do edital", "Fora das vagas (cadastro reserva)", "Não sei"], ajuda: ["edital", "cadastro reserva"] },
+      { q: "O concurso ainda está no prazo de validade?", a: ["Sim", "Não, já venceu", "Não sei"] },
+      { q: "Chamaram alguém pior colocado, terceirizados ou temporários para a mesma função?", a: ["Sim", "Não", "Não sei"], ajuda: ["preterição"] },
+    ],
+    lei: [
+      "O concurso vale por até 2 anos, prorrogável uma vez por igual período; durante a validade, quem foi aprovado tem prioridade sobre novos concursados (Constituição, art. 37, III e IV).",
+    ],
+    juris: [
+      "STF, Tema 161 (RE 598.099): quem é aprovado dentro do número de vagas do edital tem direito à nomeação durante a validade do concurso, salvo situações excepcionais e justificadas.",
+      "STF, Tema 784 (RE 837.311): o surgimento de novas vagas ou a abertura de novo concurso não geram, por si só, direito à nomeação de quem está fora das vagas — mas há direito se houver preterição arbitrária e imotivada, comprovada.",
+    ],
+    prazos: ["Fique atento(a) ao fim da validade do concurso.", "Mandado de segurança: até 120 dias contados do ato que viola o direito (Lei 12.016/2009, art. 23)."],
+    docs: ["Edital e eventuais retificações", "Resultado final e homologação, com a sua classificação", "Publicações de prorrogação da validade", "Provas de contratações de temporários ou terceirizados, se houver"],
+    passos: ["Confira no Diário Oficial a homologação e a validade.", "Faça pedido administrativo de nomeação e guarde o protocolo.", "Reúna provas de preterição, se houver.", "Procure a advogada antes do fim da validade."],
+    urgente: ["Validade do concurso perto do fim", "Novo concurso aberto para o mesmo cargo", "Contratação de temporários na sua função"],
+    fontes: [["Constituição, art. 37", "https://www.planalto.gov.br/ccivil_03/constituicao/constituicao.htm"], ["Lei 12.016/2009 (mandado de segurança)", "https://www.planalto.gov.br/ccivil_03/_ato2007-2010/2009/lei/l12016.htm"], ["STF — repercussão geral", "https://portal.stf.jus.br/jurisprudenciaRepercussao/"]],
+  },
+
+  "concurso-eliminacao": {
+    acolhe: "Eliminação em psicotécnico, teste físico ou exame médico pode ser contestada — os tribunais exigem critérios objetivos e previstos em lei.",
+    perguntas: [
+      { q: "Em qual etapa você foi eliminado(a)?", a: ["Psicotécnico", "Teste físico (TAF)", "Exame médico", "Investigação social", "Outra"] },
+      { q: "Você recebeu o motivo da eliminação por escrito?", a: ["Sim", "Não"] },
+      { q: "Já passou o prazo de recurso do edital?", a: ["Não", "Sim", "Não sei"], ajuda: ["edital"] },
+    ],
+    lei: [
+      "As etapas e critérios do concurso devem estar previstos no edital, e as exigências precisam ser compatíveis com o cargo (Constituição, art. 37, I e II).",
+    ],
+    juris: [
+      "STF, Súmula Vinculante 44: o exame psicotécnico só pode ser exigido se previsto em lei — e, segundo os tribunais, com critérios objetivos e direito a recurso.",
+      "STF, Tema 973 (RE 1.058.333): candidata gestante tem direito de remarcar o teste de aptidão física, mesmo sem previsão no edital.",
+      "Os tribunais costumam anular eliminações sem motivação, com critérios subjetivos ou que não foram previstos no edital.",
+    ],
+    prazos: ["O prazo de recurso administrativo é o do edital — normalmente curto, de poucos dias.", "Mandado de segurança: até 120 dias do ato de eliminação (Lei 12.016/2009, art. 23)."],
+    docs: ["Edital", "Resultado da etapa e motivação da eliminação", "Laudos e exames particulares que contestem o resultado", "Recurso administrativo e a resposta"],
+    passos: ["Peça por escrito os motivos e o resultado detalhado da avaliação.", "Recorra no prazo do edital.", "Faça exames ou avaliação particular para contrapor, se for o caso.", "Procure a advogada logo: as etapas seguintes do concurso continuam correndo."],
+    urgente: ["Próxima etapa do concurso marcada", "Prazo de recurso acabando", "Curso de formação para começar"],
+    fontes: [["Constituição, art. 37", "https://www.planalto.gov.br/ccivil_03/constituicao/constituicao.htm"], ["STF — Súmulas Vinculantes", "https://portal.stf.jus.br/jurisprudencia/sumariosumulas.asp?base=26"]],
+  },
+
+  "pad-prazo": {
+    acolhe: "Responder a um PAD assusta, mas há regras de prazo e de defesa que protegem o servidor.",
+    perguntas: [
+      { q: "Em que fase está?", a: ["Recebi a portaria de abertura", "Fui citado(a) para defesa", "Já há relatório final", "Fui punido(a)"], ajuda: ["pad", "sindicância"] },
+      { q: "Você é servidor(a):", a: ["Federal", "Estadual / Distrital", "Municipal"] },
+      { q: "Há quanto tempo a administração soube do fato?", a: ["Menos de 2 anos", "De 2 a 5 anos", "Mais de 5 anos", "Não sei"] },
+    ],
+    lei: [
+      "Na esfera federal, o servidor indiciado é citado para apresentar defesa escrita em 10 dias; com 2 ou mais indiciados, o prazo é comum de 20 dias (Lei 8.112/1990, art. 161, §§1º e 2º).",
+      "O PAD deve terminar em 60 dias, prorrogáveis por igual prazo (Lei 8.112/1990, art. 152).",
+      "Prescrição: 5 anos para demissão e cassação; 2 anos para suspensão; 180 dias para advertência, contados de quando o fato se tornou conhecido (Lei 8.112/1990, art. 142).",
+      "Servidores estaduais, distritais e municipais seguem o estatuto do próprio ente, com prazos que podem ser diferentes.",
+    ],
+    juris: [
+      "STJ, Súmula 635: a prescrição começa quando a autoridade competente toma conhecimento do fato, é interrompida pela abertura do processo e volta a correr por inteiro depois de 140 dias.",
+      "STF, Súmula Vinculante 5: a falta de advogado no PAD, por si só, não anula o processo — mas a defesa técnica costuma fazer diferença.",
+      "STJ, Súmula 641: a portaria de abertura não precisa descrever minuciosamente os fatos; a descrição detalhada é exigida no indiciamento.",
+    ],
+    prazos: ["Defesa escrita: 10 dias da citação (federal), ou o prazo do estatuto local.", "Verifique a prescrição: pode encerrar o caso."],
+    docs: ["Portaria de instauração", "Mandado de citação e termo de indiciamento", "Cópia integral dos autos", "Documentos e testemunhas a seu favor"],
+    passos: ["Peça cópia integral do processo.", "Anote a data da citação e conte o prazo de defesa.", "Liste testemunhas e documentos.", "Procure a advogada antes de prestar depoimento ou de apresentar a defesa."],
+    urgente: ["Prazo de defesa correndo", "Interrogatório marcado", "Risco de demissão"],
+    fontes: [["Lei 8.112/1990", "https://www.planalto.gov.br/ccivil_03/leis/l8112cons.htm"], ["STJ — Súmulas", "https://scon.stj.jus.br/SCON/sumstj/"]],
+  },
+
+  "direitos-servidor": {
+    acolhe: "Muitos direitos de servidores são negados no dia a dia — e boa parte pode ser cobrada, inclusive com valores atrasados.",
+    perguntas: [
+      { q: "Qual direito foi negado?", a: ["Progressão ou promoção", "Adicional ou gratificação", "Licença ou afastamento", "Horário especial (deficiência ou dependente com deficiência)", "Abono de permanência", "Outro"] },
+      { q: "Você é servidor(a):", a: ["Federal", "Estadual / Distrital", "Municipal"] },
+      { q: "Você já pediu por escrito ao órgão?", a: ["Sim, e negaram", "Sim, sem resposta", "Não"] },
+    ],
+    lei: [
+      "O servidor federal com deficiência, ou que tenha cônjuge, filho ou dependente com deficiência, tem direito a horário especial, sem compensação no caso do dependente (Lei 8.112/1990, art. 98, §§2º e 3º).",
+      "Quem já pode se aposentar voluntariamente e continua trabalhando pode ter direito ao abono de permanência (Constituição, art. 40, §19).",
+      "As dívidas da Fazenda Pública prescrevem em 5 anos (Decreto 20.910/1932, art. 1º).",
+    ],
+    juris: [
+      "STJ, Súmula 85: em direitos de pagamento mensal, a prescrição atinge só as parcelas anteriores aos 5 anos antes da ação — o direito em si continua.",
+      "STF, Tema 1097: o horário especial para servidor com filho ou dependente com deficiência vale também para servidores estaduais e municipais.",
+    ],
+    prazos: ["Cobre o quanto antes: a cada mês que passa, uma parcela de 5 anos atrás prescreve."],
+    docs: ["Contracheques", "Pedido administrativo e resposta", "Ato de nomeação e de enquadramento", "Laudos (no caso de horário especial)"],
+    passos: ["Faça o pedido por escrito ao órgão e guarde o protocolo.", "Junte os contracheques dos últimos 5 anos.", "Procure a advogada para avaliar o pedido judicial e os atrasados."],
+    urgente: ["Negativa de horário especial para cuidar de dependente com deficiência", "Parcelas prestes a prescrever"],
+    fontes: [["Lei 8.112/1990", "https://www.planalto.gov.br/ccivil_03/leis/l8112cons.htm"], ["Constituição, art. 40", "https://www.planalto.gov.br/ccivil_03/constituicao/constituicao.htm"], ["Decreto 20.910/1932", "https://www.planalto.gov.br/ccivil_03/decreto/antigos/d20910.htm"]],
+  },
+
+  "multa-transito": {
+    acolhe: "Multa e suspensão da CNH têm várias etapas de defesa — e erros de prazo e de notificação anulam muitas autuações.",
+    perguntas: [
+      { q: "O que você recebeu?", a: ["Notificação de autuação", "Notificação de penalidade (multa)", "Processo de suspensão ou cassação da CNH", "Não sei"] },
+      { q: "Quando recebeu?", a: ["Há menos de 30 dias", "Há mais de 30 dias"] },
+      { q: "Foi recusa ao bafômetro?", a: ["Sim", "Não"] },
+    ],
+    lei: [
+      "A notificação da autuação deve ser enviada em até 30 dias da infração; se não for, o auto é arquivado (Código de Trânsito, art. 281, parágrafo único, II).",
+      "Há três chances de defesa: defesa prévia, recurso à JARI e recurso ao CETRAN — nos prazos indicados em cada notificação (Código de Trânsito, arts. 281 a 288).",
+      "A CNH é suspensa ao atingir 20 pontos em 12 meses com 2 ou mais infrações gravíssimas; 30 pontos com 1 gravíssima; ou 40 pontos sem gravíssimas (Código de Trânsito, art. 261, com a Lei 14.071/2020).",
+      "Recusar o bafômetro é infração gravíssima, com multa multiplicada por 10 e suspensão por 12 meses (Código de Trânsito, art. 165-A).",
+    ],
+    juris: [
+      "STJ, Súmula 312: no processo de multa, são necessárias duas notificações — da autuação e da penalidade.",
+      "STJ, Súmula 127: é ilegal condicionar o licenciamento do veículo ao pagamento de multa da qual o infrator não foi notificado.",
+    ],
+    prazos: ["Use o prazo indicado na notificação: perder a defesa prévia não impede o recurso à JARI, mas cada etapa tem a sua data."],
+    docs: ["Notificações recebidas (frente e verso)", "CRLV e CNH", "Fotos, testemunhas ou documentos que mostrem que você não cometeu a infração", "Comprovante de quem dirigia, se não era você"],
+    passos: ["Confira se a notificação chegou em até 30 dias da infração.", "Se não era você dirigindo, indique o condutor no prazo.", "Apresente defesa prévia; depois, se preciso, recurso à JARI e ao CETRAN.", "Em suspensão ou cassação, procure a advogada: a defesa é mais técnica."],
+    urgente: ["Processo de suspensão ou cassação aberto", "CNH necessária para trabalhar", "Prazo de defesa acabando"],
+    fontes: [["Código de Trânsito Brasileiro", "https://www.planalto.gov.br/ccivil_03/leis/l9503compilado.htm"], ["STJ — Súmulas", "https://scon.stj.jus.br/SCON/sumstj/"]],
+  },
+
+  "responsabilidade-estado": {
+    acolhe: "Quando o poder público causa um prejuízo, a lei garante indenização — e a vítima não precisa provar culpa do servidor.",
+    perguntas: [
+      { q: "O que aconteceu?", a: ["Acidente com veículo ou obra pública", "Buraco ou falta de manutenção", "Erro em hospital público", "Ato de agente público (ex.: abordagem policial)", "Outro"] },
+      { q: "Quando aconteceu?", a: ["Há menos de 5 anos", "Há mais de 5 anos"] },
+      { q: "Você tem fotos, boletim de ocorrência ou laudos?", a: ["Sim", "Não", "Alguns"] },
+    ],
+    lei: [
+      "O Estado e as empresas que prestam serviço público respondem pelos danos que seus agentes causarem, independentemente de culpa (Constituição, art. 37, §6º).",
+      "O prazo para pedir indenização contra a Fazenda Pública é de 5 anos (Decreto 20.910/1932, art. 1º).",
+    ],
+    juris: [
+      "STF, Tema 940 (RE 1.027.633): a ação deve ser proposta contra o Estado ou a empresa prestadora — não contra o servidor, que responde depois ao próprio Estado se agiu com dolo ou culpa.",
+      "Quando o dano vem de omissão (ex.: falta de manutenção), os tribunais costumam exigir a demonstração de falha do serviço público.",
+    ],
+    prazos: ["5 anos a contar do dano. Não deixe para depois: provas se perdem."],
+    docs: ["Fotos e vídeos do local e do dano", "Boletim de ocorrência", "Laudos médicos, notas e orçamentos", "Testemunhas"],
+    passos: ["Registre tudo: fotos, BO, laudos.", "Guarde comprovantes de todos os gastos.", "Se quiser, faça pedido administrativo de indenização ao órgão.", "Procure a advogada para avaliar a ação."],
+    urgente: ["Lesão grave ou morte", "Prazo de 5 anos perto do fim", "Risco de a prova desaparecer (ex.: buraco que será tapado)"],
+    fontes: [["Constituição, art. 37, §6º", "https://www.planalto.gov.br/ccivil_03/constituicao/constituicao.htm"], ["Decreto 20.910/1932", "https://www.planalto.gov.br/ccivil_03/decreto/antigos/d20910.htm"]],
   },
 };
