@@ -1523,3 +1523,9 @@ Ocultos [CONFERIR]: ITCD-DF (faixas 4–6% e multa por atraso); inventário em c
 Conferir: Res. CNJ 35/2007 art. 12-A (571/2024); Provimento CNJ 141/2023 (termo de união estável no RCPN); Lei 6.015 arts. 216-A e 216-B; Lei 6.858/1980; STF Tema 809; STJ Súmula 239.
 - Cartório ampliado: protesto (Lei 9.492/1997; STJ Tema 725), reurb/regularização e registro (CC 1.245; Lei 13.465/2017; averbação), certidao-matricula (Lei 6.015 arts. 16-17; SAEC/ONR). Base consolidada: Código Nacional de Normas do Foro Extrajudicial (Provimento CNJ 149/2023; adjudicação: Provimento 150/2023).
   Oculto [CONFERIR]: validade da certidão de matrícula para escrituras/financiamentos (em regra 30 dias). Conferir: prazo de 3 dias úteis da intimação de protesto (arts. 12 e 14) e medidas de renegociação no CNN.
+
+## Aprofundamento das perguntas frequentes — Saúde (15) e Servidor/órgão público (9)
+Saúde: carencia-urgencia (Súm. 597 e 609), sus-remedio, bariatrica (Tema 1069), oncologico (Leis 12.732/2012, 13.896/2019, 12.880/2013), reembolso, erro-medico, home-care (Súm. 302), cancelamento-plano (art. 13; Tema 1082), saude-mental, liminar-descumprida (Tema 84), opme-protese (RN 424/2017), fertilizacao (Tema 1067), portabilidade (RN 438/2018), uti-sus (Tema 793), odontologico.
+Ocultos [CONFERIR]: DUT da bariátrica; reembolso integral pela RN 566; coparticipação em internação psiquiátrica; congelamento de óvulos pré-quimioterapia; prazo de resposta da portabilidade.
+Adm: pad-prescricao, licitacao-recurso (14.133 arts. 164-165), orgao-nao-paga (arts. 137 e 141), heteroidentificacao (ADC 41), tribunal-contas (Tema 899), improbidade (Tema 1199), desapropriacao, lai, auto-infracao (Leis 9.784 e 9.873).
+Ocultos [CONFERIR]: nova lei de cotas em concursos (2025); prazo de defesa na citação do tribunal de contas.
