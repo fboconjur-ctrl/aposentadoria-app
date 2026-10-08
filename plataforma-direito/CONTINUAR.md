@@ -4,7 +4,7 @@ Advogada: Fernanda Borges Oliveira (OAB/DF 35.332). Branch: `claude/plataforma-d
 Prévia: https://deploy-preview-1--prevcalculadora.netlify.app/plataforma-direito/ · Painel: `/plataforma-direito/escritorio/`.
 
 ## Princípios combinados
-- O SITE NÃO DÁ ORIENTAÇÃO JURÍDICA AUTOMÁTICA (OAB-SP x Enter, out/2026): só informação geral de fontes oficiais. Perguntas de continuação, leitura de CNIS e de documentos apenas COLETAM e organizam dados para a advogada; nenhuma conclusão sobre o caso concreto é mostrada ao visitante. Sem menção a gratuidade (Prov. 205/2021, art. 3º).
+- O SITE NÃO DÁ ORIENTAÇÃO JURÍDICA AUTOMÁTICA (OAB-SP x Enter, out/2026): só informação geral de fontes oficiais. Perguntas de continuação e leitura de documentos mostram "o que a lei e a jurisprudência dizem" sobre a situação descrita e terminam com "para ter certeza da avaliação no seu caso, consulte a advogada" — sem veredito. Leitura do CNIS só mostra os vínculos lidos. Sem menção a gratuidade (Prov. 205/2021, art. 3º).
 - Correção acima de tudo: nunca inventar jurisprudência, número, valor ou regra; marcar [COMPLETAR]/[PESQUISAR].
 - Dados de clientes NUNCA no repositório (é público). No painel ficam no navegador até concluir o Supabase.
 - Revisão jurídica final fica para o fim (conteudo/REVISAO.md).

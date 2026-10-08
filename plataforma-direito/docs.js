@@ -120,8 +120,9 @@ function bindDoc(key) {
     if (!r) { out.innerHTML = `<p class="warn-text">Não reconheci este documento. Confira se é o arquivo certo ou cole o texto.</p>`; return; }
     state.docSummary = r.summary;
     out.innerHTML = `<dl class="facts">${r.facts.map(([k, v]) => `<div><dt>${esc(k)}</dt><dd>${esc(v)}</dd></div>`).join("")}</dl>
-      <div class="fu-result info"><h3>Lemos os dados acima do seu documento.</h3><p>Eles vão junto com o seu pedido. O que o documento significa para o seu caso é a advogada quem analisa.</p>
-      <div class="actions"><button class="btn" id="doc-help">Enviar para a advogada analisar</button></div></div>
+      <div class="fu-result info"><h3>O que a lei diz sobre esse tipo de documento</h3><ul>${r.items.map((i) => `<li>${esc(String(i).replace(/\s*\[(VALIDAR|COMPLETAR|PESQUISAR)[^\]]*\]/g, ""))}</li>`).join("")}</ul>
+      <p><strong>Para ter certeza da avaliação no seu caso, consulte a advogada.</strong> Os dados lidos já vão junto com o pedido.</p>
+      <div class="actions"><button class="btn" id="doc-help">Quero a avaliação da advogada</button></div></div>
       <p class="muted small">Leitura automática do arquivo, só para organizar os dados. Não é análise nem orientação jurídica.</p>`;
     $("doc-help").onclick = openLawyer;
   };

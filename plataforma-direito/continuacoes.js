@@ -9,7 +9,7 @@ function attach(id, fu) { const f = FAQ.find((x) => x.id === id); if (f) f.follo
 
 /* ---------- BPC/LOAS ---------- */
 attach("bpc-renda", {
-  title: "Quer adiantar? Responda algumas perguntas para a advogada analisar o seu caso",
+  title: "Responda algumas perguntas e veja o que a lei diz sobre a sua situação",
   intro: "4 perguntas.",
   questions: [
     { id: "quem", q: "O pedido é para:", a: ["Pessoa com 65 anos ou mais", "Pessoa com deficiência"] },
@@ -37,7 +37,7 @@ attach("bpc-renda", {
 
 /* ---------- Pensão por morte ---------- */
 attach("pensao-duracao", {
-  title: "Quer adiantar? Responda algumas perguntas para a advogada analisar o seu caso",
+  title: "Responda algumas perguntas e veja o que a lei diz sobre a sua situação",
   intro: "Para cônjuge ou companheiro(a). 5 perguntas.",
   questions: [
     { id: "obito", q: "Data do falecimento:", input: "date" },
@@ -68,7 +68,7 @@ attach("pensao-duracao", {
 
 /* ---------- Salário-maternidade ---------- */
 attach("salario-maternidade", {
-  title: "Quer adiantar? Responda algumas perguntas para a advogada analisar o seu caso",
+  title: "Responda algumas perguntas e veja o que a lei diz sobre a sua situação",
   intro: "4 perguntas.",
   questions: [
     { id: "tipo", q: "Na época do parto (ou adoção), você era:", a: ["Empregada com carteira", "Desempregada", "MEI / autônoma / facultativa", "Trabalhadora rural"] },
@@ -101,7 +101,7 @@ attach("salario-maternidade", {
 
 /* ---------- Auxílio-acidente ---------- */
 attach("auxilio-acidente", {
-  title: "Quer adiantar? Responda algumas perguntas para a advogada analisar o seu caso",
+  title: "Responda algumas perguntas e veja o que a lei diz sobre a sua situação",
   intro: "4 perguntas.",
   questions: [
     { id: "tipo", q: "Na época do acidente, você era:", a: ["Empregado(a) com carteira", "Empregado(a) doméstico(a)", "Autônomo / MEI / facultativo", "Trabalhador(a) rural", "Desempregado(a)"] },
@@ -124,7 +124,7 @@ attach("auxilio-acidente", {
 
 /* ---------- Aposentadoria especial ---------- */
 attach("especial-ppp", {
-  title: "Quer adiantar? Responda algumas perguntas para a advogada analisar o seu caso",
+  title: "Responda algumas perguntas e veja o que a lei diz sobre a sua situação",
   intro: "4 perguntas.",
   questions: [
     { id: "agente", q: "A que você ficava exposto(a)?", a: ["Ruído", "Produtos químicos", "Agentes biológicos (saúde, lixo)", "Eletricidade", "Vigilância armada", "Outro / não sei"] },
@@ -149,7 +149,7 @@ attach("especial-ppp", {
 
 /* ---------- Consumidor: negativação ---------- */
 attach("negativado", {
-  title: "Quer adiantar? Responda algumas perguntas para a advogada analisar o seu caso",
+  title: "Responda algumas perguntas e veja o que a lei diz sobre a sua situação",
   intro: "4 perguntas.",
   questions: [
     { id: "divida", q: "A dívida existe?", a: ["Não reconheço", "Já paguei", "Existe, mas o valor está errado", "Existe e está em aberto"] },
@@ -176,7 +176,7 @@ attach("negativado", {
 
 /* ---------- Consumidor: defeito e arrependimento ---------- */
 attach("defeito", {
-  title: "Quer adiantar? Responda algumas perguntas para a advogada analisar o seu caso",
+  title: "Responda algumas perguntas e veja o que a lei diz sobre a sua situação",
   intro: "3 perguntas.",
   questions: [
     { id: "duravel", q: "O produto é:", a: ["Durável (eletrônico, móvel, veículo, roupa)", "Não durável (alimento, cosmético)"] },
@@ -199,7 +199,7 @@ attach("defeito", {
   },
 });
 attach("arrependimento", {
-  title: "Quer adiantar? Responda algumas perguntas para a advogada analisar o seu caso",
+  title: "Responda algumas perguntas e veja o que a lei diz sobre a sua situação",
   intro: "Informe quando recebeu o produto (ou assinou o contrato).",
   questions: [{ id: "data", q: "Data de recebimento ou de assinatura:", input: "date" }],
   evaluate(a) {
@@ -213,7 +213,7 @@ attach("arrependimento", {
 
 /* ---------- Administrativo: concurso e multa ---------- */
 attach("concurso-vagas", {
-  title: "Quer adiantar? Responda algumas perguntas para a advogada analisar o seu caso",
+  title: "Responda algumas perguntas e veja o que a lei diz sobre a sua situação",
   intro: "3 perguntas.",
   questions: [
     { id: "posicao", q: "Sua classificação está:", a: ["Dentro do número de vagas do edital", "No cadastro reserva", "Não sei"] },
@@ -236,7 +236,7 @@ attach("concurso-vagas", {
   },
 });
 attach("multa-transito", {
-  title: "Quer adiantar? Responda algumas perguntas para a advogada analisar o seu caso",
+  title: "Responda algumas perguntas e veja o que a lei diz sobre a sua situação",
   intro: "3 perguntas com base na notificação.",
   questions: [
     { id: "fase", q: "Qual notificação você recebeu?", a: ["Notificação de autuação (1ª)", "Notificação de penalidade (2ª)", "Processo de suspensão da CNH"] },
@@ -261,7 +261,7 @@ attach("multa-transito", {
 
 /* ---------- Cartório: divórcio e usucapião ---------- */
 attach("divorcio-cartorio", {
-  title: "Quer adiantar? Responda algumas perguntas para a advogada analisar o seu caso",
+  title: "Responda algumas perguntas e veja o que a lei diz sobre a sua situação",
   intro: "3 perguntas.",
   questions: [
     { id: "acordo", q: "Vocês estão de acordo com o divórcio e a divisão dos bens?", a: ["Sim", "Não", "Em parte"] },
@@ -281,7 +281,7 @@ attach("divorcio-cartorio", {
   },
 });
 attach("usucapiao", {
-  title: "Quer adiantar? Responda algumas perguntas para a advogada analisar o seu caso",
+  title: "Responda algumas perguntas e veja o que a lei diz sobre a sua situação",
   intro: "5 perguntas.",
   questions: [
     { id: "anos", q: "Há quantos anos você tem a posse do imóvel?", input: "number" },

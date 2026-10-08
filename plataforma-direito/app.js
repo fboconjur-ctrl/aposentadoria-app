@@ -247,11 +247,13 @@ function finishFollowUp(fu, ans) {
   $("fu-answers").innerHTML = "";
   const box = document.createElement("div");
   box.className = "fu-result " + r.tone;
-  // Nada de conclusão automática sobre o caso concreto: as respostas vão para a advogada analisar.
+  // Mostra o que a lei e a jurisprudência dizem sobre a situação descrita; a avaliação do caso é da advogada.
+  const regras = r.items.map((t) => t.replace(/\s*\[(VALIDAR|COMPLETAR|PESQUISAR)[^\]]*\]/g, "")).filter(Boolean);
   box.className = "fu-result info";
-  box.innerHTML = `<h3>Pronto, suas respostas foram registradas.</h3>
-    <p>Elas seguem junto com o seu pedido, para a advogada analisar o seu caso com os documentos. Quem diz o que vale no seu caso é a advogada, não o site.</p>
-    <div class="actions"><button class="btn" id="fu-help">Enviar para a advogada analisar</button></div>`;
+  box.innerHTML = `<h3>O que a lei e a jurisprudência dizem sobre isso</h3><ul>${regras.map((t) => `<li>${esc(t)}</li>`).join("")}</ul>
+    <p><strong>Para ter certeza da avaliação no seu caso, consulte a advogada.</strong> Suas respostas já vão junto com o pedido.</p>
+    <div class="actions"><button class="btn" id="fu-help">Quero a avaliação da advogada</button></div>
+    <p class="small muted">Informação geral com base na lei e na jurisprudência. Não substitui a análise do seu caso com os documentos.</p>`;
   $("followup").appendChild(box);
   $("fu-help").onclick = openLawyer;
   $("faq-cta").hidden = true;
