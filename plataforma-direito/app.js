@@ -45,7 +45,7 @@ function startChat(text, forcedKey, skipQuestion) {
   const key = forcedKey || classify(text);
   setTimeout(() => {
     if (!key) {
-      say("Obrigado por contar. Para eu entender melhor: com quem é o problema?");
+      say("Com quem é a questão?");
       offer(["INSS", "Órgão público", "Plano de saúde ou SUS", "Uma empresa", "Cartório"], (o) => {
         const map = { "INSS": "previdenciario", "Órgão público": "administrativo", "Plano de saúde ou SUS": "saude", "Uma empresa": "consumidor", "Cartório": "cartorio" };
         begin(map[o]);
@@ -59,8 +59,34 @@ function startChat(text, forcedKey, skipQuestion) {
 function begin(key) {
   state.key = key;
   state.flow = FLOWS[key];
-  say(state.flow.understood + "\n\nPara mostrar as informações certas, preciso saber algumas coisas.");
-  setTimeout(ask, 500);
+  // Sem relato ainda (veio pelo botão de assunto): pede a história em poucas palavras antes das perguntas.
+  if (!state.text) return pedirHistoria();
+  setTimeout(ask, 300);
+}
+
+const EXEMPLO_HIST = {
+  previdenciario: "Ex.: tenho 60 anos, pedi aposentadoria e o INSS negou",
+  saude: "Ex.: meu plano negou a cirurgia que o médico pediu",
+  administrativo: "Ex.: passei no concurso e não fui chamado",
+  consumidor: "Ex.: comprei uma geladeira que veio com defeito e a loja não troca",
+  cartorio: "Ex.: meu pai faleceu e somos 3 irmãos de acordo na partilha",
+};
+function pedirHistoria() {
+  say("Conte em poucas palavras o que aconteceu.");
+  const box = $("answers");
+  box.innerHTML = `<form id="hist-form" class="hist-form"><textarea id="hist-txt" rows="3" placeholder="${esc(EXEMPLO_HIST[state.key] || "Ex.: o que aconteceu, quando e com quem")}"></textarea>
+    <div class="actions"><button class="btn" type="submit">Continuar</button><button type="button" id="hist-pular">Prefiro só responder perguntas</button></div></form>`;
+  $("hist-txt").focus();
+  $("hist-txt").onkeydown = (e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); $("hist-form").requestSubmit(); } };
+  $("hist-form").onsubmit = (e) => {
+    e.preventDefault();
+    const t = $("hist-txt").value.trim(); if (!t) return $("hist-txt").focus();
+    state.text = t; box.innerHTML = ""; say(t, "user");
+    // Pergunta formulada como dúvida e com resposta pronta: mostra a informação geral direto.
+    if (isQuestion(t) && findFaq(t)) return setTimeout(() => answerQuestion(t), 350);
+    setTimeout(ask, 350);
+  };
+  $("hist-pular").onclick = () => { box.innerHTML = ""; setTimeout(ask, 200); };
 }
 
 function ask() {
@@ -337,7 +363,7 @@ $("start-form").onsubmit = (e) => {
 $("start-text").addEventListener("keydown", (e) => {
   if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); $("start-form").requestSubmit(); }
 });
-document.querySelectorAll("#shortcuts [data-topic]").forEach((b) => (b.onclick = () => startChat("", b.dataset.topic)));
+document.querySelectorAll("#shortcuts [data-topic]").forEach((b) => (b.onclick = () => mostrarSituacoes(b.dataset.topic)));
 document.querySelectorAll("[data-go]").forEach((a) => a.addEventListener("click", (e) => {
   if (a.getAttribute("href") === "#") e.preventDefault();
   go(a.dataset.go);
@@ -407,23 +433,30 @@ $("outro").onclick = () => {
   $("start-text").focus();
 };
 
-// "Dívidas e bancos": a pessoa escolhe a situação e cai direto na resposta verificada correspondente.
-const DIVIDAS = [
-  ["Tenho muitas dívidas e não consigo pagar", "superendividamento"],
-  ["Apareceu empréstimo ou desconto que não fiz", "consignado-nao-contratado"],
-  ["Caí em golpe no Pix", "pix-golpe"],
-  ["O banco quer tomar meu carro", "busca-apreensao"],
-  ["Outro problema com banco ou cobrança", null],
-];
-$("dividas").onclick = () => {
-  Object.assign(state, { text: "", answers: [], qi: 0, flow: null, followSummary: null, cnisSummary: null, docSummary: null, faqId: null });
+// Cada assunto abre "Qual destas situações é a sua?": a situação leva direto à informação verificada;
+// "Outra situação" pede a história em poucas palavras e segue com as perguntas do assunto.
+const SITUACOES = {
+  previdenciario: [["Meu benefício do INSS foi negado", "indeferido"], ["Quero saber com que idade posso me aposentar", "idade-minima"], ["Estão descontando da minha aposentadoria sem autorização", "descontos-beneficio"], ["Tenho deficiência e quero me aposentar", "pcd-quem"], ["BPC/LOAS para idoso ou pessoa com deficiência", "bpc-renda"], ["Pensão por morte", "pensao-duracao"]],
+  saude: [["O plano negou exame, cirurgia ou tratamento", "plano-negou"], ["O plano demora para marcar consulta ou cirurgia", "prazo-atendimento"], ["Remédio caro: plano ou SUS não fornecem", "liminar-medicamento"], ["A mensalidade do plano aumentou muito", "reajuste-idade"], ["Terapias para autismo (TEA)", "tea-terapia"], ["Fui demitido(a) ou me aposentei e quero manter o plano", "manter-plano"]],
+  administrativo: [["Passei no concurso e não fui chamado(a)", "concurso-vagas"], ["Fui eliminado(a) em etapa do concurso", "concurso-eliminacao"], ["Respondo a processo disciplinar (PAD)", "pad-prazo"], ["Sou servidor(a) e um direito meu foi negado", "direitos-servidor"], ["Multa de trânsito ou suspensão da CNH", "multa-transito"], ["O poder público me causou prejuízo", "responsabilidade-estado"]],
+  dividas: [["Tenho muitas dívidas e não consigo pagar", "superendividamento"], ["Apareceu empréstimo ou desconto que não fiz", "consignado-nao-contratado"], ["Caí em golpe no Pix", "pix-golpe"], ["O banco quer tomar meu carro", "busca-apreensao"], ["Meu nome foi negativado", "negativado"], ["Compras no cartão que eu não fiz", "compra-nao-reconhecida"]],
+  consumidor: [["Produto com defeito", "defeito"], ["Comprei pela internet e não recebi", "compra-nao-entregue"], ["Quero desistir de uma compra", "arrependimento"], ["Voo atrasado ou cancelado", "voo"], ["Problema com operadora de celular ou internet", "telefonia"], ["Cobrança indevida", "cobranca-dobro"]],
+  cartorio: [["Inventário de quem faleceu", "inventario-cartorio"], ["Divórcio", "divorcio-cartorio"], ["União estável", "uniao-estavel"], ["Regularizar imóvel (usucapião)", "usucapiao"], ["Paguei o imóvel e não recebi a escritura", "adjudicacao"], ["Sacar FGTS ou saldo de quem faleceu", "alvara-valores"]],
+};
+const OUTRA = "Outra situação — contar com minhas palavras";
+function mostrarSituacoes(tema) {
+  const key = tema === "dividas" ? "consumidor" : tema;
+  Object.assign(state, { text: "", answers: [], qi: 0, key, flow: FLOWS[key], followSummary: null, cnisSummary: null, docSummary: null, faqId: null });
   $("messages").innerHTML = "";
   $("qcount").textContent = ""; $("voltar").hidden = true;
   go("chat"); setStep(1);
   say("Vamos lá. Qual destas situações é a sua?");
-  offer(DIVIDAS.map((d) => d[0]), (o) => {
-    const [txt, id] = DIVIDAS.find((d) => d[0] === o);
-    const f = id && FAQ.find((x) => x.id === id);
-    if (f) answerQuestion(txt, f); else begin("consumidor");
+  const lista = SITUACOES[tema];
+  offer([...lista.map((x) => x[0]), OUTRA], (o) => {
+    if (o === OUTRA) return pedirHistoria();
+    const [txt, id] = lista.find((x) => x[0] === o);
+    const f = FAQ.find((x) => x.id === id);
+    if (f) answerQuestion(txt, f); else begin(key);
   });
-};
+}
+$("dividas").onclick = () => mostrarSituacoes("dividas");

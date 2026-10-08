@@ -299,3 +299,8 @@ tr:last-child td { border-bottom: 0; }
 .b2b-card { display: grid; gap: 2px; width: 100%; box-sizing: border-box; padding: 14px 16px; border: 1.5px solid var(--line); border-radius: var(--r); background: var(--tint); color: var(--ink); text-decoration: none; text-align: left; }
 .b2b-card span { color: var(--muted); font-size: .92rem; }
 .b2b-card:hover { border-color: var(--brand); }
+.hist-form { display: grid; gap: 10px; width: 100%; }
+.hist-form textarea { width: 100%; box-sizing: border-box; border: 1.5px solid var(--line); border-radius: 14px; padding: 12px 14px; font: 1rem/1.5 var(--font-body); background: var(--surface); color: var(--ink); resize: vertical; }
+.hist-form textarea:focus { outline: none; border-color: var(--brand); }
+.hist-form .actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.answers .hist-form .btn { background: var(--brand); color: var(--brand-ink); border: 0; }
