@@ -219,7 +219,23 @@ function renderHoje() {
   const pubsNovas = pubsTodas().filter((p) => !vistas.has(String(p.id)));
   if (pubsNovas.length) nov.push(`<li><span class="ico">📰</span><div><b>${pubsNovas.length} publicação(ões) nova(s)</b> — ${[...new Set(pubsNovas.map((p) => cliDoProc(numPub(p))?.nome).filter(Boolean))].map(esc).join(", ") || "processos sem cliente"}<br><button class="linkish small" data-view="djen">Ver publicações</button></div></li>`);
   Object.entries(acomp).forEach(([n, a]) => { const k = (a.movs || []).filter((m) => m.data > (a.vistoAte || "9")).length; if (k) { const c = cliDoProc(n); nov.push(`<li><span class="ico">🔔</span><div><b>${k} movimentação(ões)</b> no processo ${esc(mascara(n))}${c ? ` · <button class="linkish" data-cli="${c.id}">${esc(c.nome)}</button>` : ""}</div></li>`); } });
+  // Política de privacidade: pedidos sem contratação há mais de 90 dias devem ser apagados.
+  const vencidos = clientesVencidos();
+  if (vencidos.length) nov.push(`<li><span class="ico">🗑️</span><div><b>${vencidos.length} pedido(s) sem contrato há mais de 90 dias</b> — pela política de privacidade, os dados devem ser apagados: ${vencidos.map((c) => esc(c.nome)).join(", ")}<br><button class="linkish small" id="apagar-vencidos">Apagar agora</button></div></li>`);
   $("h-novidades").innerHTML = nov.join("") || `<li class="muted">Nenhuma novidade.</li>`;
+  const bt = $("apagar-vencidos");
+  if (bt) bt.onclick = async () => {
+    if (!confirm(`Apagar todos os dados de ${vencidos.length} pedido(s) sem contrato há mais de 90 dias?\n\n${vencidos.map((c) => c.nome).join(", ")}\n\nNão dá para desfazer.`)) return;
+    const ids = new Set(vencidos.map((c) => c.id));
+    clientes = clientes.filter((x) => !ids.has(x.id)); itens = itens.filter((x) => !ids.has(x.cli)); fin = fin.filter((l) => !ids.has(l.cli));
+    salvarCrm(); salvarItens(); salvarFin();
+    for (const c of vencidos) { try { if (window.apagarPedidoNuvem && c.protocolo) await window.apagarPedidoNuvem(c.protocolo); } catch {} }
+    renderTudo();
+  };
+}
+function clientesVencidos() {
+  const limite = hoje.getTime() - 90 * DAY;
+  return clientes.filter((c) => c.origem === "Plataforma" && ["Novo pedido", "Consulta marcada", "Proposta enviada", "Indicado a colega"].includes(c.etapa) && c.criado && new Date(c.criado).getTime() < limite);
 }
 
 // ---------- Clientes ----------
@@ -389,6 +405,9 @@ function importarPacote(texto) {
   clientes.push(c); salvarCrm();
   const falta = (pk.faltaSaber || []).length ? ` — perguntar: ${pk.faltaSaber.join("; ")}` : "";
   itens.push({ id: novoId("I-"), tipo: "tarefa", texto: `Retornar contato${pk.periodo ? ` (prefere ${String(pk.periodo).toLowerCase()})` : ""}${falta}`, quando: hojeIso, cli: c.id, feita: false }); salvarItens();
+  // Lembrete único, só se a pessoa autorizou no formulário (sem propaganda, sem insistência).
+  if (pk.lembrete) itens.push({ id: novoId("I-"), tipo: "tarefa", texto: `Se não respondeu: lembrete ÚNICO para ${pk.nome} (autorizado)`, quando: iso(new Date(hoje.getTime() + 7 * DAY)), cli: c.id, feita: false });
+  if (pk.lembrete) salvarItens();
   $("ped-texto").value = ""; $("ped-msg").textContent = `Pedido ${pk.protocolo} importado.`;
   renderTudo(); return true;
 }
