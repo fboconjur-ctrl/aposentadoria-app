@@ -4,6 +4,7 @@ Advogada: dados (nome/OAB) ficam só em "Meus dados" no painel — NUNCA no cód
 Prévia: https://deploy-preview-1--prevcalculadora.netlify.app/plataforma-direito/ · Painel: `/plataforma-direito/escritorio/`.
 
 ## Princípios combinados
+- PRIVACIDADE: o site não salva nem envia dados ou documentos de ninguém. PDFs são lidos no aparelho da pessoa e nunca enviados. Só quando a pessoa pede para falar com a advogada (e marca a autorização) o relato, as respostas e os dados lidos vão para a advogada. Nada de analytics/rastreadores. Indicação a colega exige autorização.
 - O SITE NÃO DÁ ORIENTAÇÃO JURÍDICA AUTOMÁTICA (OAB-SP x Enter, out/2026): só informação geral de fontes oficiais. Perguntas de continuação e leitura de documentos mostram "o que a lei e a jurisprudência dizem" sobre a situação descrita e terminam com "para ter certeza da avaliação no seu caso, consulte a advogada" — sem veredito. Leitura do CNIS só mostra os vínculos lidos. Sem menção a gratuidade (Prov. 205/2021, art. 3º).
 - Correção acima de tudo: nunca inventar jurisprudência, número, valor ou regra; marcar [COMPLETAR]/[PESQUISAR].
 - Dados de clientes NUNCA no repositório (é público). No painel ficam no navegador até concluir o Supabase.

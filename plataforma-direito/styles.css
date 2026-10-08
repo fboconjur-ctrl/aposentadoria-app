@@ -320,3 +320,6 @@ tr:last-child td { border-bottom: 0; }
 .rt-urgente { border-left: 4px solid #b42318; padding-left: 14px; }
 .linkish { background: none; border: 0; padding: 0; color: var(--brand); font: inherit; font-weight: 600; cursor: pointer; text-decoration: underline; }
 .home-doc { width: 100%; box-sizing: border-box; text-align: left; }
+.privacidade { margin-top: 10px; text-align: left; max-width: 760px; margin-left: auto; margin-right: auto; }
+.privacidade summary { cursor: pointer; font-weight: 600; color: var(--ink-2); }
+.privacidade ul { padding-left: 1.2em; display: grid; gap: 6px; }
