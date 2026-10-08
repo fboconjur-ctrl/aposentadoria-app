@@ -52,6 +52,9 @@ const GLOSSARIO = {
   "cessão de crédito": "Quando a empresa “vende” ou repassa a sua dívida para outra (ex.: uma empresa de cobrança). A dívida continua a mesma: a nova cobradora não pode aumentar o valor por conta própria.",
   "lei de usura": "Lei de 1933 que limita os juros a 12% ao ano para quem não é banco ou financeira autorizada pelo Banco Central.",
   "cet": "Custo Efetivo Total: o custo real de um parcelamento ou empréstimo, somando juros, tarifas e encargos. Deve ser informado antes de você aceitar.",
+  "toi": "Termo de Ocorrência e Inspeção: documento que a distribuidora de energia faz quando diz ter encontrado irregularidade no medidor. Sozinho, os tribunais costumam entender que não prova fraude.",
+  "recuperação de consumo": "Cobrança que a distribuidora faz de energia que, segundo ela, foi consumida e não registrada (por defeito ou fraude no medidor).",
+  "aferição do medidor": "Teste do medidor (de luz ou de água) para ver se ele marca o consumo corretamente. Você pode pedir; em geral, se o medidor estiver certo, pode haver custo.",
   "responsabilidade objetiva": "O Estado responde pelo dano causado por seus agentes sem que a vítima precise provar culpa: basta provar o dano e a relação com a ação do Estado.",
 };
 
@@ -848,5 +851,94 @@ const ROTEIROS = {
     passos: ["Peça por escrito, à concessionária e à cobradora, o contrato, a memória de cálculo e o custo efetivo total.", "Consulte no site do Banco Central se a cobradora é instituição autorizada.", "Reclame na ouvidoria da concessionária, na agência reguladora (ANEEL 167, Anatel 1331, agência de água ou gás do seu estado), no Procon e no consumidor.gov.br.", "Ofereça pagar o valor original com os encargos legais, por escrito.", "Procure a advogada: pode caber revisão da dívida, devolução em dobro, denúncia ao Banco Central e pedido urgente contra o corte."],
     urgente: ["Corte marcado ou já feito", "Pessoa doente que depende de aparelho elétrico", "Negativação pela cobradora"],
     fontes: [["Código de Defesa do Consumidor", "https://www.planalto.gov.br/ccivil_03/leis/l8078compilado.htm"], ["ANEEL — Resolução Normativa 1.000/2021", "https://www2.aneel.gov.br/cedoc/ren20211000.html"], ["ANEEL — como resolver", "https://www.gov.br/aneel/pt-br/consumidores/como-resolver"], ["Lei 11.445/2007 (saneamento)", "https://www.planalto.gov.br/ccivil_03/_ato2007-2010/2007/lei/l11445.htm"], ["Decreto 22.626/1933 (Lei de Usura)", "https://www.planalto.gov.br/ccivil_03/decreto/d22626.htm"], ["Lei 4.595/1964", "https://www.planalto.gov.br/ccivil_03/leis/l4595.htm"]],
+  },
+
+  "falta-energia": {
+    acolhe: "Falta de energia é a reclamação nº 1 na ANEEL — e pode dar direito a desconto na conta e a ressarcimento de aparelhos queimados.",
+    perguntas: [
+      { q: "O que aconteceu?", a: ["Falta de energia demorada", "Quedas frequentes", "Aparelho queimou com a oscilação", "Perdi alimentos ou remédios"] },
+      { q: "Por quanto tempo ficou sem energia?", a: ["Menos de 24 horas", "Mais de 24 horas", "Várias vezes no mês"] },
+      { q: "Você tem nota fiscal ou orçamento do aparelho?", a: ["Sim", "Não"] },
+    ],
+    lei: [
+      "A distribuidora responde pelos danos causados pela falha no serviço, independentemente de culpa (CDC, arts. 14 e 22).",
+      "Quando a distribuidora ultrapassa os limites de duração e frequência das interrupções fixados pela ANEEL, ela deve compensar o consumidor com desconto automático na fatura (Resolução Normativa ANEEL 1.000/2021 e Procedimentos de Distribuição).",
+      "Aparelho queimado por oscilação: você pode pedir o ressarcimento à distribuidora, que deve verificar o equipamento e responder em prazos fixados pela ANEEL. [CONFERIR] prazo para o consumidor pedir e prazos de resposta.",
+      "[CONFERIR] Nova regra da ANEEL de pagamento ao consumidor em interrupções de emergência acima de 24 horas.",
+    ],
+    juris: ["Os tribunais costumam reconhecer indenização quando a interrupção é longa ou repetida e causa prejuízo concreto (alimentos, remédios, trabalho), e também o ressarcimento de aparelhos danificados por oscilação."],
+    prazos: ["Peça o ressarcimento do aparelho o quanto antes e não descarte o equipamento: ele pode ser vistoriado."],
+    docs: ["Protocolos das ligações para a distribuidora", "Fotos e vídeos (bairro às escuras, aparelho queimado)", "Nota fiscal ou orçamento do aparelho e laudo de técnico", "Comprovantes de prejuízos (alimentos, remédios, trabalho)"],
+    passos: ["Registre a falta de energia na distribuidora e anote o protocolo.", "Para aparelho queimado, peça o ressarcimento pelo canal da distribuidora.", "Confira na fatura se veio a compensação pelas interrupções.", "Sem solução, reclame na ANEEL (167) e procure a advogada se o prejuízo for relevante."],
+    urgente: ["Pessoa que depende de aparelho elétrico (oxigênio, por exemplo)", "Remédios que precisam de geladeira", "Comércio parado"],
+    fontes: [["ANEEL — como resolver", "https://www.gov.br/aneel/pt-br/consumidores/como-resolver"], ["Código de Defesa do Consumidor", "https://www.planalto.gov.br/ccivil_03/leis/l8078compilado.htm"]],
+  },
+
+  "conta-alta": {
+    acolhe: "Conta de luz ou de água muito acima do normal precisa de explicação — e você pode exigir a verificação.",
+    perguntas: [
+      { q: "Qual conta veio alta?", a: ["Energia", "Água"] },
+      { q: "Quanto subiu em relação à média?", a: ["Até o dobro", "Mais que o dobro"] },
+      { q: "A empresa explicou o motivo?", a: ["Disse que é vazamento", "Disse que foi leitura estimada ou acumulada", "Não explicou"], ajuda: ["aferição do medidor"] },
+    ],
+    lei: [
+      "O consumidor tem direito à informação clara sobre o que está sendo cobrado e à revisão da fatura contestada (CDC, art. 6º, III; normas da ANEEL e das agências de saneamento).",
+      "Você pode pedir a verificação (aferição) do medidor de energia ou do hidrômetro. [CONFERIR] regras de custo e prazo da aferição na ANEEL e na agência local de água.",
+      "Cobrança acima do consumo real deve ser devolvida em dobro, salvo engano justificável (CDC, art. 42).",
+    ],
+    juris: ["Há decisões condenando a concessionária quando ela própria reconhece o erro de medição, mas também decisões a favor da empresa quando o histórico mostra vazamento interno no imóvel — por isso a prova conta muito."],
+    divergencia: ["Vazamento oculto (escondido) depois do hidrômetro: algumas agências e contratos preveem desconto; em outros lugares, a conta é do consumidor. [CONFERIR] regra da agência local."],
+    prazos: ["Conteste a fatura antes do vencimento, se possível, e peça o parcelamento da diferença enquanto se discute."],
+    docs: ["Faturas dos últimos 12 meses (para mostrar a média)", "Fotos do medidor ou hidrômetro com a leitura", "Laudo de encanador ou eletricista (se não há vazamento ou defeito)", "Protocolos de reclamação"],
+    passos: ["Fotografe o medidor e anote a leitura por alguns dias.", "Peça a revisão da fatura e a aferição do medidor, com protocolo.", "Reclame na ouvidoria da empresa e na agência reguladora.", "Procure a advogada se houver ameaça de corte pela conta contestada."],
+    urgente: ["Ameaça de corte pela conta contestada", "Valor muito acima da capacidade de pagamento"],
+    fontes: [["ANEEL — como resolver", "https://www.gov.br/aneel/pt-br/consumidores/como-resolver"], ["Código de Defesa do Consumidor", "https://www.planalto.gov.br/ccivil_03/leis/l8078compilado.htm"]],
+  },
+
+  "fraude-medidor": {
+    acolhe: "Ser acusado de fraude no medidor e receber uma cobrança alta de “recuperação de consumo” é comum — e os tribunais exigem prova da distribuidora.",
+    perguntas: [
+      { q: "O que você recebeu?", a: ["Termo de ocorrência (TOI) e cobrança", "Só a cobrança de recuperação de consumo", "Aviso de corte por essa dívida"], ajuda: ["toi", "recuperação de consumo"] },
+      { q: "Você acompanhou a inspeção no medidor?", a: ["Sim", "Não, foi feita sem ninguém em casa", "Não sei"] },
+      { q: "Você mora no imóvel há quanto tempo?", a: ["Menos de 1 ano", "Mais de 1 ano"] },
+    ],
+    lei: [
+      "A distribuidora deve seguir o procedimento da ANEEL para apurar irregularidade, garantindo ao consumidor o direito de acompanhar, de pedir perícia e de se defender (Resolução Normativa ANEEL 1.000/2021).",
+      "O consumidor tem direito à informação, à ampla defesa e à inversão do ônus da prova quando sua alegação for verossímil (CDC, art. 6º, III e VIII).",
+    ],
+    juris: [
+      "STJ, Tema 699: o corte por débito de recuperação de consumo só é possível se a fraude for atribuída ao consumidor e apurada com contraditório e ampla defesa, limitado aos 90 dias anteriores à constatação, com corte em até 90 dias após o vencimento e aviso prévio. Valores mais antigos só podem ser cobrados na Justiça.",
+      "Vários tribunais estaduais entendem que o TOI, sozinho, não prova a fraude nem quem a cometeu — a distribuidora precisa de perícia ou outras provas, e de demonstrar a autoria.",
+    ],
+    divergencia: ["Perícia feita pela própria distribuidora ou por laboratório contratado: alguns tribunais aceitam, sobretudo se acreditado pelo Inmetro; outros exigem perícia independente ou judicial."],
+    prazos: ["Apresente defesa e peça perícia no prazo indicado na notificação.", "Corte só em até 90 dias após o vencimento do débito, com aviso prévio (Tema 699)."],
+    docs: ["Termo de ocorrência (TOI) e fotos entregues pela distribuidora", "Notificação e cálculo da recuperação de consumo", "Faturas dos 12 meses anteriores", "Contrato de aluguel ou escritura (se mudou há pouco tempo)"],
+    passos: ["Peça por escrito cópia do TOI, das fotos, do laudo e do cálculo.", "Apresente defesa e peça perícia independente no prazo.", "Não assine confissão de dívida sem orientação.", "Procure a advogada, principalmente se houver ameaça de corte."],
+    urgente: ["Aviso de corte por recuperação de consumo", "Pressão para assinar confissão de dívida", "Valor muito alto"],
+    fontes: [["ANEEL — Resolução Normativa 1.000/2021", "https://www2.aneel.gov.br/cedoc/ren20211000.html"], ["STJ — Tema 699", "https://processo.stj.jus.br/repetitivos/temas_repetitivos/"]],
+  },
+
+  "cancelamento-curso": {
+    acolhe: "Desistiu de curso, faculdade ou pós e querem cobrar o curso inteiro? Isso costuma ser considerado abusivo.",
+    perguntas: [
+      { q: "Quando você desistiu?", a: ["Antes de começarem as aulas", "Depois que as aulas começaram"] },
+      { q: "Como contratou?", a: ["Presencialmente", "Pela internet ou telefone"], ajuda: ["direito de arrependimento"] },
+      { q: "O que estão cobrando?", a: ["Todas as parcelas que faltam", "Multa alta", "Não devolvem a matrícula", "Outro"] },
+    ],
+    lei: [
+      "São nulas as cláusulas que deixam o consumidor em desvantagem exagerada ou que impõem perda total do que foi pago (CDC, arts. 51, IV, e 53).",
+      "Contratou pela internet ou telefone? Pode desistir em 7 dias e receber tudo de volta (CDC, art. 49).",
+      "É abusivo exigir vantagem manifestamente excessiva, como cobrar por aulas que não serão dadas (CDC, art. 39, V).",
+    ],
+    juris: [
+      "Os tribunais costumam limitar a multa rescisória a um percentual razoável sobre o que faltava pagar — o Idec defende o teto de 10% das parcelas restantes —, e não admitem a cobrança do curso inteiro.",
+      "Desistência antes do início das aulas: há decisões determinando a devolução do valor pago, já que o serviço não foi prestado e a vaga pode ser ocupada por outra pessoa.",
+    ],
+    divergencia: ["Retenção da taxa de matrícula: alguns tribunais admitem reter parte para cobrir custos administrativos; outros mandam devolver integralmente quando a desistência é antes das aulas."],
+    prazos: ["Formalize a desistência por escrito na hora em que decidir: a data do pedido conta para o cálculo."],
+    docs: ["Contrato e comprovantes de pagamento", "Pedido de cancelamento por escrito (com data e protocolo)", "Cobranças e boletos recebidos depois do cancelamento"],
+    passos: ["Peça o cancelamento por escrito e guarde o protocolo.", "Peça a planilha do que estão cobrando.", "Reclame no consumidor.gov.br ou Procon.", "Procure a advogada se houver negativação ou cobrança do curso inteiro."],
+    urgente: ["Negativação pela cobrança", "Valores altos (pós, MBA, medicina)"],
+    fontes: [["Código de Defesa do Consumidor", "https://www.planalto.gov.br/ccivil_03/leis/l8078compilado.htm"], ["Idec — cancelamento de cursos", "https://idec.org.br/"]],
   },
 };
