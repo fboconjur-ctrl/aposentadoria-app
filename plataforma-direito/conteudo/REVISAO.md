@@ -1501,3 +1501,9 @@ Conferir: pontos (93/103) e idade progressiva (59a6m/64a6m) em 2026; LOAS art. 2
 Revisar: concurso-vagas, concurso-eliminacao, pad-prazo, direitos-servidor, multa-transito, responsabilidade-estado.
 Conferir: STF Temas 161, 784, 973, 940, 1097; SV 44 e 5; STJ Súmulas 635, 641, 85, 312, 127; CTB arts. 165-A, 261 (Lei 14.071/2020), 281.
 Para marcar um roteiro como revisado: em roteiros.js, ROTEIROS_REVISADOS = { "id-da-situacao": "AAAA-MM-DD" }.
+
+## Roteiros — lote Dívidas e bancos (6 situações) — área com muita jurisprudência acima da lei
+Revisar: superendividamento, consignado-nao-contratado, pix-golpe, busca-apreensao, negativado, compra-nao-reconhecida.
+Novo bloco "Onde os tribunais ainda divergem" (Pix: REsp 2.215.907/SP x transações fora do perfil; Tema 1132 e "não procurado"; R$ 600 absoluto ou não; dívida prescrita em plataformas; chip e senha).
+Oculto até revisão [CONFERIR]: prazo máximo do MED no regulamento atual do Pix (MED 2.0 obrigatório desde 02/2026).
+Conferir: STF ADPFs 1005/1006/1097 (23/04/2026, R$ 600 + revisão pelo CMN); STJ Temas 722 e 1132; REsp 1.622.555; EAREsp 676.608 (modulação 30/03/2021).

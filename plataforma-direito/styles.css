@@ -325,3 +325,4 @@ tr:last-child td { border-bottom: 0; }
 .privacidade ul { padding-left: 1.2em; display: grid; gap: 6px; }
 .selo-rev { margin-top: 14px; padding: 10px 12px; border-radius: 12px; background: var(--tint); color: var(--ink-2); }
 #view-sobre h2 { margin-top: 22px; }
+.rt-diverge { border-left: 4px solid var(--brand); padding-left: 14px; }

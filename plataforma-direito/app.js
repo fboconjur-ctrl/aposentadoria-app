@@ -189,6 +189,7 @@ function mostrarRoteiro(f, R, text) {
     <div id="rt-conteudo" hidden>
       ${bloco("O que a lei diz", R.lei)}
       ${bloco("Como os tribunais têm decidido", R.juris)}
+      ${bloco("Onde os tribunais ainda divergem", R.divergencia, "rt-diverge")}
       ${bloco("Prazos que importam", R.prazos, "rt-prazo")}
       ${publico(R.docs).length ? `<section class="rt-bloco"><h2>Documentos para separar</h2><ul class="rt-check">${publico(R.docs).map((x) => `<li><label><input type="checkbox"> ${esc(x)}</label></li>`).join("")}</ul></section>` : ""}
       ${publico(R.passos).length ? `<section class="rt-bloco"><h2>O que fazer agora</h2><ol>${publico(R.passos).map((x) => `<li>${esc(x)}</li>`).join("")}</ol></section>` : ""}

@@ -32,6 +32,13 @@ const GLOSSARIO = {
   "sindicância": "Apuração mais simples que o PAD. Pode arquivar o caso, aplicar advertência ou suspensão de até 30 dias, ou levar à abertura de PAD.",
   "jari": "Junta Administrativa de Recursos de Infrações: julga o recurso contra multa de trânsito em 1ª instância.",
   "cetran": "Conselho Estadual de Trânsito: julga o recurso em 2ª instância, depois da JARI (no DF, Contrandife).",
+  "mínimo existencial": "Parte da renda que precisa ficar livre de dívidas para a pessoa viver (alimentação, moradia, saúde). Hoje o valor de referência é R$ 600, segundo decreto mantido pelo STF em 2026.",
+  "repactuação": "Renegociação de todas as dívidas de consumo juntas, num plano de pagamento de até 5 anos, feita em audiência com todos os credores.",
+  "med": "Mecanismo Especial de Devolução do Pix: procedimento do Banco Central para bloquear e tentar devolver valores de Pix em caso de golpe. Pedido feito ao seu banco, de preferência na hora.",
+  "alienação fiduciária": "Quando o carro (ou outro bem) fica em nome do banco como garantia até o fim do financiamento. Se as parcelas atrasam, o banco pode pedir a busca e apreensão.",
+  "notificação extrajudicial": "Carta enviada pelo banco, antes da ação, para avisar formalmente do atraso. É obrigatória para a busca e apreensão.",
+  "dano moral": "Indenização por ofensa à honra, à imagem ou à tranquilidade da pessoa — além do prejuízo em dinheiro.",
+  "chargeback": "Contestação de uma compra no cartão: o banco estorna o valor enquanto apura se a compra foi legítima.",
   "responsabilidade objetiva": "O Estado responde pelo dano causado por seus agentes sem que a vítima precise provar culpa: basta provar o dano e a relação com a ação do Estado.",
 };
 
@@ -441,5 +448,154 @@ const ROTEIROS = {
     passos: ["Registre tudo: fotos, BO, laudos.", "Guarde comprovantes de todos os gastos.", "Se quiser, faça pedido administrativo de indenização ao órgão.", "Procure a advogada para avaliar a ação."],
     urgente: ["Lesão grave ou morte", "Prazo de 5 anos perto do fim", "Risco de a prova desaparecer (ex.: buraco que será tapado)"],
     fontes: [["Constituição, art. 37, §6º", "https://www.planalto.gov.br/ccivil_03/constituicao/constituicao.htm"], ["Decreto 20.910/1932", "https://www.planalto.gov.br/ccivil_03/decreto/antigos/d20910.htm"]],
+  },
+
+  // ---------------- Dívidas e bancos ----------------
+  // Área em que a jurisprudência do STJ muitas vezes define a regra na prática: cada roteiro separa lei, tribunais e divergências.
+  "superendividamento": {
+    acolhe: "Dever não é crime — e, desde 2021, a lei protege quem não consegue mais pagar as dívidas sem comprometer o básico para viver.",
+    perguntas: [
+      { q: "Suas dívidas são principalmente de:", a: ["Cartão, cheque especial e empréstimos", "Consignado", "Contas de consumo (luz, água, lojas)", "Financiamento de casa ou carro", "Várias delas"] },
+      { q: "Depois de pagar as parcelas, sobra o suficiente para comida, moradia e saúde?", a: ["Não", "Muito pouco", "Sim"], ajuda: ["mínimo existencial"] },
+      { q: "Você já tentou renegociar?", a: ["Sim, sem sucesso", "Não", "Estou negociando"] },
+    ],
+    lei: [
+      "A Lei do Superendividamento (Lei 14.181/2021) incluiu no Código de Defesa do Consumidor a possibilidade de reunir as dívidas de consumo num plano de pagamento de até 5 anos, preservando o mínimo existencial (CDC, arts. 104-A a 104-C).",
+      "O processo começa com uma audiência de conciliação com todos os credores; se não houver acordo, o juiz pode impor um plano (CDC, arts. 104-A e 104-B).",
+      "Ficam de fora: dívidas com garantia real (como financiamento imobiliário), crédito rural, impostos, pensão alimentícia e dívidas contraídas de má-fé (CDC, art. 104-A, §1º).",
+      "Se o credor faltar à audiência sem justificativa, a cobrança daquela dívida fica suspensa e param de correr os encargos do atraso (CDC, art. 104-A, §2º).",
+    ],
+    juris: [
+      "STF, ADPFs 1005, 1006 e 1097 (2026): manteve o valor de referência de R$ 600 para o mínimo existencial e determinou que o Conselho Monetário Nacional o revise periodicamente.",
+    ],
+    divergencia: ["Se o valor de R$ 600 é critério absoluto: há quem entenda que o juiz pode considerar a realidade concreta da família ao analisar o caso."],
+    prazos: ["Não há prazo para pedir. Mas, quanto antes, menos juros se acumulam."],
+    docs: ["Lista de todas as dívidas (credor, valor, parcela)", "Contracheque ou comprovante de renda", "Comprovantes dos gastos básicos (aluguel, remédios, escola)", "Contratos e extratos"],
+    passos: ["Liste todas as dívidas e todos os gastos essenciais.", "Procure o Procon ou o centro de conciliação (Cejusc) do tribunal para a repactuação.", "Não faça novos empréstimos para pagar os antigos.", "Procure a advogada se os credores não aceitarem o plano."],
+    urgente: ["Salário ou benefício quase todo comprometido", "Ameaça de corte de serviços essenciais", "Novos empréstimos para pagar os antigos"],
+    fontes: [["Código de Defesa do Consumidor", "https://www.planalto.gov.br/ccivil_03/leis/l8078compilado.htm"], ["Lei 14.181/2021", "https://www.planalto.gov.br/ccivil_03/_ato2019-2022/2021/lei/l14181.htm"], ["STF — mínimo existencial", "https://noticias.stf.jus.br/"]],
+  },
+
+  "consignado-nao-contratado": {
+    acolhe: "Empréstimo que você não pediu é um dos golpes mais comuns contra aposentados — e a lei e o STJ protegem bastante o consumidor nesse caso.",
+    perguntas: [
+      { q: "O dinheiro do empréstimo caiu na sua conta?", a: ["Sim", "Não", "Não sei"] },
+      { q: "Você assinou algum contrato ou passou dados por telefone?", a: ["Não", "Passei dados por telefone", "Assinei sem entender", "Não lembro"] },
+      { q: "Você recebe:", a: ["Aposentadoria ou pensão do INSS", "Salário (servidor ou empregado)"], ajuda: ["consignado"] },
+    ],
+    lei: [
+      "O banco responde pelos danos causados por falha no serviço, independentemente de culpa (CDC, art. 14).",
+      "Quem cobra o que não é devido deve devolver em dobro, salvo engano justificável (CDC, art. 42, parágrafo único).",
+      "Cabe ao banco provar que o cliente realmente contratou (CDC, art. 6º, VIII, inversão do ônus da prova).",
+    ],
+    juris: [
+      "STJ, Súmula 297: o Código de Defesa do Consumidor se aplica às instituições financeiras.",
+      "STJ, Súmula 479: os bancos respondem objetivamente por fraudes de terceiros em operações bancárias — aqui a jurisprudência foi além do texto da lei, tratando a fraude como risco do próprio negócio do banco.",
+      "STJ (EAREsp 676.608, 2021): a devolução em dobro não exige prova de má-fé — vale para cobranças a partir de março de 2021.",
+    ],
+    divergencia: ["Se o desconto indevido, sozinho, gera dano moral: muitos tribunais reconhecem, sobretudo quando atinge benefício de aposentado; outros exigem prova de um prejuízo maior."],
+    prazos: ["Não use o dinheiro que caiu na conta: guarde para devolver ou depositar em juízo.", "Aja logo: os descontos continuam todo mês."],
+    docs: ["Extrato de empréstimos do Meu INSS (ou contracheque)", "Extrato bancário mostrando o depósito, se houve", "Protocolos de reclamação"],
+    passos: ["Baixe o extrato de empréstimos no Meu INSS.", "Peça ao banco cópia do contrato e da gravação/assinatura.", "Registre reclamação no consumidor.gov.br e bloqueie novos empréstimos no Meu INSS.", "Procure a advogada para pedir cancelamento, devolução em dobro e indenização."],
+    urgente: ["Descontos comprometendo a renda", "Vários empréstimos seguidos", "Pessoa idosa ou com dificuldade de leitura"],
+    fontes: [["Código de Defesa do Consumidor", "https://www.planalto.gov.br/ccivil_03/leis/l8078compilado.htm"], ["STJ — Súmulas", "https://scon.stj.jus.br/SCON/sumstj/"], ["consumidor.gov.br", "https://www.consumidor.gov.br"]],
+  },
+
+  "pix-golpe": {
+    acolhe: "Cair em golpe não é motivo de vergonha — e a velocidade agora conta muito para tentar recuperar o dinheiro.",
+    perguntas: [
+      { q: "Como foi o golpe?", a: ["Eu mesmo(a) fiz o Pix, enganado(a) pelo golpista", "Fizeram Pix da minha conta sem eu saber", "Celular roubado ou conta invadida"] },
+      { q: "Quando foi?", a: ["Hoje ou ontem", "Nesta semana", "Há mais tempo"] },
+      { q: "As transferências fugiam do seu costume (valor alto, várias seguidas, de madrugada)?", a: ["Sim", "Não", "Não sei"] },
+    ],
+    lei: [
+      "O banco responde por falhas na segurança do serviço, independentemente de culpa — mas não responde se provar culpa exclusiva do cliente ou de terceiro (CDC, art. 14, caput e §3º, II).",
+      "O Banco Central criou o Mecanismo Especial de Devolução (MED), pedido ao seu banco, que pode bloquear o valor na conta do golpista e devolvê-lo.",
+    ],
+    juris: [
+      "STJ, Súmula 479: os bancos respondem por fraudes de terceiros ligadas às operações bancárias.",
+    ],
+    divergencia: [
+      "Quando a própria vítima faz o Pix, enganada pelo golpista, o STJ tem afastado a responsabilidade do banco (fortuito externo e culpa de terceiro) — por exemplo, no REsp 2.215.907/SP.",
+      "Quando o banco deixa passar transações claramente fora do perfil do cliente, sem bloqueio nem alerta, o STJ tem reconhecido a responsabilidade do banco.",
+      "Por isso, o resultado depende muito da prova: o padrão de uso da conta e a rapidez com que o banco foi avisado.",
+    ],
+    prazos: ["Avise o banco imediatamente e peça o MED: quanto antes, maior a chance de o dinheiro ainda estar na conta do golpista.", "[CONFERIR] Prazo máximo para pedir o MED no regulamento atual do Pix."],
+    docs: ["Comprovantes dos Pix", "Prints das conversas com o golpista", "Boletim de ocorrência", "Protocolo do pedido de MED no banco", "Extratos dos últimos meses (para mostrar o seu padrão)"],
+    passos: ["Ligue para o banco agora, peça o MED e anote o protocolo.", "Registre boletim de ocorrência (pode ser pela internet).", "Guarde todos os prints e comprovantes.", "Procure a advogada para avaliar a responsabilidade do banco."],
+    urgente: ["Golpe aconteceu hoje", "Valor alto ou economia de vida", "Vários Pix seguidos fora do seu padrão"],
+    fontes: [["Banco Central — Pix e MED", "https://www.bcb.gov.br/estabilidadefinanceira/pix"], ["Código de Defesa do Consumidor", "https://www.planalto.gov.br/ccivil_03/leis/l8078compilado.htm"]],
+  },
+
+  "busca-apreensao": {
+    acolhe: "A busca e apreensão do carro tem regras rígidas e prazos curtos — e o banco também precisa cumprir as dele.",
+    perguntas: [
+      { q: "Em que fase está?", a: ["Recebi carta do banco cobrando", "Recebi citação da ação", "O carro já foi apreendido"], ajuda: ["notificação extrajudicial"] },
+      { q: "Quantas parcelas você já pagou?", a: ["Menos da metade", "Mais da metade", "Quase todas"], ajuda: ["alienação fiduciária"] },
+      { q: "A carta de cobrança foi enviada para o endereço do contrato?", a: ["Sim", "Não, para outro endereço", "Não recebi nenhuma carta", "Não sei"] },
+    ],
+    lei: [
+      "Para pedir a busca e apreensão, o banco precisa comprovar o atraso (a mora) com carta enviada ao devedor (Decreto-Lei 911/1969, art. 2º, §2º).",
+      "Depois da apreensão, o devedor tem 5 dias para pagar a integralidade da dívida e recuperar o carro (art. 3º, §§1º e 2º).",
+      "O prazo para apresentar defesa é de 15 dias após a execução da liminar (art. 3º, §3º).",
+    ],
+    juris: [
+      "STJ, Súmula 72: a comprovação do atraso é indispensável para a busca e apreensão.",
+      "STJ, Tema 1132: basta o banco enviar a carta ao endereço do contrato — não precisa provar que o devedor recebeu.",
+      "STJ, Tema 722: para recuperar o carro, é preciso pagar a dívida inteira, incluindo parcelas que ainda iam vencer — aqui a jurisprudência fixou uma leitura dura da lei.",
+      "STJ (REsp 1.622.555, 2017): ter pago a maior parte do contrato (adimplemento substancial) não impede a busca e apreensão.",
+    ],
+    divergencia: ["Carta devolvida como “não procurado”: alguns tribunais aceitam como válida (Tema 1132); outros exigem que tenha havido tentativa real de entrega."],
+    prazos: ["5 dias depois da apreensão para pagar a dívida inteira.", "15 dias depois da liminar para a defesa."],
+    docs: ["Contrato de financiamento", "Comprovantes de pagamento das parcelas", "Carta de cobrança e envelope (com a data e a anotação dos Correios)", "Citação ou mandado de busca e apreensão"],
+    passos: ["Guarde a carta e o envelope de cobrança.", "Tente renegociar antes da ação.", "Se receber citação ou o carro for apreendido, procure a advogada no mesmo dia: os prazos são de 5 e 15 dias."],
+    urgente: ["Carro já apreendido", "Citação recebida", "Carro usado para trabalhar"],
+    fontes: [["Decreto-Lei 911/1969", "https://www.planalto.gov.br/ccivil_03/decreto-lei/del0911.htm"], ["STJ — repetitivos", "https://processo.stj.jus.br/repetitivos/temas_repetitivos/"]],
+  },
+
+  "negativado": {
+    acolhe: "Nome sujo de forma indevida dá direito a limpar o cadastro — e, muitas vezes, a indenização.",
+    perguntas: [
+      { q: "A dívida é:", a: ["Desconhecida (não fiz)", "Já paga", "Real, mas o valor está errado", "Real e não paga"] },
+      { q: "Você recebeu aviso antes da negativação?", a: ["Não", "Sim", "Não sei"] },
+      { q: "Já tinha outras negativações na época?", a: ["Não", "Sim", "Não sei"] },
+    ],
+    lei: [
+      "O consumidor deve ser comunicado por escrito antes da inclusão do nome no cadastro (CDC, art. 43, §2º).",
+      "O registro não pode ficar mais de 5 anos (CDC, art. 43, §1º).",
+    ],
+    juris: [
+      "STJ, Súmula 359: quem deve avisar antes da negativação é o órgão do cadastro (SPC, Serasa); Súmula 404: o aviso não precisa ter aviso de recebimento.",
+      "STJ, Súmula 548: depois do pagamento, o credor tem 5 dias úteis para retirar o nome do cadastro.",
+      "STJ: a negativação indevida gera dano moral presumido, sem precisar provar o prejuízo.",
+      "STJ, Súmula 385: se a pessoa já tinha outra negativação legítima, não cabe dano moral pela nova — só a retirada (exceção criada pela jurisprudência).",
+    ],
+    divergencia: ["Se a cobrança de dívida prescrita em plataformas de negociação (ex.: Serasa Limpa Nome) é permitida: os tribunais ainda decidem de formas diferentes."],
+    prazos: ["Dívida paga: o credor tem 5 dias úteis para tirar seu nome.", "O registro sai automaticamente depois de 5 anos."],
+    docs: ["Consulta atualizada do Serasa/SPC/Boa Vista", "Comprovante de pagamento (se a dívida foi paga)", "Prova de que não contratou (boletim de ocorrência, se houve fraude)", "Protocolos de reclamação"],
+    passos: ["Consulte seu CPF nos cadastros e baixe o comprovante.", "Peça ao credor a retirada e a prova da dívida.", "Reclame no consumidor.gov.br.", "Procure a advogada para a retirada urgente e a indenização."],
+    urgente: ["Crédito negado por causa da negativação", "Dívida que você nunca fez (possível fraude)"],
+    fontes: [["Código de Defesa do Consumidor, art. 43", "https://www.planalto.gov.br/ccivil_03/leis/l8078compilado.htm"], ["STJ — Súmulas", "https://scon.stj.jus.br/SCON/sumstj/"]],
+  },
+
+  "compra-nao-reconhecida": {
+    acolhe: "Compras que você não fez no cartão devem ser contestadas logo — e, em regra, o risco da fraude é do banco.",
+    perguntas: [
+      { q: "O cartão estava com você?", a: ["Sim (provável clonagem ou compra online)", "Não, foi perdido ou roubado"] },
+      { q: "As compras foram feitas com chip e senha?", a: ["Não, foram online ou por aproximação", "Sim, com senha", "Não sei"] },
+      { q: "Você já avisou o banco?", a: ["Sim", "Ainda não"], ajuda: ["chargeback"] },
+    ],
+    lei: [
+      "O banco responde por falha de segurança do serviço, independentemente de culpa, salvo culpa exclusiva do cliente ou de terceiro (CDC, art. 14).",
+    ],
+    juris: [
+      "STJ, Súmula 479: o banco responde por fraudes de terceiros em operações bancárias, como a clonagem de cartão.",
+    ],
+    divergencia: ["Compras com chip e senha: alguns tribunais entendem que houve descuido do titular com a senha; outros responsabilizam o banco quando as compras fogem do perfil e não foram bloqueadas."],
+    prazos: ["Avise o banco assim que perceber: as compras feitas depois do aviso são de responsabilidade do banco.", "Conteste antes do vencimento da fatura, se possível."],
+    docs: ["Fatura com as compras marcadas", "Protocolo da contestação", "Boletim de ocorrência (roubo, perda ou fraude)"],
+    passos: ["Bloqueie o cartão no app e conteste as compras (chargeback), anotando o protocolo.", "Registre boletim de ocorrência.", "Se o banco negar o estorno, reclame no consumidor.gov.br e no Banco Central.", "Procure a advogada para cobrar a devolução e, se for o caso, indenização."],
+    urgente: ["Valor alto", "Banco cobrando as compras contestadas", "Nome ameaçado de negativação"],
+    fontes: [["Código de Defesa do Consumidor", "https://www.planalto.gov.br/ccivil_03/leis/l8078compilado.htm"], ["Banco Central — reclamações", "https://www.bcb.gov.br/meubc/registrar_reclamacao"]],
   },
 };
