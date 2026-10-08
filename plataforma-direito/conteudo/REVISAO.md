@@ -1486,3 +1486,8 @@ O melhor caminho é o planejamento: listar ativos e acessos em testamento ou doc
 
 **Revisão:** ☐ ✅ ok ☐ ✏️ corrigir ☐ ❌ remover
 
+
+## Roteiros por situação (roteiros.js) — lote Saúde (6 situações)
+Revisar: plano-negou, prazo-atendimento, liminar-medicamento, reajuste-idade, tea-terapia, manter-plano.
+Pendente [CONFERIR] (oculto do público): prazo para manifestar interesse em continuar no plano após o desligamento (RN ANS 488/2021).
+Conferir redação oficial: ADI 7265 (requisitos), RN 623/2024 (prazos de resposta), RN 566/2022 (prazos de atendimento), RN 539/541/2022 (TEA), Temas STF 6 e 1234.

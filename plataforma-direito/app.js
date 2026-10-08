@@ -156,6 +156,49 @@ function openLawyer() {
   go("lawyer");
 }
 
+// Roteiro completo da situação: perguntas (com "ⓘ O que é isso?") e, depois, lei, tribunais, prazos, documentos e passos.
+const publico = (lista) => (lista || []).filter((x) => !/^\[CONFERIR\]/.test(x));
+function ajudaHtml(termos) {
+  return (termos || []).filter((t) => GLOSSARIO[t]).map((t) => `<details class="ajuda"><summary>ⓘ O que é ${esc(t)}?</summary><p>${esc(GLOSSARIO[t])}</p></details>`).join("");
+}
+function mostrarRoteiro(f, R, text) {
+  const resp = [];
+  go("result");
+  const bloco = (titulo, itens, cls = "") => publico(itens).length ? `<section class="rt-bloco ${cls}"><h2>${titulo}</h2><ul>${publico(itens).map((x) => `<li>${esc(x)}</li>`).join("")}</ul></section>` : "";
+  $("result").innerHTML = `
+    <p class="eyebrow">Sua situação</p>
+    <h1>${esc(text)}</h1>
+    <p class="lead">${esc(R.acolhe)}</p>
+    <div class="card rt-perguntas"><h2>Para entender melhor, responda rapidinho</h2>
+      ${R.perguntas.map((p, i) => `<div class="rt-q" data-i="${i}"><p><strong>${esc(p.q)}</strong></p><div class="answers">${p.a.map((a) => `<button type="button" data-r="${esc(a)}">${esc(a)}</button>`).join("")}</div>${ajudaHtml(p.ajuda)}</div>`).join("")}
+      <p class="small muted">Suas respostas vão junto com o pedido, para a advogada. <button type="button" class="linkish small" id="rt-pular">Pular e ver as informações</button></p>
+    </div>
+    <div id="rt-conteudo" hidden>
+      ${bloco("O que a lei diz", R.lei)}
+      ${bloco("Como os tribunais têm decidido", R.juris)}
+      ${bloco("Prazos que importam", R.prazos, "rt-prazo")}
+      ${publico(R.docs).length ? `<section class="rt-bloco"><h2>Documentos para separar</h2><ul class="rt-check">${publico(R.docs).map((x) => `<li><label><input type="checkbox"> ${esc(x)}</label></li>`).join("")}</ul></section>` : ""}
+      ${publico(R.passos).length ? `<section class="rt-bloco"><h2>O que fazer agora</h2><ol>${publico(R.passos).map((x) => `<li>${esc(x)}</li>`).join("")}</ol></section>` : ""}
+      ${bloco("Quando é urgente procurar a advogada", R.urgente, "rt-urgente")}
+      <div class="card decision"><h2>Para ter certeza da avaliação no seu caso, consulte a advogada.</h2>
+        <p class="muted">As informações acima são gerais. O que vale para você depende dos documentos e dos detalhes do caso.</p>
+        <div class="actions"><button class="btn" id="to-lawyer">Quero a avaliação da advogada</button><a href="#" class="btn btn-wa" data-wa>Falar no WhatsApp</a></div></div>
+      ${R.fontes ? `<details><summary>Fontes oficiais →</summary><ul>${R.fontes.map(([n, u]) => `<li><a href="${u}" target="_blank" rel="noopener">${esc(n)}</a></li>`).join("")}</ul></details>` : ""}
+      <p class="muted small">Informação geral com base na lei e na jurisprudência. Não constitui orientação jurídica nem substitui a análise do seu caso pela advogada.</p>
+    </div>`;
+  const revelar = () => { const c = $("rt-conteudo"); if (!c.hidden) return; c.hidden = false; c.scrollIntoView({ behavior: "smooth", block: "start" }); };
+  const registrar = () => { state.followSummary = `${f.q} — ` + R.perguntas.map((p, i) => `${p.q} ${resp[i] || "(sem resposta)"}`).join(" | "); state.answers = resp.filter(Boolean); };
+  document.querySelectorAll(".rt-q").forEach((el) => el.querySelectorAll("[data-r]").forEach((b) => (b.onclick = () => {
+    const i = +el.dataset.i; resp[i] = b.dataset.r;
+    el.querySelectorAll("[data-r]").forEach((x) => x.classList.toggle("on", x === b));
+    registrar();
+    if (R.perguntas.every((_, k) => resp[k])) revelar();
+  })));
+  $("rt-pular").onclick = () => { registrar(); revelar(); };
+  $("to-lawyer").onclick = () => { registrar(); openLawyer(); };
+  state.text = state.text || text;
+}
+
 function answerQuestion(text, faqFixa) {
   const f = faqFixa || findFaq(text);
   state.faqId = f ? f.id : null;
@@ -163,6 +206,7 @@ function answerQuestion(text, faqFixa) {
   state.key = key;
   state.flow = key ? FLOWS[key] : null;
   const sources = (list) => list.map(([n, u]) => `<li><a href="${u}" target="_blank" rel="noopener">${esc(n)}</a></li>`).join("");
+  if (f && typeof ROTEIROS !== "undefined" && ROTEIROS[f.id]) return mostrarRoteiro(f, ROTEIROS[f.id], text);
   if (f) {
     const table = f.table ? `<div class="table-wrap"><table><thead><tr>${f.table.head.map((h) => `<th>${esc(h)}</th>`).join("")}</tr></thead><tbody>${f.table.rows.map((r) => `<tr>${r.map((c) => `<td>${esc(c)}</td>`).join("")}</tr>`).join("")}</tbody></table></div><p class="muted small">${esc(f.table.note)}</p>` : "";
     $("result").innerHTML = `

@@ -304,3 +304,18 @@ tr:last-child td { border-bottom: 0; }
 .hist-form textarea:focus { outline: none; border-color: var(--brand); }
 .hist-form .actions { display: flex; gap: 8px; flex-wrap: wrap; }
 .answers .hist-form .btn { background: var(--brand); color: var(--brand-ink); border: 0; }
+
+/* Roteiros por situação */
+.rt-perguntas { display: grid; gap: 14px; }
+.rt-q p { margin: 0 0 6px; }
+.rt-q .answers { margin-top: 0; }
+.answers button.on { border-color: var(--brand); background: var(--brand); color: var(--brand-ink); }
+.ajuda { margin-top: 6px; font-size: .92rem; }
+.ajuda summary { color: var(--brand); cursor: pointer; font-weight: 600; }
+.ajuda p { background: var(--tint); border-radius: 12px; padding: 10px 12px; margin: 6px 0 0; }
+.rt-bloco { margin-top: 22px; }
+.rt-bloco ul, .rt-bloco ol { padding-left: 1.2em; display: grid; gap: 6px; }
+.rt-check { list-style: none; padding-left: 0 !important; }
+.rt-prazo { border-left: 4px solid var(--amber); padding-left: 14px; }
+.rt-urgente { border-left: 4px solid #b42318; padding-left: 14px; }
+.linkish { background: none; border: 0; padding: 0; color: var(--brand); font: inherit; font-weight: 600; cursor: pointer; text-decoration: underline; }
