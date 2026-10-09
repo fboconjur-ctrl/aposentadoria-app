@@ -4,22 +4,26 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Simulador Previdenciário</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Figtree:wght@400;500;600&display=swap" />
     <link rel="stylesheet" href="styles.css?v=flow1" />
+    <link rel="stylesheet" href="identidade.css?v=1" />
   </head>
-  <body data-report-owner="Fernanda Borges Oliveira">
+  <body>
     <main class="app-shell">
       <section class="workspace">
         <header class="topbar">
           <div class="portal-title">
-            <p class="eyebrow">RGPS urbano | regras gerais e transições</p>
-            <h1>Simulador Previdenciário</h1>
+            <a class="pd-brand" href="/plataforma-direito/">Plataforma do Direito</a>
+            <h1>Quando posso me <em>aposentar?</em></h1>
+            <p class="pd-lead">São só 3 dados: sexo, data de nascimento e tempo de contribuição. A resposta aparece na hora. O simulador compara as regras do INSS com os dados que você digitar. Nada é salvo nem enviado.</p>
           </div>
           <div class="status-pill" id="referenceDate"></div>
         </header>
 
         <section class="notice">
-          <strong>Uso técnico preliminar.</strong>
-          Este app não substitui análise jurídica, CNIS completo nem simulação oficial do Meu INSS. Ele ajuda a comparar regras com os dados informados.
+          <strong>Caráter informativo.</strong>
+          O resultado mostra o que dizem as regras para os números informados. Não substitui o CNIS completo, a simulação oficial do Meu INSS nem a análise do seu caso — para ter certeza, consulte a advogada.
         </section>
 
         <div class="portal-grid">
@@ -27,18 +31,18 @@
             <nav class="tabs" aria-label="Módulos do simulador">
               <button class="tab-button active" type="button" data-route="aposentadorias" data-tab="retirementTab">
                 <span>Aposentadorias</span>
-                <small>Regras, transições e melhor caminho</small>
+                <small>Quando e por qual regra</small>
               </button>
-              <button class="tab-button" type="button" data-route="relatorio" data-tab="reportTab">
-                <span>Relatório CNIS</span>
-                <small>Leitura previdenciária e pendências</small>
+              <button class="tab-button" type="button" data-route="relatorio" data-tab="reportTab" hidden>
+                <span>Tenho o CNIS</span>
+                <small>Cole o extrato e veja os vínculos</small>
               </button>
               <button class="tab-button" type="button" data-route="beneficios" data-tab="benefitsTab">
                 <span>Benefícios e pensões</span>
                 <small>Auxílios, pensão, IR e acréscimos</small>
               </button>
               <button class="tab-button" type="button" data-route="clientes" data-tab="clientsTab">
-                <span>Clientes / Atendimentos</span>
+                <span>Atendimentos salvos</span>
                 <small>Registros salvos, busca e exportação</small>
               </button>
             </nav>
@@ -74,12 +78,21 @@
           </div>
           <div class="layout">
           <form id="retirementForm" class="panel form-panel">
+            <div class="pd-cnis">
+              <strong>Tem o extrato do CNIS?</strong>
+              <span class="pd-dica">Envie o PDF e preenchemos o tempo de contribuição para você. O arquivo é lido no seu aparelho e não é enviado. Baixe no Meu INSS → Extrato de Contribuição (CNIS).</span>
+              <label class="pd-btn" for="simCnis">Enviar PDF do CNIS</label>
+              <input type="file" id="simCnis" accept="application/pdf" hidden />
+              <div id="simCnisMsg" class="pd-dica"></div>
+            </div>
+            <p class="pd-dica" style="text-align:center">ou preencha você mesmo:</p>
             <div class="section-title">
               <span>01</span>
-              <h2>Identificação</h2>
+              <h2>Você</h2>
             </div>
 
-            <label>
+            <details class="pd-opcional"><summary>Dados pessoais para o relatório (opcional)</summary>
+<label>
               NIS/PIS/PASEP
               <input name="nis" inputmode="numeric" placeholder="000.00000.00-0" />
             </label>
@@ -127,6 +140,7 @@
               </label>
             </div>
 
+            </details>
             <div class="grid two">
               <label>
                 Sexo cadastral
@@ -144,56 +158,66 @@
 
             <div class="section-title">
               <span>02</span>
-              <h2>Tempo e carência</h2>
+              <h2>Suas contribuições</h2>
             </div>
 
-            <div class="grid two">
-              <label>
-                Tempo total de contribuição
+            <label>
+                Quanto tempo você já contribuiu para o INSS, somando tudo?
                 <div class="inline-fields">
-                  <input name="contribYears" type="number" min="0" max="60" value="30" aria-label="Anos de contribuição" />
+                  <input name="contribYears" type="number" min="0" max="60" value="" placeholder="0" required aria-label="Anos de contribuição" />
                   <span>anos</span>
                   <input name="contribMonths" type="number" min="0" max="11" value="0" aria-label="Meses de contribuição" />
                   <span>meses</span>
                 </div>
+                <small class="pd-dica">Não sabe? Está no extrato do CNIS, no Meu INSS. Pode usar um número aproximado.</small>
               </label>
 
-              <label>
-                Carência
+            <fieldset class="pd-pergunta">
+              <legend>Você já contribuía antes de 13 de novembro de 2019 (Reforma da Previdência)?</legend>
+              <label class="check"><input type="radio" name="antes2019" value="sim" checked /> <span>Sim</span></label>
+              <label class="check"><input type="radio" name="antes2019" value="nao" /> <span>Não, comecei depois</span></label>
+              <small class="pd-dica">Quem já contribuía antes pode usar as regras de transição, que costumam ser mais vantajosas.</small>
+            </fieldset>
+
+            <label>
+                Média aproximada dos seus salários (opcional)
                 <div class="inline-fields">
-                  <input name="carencia" type="number" min="0" max="720" value="180" />
-                  <span>meses</span>
+                  <input name="averageSalary" type="number" min="0" step="0.01" value="" placeholder="Ex.: 2500" />
+                  <span>R$ por mês</span>
                 </div>
+                <small class="pd-dica">Serve só para estimar o valor. Sem ele, mostramos apenas a data.</small>
               </label>
-            </div>
 
-            <div class="grid two">
+            <details class="pd-opcional" id="ajustesAvancados"><summary>Ajustes avançados (tempo exato em 2019 e carência)</summary>
+              <p class="pd-dica">Calculamos sozinhos a partir do tempo total. Só mude se tiver os números do CNIS.</p>
+              <div class="grid two">
               <label>
                 Tempo em 13/11/2019
                 <div class="inline-fields">
-                  <input name="contrib2019Years" type="number" min="0" max="60" value="28" aria-label="Anos em 13 de novembro de 2019" />
+                  <input name="contrib2019Years" type="number" min="0" max="60" value="0" aria-label="Anos em 13 de novembro de 2019" />
                   <span>anos</span>
                   <input name="contrib2019Months" type="number" min="0" max="11" value="0" aria-label="Meses em 13 de novembro de 2019" />
                   <span>meses</span>
                 </div>
               </label>
-
               <label>
-                Salários considerados
+                Carência (meses pagos em dia)
                 <div class="inline-fields">
-                  <input name="averageSalary" type="number" min="0" step="0.01" value="2500" />
-                  <span>R$ média</span>
+                  <input name="carencia" type="number" min="0" max="720" value="0" />
+                  <span>meses</span>
                 </div>
               </label>
-            </div>
+              </div>
+            </details>
 
-            <div class="section-title">
+            <details class="pd-opcional"><summary>Professor(a), atividade especial ou deficiência? Toque aqui</summary>
+<div class="section-title">
               <span>03</span>
               <h2>Condições especiais</h2>
             </div>
 
             <div class="switch-row">
-              <label class="check">
+              <label class="check" hidden>
                 <input name="startedBeforeReform" type="checkbox" checked />
                 <span>Já tinha filiação/contribuição antes de 13/11/2019</span>
               </label>
@@ -306,9 +330,10 @@
               </label>
             </div>
 
+            </details>
             <div class="actions">
-              <button type="submit">Calcular melhor regra</button>
-              <button type="button" class="secondary" id="fillExample">Exemplo</button>
+              <button type="submit">Ver quando posso me aposentar</button>
+              <button type="button" class="secondary linkish" id="fillExample">Ver um exemplo preenchido</button>
               <button type="button" class="secondary next-step" data-next-tab="reportTab">Próxima etapa</button>
             </div>
           </form>
@@ -316,17 +341,14 @@
           <section class="results">
             <div class="panel summary-card" id="bestResult">
               <p class="eyebrow">Resultado</p>
-              <h2>Preencha os dados para comparar as regras.</h2>
-              <p>O app avalia idade, tempo comum, especial, rural, PcD, incapacidade, carência, pontos e pedágios, depois ordena pela data mais próxima e por estimativa de renda.</p>
+              <h2>Preencha ao lado e toque em “Ver quando posso me aposentar”.</h2>
+              <p>Comparamos todas as regras do INSS com os seus números e mostramos a que chega primeiro.</p>
             </div>
 
-            <div class="panel">
-              <div class="section-title compact">
-                <span>04</span>
-                <h2>Comparativo das regras</h2>
-              </div>
+            <details class="panel pd-todas" id="todasRegras" hidden>
+              <summary>Ver todas as regras comparadas</summary>
               <div id="rulesList" class="rules-list"></div>
-            </div>
+            </details>
           </section>
           </div>
         </section>
@@ -361,7 +383,7 @@
                 <div class="stacked-fields">
                   <label>
                     Responsável pelo relatório
-                    <input name="reportOwner" value="Fernanda Borges Oliveira" placeholder="Nome de quem está emitindo o relatório" />
+                    <input name="reportOwner" placeholder="Nome de quem está emitindo o relatório" />
                   </label>
                   <label>
                     Objetivo principal
@@ -458,6 +480,7 @@
                 </label>
               </div>
 
+<details class="pd-opcional"><summary>Alguém da família faleceu? (pensão por morte)</summary>
               <div class="section-title">
                 <span>02</span>
                 <h2>Pensão e dependentes</h2>
@@ -493,6 +516,8 @@
                 </label>
               </div>
 
+</details>
+<details class="pd-opcional"><summary>Doença grave, isenção de IR ou ajuda de terceiros?</summary>
               <div class="section-title">
                 <span>03</span>
                 <h2>Isenções e acréscimos</h2>
@@ -541,6 +566,8 @@
                 </select>
               </label>
 
+</details>
+<div class="pd-escritorio" hidden>
               <div class="section-title">
                 <span>04</span>
                 <h2>Documentos e contratação</h2>
@@ -589,9 +616,10 @@
                 <span>Autorizo o tratamento dos dados pessoais e sensíveis para análise previdenciária, elaboração de documentos, contato profissional e eventual prestação de serviços advocatícios.</span>
               </label>
 
+</div>
               <div class="actions">
-                <button type="submit">Analisar benefícios</button>
-                <button type="button" class="secondary" id="generateDocuments">Gerar documentos</button>
+                <button type="submit">Ver quais benefícios posso ter</button>
+                <button type="button" class="secondary" id="generateDocuments" hidden>Gerar documentos</button>
                 <button type="button" class="secondary next-step" data-next-tab="clientsTab">Ver atendimento salvo</button>
               </div>
             </form>
@@ -609,7 +637,7 @@
                 </div>
                 <div id="benefitsList" class="rules-list"></div>
               </div>
-              <div class="panel document-panel" id="documentPreviewPanel">
+              <div class="panel document-panel" id="documentPreviewPanel" hidden>
                 <div class="section-title compact">
                   <span>05</span>
                   <h2>Pré-visualização dos documentos</h2>
@@ -666,14 +694,14 @@
         </div>
 
         <footer>
-          <span>Fernanda Borges Oliveira - Direito Público.</span>
-          <span>Fontes de referência: INSS/Gov.br, EC 103/2019, LC 142/2013 e regras vigentes em 2026. Atualize os parâmetros antes de uso profissional.</span>
+                    <span>Fontes de referência: INSS/Gov.br, EC 103/2019, LC 142/2013 e regras vigentes em 2026. Atualize os parâmetros antes de uso profissional.</span>
         </footer>
       </section>
     </main>
 
     <script src="rules.js?v=docs1"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-    <script src="app.js?v=flow1"></script>
+    <script src="/plataforma-direito/cnis.js"></script>
+    <script src="app.js?v=flow2"></script>
   </body>
 </html>

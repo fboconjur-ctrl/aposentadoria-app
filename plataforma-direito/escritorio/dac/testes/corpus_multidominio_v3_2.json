@@ -1,0 +1,101 @@
+[
+  {
+    "id": "MC01",
+    "title": "Servidor, contratação, vantagem alegada e contas rejeitadas",
+    "text": "Servidor público participou da contratação. A denúncia afirma que ele recebeu vantagem indevida da pessoa jurídica contratada, mas o servidor nega e não há prova conclusiva de dolo. O TCU rejeitou as contas por dano apontado em auditoria. A defesa sustenta que a rejeição, isoladamente, não demonstra improbidade.",
+    "domains": [
+      "DA-04",
+      "DA-05",
+      "DA-19",
+      "DA-20",
+      "DA-23"
+    ],
+    "facts": {
+      "VANTAGEM_INDEVIDA": "UNKNOWN",
+      "DOLO": "UNKNOWN",
+      "DANO_ERARIO": "UNKNOWN",
+      "IMPROBIDADE_MENCIONADA": "UNKNOWN",
+      "REJEICAO_CONTAS": "TRUE"
+    }
+  },
+  {
+    "id": "MC02",
+    "title": "Conluio suspeito em licitação e responsabilização da PJ",
+    "text": "Em licitação federal, há suspeita de conluio entre duas pessoas jurídicas. O relatório menciona possível pagamento de vantagem indevida, ainda não comprovado. As pessoas jurídicas contestam os fatos. Não foi demonstrado dolo de agente público.",
+    "domains": [
+      "DA-05",
+      "DA-19",
+      "DA-21",
+      "DA-26"
+    ],
+    "facts": {
+      "CONLUIO": "UNKNOWN",
+      "VANTAGEM_INDEVIDA": "UNKNOWN",
+      "DOLO": "UNKNOWN"
+    }
+  },
+  {
+    "id": "MC03",
+    "title": "Dados pessoais, LAI e publicação",
+    "text": "Foi formulado pedido de acesso à informação sobre processo administrativo que contém dados pessoais sensíveis. A Administração reconhece a existência dos dados sensíveis. Não houve autorização para publicação integral e a possibilidade de anonimização ainda está sendo analisada.",
+    "domains": [
+      "DA-03",
+      "DA-16",
+      "DA-17",
+      "DA-18"
+    ],
+    "facts": {
+      "DADOS_PESSOAIS": "TRUE",
+      "DADOS_SENSIVEIS": "TRUE",
+      "PEDIDO_LAI": "TRUE",
+      "PUBLICACAO_INTEGRAL": "FALSE",
+      "ANONIMIZACAO_POSSIVEL": "UNKNOWN"
+    }
+  },
+  {
+    "id": "MC04",
+    "title": "Absolvição penal por insuficiência de prova e improbidade",
+    "text": "O servidor foi absolvido no processo penal por insuficiência de provas. A sentença não reconheceu inexistência do fato nem negativa de autoria. Paralelamente existe ação de improbidade baseada em documentos administrativos próprios.",
+    "domains": [
+      "DA-04",
+      "DA-20",
+      "DA-21",
+      "DA-27"
+    ],
+    "facts": {
+      "ABSOLVICAO_PENAL": "TRUE",
+      "ABSOLVICAO_INEXISTENCIA_FATO": "FALSE",
+      "ABSOLVICAO_NEGATIVA_AUTORIA": "FALSE",
+      "IMPROBIDADE_MENCIONADA": "TRUE"
+    }
+  },
+  {
+    "id": "MC05",
+    "title": "Negativa de dano, vantagem comprovada e dolo não provado",
+    "text": "Não houve dano ao erário. Contudo, ficou comprovado que a pessoa jurídica pagou vantagem indevida. Não há prova suficiente de dolo do servidor e a participação individual dele permanece controvertida.",
+    "domains": [
+      "DA-19",
+      "DA-20",
+      "DA-21"
+    ],
+    "facts": {
+      "DANO_ERARIO": "FALSE",
+      "VANTAGEM_INDEVIDA": "TRUE",
+      "DOLO": "UNKNOWN"
+    }
+  },
+  {
+    "id": "MC06",
+    "title": "Concessão, reequilíbrio e fato econômico ainda não demonstrado",
+    "text": "A concessionária pediu reequilíbrio econômico-financeiro do contrato. Alega que ocorreu evento extraordinário não alocado à sua matriz de riscos. A Administração contesta a ocorrência e o impacto econômico ainda não foi demonstrado.",
+    "domains": [
+      "DA-07",
+      "DA-13",
+      "DA-25"
+    ],
+    "facts": {
+      "PEDIDO_REEQUILIBRIO": "TRUE",
+      "RISCO_CONTRATUAL_PREALOCADO": "UNKNOWN"
+    }
+  }
+]

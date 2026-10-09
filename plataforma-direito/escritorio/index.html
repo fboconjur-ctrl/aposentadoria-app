@@ -1,0 +1,313 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Escritório — Plataforma do Direito</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Figtree:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="../styles.css">
+<link rel="stylesheet" href="escritorio.css">
+</head>
+<body class="office">
+<aside class="side">
+  <a class="brand" href="../">Plataforma do Direito</a>
+  <nav>
+    <button class="nav on" data-view="hoje">Hoje</button>
+    <button class="nav" data-view="clientes">Clientes</button>
+    <button class="nav" data-view="mais">Mais</button>
+  </nav>
+  <p class="small" id="nuvem-status" style="opacity:.8;margin:0"></p>
+  <button class="nav" id="sair" style="opacity:.6">Sair</button>
+</aside>
+
+<main class="office-main">
+  <div class="qa">
+    <form id="qa" autocomplete="off"><input id="qa-texto" placeholder="＋ Anotar… ex.: Maria audiência 15/10 14h · João pagou 500 · ligar p/ Ana amanhã" aria-label="Anotar"></form>
+    <div id="qa-prev" class="qa-prev" hidden></div>
+  </div>
+
+  <section id="v-hoje" class="oview on">
+    <header class="ohead"><div><p class="eyebrow" id="hoje-data"></p><h1 id="hoje-ola">Bom dia.</h1></div></header>
+    <div class="panel"><h2>Atrasado e hoje</h2><ul class="list" id="h-agora"></ul></div>
+    <div class="panel"><h2>Próximos 7 dias</h2><ul class="list" id="h-semana"></ul></div>
+    <div class="panel"><h2>Novidades</h2><ul class="list" id="h-novidades"></ul>
+      <details><summary class="small"><b>Colar pedido recebido por e-mail</b> (linha "PD1:…")</summary>
+        <textarea id="ped-texto" rows="3" class="search" style="width:100%;margin-top:8px" placeholder="PD1:..."></textarea>
+        <button class="btn" id="ped-ok" style="margin-top:8px">Importar pedido</button> <span id="ped-msg" class="small"></span></details></div>
+  </section>
+
+  <section id="v-clientes" class="oview">
+    <header class="ohead"><div><h1>Clientes</h1></div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap"><input id="crm-busca" class="search" placeholder="Buscar nome, telefone, processo"><button class="btn" id="crm-novo">Novo cliente</button></div></header>
+    <div class="panel"><ul class="list" id="cli-lista"></ul></div>
+  </section>
+
+  <section id="v-ficha" class="oview">
+    <header class="ohead"><div><button class="back" data-view="clientes">← Clientes</button><h1 id="fi-nome"></h1><p class="muted" id="fi-sub"></p></div>
+      <div class="fi-acoes"><select id="fi-etapa" class="search" aria-label="Etapa"></select><button class="wa-btn" id="fi-wa">WhatsApp</button><button class="back" id="fi-editar">Editar dados</button><button class="back" id="fi-docs">Documentos / kit</button><button class="back" id="fi-dac">⚖️ Motor DAC</button><button class="back" id="fi-ind-abrir">Indicar a colega</button></div></header>
+    <form class="panel" id="fi-ind" hidden>
+      <h2>Indicar a colega</h2>
+      <div class="crm-grid">
+        <label>Colega<input id="ind-nome" class="search" list="ind-lista" required placeholder="Nome do(a) advogado(a)"></label>
+        <label>WhatsApp do colega<input id="ind-tel" class="search" inputmode="tel" required placeholder="61 99999-9999"></label>
+        <label class="wide" style="display:flex;gap:8px;align-items:center"><input type="checkbox" id="ind-ok" required> O cliente autorizou o repasse do caso e do contato dele (LGPD e sigilo).</label>
+      </div>
+      <datalist id="ind-lista"></datalist>
+      <div style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn">Abrir WhatsApp do colega</button><button class="back" type="button" id="ind-x">Cancelar</button></div>
+      <p class="small muted">A mensagem vai pronta com o resumo do caso; você confere antes de enviar. O cliente fica marcado como "Indicado a colega".</p>
+    </form>
+    <div class="panel" id="crm-form" hidden>
+      <h2 id="crm-form-titulo">Novo cliente</h2>
+      <div class="crm-grid">
+        <label>Nome<input id="c-nome" class="search"></label>
+        <label>WhatsApp (com DDD)<input id="c-tel" class="search" inputmode="tel" placeholder="61 99999-9999"></label>
+        <label>CPF ou CNPJ<input id="c-cpf" class="search" inputmode="numeric" placeholder="pode completar depois"></label>
+        <label>E-mail<input id="c-email" class="search" type="email"></label>
+        <label>Área<select id="c-area" class="search"><option>Previdenciário</option><option>Consumidor</option><option>Saúde</option><option>Administrativo</option><option>Cartório/Extrajudicial</option><option>Trabalhista</option><option>Empresas</option><option>Outra</option></select></label>
+        <label>Origem<select id="c-origem" class="search"><option>Plataforma</option><option>Indicação</option><option>WhatsApp</option><option>Instagram</option><option>Google</option><option>Outra</option></select></label>
+        <label class="wide">Assunto (uma linha)<input id="c-assunto" class="search" placeholder="Ex.: Plano negou cirurgia"></label>
+        <label class="wide">Processos (números CNJ, um por linha)<textarea id="c-procs" rows="2" class="search"></textarea></label>
+      </div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn" id="crm-salvar">Salvar</button><button class="back" id="crm-cancelar">Cancelar</button><button class="back" id="crm-excluir" style="color:#b42318">Apagar dados deste cliente</button></div>
+    </div>
+    <div class="panel" id="crm-wa" hidden>
+      <h2>Mensagem para <span id="wa-nome"></span></h2>
+      <label class="small">Modelo<select id="wa-modelo" class="search"></select></label>
+      <textarea id="wa-texto" rows="6" class="search" style="width:100%"></textarea>
+      <div style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn" id="wa-abrir">Abrir no WhatsApp</button><button class="back" id="wa-fechar">Fechar</button></div>
+    </div>
+    <div class="dossie">
+      <div class="panel wide"><div class="fi-tit"><h2>A fazer</h2><span class="small"><button class="linkish" id="fi-calc">Calcular prazo</button></span></div>
+        <form id="fi-qa" class="fi-qa"><input id="fi-qa-texto" class="search" placeholder="Anotar para este cliente… ex.: réplica vence 20/10"></form>
+        <div id="fi-qa-prev" class="qa-prev" hidden></div>
+        <ul class="list" id="fi-itens"></ul>
+        <details id="fi-feitos-box"><summary class="small muted">Concluídos</summary><ul class="list" id="fi-feitos"></ul></details></div>
+      <div class="panel"><div class="fi-tit"><h2>Processos</h2><button class="linkish small" id="fi-atualizar">Atualizar</button></div><div id="fi-procs"></div></div>
+      <div class="panel"><div class="fi-tit"><h2>Pagamentos</h2><button class="linkish small" id="fi-hon-abrir">+ Honorários</button></div>
+        <form id="fi-hon" class="crm-grid" hidden>
+          <label>Valor total (R$)<input id="fi-hon-valor" class="search" inputmode="decimal" required></label>
+          <label>Parcelas<input id="fi-hon-n" class="search" type="number" min="1" max="48" value="1"></label>
+          <label>1º vencimento<input id="fi-hon-venc" class="search" type="date" required></label>
+          <div><button class="btn">Gerar parcelas</button></div>
+        </form>
+        <ul class="list" id="fi-fin"></ul></div>
+      <div class="panel wide"><h2>História e anotações</h2><div id="fi-historia"></div>
+        <textarea id="fi-notas" rows="4" class="search" style="width:100%" placeholder="Anotações livres sobre o cliente (salvam sozinhas)"></textarea>
+        <details><summary class="small muted">Histórico de contatos</summary><ul class="list small" id="fi-hist"></ul></details></div>
+    </div>
+  </section>
+
+  <section id="v-mais" class="oview">
+    <header class="ohead"><div><h1>Mais</h1></div></header>
+    <div class="mais-grid">
+      <button class="card-c" data-view="dac"><b>⚖️ Motor de Direito Administrativo</b><span class="meta">Fatos, regras com fonte, lacunas e perguntas (3.292 regras · 28 domínios)</span></button>
+      <button class="card-c" data-view="fin"><b>Financeiro do mês</b><span class="meta">Recebido, a receber, despesas e planilha</span></button>
+      <button class="card-c" data-view="djen"><b>Publicações</b><span class="meta">DJEN e Recorte Digital da OAB/DF</span></button>
+      <button class="card-c" data-view="prazos"><b>Calcular prazo</b><span class="meta">Cível, trabalhista, Juizado e penal</span></button>
+      <button class="card-c" data-view="docs"><b>Documentos e kit da ação</b><span class="meta">Procuração, contrato, proposta, petição</span></button>
+      <button class="card-c" data-view="importar"><b>Importar processos</b><span class="meta">Colar sua lista de processos</span></button>
+    </div>
+  </section>
+
+  <section id="v-dac" class="oview">
+    <header class="ohead"><div><button class="back" data-voltar>← Voltar</button><h1>Motor de Direito Administrativo</h1><p class="muted">Direito Administrativo Computável · ferramenta de apoio à sua análise. Nada sai deste navegador.</p></div></header>
+    <div class="panel">
+      <label for="dac-txt"><b>Descreva o caso</b> <span class="small muted" id="dac-cli"></span></label>
+      <textarea id="dac-txt" class="search" rows="6" placeholder="Ex.: Servidor federal removido de ofício após denunciar a chefia, sem processo prévio e sem motivação. Alega perseguição."></textarea>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:10px"><button class="btn" id="dac-run">Analisar</button><button class="back" id="dac-salvar" hidden>Salvar análise na ficha</button><a class="back" href="dac/motor.html" target="_blank" rel="noopener">Abrir o motor completo ↗</a></div>
+      <p class="small muted" id="dac-status"></p>
+    </div>
+    <div id="dac-out"></div>
+  </section>
+
+  <section id="v-prazos" class="oview">
+    <header class="ohead"><div><button class="back" data-voltar>← Voltar</button><h1>Calcular prazo</h1></div></header>
+    <form class="panel" id="pz-form">
+      <h2>Calcular prazo</h2>
+      <div class="calc-abas"><button type="button" class="on" data-pz-area="civel">Cível, trabalhista e Juizado</button><button type="button" data-pz-area="penal">Penal</button></div>
+      <p class="calc-regra" id="pz-regra"></p>
+      <div class="crm-grid">
+        <label>A partir de<select id="pz-tipo" class="search"><option value="disponibilizacao">Disponibilização no DJEN/DJe</option><option value="publicacao">Publicação</option><option value="intimacao">Intimação / ciência</option><option value="portal">Intimação no portal (ciência em 10 dias)</option></select></label>
+        <label>Data<input id="pz-data" class="search" type="date" required></label>
+        <label>Prazo (dias)<input id="pz-dias" class="search" type="number" min="1" value="15" required></label>
+        <input type="hidden" id="pz-contagem" value="uteis">
+        <label class="wide" style="display:flex;gap:18px;flex-wrap:wrap;align-items:center">
+          <span><input type="checkbox" id="pz-dobro"> <span id="pz-dobro-txt">Prazo em dobro (Fazenda, MP, Defensoria, litisconsortes em autos físicos)</span></span>
+          <span><input type="checkbox" id="pz-recesso" checked> <span id="pz-recesso-txt">Recesso 20/12–20/01 (CPC, art. 220)</span></span>
+          <span><input type="checkbox" id="pz-forenses" checked> Carnaval, Quinta-feira Santa, Corpus Christi e Dia da Justiça</span></label>
+        <label class="wide">Feriados locais e suspensões do tribunal (um por linha: dd/mm/aaaa motivo) — ficam salvos<textarea id="pz-extras" rows="2" class="search" placeholder="28/10/2026 Dia do Servidor (TJDFT)"></textarea></label>
+        <label class="wide">Providência<input id="pz-prov" class="search" placeholder="Ex.: Réplica, Contrarrazões, Embargos de declaração"></label>
+        <label>Cliente<select id="pz-caso" class="search"></select></label>
+      </div>
+      <div><button class="btn" type="submit">Calcular</button></div>
+      <div id="pz-res" hidden></div>
+    </form>
+    <details class="panel" id="pz-presc-box" hidden><summary><b>Prescrição penal</b> <span class="small muted">(CP, arts. 109, 110, 115 e 117)</span></summary><div id="esc-prescricao" style="margin-top:12px"></div></details>
+  </section>
+
+  <section id="v-docs" class="oview">
+    <header class="ohead"><div><button class="back" data-voltar>← Voltar</button><h1>Documentos e kit da ação</h1></div></header>
+    <details class="panel" id="meus-dados"><summary><b>Meus dados</b> <span class="small muted">(preencha uma vez; ficam só neste navegador)</span></summary>
+      <div class="crm-grid" style="margin-top:12px">
+        <label>Nome<input id="adv-nome" class="search"></label>
+        <label>OAB (número/UF)<input id="adv-oab" class="search"></label>
+        <label class="wide">Endereço profissional completo<input id="adv-end" class="search"></label>
+        <label>Cidade/UF padrão<input id="adv-cidade" class="search"></label>
+      </div></details>
+    <div class="panel">
+      <label class="small" style="display:grid;gap:4px;max-width:420px">Cliente ou pedido já cadastrado (traz a história e o que a plataforma já leu)<select id="doc-cliente" class="search"></select></label>
+      <h2 style="margin-top:12px">1. Documentos do cliente</h2>
+      <label class="dropzone" id="dz"><input type="file" id="dz-input" multiple accept="image/*,application/pdf" hidden>
+        <b>Arraste aqui RG, CPF, CNH e comprovante de endereço</b><br><span class="small muted">fotos ou PDF · a leitura acontece neste navegador, nada é enviado</span></label>
+      <ul class="list small" id="dz-lista"></ul>
+      <h2 style="margin-top:12px">2. A história do caso</h2>
+      <textarea id="kit-historia" rows="6" class="search" style="width:100%" placeholder="Conte o caso como contaria a um colega: o que aconteceu, quando, contra quem, o que o cliente quer. Isso vai para a minuta da petição."></textarea>
+      <div class="crm-grid" style="margin-top:8px">
+        <label>Réu / parte contrária<input id="kit-reu" class="search"></label>
+        <label>Cidade onde a ação será proposta<input id="kit-foro" class="search"></label>
+        <label>Tribunal / sistema<select id="kit-trib" class="search"><option value="">— escolher —</option><option>TJDFT — PJe 1º grau</option><option>TJDFT — Juizado Especial (PJe)</option><option>TRT10 — PJe-JT</option><option>TRF1 — PJe (Justiça Federal / JEF)</option><option>TJPB — PJe</option><option>Outro</option></select></label>
+        <label>Valor da causa (R$)<input id="kit-valor" class="search" inputmode="decimal"></label>
+        <label class="wide" style="display:flex;gap:16px;flex-wrap:wrap"><span><input type="checkbox" id="kit-grat"> Justiça gratuita</span><span><input type="checkbox" id="kit-tutela"> Tutela de urgência / liminar</span><span><input type="checkbox" id="kit-prior"> Prioridade (idoso, doença grave, PcD)</span><span><input type="checkbox" id="kit-segredo"> Segredo de justiça</span></label>
+      </div>
+      <h2 style="margin-top:12px">3. Honorários e proposta</h2>
+      <div id="pr-form" class="pr-box">
+      
+      <div class="crm-grid">
+        <label class="wide">Serviço (busca na tabela da OAB/DF)<input id="pr-busca" class="search" placeholder="ex.: divórcio, mandado de segurança, INSS, júri, PAD"></label>
+        <label class="wide"><select id="pr-servico" class="search" aria-label="Serviço"></select></label>
+        <p class="wide small" id="pr-item"></p>
+        <label id="pr-urh-box">Valor da URH do mês (R$) — fica salvo<input id="pr-urh" class="search" inputmode="decimal" placeholder="ex.: 362,72 (fev/2025) — confira o atual"></label>
+        <label>Proveito econômico / valor em jogo (R$)<input id="pr-proveito" class="search" inputmode="decimal" placeholder="opcional"></label>
+        <label>Horas estimadas (opcional)<input id="pr-horas" class="search" inputmode="decimal"></label>
+        <label>Seu valor-hora (R$, opcional — mínimo 2 URH)<input id="pr-hora" class="search" inputmode="decimal"></label>
+        <label>Êxito na opção 2 (%)<input id="pr-exito" class="search" type="number" min="0" max="30" value="20"></label>
+      </div>
+      <details class="small" style="margin-top:6px"><summary>Ajustar critérios do caso (CED, art. 49)</summary><div class="crm-grid" id="pr-fatores" style="margin-top:8px"></div></details>
+      <div><button class="btn" type="button" id="pr-calcular">Calcular honorários</button></div>
+      <div id="pr-res" hidden></div>
+    </div>
+      <div class="crm-grid" style="margin-top:8px"><label>No contrato e na proposta, usar<select id="kit-opcao" class="search"><option value="1">Opção 1 — honorários fixos</option><option value="2">Opção 2 — fixo + êxito</option><option value="ambas">As duas opções na proposta; contrato com a opção 1</option></select></label></div>
+      <h2 style="margin-top:12px">4. O que vai no kit</h2>
+      <div class="kit-opcoes" id="kit-opcoes"></div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:12px"><button class="btn" id="kit-gerar">Gerar kit da ação (.zip)</button></div>
+      <p id="kit-status" class="small"></p>
+    </div>
+    <details class="panel" id="doc-avulso"><summary><b>Dados do cliente e documento avulso</b></summary>
+      <div class="crm-grid" style="margin-top:12px">
+        <label>Modelo<select id="doc-modelo" class="search"></select></label>
+      </div>
+      <h2 style="margin-top:8px">Outorgante / Contratante</h2>
+      <div class="crm-grid">
+        <label>Tipo<select id="p-tipo" class="search"><option value="pf">Pessoa física</option><option value="pj">Pessoa jurídica</option></select></label>
+        <label>Nome / Razão social<input id="p-nome" class="search"></label>
+        <label class="pf">Nacionalidade<input id="p-nac" class="search" value="brasileiro(a)"></label>
+        <label class="pf">Estado civil<input id="p-civil" class="search"></label>
+        <label class="pf">Profissão<input id="p-prof" class="search"></label>
+        <label class="pf">RG e órgão expedidor<input id="p-rg" class="search"></label>
+        <label>CPF / CNPJ<input id="p-doc" class="search"></label>
+        <label class="wide">Endereço completo (com CEP)<input id="p-end" class="search"></label>
+        <label class="pj wide">Representante legal (nome, nacionalidade, estado civil, profissão, CPF)<input id="p-rep" class="search"></label>
+        <label class="pf wide">Representa menor? (nome e CPF do menor — deixe vazio se não)<input id="p-menor" class="search"></label>
+      </div>
+      <div id="doc-campos" class="crm-grid" style="margin-top:12px"></div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:12px"><button class="btn" id="doc-gerar">Gerar documento</button></div>
+    </details>
+    <div class="panel" id="doc-saida" hidden>
+      <div style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn" id="doc-word">Baixar Word</button><button class="back" id="doc-pdf">Imprimir / salvar PDF</button><button class="back" id="doc-copiar">Copiar texto</button></div>
+      <p class="small muted">Você pode editar o texto abaixo antes de baixar. Revise sempre antes de assinar.</p>
+      <article id="doc-texto" class="doc-folha" contenteditable="true"></article>
+    </div>
+  </section>
+
+  <section id="v-fin" class="oview">
+    <header class="ohead"><div><button class="back" data-voltar>← Voltar</button><h1>Financeiro do mês</h1></div>
+      <input type="month" id="fin-mes" class="search" style="min-width:0"></header>
+    <div class="kpis" id="fin-kpis"></div>
+    <div class="two">
+      <form class="panel" id="fin-hon">
+        <h2>Honorários (gera as parcelas)</h2>
+        <div class="crm-grid">
+          <label>Cliente<select id="fh-vinculo" class="search"></select></label>
+          <label>Valor total (R$)<input id="fh-valor" class="search" inputmode="decimal" required placeholder="5.000,00"></label>
+          <label>Parcelas<input id="fh-n" class="search" type="number" min="1" max="48" value="1"></label>
+          <label>1º vencimento<input id="fh-venc" class="search" type="date" required></label>
+          <label class="wide">Descrição<input id="fh-desc" class="search" placeholder="Honorários contratuais — ação X" required></label>
+        </div>
+        <div><button class="btn" type="submit">Gerar parcelas</button></div>
+      </form>
+      <form class="panel" id="fin-lanc">
+        <h2>Lançamento avulso</h2>
+        <div class="crm-grid">
+          <label>Tipo<select id="fl-tipo" class="search"><option value="receita">Recebimento</option><option value="despesa">Despesa</option></select></label>
+          <label>Valor (R$)<input id="fl-valor" class="search" inputmode="decimal" required></label>
+          <label>Data<input id="fl-data" class="search" type="date" required></label>
+          <label>Categoria<select id="fl-cat" class="search"><option>Honorários</option><option>Êxito</option><option>Consulta</option><option>Custas (reembolsável)</option><option>Aluguel / escritório</option><option>Sistemas e assinaturas</option><option>Impostos</option><option>Outros</option></select></label>
+          <label class="wide">Descrição<input id="fl-desc" class="search" required></label>
+          <label>Cliente<select id="fl-vinculo" class="search"></select></label>
+          <label style="flex-direction:row;display:flex;gap:6px;align-items:center"><input type="checkbox" id="fl-pago" checked> Já pago</label>
+        </div>
+        <div><button class="btn" type="submit">Lançar</button></div>
+      </form>
+    </div>
+    <div class="panel"><div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:center"><h2>Lançamentos do mês</h2><button class="back" id="fin-csv">Exportar planilha (CSV)</button></div>
+      <table class="table"><thead><tr><th>Vencimento</th><th>Descrição</th><th>Valor</th><th>Situação</th><th></th></tr></thead><tbody id="fin-tab"></tbody></table></div>
+  </section>
+
+  <section id="v-djen" class="oview">
+    <header class="ohead"><div><button class="back" data-voltar>← Voltar</button><h1>Publicações</h1></div>
+      <button class="btn" id="djen-buscar">Buscar agora</button></header>
+    <div class="panel">
+      <div class="djen-form">
+        <label>OAB<input id="djen-oab" class="search" inputmode="numeric" placeholder="só números"></label>
+        <label>UF<input id="djen-uf" class="search" value="DF" maxlength="2"></label>
+        <label>Nome (busca extra)<input id="djen-nome" class="search" style="width:240px" placeholder="seu nome completo"></label>
+        <label>Últimos dias<input id="djen-dias" class="search" type="number" min="1" max="60" value="7"></label>
+      </div>
+      <label class="small">Processos de terceiros para acompanhar (um número por linha)
+        <textarea id="djen-monit" rows="3" class="search" style="width:100%;font-family:monospace" placeholder="0700000-00.2026.8.07.0001"></textarea></label>
+      <label class="small">Buscar por nome de parte (cliente ou empresa — um nome por linha)
+        <textarea id="djen-partes" rows="2" class="search" style="width:100%" placeholder="Nome completo da parte"></textarea></label>
+      <p class="small muted">Os processos cadastrados nas fichas dos clientes também são consultados. As publicações já vistas ficam marcadas neste navegador.</p>
+      <details><summary class="small"><b>Colar e-mail do Recorte Digital (OAB/DF)</b> — traz publicações que o DJEN ainda não liberou na consulta</summary>
+        <textarea id="rec-texto" rows="6" class="search" style="width:100%;margin-top:8px" placeholder="Abra o e-mail do Recorte Digital, selecione tudo (Ctrl+A), copie e cole aqui"></textarea>
+        <button class="btn" id="rec-ok" style="margin-top:8px">Ler e-mail</button></details>
+      <p id="djen-status" class="small"></p>
+      <p class="small"><b>Conferência:</b> compare com o Recorte Digital da OAB/DF que chega por e-mail. Atalhos:
+        <a href="https://dejt.jt.jus.br/dejt/f/n/diariocon" target="_blank" rel="noopener">Consultar o DEJT</a> ·
+        <a href="https://pje.trt10.jus.br/consultaprocessual/" target="_blank" rel="noopener">Consulta processual TRT10</a></p>
+    </div>
+    <div id="djen-lista" class="djen-lista"></div>
+  </section>
+
+  <section id="v-importar" class="oview">
+    <header class="ohead"><div><button class="back" data-voltar>← Voltar</button><h1>Importar processos</h1></div></header>
+    <div class="panel">
+      <p>Cole a lista de processos (planilha copiada, CSV ou texto com números CNJ) ou escolha um arquivo. Cada processo vira (ou entra na ficha de) um cliente.</p>
+      <p class="small muted">Colunas reconhecidas, se houver cabeçalho: processo, cliente, área, assunto, tribunal/órgão, etapa/situação, prazo, providência, observação. Sem cabeçalho, o painel encontra os números CNJ no texto.</p>
+      <textarea id="imp-texto" rows="10" class="search" style="width:100%;font-family:monospace" placeholder="0700000-00.2026.8.07.0001;Cliente;Consumidor;..."></textarea>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+        <input type="file" id="imp-arquivo" accept=".csv,.tsv,.txt,.json">
+        <button class="btn" id="imp-ok">Importar</button>
+        
+      </div>
+      <p id="imp-msg" class="small"></p>
+    </div>
+  </section>
+</main>
+<script src="../supabase-config.js"></script>
+<script src="../documento-id.js"></script>
+<script src="../prazos-calc.js"></script>
+<script src="../prescricao.js"></script>
+<script src="../calculadoras.js"></script>
+<script src="escritorio.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="leitura-docs.js"></script>
+<script src="documentos.js"></script>
+<script src="tabela-oabdf.js"></script>
+<script src="precificacao.js"></script>
+<script src="dac-painel.js"></script>
+<script src="nuvem.js"></script>
+</body>
+</html>
