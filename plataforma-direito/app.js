@@ -448,7 +448,7 @@ document.querySelectorAll("[data-go]").forEach((a) => a.addEventListener("click"
 
 document.querySelectorAll("[data-tool]").forEach((b) => (b.onclick = () => {
   $("b2b-tool").value = b.dataset.tool;
-  $("b2b-title").textContent = b.dataset.tool;
+  $("b2b-title").textContent = "Falar com a advogada";
   $("b2b-form").hidden = false;
   $("b2b-msg").textContent = "";
   $("b2b-form").scrollIntoView({ behavior: "smooth", block: "start" });
@@ -457,9 +457,16 @@ $("b2b-form").onsubmit = async (e) => {
   e.preventDefault();
   $("b2b-send").disabled = true;
   try {
-    const r = await fetch("/", { method: "POST", headers: { "Content-Type": "application/x-www-form-urlencoded" }, body: new URLSearchParams(new FormData(e.target)).toString() });
+    const fd = new FormData(e.target);
+    const r = await fetch("/", { method: "POST", headers: { "Content-Type": "application/x-www-form-urlencoded" }, body: new URLSearchParams(fd).toString() });
+    // Também chega ao painel do escritório como pedido (área Administrativo), pronto para o motor DAC.
+    const protocolo = "PD-" + new Date().toISOString().slice(2, 10).replace(/-/g, "") + "-" + Math.random().toString(36).slice(2, 6).toUpperCase();
+    const pacote = { v: 1, protocolo, criado: new Date().toISOString(), area: "Administrativo — empresas e gestores", key: "administrativo",
+      relato: [fd.get("assunto"), fd.get("organizacao") && `Organização: ${fd.get("organizacao")}`, `Perfil: ${fd.get("perfil")}`].filter(Boolean).join("\n"),
+      nome: String(fd.get("nome") || "").trim(), email: String(fd.get("email") || "").trim(), telefone: String(fd.get("telefone") || "").trim(), respostas: [] };
+    enviarPedidoNuvem("PD1:" + btoa(unescape(encodeURIComponent(JSON.stringify(pacote)))));
     if (!r.ok) throw new Error(r.status);
-    $("b2b-msg").textContent = "Recebido. Avisaremos você assim que a ferramenta abrir.";
+    $("b2b-msg").textContent = `Recebido (protocolo ${protocolo}). A advogada retorna em até 1 dia útil.`;
     e.target.reset();
   } catch {
     $("b2b-msg").textContent = "Não conseguimos enviar agora. Verifique a conexão e tente de novo.";

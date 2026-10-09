@@ -150,46 +150,50 @@
   <section id="view-empresas" class="view">
     <div class="b2b">
       <p class="eyebrow">Plataforma do Direito · Empresas e Gestores</p>
-      <h1>Ferramentas jurídicas para quem contrata com o poder público</h1>
-      <p class="lead">Análise de casos, riscos, propostas e tributos, com regras organizadas por fonte legal. Apoio à decisão, sempre com revisão profissional.</p>
+      <h1>Direito Administrativo para empresas e gestores públicos</h1>
+      <p class="lead">Licitações e contratos, Tribunal de Contas, improbidade, processos sancionadores e servidores. A análise é feita pela advogada, com apoio de um método próprio de organização: 3.292 regras de Direito Administrativo, em 28 domínios, cada uma ligada à sua fonte legal.</p>
       <div class="tools">
         <article class="tool">
-          <span class="badge">Beta em breve</span>
-          <h3>Análise de casos — Direito Administrativo</h3>
-          <p>Descreva o caso e veja os fatos identificados (afirmados, alegados, hipotéticos, contestados), as regras aplicáveis com a fonte e o que falta esclarecer.</p>
-          <p class="muted small">3.292 regras em 28 domínios: processo administrativo, agentes públicos, licitações, improbidade, controle externo e outros.</p>
-          <button class="btn secondary" data-tool="Análise de casos — Administrativo">Quero acesso antecipado</button>
+          <h3>Licitações e contratos</h3>
+          <p>Impugnação de edital, recursos, contratação direta, reequilíbrio econômico-financeiro, execução contratual e sanções da Lei 14.133/2021.</p>
         </article>
         <article class="tool">
-          <span class="badge">Em desenvolvimento</span>
-          <h3>Simulador de riscos em licitações e contratos</h3>
-          <p>Responda perguntas sobre o edital ou o contrato e receba os riscos classificados, com fundamento e providências.</p>
-          <button class="btn secondary" data-tool="Simulador de riscos">Quero ser avisado(a)</button>
+          <h3>Tribunal de Contas</h3>
+          <p>Defesa em tomada de contas especial, contas julgadas irregulares, imputação de débito e multas do TCU e do TCDF.</p>
         </article>
         <article class="tool">
-          <span class="badge">Em desenvolvimento</span>
-          <h3>Gerador de propostas para licitação</h3>
-          <p>Minuta de proposta a partir do edital, com checklist de conferência obrigatório antes do envio.</p>
-          <button class="btn secondary" data-tool="Gerador de propostas">Quero ser avisado(a)</button>
+          <h3>Improbidade e responsabilização</h3>
+          <p>Defesa em ação de improbidade (Lei 8.429/1992, com as mudanças de 2021), processo de responsabilização de empresas (Lei 12.846/2013) e acordos.</p>
         </article>
         <article class="tool">
-          <span class="badge">Em desenvolvimento</span>
-          <h3>Motor tributário — Reforma Tributária</h3>
-          <p>Efeitos da transição para IBS e CBS nas suas contratações e nos seus contratos públicos, ano a ano.</p>
-          <button class="btn secondary" data-tool="Motor tributário (RTC)">Quero ser avisado(a)</button>
+          <h3>Servidores e processo disciplinar</h3>
+          <p>Defesa em PAD e sindicância, direitos funcionais, concursos e atos de remoção, demissão ou cassação.</p>
         </article>
+      </div>
+      <div class="card metodo">
+        <h2>Como a análise é organizada</h2>
+        <ol>
+          <li><strong>Fatos separados de alegações:</strong> o que está comprovado, o que é só alegado, o que é hipótese e o que é contestado nunca se misturam.</li>
+          <li><strong>Regras com fonte:</strong> cada ponto de análise aponta a lei, o artigo ou a decisão de onde vem.</li>
+          <li><strong>Lacunas e perguntas:</strong> o que falta esclarecer aparece como pergunta, antes de qualquer conclusão.</li>
+        </ol>
+        <p class="muted small">O método organiza a informação; a avaliação jurídica é sempre feita pessoalmente pela advogada.</p>
+        <div class="actions"><button class="btn" data-tool="Atendimento — empresas e gestores">Falar com a advogada</button><a href="#" class="btn btn-wa" data-wa>WhatsApp</a></div>
       </div>
       <form class="card lead-form" id="b2b-form" name="interesse-empresas" method="POST" data-netlify="true" netlify-honeypot="empresa-site" hidden>
         <input type="hidden" name="form-name" value="interesse-empresas">
         <input type="hidden" name="ferramenta" id="b2b-tool">
         <p hidden><label>Não preencha: <input name="empresa-site"></label></p>
-        <h3 id="b2b-title">Acesso antecipado</h3>
+        <h3 id="b2b-title">Falar com a advogada</h3>
         <label for="b2b-nome">Nome</label><input id="b2b-nome" name="nome" required autocomplete="name">
-        <label for="b2b-email">E-mail</label><input id="b2b-email" name="email" type="email" required autocomplete="email">
+        <label for="b2b-tel">WhatsApp ou telefone</label><input id="b2b-tel" name="telefone" type="tel" required autocomplete="tel">
+        <label for="b2b-email">E-mail (opcional)</label><input id="b2b-email" name="email" type="email" autocomplete="email">
         <label for="b2b-org">Empresa ou órgão</label><input id="b2b-org" name="organizacao">
         <label for="b2b-perfil">Você é</label>
         <select id="b2b-perfil" name="perfil"><option>Empresa que licita</option><option>Gestor(a) público(a)</option><option>Servidor(a)</option><option>Advogado(a)</option><option>Outro</option></select>
-        <label class="consent"><input type="checkbox" name="consentimento" value="sim" required> Autorizo o contato sobre esta ferramenta.</label>
+        <label for="b2b-assunto">Assunto (em poucas palavras)</label><textarea id="b2b-assunto" name="assunto" rows="3" placeholder="Ex.: recebemos notificação do TCU para defesa em tomada de contas especial"></textarea>
+        <label class="consent"><input type="checkbox" name="consentimento" value="sim" required> Autorizo o envio destes dados à advogada, só para o contato e a preparação do atendimento. Posso pedir que sejam apagados a qualquer momento.</label>
+        <p class="muted small">Nenhum serviço é iniciado antes da assinatura do contrato de honorários e da procuração.</p>
         <button class="btn" type="submit" id="b2b-send">Enviar</button>
         <p class="muted small" id="b2b-msg"></p>
       </form>
