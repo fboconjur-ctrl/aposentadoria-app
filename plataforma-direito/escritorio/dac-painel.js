@@ -48,7 +48,7 @@
     return `<span class="dac-v inc">${e}${f.contested && f.epistemic_status !== "DENIED" ? " · contestado" : ""}</span>`;
   };
   // Rótulos técnicos das conclusões ("avaliar dolo culpa", "enforce dano nao presumido") em português legível.
-  const ACENTO = { nao: "não", e: "é", previo: "prévio", publico: "público", publica: "pública", erario: "erário", licitacao: "licitação", motivacao: "motivação", contraditorio: "contraditório", decisao: "decisão", sancao: "sanção", prescricao: "prescrição", reequilibrio: "reequilíbrio", concessao: "concessão", informacao: "informação", anonimizacao: "anonimização", violacao: "violação", perturbacao: "perturbação", improbidade: "improbidade", absolvicao: "absolvição", autoria: "autoria", obrigatoria: "obrigatória", juridica: "jurídica", administracao: "Administração", servico: "serviço", tecnica: "técnica", vinculacao: "vinculação", competencia: "competência", publicacao: "publicação", forca: "força", especifico: "específico", peticao: "petição", capitulo: "capítulo", pad: "PAD", numero: "número", prorrogacao: "prorrogação", diligencia: "diligência", indispensavel: "indispensável", nomeacao: "nomeação", maxima: "máxima", obrigatorio: "obrigatório", reconsideracao: "reconsideração", inquerito: "inquérito", instauracao: "instauração", inicio: "início" };
+  const ACENTO = { nao: "não", e: "é", previo: "prévio", publico: "público", publica: "pública", erario: "erário", licitacao: "licitação", motivacao: "motivação", contraditorio: "contraditório", decisao: "decisão", sancao: "sanção", prescricao: "prescrição", reequilibrio: "reequilíbrio", concessao: "concessão", informacao: "informação", anonimizacao: "anonimização", violacao: "violação", perturbacao: "perturbação", improbidade: "improbidade", absolvicao: "absolvição", autoria: "autoria", obrigatoria: "obrigatória", juridica: "jurídica", administracao: "Administração", servico: "serviço", tecnica: "técnica", vinculacao: "vinculação", competencia: "competência", publicacao: "publicação", contratacao: "contratação", excecoes: "exceções", forca: "força", especifico: "específico", peticao: "petição", capitulo: "capítulo", pad: "PAD", numero: "número", prorrogacao: "prorrogação", diligencia: "diligência", indispensavel: "indispensável", nomeacao: "nomeação", maxima: "máxima", obrigatorio: "obrigatório", reconsideracao: "reconsideração", inquerito: "inquérito", instauracao: "instauração", inicio: "início" };
   const legivel = (t) => {
     let x = String(t || "").trim(); let tipo = "";
     if (/^enforce\s+/i.test(x)) { tipo = "Salvaguarda"; x = x.replace(/^enforce\s+/i, ""); }
@@ -66,7 +66,15 @@
 
   function render(L) {
     const fatos = Object.entries(L.canonicalFacts || {}).filter(([k, f]) => !k.startsWith("_") && f && (f.value !== "UNKNOWN" || (f.epistemic_status && f.epistemic_status !== "ASSERTED")));
-    const conc = (L.conclusions || []).filter((c) => !/nenhuma atravessou/i.test(c.text));
+    // Conclusões técnicas sem conteúdo ("enforce", "vedar") somem; roteamentos ("rotear DA05") viram "ver também".
+    const NOMES_DOM = Object.fromEntries((L.domains || []).map((d) => [d.id.replace("-", ""), d.name]));
+    const rotas = new Set(); const conc = [];
+    for (const c of (L.conclusions || [])) {
+      const t = String(c.text || "").trim();
+      if (/nenhuma atravessou/i.test(t) || /^(enforce|vedar|avaliar|exigir|permitir)$/i.test(t)) continue;
+      if (/^rotear\b/i.test(t)) { (t.match(/DA\d{2}/g) || []).forEach((d) => rotas.add(d)); continue; }
+      if (!conc.some((x) => x.text === t)) conc.push(c);
+    }
     const regras = (L.rules || []).slice(0, 12);
     $("dac-out").innerHTML = `
       <div class="panel"><h2>Fatos extraídos</h2>
@@ -75,6 +83,7 @@
       <div class="panel"><h2>Domínios envolvidos</h2><p>${(L.domains || []).map((d) => `<span class="pill-s">${esc2(d.id)} ${esc2(d.name)}</span>`).join(" ") || "—"}</p>
         <p class="small muted">Escopo: ${esc2([L.scope?.entity, L.scope?.branch, L.scope?.stage].filter((x) => x && x !== "UNKNOWN").join(" · ") || "não identificado")}</p></div>
       <div class="panel"><h2>Pontos a avaliar</h2>${conc.length ? `<ul>${conc.map((c) => `<li><b>${esc2(legivel(c.text))}</b>${(() => { const r = (L.rules || []).find((x) => x.id === c.rule); return r ? ` <span class="small muted">— ${esc2(r.source || "")}${r.article ? ", " + esc2(r.article) : ""} (${esc2(c.rule)})</span>` : c.domain ? ` <span class="small muted">(${esc2(c.domain)} · ${esc2(c.rule || "")})</span>` : ""; })()}${c.uncertain ? ` <span class="dac-v inc">depende de fato em aberto</span>` : ""}</li>`).join("")}</ul>` : `<p class="muted">Nenhuma regra atravessou todos os filtros com os fatos atuais. Complete os fatos (perguntas abaixo) e analise de novo.</p>`}</div>
+      ${rotas.size ? `<p class="small muted" style="margin-top:8px"><b>Ver também:</b> ${[...rotas].map((d) => esc2(d.replace(/^DA/, "DA-") + (NOMES_DOM[d] ? " " + NOMES_DOM[d] : ""))).join(" · ")}</p>` : ""}
       <div class="panel"><h2>Regras relacionadas, com fonte</h2>${regras.length ? `<ul>${regras.map((r) => `<li><b>${esc2(r.source || "")}${r.article ? ", " + esc2(r.article) : ""}</b> — ${esc2(r.topic || r.id)} <span class="small muted">(${esc2(r.id)} · ${esc2(r.domainName || r.domain)})</span></li>`).join("")}</ul>${L.rules.length > 12 ? `<p class="small muted">+${L.rules.length - 12} regra(s) — veja no motor completo.</p>` : ""}` : `<p class="muted">Nenhuma.</p>`}</div>
       ${(L._pendencias || []).length ? `<div class="panel" id="dac-pend"><h2>Completar fatos <span class="small muted">(destrava regras)</span></h2>
         <p class="small muted">O relato não diz isto com segurança. Responda o que você já sabe; a resposta é sua, não uma inferência do motor.</p>

@@ -640,9 +640,41 @@ function demo(n){
  if(cases[n])t.value=cases[n];
  analyze();
 }
-function domainScore(text,d){
- let score=0,hits=[];
- for(const k of d.keywords){if(norm(text).includes(norm(k))){score+=4;hits.push(k)}}
+// v13.8: vocabulário do dia a dia por domínio (como as pessoas descrevem o caso), somado às palavras-chave técnicas do corpus.
+const DOMINIO_KW_V138={
+ "DA-01":["nepotismo","teto remuneratorio","dentro das vagas","direito adquirido","principio da"],
+ "DA-02":["ministerio","secretaria","agencia reguladora","delegou","delegacao de competencia","orgao publico"],
+ "DA-03":["recurso","indeferiu","indeferido","prazo para defesa","notificacao","decisao administrativa","processo no orgao","pedido administrativo"],
+ "DA-04":["servidora","funcionario publico","exonerado","exoneracao","demitido","removido","remocao","licenca","estagio probatorio","posse","nomeacao","sindicancia","cargo efetivo"],
+ "DA-05":["contrato com a prefeitura","contrato publico","aditivo","proposta","licitante","certame","contratacao direta","marca e modelo"],
+ "DA-06":["petrobras","correios","caixa economica","banco do brasil","empresa estatal","empresa publica federal"],
+ "DA-07":["concessao de servico","pedagio","distribuidora","contrato de concessao","poder concedente"],
+ "DA-08":["contraprestacao publica","parceria publico privada","concessao patrocinada"],
+ "DA-09":["consorcio","gestao associada","contrato de programa","entre municipios"],
+ "DA-10":["organizacao da sociedade civil","ong","convenio","prestacao de contas da entidade"],
+ "DA-11":["imovel da uniao","imovel publico","terreno publico","area publica","taxa de ocupacao","ocupacao","cedido","cessao","spu","foro","laudemio","bens publicos","terreno da uniao"],
+ "DA-12":["desapropriado","desapropriacao","indenizacao pelo imovel","tombado","valor de mercado"],
+ "DA-13":["corte de agua","corte de luz","cortou o fornecimento","fornecimento","agua","esgoto","transporte publico","sem aviso previo"],
+ "DA-14":["restos a pagar","empenhado","empenhou","credito orcamentario","pagamento nao foi feito"],
+ "DA-15":["lei de responsabilidade fiscal","lrf","despesa com pessoal","limite prudencial","quadrimestre"],
+ "DA-16":["pedido de acesso","pedido de informacao","portal da transparencia","negado sem fundamentacao"],
+ "DA-17":["vazamento de dados","dados pessoais","dados de saude","exposicao de dados","anonimizacao","dados sensiveis"],
+ "DA-18":["gov.br","documento digital","certificado digital","sistema eletronico","assinatura digital"],
+ "DA-19":["propina","suborno","acordo de leniencia","cgu","compliance","integridade"],
+ "DA-20":["acao de improbidade","indisponibilidade de bens","ressarcimento ao erario","dano ao erario"],
+ "DA-21":["multa administrativa","processo sancionador","penalidade","multado","multada","processo administrativo sancionador"],
+ "DA-22":["cgu","controladoria","auditoria","ouvidoria","controle interno"],
+ "DA-23":["tcdf","tce","tomada de contas especial","contas irregulares","imputacao de debito","auditoria do tcu"],
+ "DA-24":["liminar","juiz","justica federal","acao judicial","processo judicial","ajuizei","ajuizou"],
+ "DA-25":["camara de conciliacao","acordo com a administracao","transacao","clausula de arbitragem"],
+ "DA-26":["combinaram precos","combinaram propostas","rodizio de vencedores","cartel"],
+ "DA-27":["propina","peculato","desvio de dinheiro","processo criminal","policia federal","denuncia criminal","corrupcao"],
+ "DA-28":["microempresa","produto nacional","produtos nacionais","cota para mulheres","licitacao sustentavel","margem de preferencia"]
+};
+function domainScore(text,d,id){
+ let score=0,hits=[]; const n=norm(text);
+ for(const k of d.keywords){if(n.includes(norm(k))){score+=4;hits.push(k)}}
+ for(const k of (DOMINIO_KW_V138[id||d.id]||[])){if(n.includes(k)&&!hits.includes(k)){score+=3;hits.push(k)}}
  return {score,hits};
 }
 function ruleScore(text,r){
@@ -702,6 +734,7 @@ function scopeGate(rule,scope,text){
  if(national) return {state:'PASS',label:'âmbito nacional/sistêmico'};
  if(federal){
    if(ent==='federal') return {state:'PASS',label:'caso federal compatível'};
+   if(scope&&scope.federalResources) return {state:'PASS',label:'recursos/controle federal (TCU, CGU ou verba da União)'};
    if(ent==='unknown') return {state:'UNKNOWN_SCOPE',label:'ente não confirmado para regra federal'};
    if(hasAdoptionEvidence(text)) return {state:'PASS_ADOPTION',label:'incidência por adesão informada — revisar base específica'};
    return {state:'BLOCK_SCOPE',label:`regra ${rule.scope||'federal'} não aplicada automaticamente a ente ${scope.entity}`};
@@ -763,7 +796,7 @@ function engineAnalyzeCore(){
  const scope=resolveScope(text);
  const ds=[];
  for(const [id,d] of Object.entries(DATA.domains)){
-   const sc=domainScore(text,d); if(sc.score>0)ds.push({id,...d,...sc});
+   const sc=domainScore(text,d,id); if(sc.score>0)ds.push({id,...d,...sc});
  }
  ds.sort((a,b)=>b.score-a.score);
  const activeIds=new Set(ds.slice(0,9).map(x=>x.id));
@@ -1315,6 +1348,7 @@ function genericFactForPredicateV9(cp,text,F){
  }
  // v13.8: ponte jurídica — predicados frequentes derivados do relato, com fronteira epistemológica.
  const pr=ponteV138(cp.key,text,F); if(pr)return pr;
+ const pl=ponteLexicalV138(cp,text,F); if(pl)return pl;
  // Conservative generic extractor: explicit uncertainty/absence-of-information must remain UNKNOWN.
  if(phrase.length>=5){
    const esc=phrase.replace(/[.*+?^${}()|[\]\\]/g,"\\$&");
@@ -1368,7 +1402,7 @@ function ponteV138(key,text,F){
  const naoFirme=(cl)=>/(talvez|supostamente|possivelmente|provavelmente|sera apurad|em apuracao|em tese|alega|afirma|sustenta|denuncia|suspeita|nega|contesta|se houver|caso haja|pode ter|teria)/.test(cl);
  const porTexto=(rx,ev)=>{const cl=clausula(rx); if(cl==null)return null; if(naoFirme(cl))return cf("UNKNOWN",.6,cl,"PONTE_V138_NAO_FIRME"); return cf(true,.8,ev||cl.trim(),"PONTE_V138");};
  const R={
-  SERVIDOR_FEDERAL:()=>/servidor(a)?( publico| publica)? federal|servidor(a)? da uniao|servidor(a)? (do|da) (ministerio|autarquia federal|universidade federal|instituto federal|ibama|inss|receita federal|policia federal)/.test(n)?cf(true,.85,"servidor federal","PONTE_V138"):null,
+  SERVIDOR_FEDERAL:()=>porTexto(/servidor(a)?( publico| publica)? federal|servidor(a)? da uniao|servidor(a)? (do|da) (ministerio|autarquia federal|universidade federal|instituto federal|ibama|inss|receita federal|policia federal)/),
   PAD_INSTAURADO:()=>porTexto(/\bpad\b|processo administrativo disciplinar|processo disciplinar|instaur\w* (o |um )?(processo|pad)/),
   PENA_GRAVE_EM_TESE:()=>porTexto(/demiti\w*|demissao|cassacao|cassad\w* (a )?aposentadoria|destituicao|destituid\w*/),
   PENALIDADE_EM_TESE:()=>porTexto(/demiti\w*|demissao|suspens\w*|advertencia|cassacao|destituicao|penalidade/),
@@ -1395,6 +1429,95 @@ function ponteV138(key,text,F){
  };
  const f=R[key]; return f?f():null;
 }
+// v13.8 — Ponte lexical geral: cobre os predicados de presença dos 28 domínios.
+// Um predicado (ex.: TCE_INSTAURADA, ESPECIFICACAO_OBJETO_INDICA_MARCA_MODELO) é satisfeito quando TODAS as suas
+// palavras de conteúdo (ou sinônimos/variações) aparecem na MESMA frase do relato, afirmadas de forma firme.
+// Alegação, hipótese, contestação ou apuração em curso → UNKNOWN; negação ("sem", "não houve"…) → FALSE.
+const LEX_STOP=new Set("de da do das dos e ou em no na nos nas para por com sem a o as os ao aos um uma uns umas que se true false art lei inciso paragrafo caput sobre entre ate apos pelo pela pelos pelas sua seu suas seus tipo caso quando".split(" "));
+const LEX_SIN={
+ servidor:["servidor","funcionario publico","agente publico"],agente:["agente","servidor","gestor","autoridade","funcionario"],
+ gestor:["gestor","ordenador","prefeito","secretario","diretor","presidente"],dano:["dano","prejuizo","desfalque","rombo"],
+ prejuizo:["prejuizo","dano"],uniao:["uniao","federal","ministerio"],federal:["federal","uniao","ministerio","autarquia federal","universidade federal","instituto federal"],
+ estadual:["estadual","estado","governo do estado"],municipal:["municipal","municipio","prefeitura"],distrital:["distrital","distrito federal","gdf"],
+ orgao:["orgao","ministerio","secretaria","autarquia","prefeitura","fundacao","agencia","tribunal","camara"],entidade:["entidade","autarquia","fundacao","empresa publica","sociedade de economia mista"],
+ pj:["pessoa juridica","empresa","companhia","sociedade"],empresa:["empresa","pessoa juridica","companhia","contratada","licitante","fornecedor"],
+ contrato:["contrato","contratacao","aditivo","ajuste"],contratacao:["contratacao","contrato","contratar","contratou"],licitacao:["licitacao","pregao","concorrencia","certame","edital"],
+ edital:["edital","certame","licitacao"],tcu:["tcu","tribunal de contas da uniao"],tce:["tomada de contas especial","tce"],tribunal:["tribunal"],contas:["contas","prestacao de contas"],
+ improbidade:["improbidade"],dolo:["dolo","dolosa","doloso","intencional","de proposito","ma-fe","ma fe"],multa:["multa","multad"],sancao:["sancao","penalidade","punicao","multa","suspensao","impedimento","inidoneidade"],
+ recurso:["recurso","recorr"],prazo:["prazo"],decisao:["decisao","decidiu","despacho","julgamento","acordao"],ato:["ato","portaria","decreto","despacho","decisao"],
+ publico:["public","da uniao","federal","municipal","estadual","do estado","da prefeitura","do municipio","do distrito federal"],publica:["public","da uniao","federal","municipal","estadual"],
+ cidadao:["cidadao","eleitor","ajuizei","propus","entrei com","sou autor"],autor:["autor","ajuizei","propus","entrei com","ajuizou","propos"],lesivo:["lesiv","lesao","prejudic","dano"],concessao:["concessao","concessionaria"],permissao:["permissao","permissionaria"],tarifa:["tarifa","tarifario","reajuste tarifario","conta de"],
+ usuario:["usuario","consumidor","cidadao"],imovel:["imovel","terreno","lote","casa","apartamento","predio","edificio"],desapropriacao:["desapropria"],
+ dados:["dados","informacao pessoal","informacoes pessoais"],pessoal:["pessoal","pessoais"],informacao:["informacao","informacoes","dados"],sigilo:["sigilo","sigilos","confidencial"],
+ servico:["servico"],obra:["obra","construcao","reforma"],engenharia:["engenharia","obra"],consorcio:["consorcio"],parceria:["parceria","termo de colaboracao","termo de fomento","convenio"],
+ convenio:["convenio","termo de colaboracao","termo de fomento","transferencia voluntaria"],estatal:["estatal","empresa publica","sociedade de economia mista"],
+ prescricao:["prescri"],nomeacao:["nomead","nomeacao"],cargo:["cargo"],concurso:["concurso"],aposentadoria:["aposentad"],pensao:["pensao","pensionista"],
+ vantagem:["vantagem","propina","beneficio indevido","suborno"],fraude:["fraude","fraudad","fraudul"],superfaturamento:["superfatura","sobrepreco"],sobrepreco:["sobrepreco","superfatura"],
+ irregularidade:["irregular"],ilegal:["ilegal","ilicit"],ilegalidade:["ilegal","ilicit"],motivacao:["motiva","fundamenta"],defesa:["defesa","contraditorio","se defender"],
+ contraditorio:["contraditorio","defesa"],remocao:["removid","remocao","transferid"],demissao:["demiti","demissao","exonera"],exoneracao:["exonera"],suspensao:["suspens"],advertencia:["advertencia","advertid"],
+ cassacao:["cassa"],licenca:["licenca"],remuneracao:["remunera","salario","vencimento","subsidio"],salario:["salario","remunera","vencimento"],
+ pagamento:["pagamento","pagou","pagar","pago","paga"],atraso:["atras","em atraso","nao pag"],reequilibrio:["reequilibrio","revisao","recomposicao"],
+ rescisao:["rescis","rescind","extin"],aditivo:["aditivo","alteracao contratual"],dispensa:["dispensa"],inexigibilidade:["inexigibilidade","inexigivel"],emergencia:["emergen","calamidade","urgen"],
+ calamidade:["calamidade","emergen"],acordo:["acordo"],leniencia:["leniencia"],colaboracao:["colaboracao","delacao"],denuncia:["denuncia","representacao"],
+ investigacao:["investiga","apuracao","sindicancia","inquerito"],sindicancia:["sindicancia"],pad:["pad","processo administrativo disciplinar","processo disciplinar"],
+ processo:["processo","procedimento","autos"],instaurado:["instaur","aberto","abriu"],instaurada:["instaur","aberta","abriu"],interposto:["interp","apresent","protocol"],
+ negado:["negad","indeferi","recusad"],negada:["negad","indeferi","recusad"],indeferido:["indeferi","negad"],concedido:["concedi","deferi","aprovad"],
+ comprovada:["comprovad","provad","demonstrad","constatad","apurad"],comprovado:["comprovad","provad","demonstrad","constatad","apurad"],efetiva:["efetiv","real","concret"],
+ prova:["prova","provas","documento","comprovante"],pedido:["pedido","requerimento","solicitacao","pediu","requereu","solicitou"],acesso:["acesso"],
+ lai:["lai","lei de acesso","acesso a informacao"],saude:["saude"],educacao:["educacao","escola","ensino"],ambiental:["ambient"],
+ judicial:["judicial","justica","juiz","acao","processo judicial"],acao:["acao","processo judicial","ajuizad"],popular:["popular"],civil:["civil"],
+ credito:["credito"],despesa:["despesa","gasto"],orcamento:["orcament"],empenho:["empenh"],restos:["restos a pagar"],
+ controle:["controle"],interno:["interno","cgu","controladoria"],externo:["externo","tribunal de contas","tcu","tce","tcdf"],
+ conflito:["conflito"],interesse:["interesse"],parente:["parente","familiar","conjuge","filho","irmao"],nepotismo:["nepotismo","parente"],
+ digital:["digital","eletronic","online","internet","sistema"],eletronico:["eletronic","digital","sistema"],assinatura:["assinatura","assinou","assinad"],
+ responsavel:["responsavel","gestor","ordenador","prefeito","secretario","diretor","presidente","servidor"],erario:["erario","cofres publicos","dinheiro publico","patrimonio publico"],
+ dinheiro:["dinheiro","verba","recurso"],dinheiros:["dinheiro","verba","recurso"],recursos:["recurso","verba","dinheiro"],verba:["verba","recurso","dinheiro"],valores:["valor","dinheiro","verba"],
+ bem:["bem","bens","patrimonio"],bens:["bens","bem","patrimonio"],tombado:["tomba"],tombamento:["tomba"]
+};
+const LEX_NORMATIVO=/\b(exige|exigem|deve|devem|pode|podem|vedad\w*|proibid\w*|obrigatori\w*|aplica\w*|vigente|current|regime|principio\w*|limpe|todos poderes|norma\w*|rastreavel)\b/;
+function lexVariantes(w){
+ if(LEX_SIN[w])return LEX_SIN[w];
+ const st=w.length>6?w.slice(0,w.length-2):w.length>4?w.slice(0,w.length-1):w; // radical simples (instaurada → instaura)
+ return [st];
+}
+function lexFrases(n){return n.split(/(?<=[.;!?])\s+|\n+/).map(x=>x.trim()).filter(Boolean);}
+function ponteLexicalV138(cp,text,F){
+ if(!cp||cp.kind!=="PRESENCE"||!cp.key)return null;
+ const raw=norm(String(cp.raw||cp.key)).replace(/_/g," ").replace(/\s*=\s*true$/," ");
+ // Premissas normativas (o que a lei exige/permite/veda) não são fatos do caso: o motor as trata como vigentes.
+ if(LEX_NORMATIVO.test(raw)&&!/(ausent|nao observad|descumprid|violad)/.test(raw))return cf(true,.7,"premissa normativa do corpus","PONTE_NORMATIVA");
+ const n=norm(text);
+ const grupos=raw.split(/\bou\b/).map(g=>g.split(/\s+/).filter(w=>w.length>2&&!LEX_STOP.has(w)&&!/^\d+$/.test(w)&&!/^art\d/.test(w))).filter(g=>g.length);
+ if(!grupos.length)return null;
+ const frases=lexFrases(n);
+ let melhor=null;
+ for(const g of grupos){
+  const longo=g.length>4;
+  if(g.length>10)continue; // predicados muito longos: deixar para "Completar fatos"
+  for(const fr of frases){
+   const enteFed=F&&F.ENTE_FEDERATIVO&&/federal/i.test(String(F.ENTE_FEDERATIVO.value||""))||/\b(tcu|uniao|cgu)\b/.test(n);
+   const pos=g.map(w=>{if((w==="federal"||w==="uniao")&&enteFed)return 0;let best=-1;for(const v of lexVariantes(w)){const i=fr.indexOf(v);if(i>=0&&(best<0||i<best))best=i;}return best;});
+   // Enumerações longas (sem "ou"): exige as duas primeiras palavras + ao menos mais uma.
+   if(longo){ if(pos[0]<0||pos[1]<0||pos.slice(2).every(i=>i<0))continue; melhor={fr,pos:Math.min(...pos.filter(i=>i>=0))};break; }
+   if(pos.some(i=>i<0))continue;
+   // federal/uniao também podem vir do escopo extraído
+   melhor={fr,pos:Math.min(...pos)};break;
+  }
+  if(melhor)break;
+ }
+ if(!melhor){
+  // escopo: "federal"/"uniao" isolados satisfeitos pelo ente extraído
+  const ente=F&&F.ENTE_FEDERATIVO?String(F.ENTE_FEDERATIVO.value||""):"";
+  if(grupos.some(g=>g.length===1&&/^(federal|uniao)$/.test(g[0]))&&/federal/i.test(ente))return cf(true,.75,"ente federal","PONTE_LEXICAL");
+  return null;
+ }
+ const fr=melhor.fr;
+ if(/(talvez|supostamente|possivelmente|provavelmente|sera apurad|em apuracao|sob apuracao|em tese|alega|afirma|sustenta|denuncia|suspeita|indicio|nega|contesta|se houver|caso haja|pode ter|teria|nao se sabe|nao esta claro|nao sei)/.test(fr))
+  return cf("UNKNOWN",.6,fr,"PONTE_LEXICAL_NAO_FIRME");
+ const antes=fr.slice(Math.max(0,melhor.pos-40),melhor.pos);
+ if(/(\bsem\b|nao houve|nao ha\b|nao foi|nao foram|nunca|jamais|inexist|ausencia de|\bnem\b)[^,;]*$/.test(antes))return cf(false,.7,fr,"PONTE_LEXICAL");
+ return cf(true,.65,fr,"PONTE_LEXICAL");
+}
 function evaluateCompiledCondition(cond,F,text){
  const cp=compileCondition(cond);
  const nt=norm(text);
@@ -1410,7 +1533,9 @@ function evaluateCompiledCondition(cond,F,text){
  const semanticKey=conditionToCanonical(cond);
  let semanticAllowed=semanticKey ? semanticSatisfactionAllowed(cp,semanticKey,text) : false;
  let fact=(semanticKey && semanticAllowed) ? (F[semanticKey]||cf("UNKNOWN",0,"não extraído","CANONICAL")) : genericFactForPredicateV9(cp,text,F);
- if(fact && fact.value==="UNKNOWN"){const pr=ponteV138(cp.key,text,F); if(pr)fact=pr;}
+ // v13.8: fato amplo com valor textual (ex.: ENTE_FEDERATIVO="FEDERAL") não responde predicado de presença específico.
+ if(fact && cp.op==="PRESENT" && typeof fact.value==="string" && fact.value!=="UNKNOWN"){fact=ponteV138(cp.key,text,F)||ponteLexicalV138(cp,text,F)||cf("UNKNOWN",0,"predicado específico","PONTE_V138");}
+ if(fact && fact.value==="UNKNOWN"){const pr=ponteV138(cp.key,text,F)||ponteLexicalV138(cp,text,F); if(pr)fact=pr;}
  let status=comparePredicate(fact.value,cp.op,cp.value);
  // Conceitos canônicos amplos não podem satisfazer predicados jurídicos mais específicos sem evidência própria.
  if(semanticKey && semanticAllowed && fact.value===true && (cp.op==="PRESENT" || cp.value===true))status="PASS";
@@ -1426,6 +1551,9 @@ function evaluateRuleCompiled(rule,F,text){
  else if(req.some(x=>x.status==="UNKNOWN"))state="BLOCKED_UNKNOWN";
  if(any.length&&!any.some(x=>x.status==="PASS"))state=any.some(x=>x.status==="UNKNOWN")?"BLOCKED_UNKNOWN":"REJECTED_FALSE";
  if(exc.some(x=>x.status==="PASS"))state="BLOCKED_EXCEPTION";
+ // v13.8: premissas normativas sozinhas não executam regra; é preciso ao menos um fato do caso confirmado.
+ if(state==="EXECUTABLE"){const fatos=[...req,...any].filter(x=>x.key!=="META_GUARD"&&x.status==="PASS"&&!(x.fact&&x.fact.source==="PONTE_NORMATIVA"));
+   if(!fatos.length&&[...req,...any].some(x=>x.fact&&x.fact.source==="PONTE_NORMATIVA"))state="BLOCKED_UNKNOWN";}
  const factual=[...req,...any].filter(x=>x.key!=="META_GUARD");
  const compiled=factual.filter(x=>x.compiled).length;
  const passed=factual.filter(x=>x.status==="PASS").length;
@@ -1531,11 +1659,13 @@ function resolveScope(text){
    /fundacao publica/.test(n) ? "Fundação pública" :
    /orgao|ministerio|secretaria|prefeitura/.test(n) ? "Administração direta" : "UNKNOWN";
  const dateMatch=text.match(/\b\d{2}\/\d{2}\/\d{4}\b/); const date=dateMatch?dateMatch[0]:"não informada";
+ // v13.8: jurisdição federal por recursos/controle federal (TCU, CGU, verba da União), mesmo com ente municipal/estadual.
+ const federalResources=/\b(tcu|cgu)\b|tribunal de contas da uniao|controladoria-geral da uniao|recursos? federa|verbas? federa|convenio com a uniao|transferencia (voluntaria )?da uniao|\bfnde\b|\bfunasa\b|fundo nacional/.test(n);
  const stage =
    /\brecurso\b|apelacao|pedido de reconsideracao/.test(n) ? "Recursal" :
    /processo judicial|acao judicial|mandado de seguranca|\bstf\b|\bstj\b/.test(n) ? "Judicial" :
    /\bpad\b|processo administrativo|sindicancia/.test(n) ? "Processo administrativo" : "UNKNOWN";
- return {entity,branch,entityType,date,stage};
+ return {entity,branch,entityType,date,stage,federalResources};
 }
 function buildQuestions(text,res,scope){
  const q=[];
