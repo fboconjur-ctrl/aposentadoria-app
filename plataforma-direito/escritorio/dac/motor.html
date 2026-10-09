@@ -819,7 +819,7 @@ function engineAnalyzeCore(){
  let preliminary=[];
  for(const r of topRules){
    const eff=(r.then||[]).filter(Boolean);
-   if(eff.length&&r.finalState==="EXECUTABLE") for(const e of eff.slice(0,2)) preliminary.push({domain:r.domain,rule:r.id,text:label(e),uncertain:false,sourcePath:r.sourcePath,why:`SE ${(r.if||[]).map(label).join(' + ')||'pressupostos'} → ENTÃO ${label(e)}`});
+   if(eff.length&&r.finalState==="EXECUTABLE") for(const e of eff.slice(0,2)) preliminary.push({domain:r.domain,rule:r.id,text:label(e),uncertain:!!(r.execution.excecoesPendentes||[]).length,salvo:r.execution.excecoesPendentes||[],sourcePath:r.sourcePath,why:`SE ${(r.if||[]).map(label).join(' + ')||'pressupostos'} → ENTÃO ${label(e)}`});
  }
  const guardResult=guardConclusions(canonicalFacts,preliminary);
  let conclusions=guardResult.conclusions.slice(0,14);
@@ -1422,6 +1422,11 @@ function ponteV138(key,text,F){
   SERVICO_PUBLICO:()=>porTexto(/servico publico|concessionaria|permissionaria/),
   CONCESSAO:()=>porTexto(/concessao|concessionaria/),
   DESAPROPRIACAO:()=>porTexto(/desapropria\w*/),
+  REGIME_8112:()=>{const fed=/federal|da uniao|\b(ibama|inss|incra|funai|ibge|receita federal|policia federal|ministerio|autarquia federal|universidade federal|instituto federal)\b/.test(n)||(F&&F.ENTE_FEDERATIVO&&/federal/i.test(String(F.ENTE_FEDERATIVO.value||"")));
+    const rx=/servidor|servidora|cargo|concurso|nomeac|nomead|\bpad\b|processo disciplinar|sindicancia|estagio probatorio|aposentadoria do servidor/;
+    if(fed&&rx.test(n)){const cl=clausula(rx)||n; return naoFirme(cl)?cf("UNKNOWN",.6,cl,"PONTE_V138_NAO_FIRME"):cf(true,.8,"regime da Lei 8.112 (servidor/cargo federal)","PONTE_V138");}
+    if(/(estadual|municipal|prefeitura|do estado|empresa privada|clt)/.test(n))return cf(false,.7,"fora do regime federal","PONTE_V138");
+    return cf("UNKNOWN",0,"regime da Lei 8.112 não identificado","PONTE_V138");},
   CONCURSO_PUBLICO:()=>porTexto(/\bconcurso\b/),
   CARGO_EFETIVO:()=>porTexto(/cargo efetivo|servidor(a)? efetiv\w*|\bestavel\b|estabilidade/),
   DOLO:()=>fv("DOLO")!=="UNKNOWN"?F.DOLO:null,
@@ -1518,6 +1523,17 @@ function ponteLexicalV138(cp,text,F){
  if(/(\bsem\b|nao houve|nao ha\b|nao foi|nao foram|nunca|jamais|inexist|ausencia de|\bnem\b)[^,;]*$/.test(antes))return cf(false,.7,fr,"PONTE_LEXICAL");
  return cf(true,.65,fr,"PONTE_LEXICAL");
 }
+// v13.8 — Correções do corpus aplicadas na carga (o arquivo congelado não é alterado; cada correção é documentada).
+const CORRECOES_CORPUS_V138={
+ // E2: lógica invertida — o art. 63 da Lei 9.784/1999 lista as hipóteses de NÃO conhecimento; elas são condições, não exceções.
+ "PA-084":{if:["recurso_interposto = True"],if_any:["recurso_intempestivo = True","autoridade_incompetente = True","recorrente_ilegitimo = True","esfera_administrativa_exaurida = True"],except_if:[],nota:"Auditoria v13.8: exceções convertidas em hipóteses (art. 63, Lei 9.784/1999)."}
+};
+(function aplicarCorrecoesV138(){
+ if(typeof DATA==="undefined")return;
+ for(const d of Object.values(DATA.domains))for(const r of d.rules){const c=CORRECOES_CORPUS_V138[r.id];if(c){Object.assign(r,c);r.status=(r.status||"")+"+CORRIGIDA_V138";}
+   // Auditoria E4: regras da Lei 8.112/1990 só valem no regime do servidor público federal (ou concurso/cargo federal).
+   if(/8\.?112/.test(r.source||"")&&!(r.if||[]).some(x=>/regime_8112/i.test(String(x)))){r.if=[...(r.if||[]),"regime_8112 = True"];}}
+})();
 function evaluateCompiledCondition(cond,F,text){
  const cp=compileCondition(cond);
  const nt=norm(text);
@@ -1551,16 +1567,20 @@ function evaluateRuleCompiled(rule,F,text){
  else if(req.some(x=>x.status==="UNKNOWN"))state="BLOCKED_UNKNOWN";
  if(any.length&&!any.some(x=>x.status==="PASS"))state=any.some(x=>x.status==="UNKNOWN")?"BLOCKED_UNKNOWN":"REJECTED_FALSE";
  if(exc.some(x=>x.status==="PASS"))state="BLOCKED_EXCEPTION";
- // v13.8: premissas normativas sozinhas não executam regra; é preciso ao menos um fato do caso confirmado.
+ // v13.8: premissas normativas e guardas técnicas sozinhas não executam regra; é preciso ao menos um fato do caso confirmado.
  if(state==="EXECUTABLE"){const fatos=[...req,...any].filter(x=>x.key!=="META_GUARD"&&x.status==="PASS"&&!(x.fact&&x.fact.source==="PONTE_NORMATIVA"));
-   if(!fatos.length&&[...req,...any].some(x=>x.fact&&x.fact.source==="PONTE_NORMATIVA"))state="BLOCKED_UNKNOWN";}
+   if(!fatos.length)state="BLOCKED_UNKNOWN";}
+ // v13.8 (auditoria E1): regra sem consequência não executa.
+ if(!(rule.then||[]).some(t=>String(t).trim()))state="EMPTY_RULE";
+ // v13.8: exceções ainda não esclarecidas tornam a conclusão condicional ("salvo se…").
+ const excecoesPendentes=exc.filter(x=>x.status==="UNKNOWN").map(x=>label(x.cond));
  const factual=[...req,...any].filter(x=>x.key!=="META_GUARD");
  const compiled=factual.filter(x=>x.compiled).length;
  const passed=factual.filter(x=>x.status==="PASS").length;
  return {state,required:req,any,exceptions:exc,
    coverage:factual.length?Math.round(passed/factual.length*100):100,
    mappingCoverage:factual.length?Math.round(compiled/factual.length*100):100,
-   knownCoverage:factual.length?Math.round(factual.filter(x=>x.status!=="UNKNOWN").length/factual.length*100):100};
+   knownCoverage:factual.length?Math.round(factual.filter(x=>x.status!=="UNKNOWN").length/factual.length*100):100,excecoesPendentes};
 }
 
 function parseDateBR(s){

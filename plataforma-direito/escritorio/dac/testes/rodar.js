@@ -34,7 +34,17 @@ const P0 = [
         fronteira.push(...v);
       }
     }
-    return { cobertura_28_dominios: cobertura, fronteira_alegacao_hipotese: fronteira };
+    // Auditoria v13.8: defeitos corrigidos não podem voltar.
+    const exec = (t) => run(t).rules.filter((r) => r.finalState === "EXECUTABLE").map((r) => r.id);
+    const auditoria = [];
+    const e1 = exec("O ministério delegou competência a uma autarquia federal por portaria para julgar recursos administrativos.");
+    if (e1.some((id) => ["PA-020", "PA-025", "PA-078"].includes(id))) auditoria.push("E1 regra vazia executou");
+    if (exec("Interpus recurso administrativo contra a decisão do órgão federal que indeferiu meu pedido.").includes("PA-084")) auditoria.push("E2 recurso 'não conhecido' sem hipótese do art. 63");
+    if (exec("O servidor federal recebeu propina para fraudar a licitação e responde a processo criminal por corrupção passiva.").includes("DA27-R062")) auditoria.push("E3 conclusão só por guarda técnica");
+    if (exec("Interpus recurso administrativo contra a decisão do órgão federal que indeferiu meu pedido.").includes("DA04-R133")) auditoria.push("E4 prazo da Lei 8.112 fora do regime do servidor");
+    for (const t of ["Comprei uma geladeira pela internet e veio com defeito; a loja não quer trocar.", "Meu plano de saúde negou a cirurgia que o médico pediu.", "Fui demitido da empresa privada onde trabalhava e não recebi as verbas rescisórias."])
+      if (exec(t).length) auditoria.push("controle negativo gerou conclusão: " + t);
+    return { cobertura_28_dominios: cobertura, fronteira_alegacao_hipotese: fronteira, auditoria_v138: auditoria };
   }, dominios);
   Object.assign(r, extra);
   let falhas = 0; for (const [k, v] of Object.entries(r)) { falhas += v.length; console.log(`${v.length ? "✗" : "✓"} ${k}${v.length ? ": " + v.join(" | ") : ""}`); }
