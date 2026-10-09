@@ -130,4 +130,6 @@ Exemplos de resultado:
 - **P1-5 resolvido:** sem erros no console (ponto de entrada `analyze` único).
 - Regressões: bateria interna 22/22 (era 21/22), NFV2 3.1 30/30 (era 26/30), NFV2 3.2 multidomínio 22/22 (era 17/22). Rodar: `node escritorio/dac/testes/rodar.js`.
 - **Em uso:** no painel do escritório (Mais → Motor de Direito Administrativo, e botão "⚖️ Motor DAC" na ficha do cliente), como apoio à análise da advogada.
-- Pendentes: P1-3 (conclusões raramente atravessam os gates), P1-4 (rótulos — o painel já traduz "avaliar/enforce"), P1-6 e P2.
+- **P1-3 atacado (ponte jurídica `ponteV138`):** predicados frequentes das regras (servidor federal, PAD instaurado, pena grave em tese, penalidade, sanção, licitação, contratação pública, recurso interposto, decisão administrativa, nomeação, aprovado dentro das vagas, concurso, cargo efetivo, TCE, ação de improbidade, estatal, serviço público, concessão, desapropriação, dolo, perda patrimonial comprovada) passam a ser derivados do relato com a mesma fronteira epistemológica do NFV2 (alegação/hipótese/contestação → UNKNOWN). Ex.: "demitido em PAD sem prazo para defesa" passou de 0 para 5 regras executáveis.
+- **Respostas complementares da advogada** (`[Resposta complementar — PRED_X: valor]`) prevalecem sobre mapeamentos amplos e aceitam valores numéricos. No painel: "Completar fatos" lista as condições que destravam regras e reanalisa.
+- Pendentes: P1-4 (rótulos — o painel traduz para linguagem legível), P1-6 e P2; ampliar a ponte para a cauda longa (2.823 predicados distintos).

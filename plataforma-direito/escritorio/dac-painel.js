@@ -10,11 +10,22 @@
     quadro.onerror = erro;
     document.body.appendChild(quadro);
   }));
+  let respostas = {}, textoBase = "";
+  const comRespostas = (t) => t + Object.entries(respostas).filter(([, v]) => v !== "nao sei").map(([k, v]) => `\n[Resposta complementar — PRED_${k}: ${v}]`).join("");
   async function analisarDAC(texto) {
     const w = await carregar();
     w.document.getElementById("caseText").value = texto;
     w.engineAnalyzeCore();
-    return w.eval("LAST");
+    const L = w.eval("LAST");
+    // Condições que faltam para as regras candidatas valerem (para a advogada completar).
+    L._pendencias = w.eval(`(() => { const t = ${JSON.stringify(texto)}; const agg = {};
+      for (const rule of LAST.rules) { const e = evaluateRuleCompiled(rule, LAST.canonicalFacts, t); if (e.state !== "BLOCKED_UNKNOWN") continue;
+        const faltam = [...e.required, ...e.any].filter((x) => x.status === "UNKNOWN" && x.compiled && x.predicate && x.predicate.key && x.predicate.key !== "META_GUARD");
+        if (faltam.length > 2) continue;
+        for (const x of faltam) { const k = x.predicate.key; const a = agg[k] || (agg[k] = { key: k, raw: x.predicate.raw, op: x.predicate.op, value: x.predicate.value, n: 0, fontes: [] });
+          a.n++; if (a.fontes.length < 2) a.fontes.push((rule.source || "") + (rule.article ? ", " + rule.article : "") + " — " + (rule.topic || rule.id)); } }
+      return Object.values(agg).sort((a, b) => b.n - a.n).slice(0, 8); })()`);
+    return L;
   }
   window.analisarDAC = analisarDAC;
 
@@ -37,13 +48,19 @@
     return `<span class="dac-v inc">${e}${f.contested && f.epistemic_status !== "DENIED" ? " · contestado" : ""}</span>`;
   };
   // Rótulos técnicos das conclusões ("avaliar dolo culpa", "enforce dano nao presumido") em português legível.
-  const ACENTO = { nao: "não", e: "é", previo: "prévio", publico: "público", publica: "pública", erario: "erário", licitacao: "licitação", motivacao: "motivação", contraditorio: "contraditório", decisao: "decisão", sancao: "sanção", prescricao: "prescrição", reequilibrio: "reequilíbrio", concessao: "concessão", informacao: "informação", anonimizacao: "anonimização", violacao: "violação", perturbacao: "perturbação", improbidade: "improbidade", absolvicao: "absolvição", autoria: "autoria", obrigatoria: "obrigatória", juridica: "jurídica", administracao: "Administração", servico: "serviço", tecnica: "técnica", vinculacao: "vinculação", competencia: "competência", publicacao: "publicação" };
+  const ACENTO = { nao: "não", e: "é", previo: "prévio", publico: "público", publica: "pública", erario: "erário", licitacao: "licitação", motivacao: "motivação", contraditorio: "contraditório", decisao: "decisão", sancao: "sanção", prescricao: "prescrição", reequilibrio: "reequilíbrio", concessao: "concessão", informacao: "informação", anonimizacao: "anonimização", violacao: "violação", perturbacao: "perturbação", improbidade: "improbidade", absolvicao: "absolvição", autoria: "autoria", obrigatoria: "obrigatória", juridica: "jurídica", administracao: "Administração", servico: "serviço", tecnica: "técnica", vinculacao: "vinculação", competencia: "competência", publicacao: "publicação", forca: "força", especifico: "específico", peticao: "petição", capitulo: "capítulo", pad: "PAD", numero: "número", prorrogacao: "prorrogação", diligencia: "diligência", indispensavel: "indispensável", nomeacao: "nomeação", maxima: "máxima", obrigatorio: "obrigatório", reconsideracao: "reconsideração", inquerito: "inquérito", instauracao: "instauração", inicio: "início" };
   const legivel = (t) => {
     let x = String(t || "").trim(); let tipo = "";
     if (/^enforce\s+/i.test(x)) { tipo = "Salvaguarda"; x = x.replace(/^enforce\s+/i, ""); }
     else if (/^avaliar\s+/i.test(x)) { tipo = "Avaliar"; x = x.replace(/^avaliar\s+/i, ""); }
+    x = x.replace(/_/g, " ").replace(/'/g, "").replace(/\s*=\s*/g, ": ");
     x = x.split(/\s+/).map((w) => ACENTO[w.toLowerCase()] || w).join(" ");
     return (tipo ? tipo + ": " : "") + x;
+  };
+  const pergunta = (p) => {
+    let t = String(p.raw || p.key).replace(/_/g, " ").replace(/\s*=\s*(true|false)$/i, "").replace(/\s*present$/i, "");
+    t = t.split(/\s+/).map((w) => ACENTO[w.toLowerCase()] || w).join(" ");
+    return t.charAt(0).toUpperCase() + t.slice(1) + "?";
   };
   const esc2 = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
 
@@ -59,6 +76,11 @@
         <p class="small muted">Escopo: ${esc2([L.scope?.entity, L.scope?.branch, L.scope?.stage].filter((x) => x && x !== "UNKNOWN").join(" · ") || "não identificado")}</p></div>
       <div class="panel"><h2>Pontos a avaliar</h2>${conc.length ? `<ul>${conc.map((c) => `<li><b>${esc2(legivel(c.text))}</b>${(() => { const r = (L.rules || []).find((x) => x.id === c.rule); return r ? ` <span class="small muted">— ${esc2(r.source || "")}${r.article ? ", " + esc2(r.article) : ""} (${esc2(c.rule)})</span>` : c.domain ? ` <span class="small muted">(${esc2(c.domain)} · ${esc2(c.rule || "")})</span>` : ""; })()}${c.uncertain ? ` <span class="dac-v inc">depende de fato em aberto</span>` : ""}</li>`).join("")}</ul>` : `<p class="muted">Nenhuma regra atravessou todos os filtros com os fatos atuais. Complete os fatos (perguntas abaixo) e analise de novo.</p>`}</div>
       <div class="panel"><h2>Regras relacionadas, com fonte</h2>${regras.length ? `<ul>${regras.map((r) => `<li><b>${esc2(r.source || "")}${r.article ? ", " + esc2(r.article) : ""}</b> — ${esc2(r.topic || r.id)} <span class="small muted">(${esc2(r.id)} · ${esc2(r.domainName || r.domain)})</span></li>`).join("")}</ul>${L.rules.length > 12 ? `<p class="small muted">+${L.rules.length - 12} regra(s) — veja no motor completo.</p>` : ""}` : `<p class="muted">Nenhuma.</p>`}</div>
+      ${(L._pendencias || []).length ? `<div class="panel" id="dac-pend"><h2>Completar fatos <span class="small muted">(destrava regras)</span></h2>
+        <p class="small muted">O relato não diz isto com segurança. Responda o que você já sabe; a resposta é sua, não uma inferência do motor.</p>
+        ${L._pendencias.map((p) => { const valorSim = p.op === "=" && typeof p.value !== "boolean" ? String(p.value) : "sim"; return `<div class="dac-q" data-k="${esc2(p.key)}"><div><b>${esc2(pergunta(p))}</b><br><span class="small muted">${p.n} regra(s): ${esc2(p.fontes.join(" · "))}</span></div>
+          <div class="dac-opts">${[["Sim", valorSim], ["Não", "nao"], ["Não sei", "nao sei"]].map(([r, v]) => `<button type="button" class="back${respostas[p.key] === v ? " on" : ""}" data-v="${esc2(v)}">${r}</button>`).join("")}</div></div>`; }).join("")}
+        <button class="btn" id="dac-reanalisar" style="margin-top:10px">Analisar de novo com as respostas</button></div>` : ""}
       <div class="panel"><h2>Perguntas para o cliente</h2>${(L.questions || []).length ? `<ol>${L.questions.map((q) => `<li>${esc2(q.q)}</li>`).join("")}</ol>` : `<p class="muted">Nenhuma.</p>`}
         ${(L.missing || []).length ? `<p class="small muted"><b>Lacunas:</b> ${esc2(L.missing.slice(0, 10).join("; "))}</p>` : ""}</div>
       <p class="small muted">Corpus de ${esc2(L.snapshot || "")} · motor ${esc2(L.engineVersion || "")} + NFV2 13.8. Ferramenta de apoio: a avaliação jurídica é sua.</p>`;
@@ -68,16 +90,24 @@
     const conc = (L.conclusions || []).filter((c) => !/nenhuma atravessou/i.test(c.text)).map((c) => legivel(c.text));
     return [`[Motor DAC ${new Date().toLocaleDateString("pt-BR")}]`, `Domínios: ${(L.domains || []).map((d) => d.id + " " + d.name).join("; ")}`,
       fatos.length && `Fatos: ${fatos.join("; ")}`, conc.length && `Pontos a avaliar: ${conc.join("; ")}`,
+      Object.keys(respostas).length && `Respostas da advogada: ${Object.entries(respostas).map(([k, v]) => `${k.toLowerCase().replace(/_/g, " ")}: ${v}`).join("; ")}`,
       (L.questions || []).length && `Perguntar: ${L.questions.map((q) => q.q).join(" | ")}`].filter(Boolean).join("\n");
   }
 
   $("dac-run").onclick = async () => {
     const t = $("dac-txt").value.trim(); if (t.length < 15) return $("dac-txt").focus();
     $("dac-status").textContent = "Analisando…"; $("dac-run").disabled = true;
-    try { ultimo = await analisarDAC(t); render(ultimo); $("dac-status").textContent = `${(ultimo.rules || []).length} regra(s) candidata(s) · ${(ultimo.domains || []).length} domínio(s).`; $("dac-salvar").hidden = !cliDac; }
+    if (t !== textoBase) { respostas = {}; textoBase = t; }
+    try { ultimo = await analisarDAC(comRespostas(t)); render(ultimo); ligarPendencias(); $("dac-status").textContent = `${(ultimo.rules || []).length} regra(s) candidata(s) · ${(ultimo.domains || []).length} domínio(s).`; $("dac-salvar").hidden = !cliDac; }
     catch (e) { $("dac-status").textContent = "Não foi possível rodar o motor: " + e.message; }
     finally { $("dac-run").disabled = false; }
   };
+  function ligarPendencias() {
+    document.querySelectorAll("#dac-pend .dac-q").forEach((q) => q.querySelectorAll("[data-v]").forEach((b) => (b.onclick = () => {
+      respostas[q.dataset.k] = b.dataset.v; q.querySelectorAll("[data-v]").forEach((x) => x.classList.toggle("on", x === b));
+    })));
+    const r = $("dac-reanalisar"); if (r) r.onclick = () => $("dac-run").click();
+  }
   $("dac-salvar").onclick = () => {
     const c = cliDac && cliPorId(cliDac); if (!c || !ultimo) return;
     c.notas = [c.notas, resumo(ultimo)].filter(Boolean).join("\n\n");

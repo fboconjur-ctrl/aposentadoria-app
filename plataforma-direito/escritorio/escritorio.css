@@ -177,3 +177,5 @@ body.office { display: grid; grid-template-columns: 240px minmax(0, 1fr); min-he
 .dac-v { display: inline-block; padding: 2px 10px; border-radius: 999px; font-size: .85rem; font-weight: 600; white-space: nowrap; }
 .dac-v.sim { background: #dff3e8; color: #106b43; } .dac-v.nao { background: #fde4e1; color: #a1281c; } .dac-v.inc { background: var(--amber-soft); color: var(--ink); }
 #dac-out .panel { margin-top: 14px; } #dac-out ul, #dac-out ol { padding-left: 20px; display: grid; gap: 6px; }
+.dac-q { display: flex; gap: 12px; justify-content: space-between; align-items: center; flex-wrap: wrap; padding: 10px 0; border-bottom: 1px solid var(--line); }
+.dac-opts { display: flex; gap: 6px; } .dac-opts .on { background: var(--brand); color: #fff; border-color: var(--brand); }

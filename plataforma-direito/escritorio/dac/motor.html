@@ -1309,9 +1309,12 @@ function genericFactForPredicateV9(cp,text,F){
  const answers=[...text.matchAll(/\[Resposta complementar — PRED_([^:]+): ([^\]]+)\]/g)];
  const hit=answers.reverse().find(m=>m[1]===cp.key);
  if(hit){
-   const v=norm(hit[2])==="sim"?true:norm(hit[2])==="nao"?false:"UNKNOWN";
+   const h=norm(hit[2]).trim();
+   const v=h==="sim"?true:h==="nao"?false:/^-?\d+(\.\d+)?$/.test(h)?Number(h):(h==="nao sei"||!h)?"UNKNOWN":h; // v13.8: aceita valor
    return cf(v,1,hit[2],"USER_ANSWER");
  }
+ // v13.8: ponte jurídica — predicados frequentes derivados do relato, com fronteira epistemológica.
+ const pr=ponteV138(cp.key,text,F); if(pr)return pr;
  // Conservative generic extractor: explicit uncertainty/absence-of-information must remain UNKNOWN.
  if(phrase.length>=5){
    const esc=phrase.replace(/[.*+?^${}()|[\]\\]/g,"\\$&");
@@ -1356,9 +1359,49 @@ function semanticSatisfactionAllowed(cp,semanticKey,text){
  const phrase=norm(cp.key.replaceAll('_',' '));
  return phrase.length>=5 && norm(text).includes(phrase);
 }
+// v13.8 — Ponte jurídica: liga predicados específicos das regras a evidência explícita do relato.
+// Nunca promove alegação, hipótese ou contestação (mesma fronteira do NFV2).
+function ponteV138(key,text,F){
+ const n=norm(text);
+ const fv=(k)=>F&&F[k]?F[k].value:"UNKNOWN";
+ const clausula=(rx)=>{const m=n.match(rx); if(!m)return null; const i=m.index; const a=Math.max(n.lastIndexOf(".",i),n.lastIndexOf(";",i)); const b=n.indexOf(".",i+m[0].length); return n.slice(a<0?0:a+1,b<0?n.length:b);};
+ const naoFirme=(cl)=>/(talvez|supostamente|possivelmente|provavelmente|sera apurad|em apuracao|em tese|alega|afirma|sustenta|denuncia|suspeita|nega|contesta|se houver|caso haja|pode ter|teria)/.test(cl);
+ const porTexto=(rx,ev)=>{const cl=clausula(rx); if(cl==null)return null; if(naoFirme(cl))return cf("UNKNOWN",.6,cl,"PONTE_V138_NAO_FIRME"); return cf(true,.8,ev||cl.trim(),"PONTE_V138");};
+ const R={
+  SERVIDOR_FEDERAL:()=>/servidor(a)?( publico| publica)? federal|servidor(a)? da uniao|servidor(a)? (do|da) (ministerio|autarquia federal|universidade federal|instituto federal|ibama|inss|receita federal|policia federal)/.test(n)?cf(true,.85,"servidor federal","PONTE_V138"):null,
+  PAD_INSTAURADO:()=>porTexto(/\bpad\b|processo administrativo disciplinar|processo disciplinar|instaur\w* (o |um )?(processo|pad)/),
+  PENA_GRAVE_EM_TESE:()=>porTexto(/demiti\w*|demissao|cassacao|cassad\w* (a )?aposentadoria|destituicao|destituid\w*/),
+  PENALIDADE_EM_TESE:()=>porTexto(/demiti\w*|demissao|suspens\w*|advertencia|cassacao|destituicao|penalidade/),
+  PENALIDADE:()=>porTexto(/demiti\w*|demissao|suspens\w*|advertencia|cassacao|destituicao|penalidade aplicad/),
+  SANCAO_ADMINISTRATIVA:()=>porTexto(/demiti\w*|demissao|suspens\w*|advertencia|multa administrativa|impedimento de licitar|declaracao de inidoneidade|penalidade aplicad/),
+  LICITACAO:()=>porTexto(/\blicitacao\b|\bpregao\b|\bconcorrencia\b/),
+  PROCESSO_LICITATORIO:()=>porTexto(/\blicitacao\b|\bpregao\b|\bconcorrencia\b|processo licitatorio/),
+  CONTRATACAO_PUBLICA:()=>porTexto(/contrato (publico|administrativo)|licitacao|pregao|dispensa de licitacao|inexigibilidade|contratacao (publica|direta)/),
+  CONTRATO_EM_EXECUCAO:()=>porTexto(/contrato em (execucao|vigor|andamento)|durante a execucao do contrato/),
+  RECURSO_INTERPOSTO:()=>porTexto(/interp\w* recurso|recorri|recorreu|apresent\w* recurso|recurso administrativo/),
+  DECISAO_ADMINISTRATIVA:()=>porTexto(/decisao administrativa|indeferi\w*|despacho|portaria|ato administrativo|foi decidido/),
+  NOMEACAO:()=>porTexto(/nomead\w*|nomeacao/),
+  APROVADO_DENTRO_VAGAS:()=>porTexto(/dentro (do numero )?das vagas/),
+  TCE_INSTAURADA:()=>porTexto(/tomada de contas especial/),
+  ACAO_IMPROBIDADE:()=>porTexto(/acao (civil )?de improbidade/),
+  ESTATAL:()=>porTexto(/empresa publica|sociedade de economia mista|\bestatal\b/),
+  SERVICO_PUBLICO:()=>porTexto(/servico publico|concessionaria|permissionaria/),
+  CONCESSAO:()=>porTexto(/concessao|concessionaria/),
+  DESAPROPRIACAO:()=>porTexto(/desapropria\w*/),
+  CONCURSO_PUBLICO:()=>porTexto(/\bconcurso\b/),
+  CARGO_EFETIVO:()=>porTexto(/cargo efetivo|servidor(a)? efetiv\w*|\bestavel\b|estabilidade/),
+  DOLO:()=>fv("DOLO")!=="UNKNOWN"?F.DOLO:null,
+  PERDA_PATRIMONIAL_EFETIVA_COMPROVADA:()=>fv("DANO_ERARIO")===false?cf(false,.9,"sem dano ao erário","PONTE_V138"):(fv("DANO_ERARIO")===true&&/comprovad|apurad\w* (pelo|pela) (tcu|tribunal|auditoria|cgu)|laudo|pericia/.test(n)?cf(true,.8,"dano comprovado","PONTE_V138"):null),
+ };
+ const f=R[key]; return f?f():null;
+}
 function evaluateCompiledCondition(cond,F,text){
  const cp=compileCondition(cond);
  const nt=norm(text);
+ // v13.8: resposta complementar da advogada prevalece sobre qualquer mapeamento amplo.
+ if(cp.compiled && cp.key && new RegExp("\\[Resposta complementar — PRED_"+cp.key+":").test(text)){
+   const fact=genericFactForPredicateV9(cp,text,{}); return {cond,key:cp.key,compiled:true,status:comparePredicate(fact.value,cp.op,cp.value),reason:`${cp.key}=${fact.value} (resposta)`,predicate:cp,fact};
+ }
  if(cp.compiled && cp.key==="LICITACAO" && /nao (?:foi )?informad[oa](?: se| sobre)?(?: houve)?\s*licitacao|nao se sabe se(?: houve)?\s*licitacao|sem informacao (?:sobre )?licitacao/.test(nt))
    return {cond,key:"LICITACAO",compiled:true,status:"UNKNOWN",reason:"LICITACAO=UNKNOWN por incerteza explícita",predicate:cp,fact:cf("UNKNOWN",.99,"incerteza explícita sobre licitação","ASSERTION_UNCERTAIN")};
  if(cp.kind==="META_GUARD")return {cond,key:"META_GUARD",compiled:true,status:"PASS",reason:"guarda técnica",predicate:cp};
@@ -1367,6 +1410,7 @@ function evaluateCompiledCondition(cond,F,text){
  const semanticKey=conditionToCanonical(cond);
  let semanticAllowed=semanticKey ? semanticSatisfactionAllowed(cp,semanticKey,text) : false;
  let fact=(semanticKey && semanticAllowed) ? (F[semanticKey]||cf("UNKNOWN",0,"não extraído","CANONICAL")) : genericFactForPredicateV9(cp,text,F);
+ if(fact && fact.value==="UNKNOWN"){const pr=ponteV138(cp.key,text,F); if(pr)fact=pr;}
  let status=comparePredicate(fact.value,cp.op,cp.value);
  // Conceitos canônicos amplos não podem satisfazer predicados jurídicos mais específicos sem evidência própria.
  if(semanticKey && semanticAllowed && fact.value===true && (cp.op==="PRESENT" || cp.value===true))status="PASS";
