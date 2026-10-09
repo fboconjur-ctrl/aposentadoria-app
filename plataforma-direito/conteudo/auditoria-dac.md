@@ -122,3 +122,12 @@ Exemplos de resultado:
 - Cada resposta de Administrativo indica os domínios DAC relacionados (`dac.js`).
 - Os domínios vão no pedido de consulta, junto com o código do Atlas, para orientar o dossiê.
 - O motor e o corpus **não** foram copiados para o repositório: o material é seu e o repositório pode ser público. Quando decidir, o corpus extraído (`regras.json`, ~1 MB) pode entrar como base do dossiê.
+
+## v13.8 — correções aplicadas (motor em `escritorio/dac/motor.html`)
+- **P0-1 resolvido:** hipótese/apuração em curso ("talvez", "supostamente", "será apurado", "em tese", "indícios"…) nunca gera `ESTABLISHED`.
+- **P0-2 resolvido:** paráfrases de ausência de defesa ("sem que lhe/me fosse oferecido prazo para defesa", "não pôde se defender", "cerceamento de defesa", "não foi intimado") → `CONTRADITORIO_OBSERVADO = false`; "foi intimado e apresentou defesa" → `true`.
+- Cláusulas separadas por "mas/porém/contudo" e por "e a/o…" (sem cortar alegação × contestação); "não reconheceu" e "nem" como negação; "negativa" não é mais lido como "nega"; confissão = alegação; na absolvição, "insuficiência de provas" é o fundamento.
+- **P1-5 resolvido:** sem erros no console (ponto de entrada `analyze` único).
+- Regressões: bateria interna 22/22 (era 21/22), NFV2 3.1 30/30 (era 26/30), NFV2 3.2 multidomínio 22/22 (era 17/22). Rodar: `node escritorio/dac/testes/rodar.js`.
+- **Em uso:** no painel do escritório (Mais → Motor de Direito Administrativo, e botão "⚖️ Motor DAC" na ficha do cliente), como apoio à análise da advogada.
+- Pendentes: P1-3 (conclusões raramente atravessam os gates), P1-4 (rótulos — o painel já traduz "avaliar/enforce"), P1-6 e P2.

@@ -46,7 +46,7 @@
 
   <section id="v-ficha" class="oview">
     <header class="ohead"><div><button class="back" data-view="clientes">← Clientes</button><h1 id="fi-nome"></h1><p class="muted" id="fi-sub"></p></div>
-      <div class="fi-acoes"><select id="fi-etapa" class="search" aria-label="Etapa"></select><button class="wa-btn" id="fi-wa">WhatsApp</button><button class="back" id="fi-editar">Editar dados</button><button class="back" id="fi-docs">Documentos / kit</button><button class="back" id="fi-ind-abrir">Indicar a colega</button></div></header>
+      <div class="fi-acoes"><select id="fi-etapa" class="search" aria-label="Etapa"></select><button class="wa-btn" id="fi-wa">WhatsApp</button><button class="back" id="fi-editar">Editar dados</button><button class="back" id="fi-docs">Documentos / kit</button><button class="back" id="fi-dac">⚖️ Motor DAC</button><button class="back" id="fi-ind-abrir">Indicar a colega</button></div></header>
     <form class="panel" id="fi-ind" hidden>
       <h2>Indicar a colega</h2>
       <div class="crm-grid">
@@ -102,12 +102,24 @@
   <section id="v-mais" class="oview">
     <header class="ohead"><div><h1>Mais</h1></div></header>
     <div class="mais-grid">
+      <button class="card-c" data-view="dac"><b>⚖️ Motor de Direito Administrativo</b><span class="meta">Fatos, regras com fonte, lacunas e perguntas (3.292 regras · 28 domínios)</span></button>
       <button class="card-c" data-view="fin"><b>Financeiro do mês</b><span class="meta">Recebido, a receber, despesas e planilha</span></button>
       <button class="card-c" data-view="djen"><b>Publicações</b><span class="meta">DJEN e Recorte Digital da OAB/DF</span></button>
       <button class="card-c" data-view="prazos"><b>Calcular prazo</b><span class="meta">Cível, trabalhista, Juizado e penal</span></button>
       <button class="card-c" data-view="docs"><b>Documentos e kit da ação</b><span class="meta">Procuração, contrato, proposta, petição</span></button>
       <button class="card-c" data-view="importar"><b>Importar processos</b><span class="meta">Colar sua lista de processos</span></button>
     </div>
+  </section>
+
+  <section id="v-dac" class="oview">
+    <header class="ohead"><div><button class="back" data-voltar>← Voltar</button><h1>Motor de Direito Administrativo</h1><p class="muted">Direito Administrativo Computável · ferramenta de apoio à sua análise. Nada sai deste navegador.</p></div></header>
+    <div class="panel">
+      <label for="dac-txt"><b>Descreva o caso</b> <span class="small muted" id="dac-cli"></span></label>
+      <textarea id="dac-txt" class="search" rows="6" placeholder="Ex.: Servidor federal removido de ofício após denunciar a chefia, sem processo prévio e sem motivação. Alega perseguição."></textarea>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:10px"><button class="btn" id="dac-run">Analisar</button><button class="back" id="dac-salvar" hidden>Salvar análise na ficha</button><a class="back" href="dac/motor.html" target="_blank" rel="noopener">Abrir o motor completo ↗</a></div>
+      <p class="small muted" id="dac-status"></p>
+    </div>
+    <div id="dac-out"></div>
   </section>
 
   <section id="v-prazos" class="oview">
@@ -295,6 +307,7 @@
 <script src="documentos.js"></script>
 <script src="tabela-oabdf.js"></script>
 <script src="precificacao.js"></script>
+<script src="dac-painel.js"></script>
 <script src="nuvem.js"></script>
 </body>
 </html>
