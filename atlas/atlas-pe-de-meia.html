@@ -1,495 +1,462 @@
 <title>Atlas Histórico do Pé-de-Meia</title>
 <meta name="claude:viewport-fit-sides" content="cover">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bangers&family=Nunito:wght@400;700;900&family=Roboto+Mono:wght@500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@600;700;800&family=Nunito+Sans:wght@400;700;800&display=swap">
 <style>
-/* Layout: livro ilustrado em páginas A4 verticais empilhadas; linguagem de HQ didática (traço preto grosso, retícula, balões) */
+/* Layout: livro em páginas A4 verticais; faixa-título azul-marinho, cartões claros, personagens ilustrados com balão e crachá */
 :root{
-  --azul:#1d4fd8; --azul-esc:#0f2a7a; --petroleo:#0b7a75; --amarelo:#ffc934; --laranja:#f27427;
-  --papel:#fffaf0; --tinta:#121417; --mesa:#2b3a67; --pend:#e6334a;
-  --f-titulo:"Bangers","Impact",system-ui,sans-serif;
-  --f-texto:"Nunito","Segoe UI",system-ui,sans-serif;
-  --f-dado:"Roboto Mono",ui-monospace,monospace;
+  --marinho:#123a63; --petroleo:#0e6f7a; --azul:#1f78c8; --ceu:#e4f2fa; --amarelo:#ffd24a; --laranja:#f2862b; --verde:#2b9a68; --vermelho:#d8443c;
+  --papel:#ffffff; --tinta:#1b2733; --suave:#5a6b7b; --mesa:#d9e3ec;
+  --f-tit:"Barlow Semi Condensed","Arial Narrow",system-ui,sans-serif;
+  --f-txt:"Nunito Sans","Segoe UI",system-ui,sans-serif;
   color-scheme:light;
 }
-body{background:var(--mesa);color:var(--tinta);font-family:var(--f-texto);
-  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:24px}
-.livro{display:flex;flex-direction:column;align-items:center;gap:28px}
-.pg{width:min(100%,794px);aspect-ratio:210/297;background:var(--papel);container-type:inline-size;position:relative;overflow:hidden;
-  box-shadow:0 10px 30px rgba(0,0,0,.45);display:flex;flex-direction:column;padding:4.5cqw 5cqw 6cqw;gap:2.4cqw;font-size:2.05cqw;line-height:1.42}
-.livro{counter-reset:pg}.pg{counter-increment:pg}.pg::after{content:counter(pg);position:absolute;bottom:1.8cqw;right:5cqw;font-family:var(--f-titulo);font-size:2.6cqw;color:var(--azul-esc)}
-.pg::before{content:"ATLAS HISTÓRICO DO PÉ-DE-MEIA";position:absolute;bottom:2.2cqw;left:5cqw;font-weight:900;font-size:1.4cqw;letter-spacing:.18em;color:var(--petroleo)}
-.ret{background-image:radial-gradient(rgba(0,0,0,.13) 18%,transparent 20%);background-size:1.3cqw 1.3cqw}
-.tipo{align-self:flex-start;font-weight:900;font-size:1.45cqw;letter-spacing:.16em;text-transform:uppercase;background:var(--tinta);color:var(--amarelo);padding:.5cqw 1.4cqw;transform:rotate(-1.5deg)}
-h1,h2{font-family:var(--f-titulo);font-weight:400;letter-spacing:.03em;line-height:.95;margin:0;text-wrap:balance}
-h2{font-size:7cqw;color:var(--azul);-webkit-text-stroke:.25cqw var(--tinta);paint-order:stroke fill;text-shadow:.6cqw .6cqw 0 var(--amarelo)}
-h3{font-family:var(--f-titulo);font-weight:400;font-size:3.4cqw;margin:0;color:var(--petroleo);letter-spacing:.04em}
+body{background:var(--mesa);color:var(--tinta);font-family:var(--f-txt);padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:24px}
+.livro{display:flex;flex-direction:column;align-items:center;gap:28px;counter-reset:pg}
+.pg{counter-increment:pg;width:min(100%,794px);aspect-ratio:210/297;background:var(--papel);container-type:inline-size;position:relative;overflow:hidden;box-shadow:0 8px 24px rgba(18,58,99,.25);display:flex;flex-direction:column;font-size:2.05cqw;line-height:1.4}
+.cab{background:var(--marinho);color:#fff;padding:4.2cqw 5cqw 3.2cqw;position:relative}
+.cab::before{content:"PÁGINA " counter(pg);position:absolute;left:0;top:0;background:#fff;color:var(--marinho);font-family:var(--f-tit);font-weight:800;font-size:1.7cqw;padding:.5cqw 1.6cqw;border-bottom-right-radius:1cqw}
+.cab h2{font-family:var(--f-tit);font-weight:800;font-size:5.6cqw;line-height:1;margin:0;text-wrap:balance}
+.cab p{margin:.8cqw 0 0;color:#8fd6e0;font-weight:700;font-size:2.3cqw}
+.cab .cap{color:var(--amarelo);font-family:var(--f-tit);font-weight:700;font-size:2cqw;letter-spacing:.08em;text-transform:uppercase;margin-bottom:.6cqw;display:block}
+.corpo{flex:1;min-height:0;padding:3cqw 5cqw 5.5cqw;display:flex;flex-direction:column;gap:2.2cqw}
+.pg::after{content:"Atlas Histórico do Pé-de-Meia · " counter(pg);position:absolute;bottom:1.8cqw;left:5cqw;font-size:1.4cqw;color:var(--suave);font-weight:700}
 p{margin:0}
-.q{border:.5cqw solid var(--tinta);background:#fff;position:relative;min-width:0}
-.grade{display:grid;gap:2cqw}
-.g2{grid-template-columns:1fr 1fr}.g3{grid-template-columns:repeat(3,1fr)}
-.cx{padding:2cqw}
-.cena{padding:0;overflow:hidden}
-.cena svg{display:block;width:100%;height:100%}
-.leg{position:absolute;left:0;top:0;background:var(--amarelo);border-right:.5cqw solid var(--tinta);border-bottom:.5cqw solid var(--tinta);padding:.6cqw 1.4cqw;font-weight:900;font-size:1.7cqw;max-width:70%}
-.balao{background:#fff;border:.45cqw solid var(--tinta);border-radius:2.5cqw;padding:1.2cqw 1.8cqw;font-weight:700;position:relative}
-.pend{display:inline-block;font-family:var(--f-dado);font-size:1.35cqw;background:var(--pend);color:#fff;padding:.15cqw .8cqw;border-radius:.6cqw;vertical-align:middle;letter-spacing:.04em}
-.num{font-family:var(--f-titulo);font-size:9cqw;line-height:.9;color:var(--laranja);-webkit-text-stroke:.3cqw var(--tinta);paint-order:stroke fill}
-.doc{background:#f6efd9;border:.35cqw solid var(--tinta);padding:2.4cqw 2.8cqw;font-family:Georgia,"Times New Roman",serif;box-shadow:1cqw 1cqw 0 var(--petroleo);transform:rotate(-.6deg)}
-.doc b{font-family:var(--f-texto)}
-.carimbo{position:absolute;right:2cqw;top:2cqw;border:.45cqw solid var(--pend);color:var(--pend);font-family:var(--f-titulo);font-size:2.6cqw;padding:.4cqw 1.2cqw;transform:rotate(9deg);letter-spacing:.06em}
-.mono{font-family:var(--f-dado);font-size:1.6cqw}
-ul.lst{margin:0;padding-left:2.6cqw;display:grid;gap:.8cqw}
-.faixa{background:var(--azul);color:#fff;border:.5cqw solid var(--tinta);padding:1.6cqw 2.2cqw;font-weight:700}
-.faixa b{color:var(--amarelo)}
+h3{font-family:var(--f-tit);font-weight:800;font-size:2.8cqw;color:var(--marinho);margin:0 0 .6cqw;line-height:1.05}
+.g{display:grid;gap:2cqw}.g2{grid-template-columns:1fr 1fr}.g3{grid-template-columns:repeat(3,1fr)}.g4{grid-template-columns:repeat(4,1fr)}
+.c{background:var(--ceu);border-radius:1.6cqw;padding:2cqw;min-width:0}
+.c.am{background:#fff4cc}.c.la{background:#ffe9d6}.c.ve{background:#dff3ea}.c.br{background:#fff;border:.3cqw solid #cfe0ec}
+.big{font-family:var(--f-tit);font-weight:800;font-size:7.5cqw;line-height:.95;color:var(--marinho)}
+.big small{font-size:3.2cqw;display:block}
+.fonte{font-size:1.45cqw;color:var(--suave)}
 .fill{flex:1;min-height:0}
-@media (prefers-reduced-motion:no-preference){.pg{transition:transform .2s}}
-.capa::after,.capa::before{display:none}
-table.t{width:100%;border-collapse:collapse;font-size:1.75cqw}table.t th{background:var(--tinta);color:var(--amarelo);text-align:left;padding:.8cqw 1cqw;font-weight:900}table.t td{border:.3cqw solid var(--tinta);padding:.8cqw 1cqw;vertical-align:top;background:#fff}table.t tr:nth-child(even) td{background:#f1f7f6}
-.ok{display:inline-block;font-family:var(--f-dado);font-size:1.35cqw;background:var(--petroleo);color:#fff;padding:.15cqw .8cqw;border-radius:.6cqw}
-.fonte{font-family:var(--f-dado);font-size:1.4cqw;color:#3a4a5a}
+/* personagens */
+.cena{display:grid;grid-template-columns:auto 1fr;gap:2cqw;align-items:end}
+.cena.inv{grid-template-columns:1fr auto}
+.pers{position:relative;width:24cqw;margin:0}
+.pers img{display:block;width:100%;aspect-ratio:4/5;object-fit:cover;object-position:right top;border-radius:1.6cqw}
+.pers figcaption{position:absolute;left:0;bottom:1.4cqw;background:var(--petroleo);color:#fff;padding:.5cqw 1.4cqw;border-radius:0 1cqw 1cqw 0;font-family:var(--f-tit);font-weight:800;font-size:2.5cqw;line-height:1}
+.pers figcaption small{display:block;font-family:var(--f-txt);font-weight:700;font-size:1.35cqw;opacity:.9;margin-top:.3cqw}
+.balao{background:#fff;border:.35cqw solid var(--marinho);border-radius:2.4cqw;padding:1.8cqw 2.2cqw;font-weight:700;position:relative;align-self:center}
+.balao::after{content:"";position:absolute;left:-2cqw;bottom:3cqw;border:1.2cqw solid transparent;border-right:2cqw solid var(--marinho);border-left:0}
+.inv .balao::after{left:auto;right:-2cqw;border-right:1.2cqw solid transparent;border-left:2cqw solid var(--marinho)}
+.faixa{background:var(--marinho);color:#fff;border-radius:1.6cqw;padding:2cqw 2.4cqw;font-weight:700}
+.faixa b{color:var(--amarelo)}
+table.t{width:100%;border-collapse:separate;border-spacing:0;font-size:1.75cqw;border-radius:1.2cqw;overflow:hidden}
+table.t th{background:var(--marinho);color:#fff;text-align:left;padding:1cqw 1.2cqw;font-family:var(--f-tit);font-weight:700;font-size:1.9cqw}
+table.t td{padding:.9cqw 1.2cqw;border-bottom:.2cqw solid #d6e4ee;vertical-align:top;background:#fff}
+table.t tr:nth-child(odd) td{background:#f2f8fc}
+.num td:last-child{font-family:var(--f-tit);font-weight:800;font-size:2.4cqw;text-align:right}
+.pend{display:inline-block;font-size:1.3cqw;font-weight:800;background:var(--vermelho);color:#fff;padding:.1cqw .8cqw;border-radius:.6cqw}
+.ok{display:inline-block;font-size:1.3cqw;font-weight:800;background:var(--verde);color:#fff;padding:.1cqw .8cqw;border-radius:.6cqw}
+.tl{display:grid;grid-template-columns:11cqw 1fr;gap:1.4cqw 2cqw;align-items:start}
+.tl .ano{font-family:var(--f-tit);font-weight:800;font-size:2.8cqw;color:var(--marinho);text-align:right;line-height:1}
+.tl .ano small{display:block;font-size:1.5cqw;color:var(--suave)}
+.tl .ev{border-left:.6cqw solid var(--petroleo);padding:.4cqw 0 .4cqw 2cqw}
+.tl .ev.x{border-color:var(--vermelho)}.tl .ev.a{border-color:var(--laranja)}
+.passo{display:flex;gap:1.6cqw;align-items:flex-start}
+.passo i{flex:none;width:5cqw;height:5cqw;border-radius:50%;background:var(--petroleo);color:#fff;font-style:normal;font-family:var(--f-tit);font-weight:800;font-size:3cqw;display:grid;place-items:center}
+.seta{display:grid;grid-template-columns:repeat(5,1fr);gap:.6cqw}
+.seta div{color:#fff;padding:1.4cqw 1cqw;font-size:1.6cqw;clip-path:polygon(0 0,90% 0,100% 50%,90% 100%,0 100%,8% 50%)}
+.seta b{display:block;font-family:var(--f-tit);font-size:2.1cqw}
+/* capa */
+.capa{background:var(--marinho);color:#fff}
+.capa::after{display:none}
+.capa .topo{padding:6cqw 5cqw 0}
+.capa .sobre{color:var(--amarelo);font-family:var(--f-tit);font-weight:700;font-size:4cqw;letter-spacing:.04em}
+.capa h1{font-family:var(--f-tit);font-weight:800;font-size:15cqw;line-height:.85;margin:.5cqw 0 1.5cqw;letter-spacing:-.01em}
+.capa .sub{font-size:3cqw;font-weight:700;color:#bfe6ee;max-width:70cqw}
+.capa .datas{font-family:var(--f-tit);font-weight:800;font-size:5cqw;margin-top:1.5cqw}
+.capa .arte{flex:1;min-height:0;margin-top:3cqw;position:relative}
+.capa .arte img{width:100%;height:100%;object-fit:cover;object-position:center 30%;display:block}
+.capa .tags{position:absolute;right:5cqw;bottom:5cqw;background:var(--amarelo);color:var(--marinho);padding:1.6cqw 2.2cqw;font-family:var(--f-tit);font-weight:800;font-size:2.4cqw;line-height:1.25;transform:rotate(-3deg);border-radius:.6cqw}
+.capa .lema{position:absolute;left:5cqw;bottom:5cqw;background:var(--petroleo);padding:1.6cqw 2.2cqw;border-radius:1.2cqw;font-weight:800;font-size:2.2cqw;max-width:48cqw}
+.elenco{display:grid;grid-template-columns:repeat(4,1fr);gap:1.6cqw}
+.elenco figure{margin:0}
+.elenco img{width:100%;aspect-ratio:1;object-fit:cover;object-position:right top;border-radius:1.2cqw;display:block}
+.elenco b{display:block;font-family:var(--f-tit);font-size:2.3cqw;color:var(--marinho);margin-top:.6cqw}
+.elenco span{font-size:1.5cqw;color:var(--suave);line-height:1.25;display:block}
+.barra{display:grid;grid-template-columns:14cqw 1fr 7cqw;gap:1.2cqw;align-items:center;font-weight:700}
+.barra .b{height:3.4cqw;border-radius:.6cqw;background:var(--petroleo)}
+.barra em{font-style:normal;font-family:var(--f-tit);font-weight:800;font-size:2.4cqw;text-align:right}
+.abre{background:var(--marinho);color:#fff}
+.abre .corpo{justify-content:space-between;padding-top:6cqw}
+.abre .parte{color:var(--amarelo);font-family:var(--f-tit);font-weight:700;font-size:2.4cqw;letter-spacing:.12em}
+.abre .n{font-family:var(--f-tit);font-weight:800;font-size:22cqw;line-height:.8;color:var(--amarelo)}
+.abre h2{font-family:var(--f-tit);font-weight:800;font-size:7cqw;line-height:.95;margin:0;text-wrap:balance}
+.abre .per{color:#8fd6e0;font-weight:800;font-size:2.6cqw}
+.abre .cen{flex:1;min-height:0;margin:3cqw 0;border:.4cqw dashed #5d86ad;border-radius:1.6cqw;display:grid;place-items:center;color:#8fb3d6;font-weight:800;font-size:2.2cqw;text-align:center;padding:2cqw}
+.abre .cen:has(img){border:0;padding:0}
+.cena.fill{align-items:stretch}.cena.fill .pers img{aspect-ratio:auto;height:100%;min-height:30cqw}.cena.fill>div,.cena.fill>.balao{align-self:center}
+.abre .cen img{width:100%;height:100%;object-fit:cover;border-radius:1.2cqw}
+.abre .fecha{background:#fff;color:var(--marinho);border-radius:1.6cqw;padding:2cqw 2.4cqw;font-weight:800}
+.abre .fecha span{display:block;font-family:var(--f-tit);color:var(--laranja);font-size:1.9cqw;letter-spacing:.1em}
+.abre::after{color:#8fb3d6}
 </style>
 
-<svg width="0" height="0" style="position:absolute" aria-hidden="true">
-<defs>
- <!-- Personagem recorrente: Ana, estudante (camiseta laranja, mochila verde) -->
- <symbol id="ana" viewBox="0 0 100 200">
-  <rect x="22" y="70" width="18" height="55" rx="6" fill="#0b7a75" stroke="#121417" stroke-width="4"/>
-  <path d="M35 70 h30 l6 60 h-42z" fill="#f27427" stroke="#121417" stroke-width="4"/>
-  <rect x="36" y="128" width="12" height="55" fill="#1d4fd8" stroke="#121417" stroke-width="4"/>
-  <rect x="52" y="128" width="12" height="55" fill="#1d4fd8" stroke="#121417" stroke-width="4"/>
-  <path d="M32 186h18M50 186h18" stroke="#121417" stroke-width="8" stroke-linecap="round"/>
-  <circle cx="50" cy="42" r="22" fill="#a86a3e" stroke="#121417" stroke-width="4"/>
-  <path d="M27 40 q2-26 24-26 q24 0 24 30 q-8-14-20-16 q-14 6-28 12z" fill="#121417"/>
-  <circle cx="44" cy="44" r="2.6" fill="#121417"/><circle cx="58" cy="44" r="2.6" fill="#121417"/>
-  <path d="M44 53 q7 6 14 0" stroke="#121417" stroke-width="3" fill="none" stroke-linecap="round"/>
-  <path d="M65 78 q14 20 6 44" stroke="#121417" stroke-width="10" stroke-linecap="round" fill="none"/>
-  <path d="M65 78 q14 20 6 44" stroke="#a86a3e" stroke-width="5" stroke-linecap="round" fill="none"/>
- </symbol>
- <!-- Personagem recorrente: Prof. Jorge -->
- <symbol id="prof" viewBox="0 0 100 210">
-  <path d="M28 72 h44 l6 70 h-56z" fill="#1d4fd8" stroke="#121417" stroke-width="4"/>
-  <path d="M44 72 l6 18 l6-18" fill="#fff" stroke="#121417" stroke-width="3"/>
-  <rect x="32" y="140" width="15" height="60" fill="#2d2d2d" stroke="#121417" stroke-width="4"/>
-  <rect x="53" y="140" width="15" height="60" fill="#2d2d2d" stroke="#121417" stroke-width="4"/>
-  <circle cx="50" cy="44" r="23" fill="#e2b48a" stroke="#121417" stroke-width="4"/>
-  <path d="M28 38 q4-22 24-22 q20 0 22 22 q-10-8-24-8 q-14 0-22 8z" fill="#9a9a9a" stroke="#121417" stroke-width="3"/>
-  <rect x="35" y="40" width="12" height="9" rx="3" fill="none" stroke="#121417" stroke-width="3"/>
-  <rect x="53" y="40" width="12" height="9" rx="3" fill="none" stroke="#121417" stroke-width="3"/>
-  <path d="M47 44h6" stroke="#121417" stroke-width="3"/>
-  <path d="M42 57 q8 5 16 0" stroke="#121417" stroke-width="3" fill="none"/>
- </symbol>
- <symbol id="moeda" viewBox="0 0 40 40"><circle cx="20" cy="20" r="17" fill="#ffc934" stroke="#121417" stroke-width="3.5"/><text x="20" y="27" text-anchor="middle" font-family="Bangers,Impact" font-size="20" fill="#121417">R$</text></symbol>
- <pattern id="dots" width="10" height="10" patternUnits="userSpaceOnUse"><circle cx="5" cy="5" r="1.6" fill="rgba(0,0,0,.16)"/></pattern>
-</defs>
-</svg>
-
 <main class="livro">
-
-<!-- 1 CAPA -->
-<section class="pg ret capa" style="background-color:var(--azul);padding:0">
- <svg viewBox="0 0 794 1123" style="width:100%;height:100%;display:block">
-  <g stroke="#121417" stroke-width="6">
-   <path d="M397 560 L-50 300 L-50 480Z M397 560 L850 260 L850 420Z M397 560 L850 760 L850 900Z M397 560 L-50 820 L-50 1000Z" fill="#2c64ef" stroke="none"/>
-   <rect x="90" y="610" width="614" height="330" fill="#fffaf0"/>
-   <rect x="90" y="610" width="614" height="330" fill="url(#dots)"/>
-   <path d="M130 610 v-90 h534 v90" fill="#ffc934"/>
-   <path d="M110 520 L397 410 L684 520Z" fill="#f27427"/>
-   <rect x="160" y="680" width="90" height="90" fill="#9fd3ff"/><rect x="544" y="680" width="90" height="90" fill="#9fd3ff"/>
-   <rect x="352" y="790" width="90" height="150" fill="#0b7a75"/>
-   <text x="397" y="580" text-anchor="middle" font-family="Bangers,Impact" font-size="34" stroke="none" fill="#121417">ESCOLA ESTADUAL</text>
-  </g>
-  <use href="#ana" x="250" y="700" width="140" height="280"/>
-  <use href="#prof" x="560" y="690" width="140" height="290"/>
-  <use href="#moeda" x="300" y="620" width="56" height="56"/><use href="#moeda" x="440" y="590" width="44" height="44"/><use href="#moeda" x="380" y="650" width="34" height="34"/>
-  <rect x="0" y="980" width="794" height="143" fill="#121417"/>
-  <text x="60" y="150" font-family="Bangers,Impact" font-size="54" fill="#ffc934" letter-spacing="6">ATLAS HISTÓRICO DO</text>
-  <text x="50" y="330" font-family="Bangers,Impact" font-size="190" fill="#fff" stroke="#121417" stroke-width="10" paint-order="stroke">PÉ-DE-</text>
-  <text x="50" y="500" font-family="Bangers,Impact" font-size="190" fill="#ffc934" stroke="#121417" stroke-width="10" paint-order="stroke">MEIA</text>
-  <text x="60" y="1040" font-family="Nunito,sans-serif" font-weight="900" font-size="26" fill="#fff">Da concepção legislativa (2021) à consolidação (2026)</text>
-  <text x="60" y="1080" font-family="Nunito,sans-serif" font-weight="700" font-size="20" fill="#ffc934">Narrativa · Dados · Documentos · Análise institucional</text>
- </svg>
-</section>
-
-<!-- 2 COMO LER -->
-<section class="pg" data-n="2">
- <span class="tipo">Abertura</span>
- <h2>Como ler este Atlas</h2>
- <p>Cada página conta um pedaço da história do Programa Pé-de-Meia. A composição muda conforme a informação: às vezes uma cena, às vezes um gráfico, um documento ou um fluxo. A paleta, os traços e os títulos são sempre os mesmos.</p>
- <div class="grade g2 fill">
-  <div class="q cx" style="background:var(--amarelo)"><h3 style="color:var(--tinta)">Narrativa</h3><p>Cenas ilustradas com a estudante Ana e o professor Jorge, quando a história pede rosto.</p><svg viewBox="0 0 200 120"><use href="#ana" x="20" y="0" width="60" height="120"/><use href="#prof" x="110" y="0" width="60" height="120"/></svg></div>
-  <div class="q cx"><h3>Dados</h3><p>Gráficos grandes e números como protagonistas.</p><svg viewBox="0 0 200 120"><g stroke="#121417" stroke-width="4"><rect x="20" y="70" width="34" height="45" fill="#0b7a75"/><rect x="70" y="45" width="34" height="70" fill="#1d4fd8"/><rect x="120" y="15" width="34" height="100" fill="#f27427"/></g></svg></div>
-  <div class="q cx"><h3>Documentos</h3><p>Leis, medidas provisórias e decretos, com os trechos que importam.</p><div class="doc mono" style="transform:rotate(-2deg);margin-top:1cqw">Art. 1º Fica instituído…</div></div>
-  <div class="q cx" style="background:#dff1ef"><h3>Análise</h3><p>Fluxos institucionais, governança e riscos.</p><svg viewBox="0 0 200 100"><g stroke="#121417" stroke-width="4" fill="#fff"><rect x="5" y="35" width="50" height="30"/><rect x="75" y="35" width="50" height="30" fill="#ffc934"/><rect x="145" y="35" width="50" height="30"/></g><path d="M55 50h20M125 50h20" stroke="#121417" stroke-width="4"/></svg></div>
+<section class="pg capa">
+ <div class="topo">
+  <div class="sobre">ATLAS HISTÓRICO DO</div>
+  <h1>PÉ-DE-MEIA</h1>
+  <p class="sub">Da concepção legislativa à transformação social</p>
+  <div class="datas">2021 – 2026 <span style="font-size:2.6cqw;color:#bfe6ee">com perspectivas até 2030</span></div>
  </div>
- <div class="faixa">Selo <span class="pend">A VALIDAR</span> marca todo dado que depende de base oficial ainda não conferida. <b>Nenhum número foi estimado para preencher lacuna.</b></div>
-</section>
-
-<!-- 3 O PROBLEMA (narrativa) -->
-<section class="pg" data-n="3">
- <span class="tipo">Narrativa · O problema</span>
- <h2>O ensino médio que fica pelo caminho</h2>
- <div class="q cena fill">
-  <svg viewBox="0 0 700 520" preserveAspectRatio="xMidYMid slice">
-   <rect width="700" height="520" fill="#9fd3ff"/><rect width="700" height="520" fill="url(#dots)"/>
-   <path d="M0 400 L700 400 L700 520 L0 520Z" fill="#c9a36a" stroke="#121417" stroke-width="5"/>
-   <path d="M330 520 L350 400 L370 400 L420 520Z" fill="#e8d3a6" stroke="#121417" stroke-width="4"/>
-   <path d="M350 400 L180 300 M370 400 L560 300" stroke="#121417" stroke-width="18" stroke-linecap="round"/>
-   <path d="M350 400 L180 300 M370 400 L560 300" stroke="#e8d3a6" stroke-width="10" stroke-linecap="round"/>
-   <g stroke="#121417" stroke-width="5"><rect x="80" y="190" width="170" height="110" fill="#fffaf0"/><path d="M70 190 L165 140 L260 190Z" fill="#f27427"/>
-   <rect x="470" y="200" width="170" height="100" fill="#6b6b6b"/><rect x="490" y="225" width="40" height="30" fill="#ffc934"/><rect x="580" y="225" width="40" height="30" fill="#ffc934"/></g>
-   <text x="165" y="255" text-anchor="middle" font-family="Bangers" font-size="30">ESCOLA</text>
-   <text x="555" y="290" text-anchor="middle" font-family="Bangers" font-size="26" fill="#fff">TRABALHO</text>
-   <use href="#ana" x="300" y="260" width="110" height="220"/>
-   <g><path d="M420 60 h250 v90 h-170 l-30 30 l0-30 h-50z" fill="#fff" stroke="#121417" stroke-width="5"/>
-   <text x="545" y="98" text-anchor="middle" font-family="Nunito" font-weight="900" font-size="20">Preciso ajudar em casa.</text>
-   <text x="545" y="126" text-anchor="middle" font-family="Nunito" font-weight="900" font-size="20">Termino o 2º ano?</text></g>
-  </svg>
-  <span class="leg">Brasil, início dos anos 2020</span>
- </div>
- <div class="grade g2">
-  <div class="q cx"><h3>A pergunta do Atlas</h3><p>Por que tantos jovens de baixa renda saem da escola justamente na etapa final? A renda imediata do trabalho compete com a promessa distante do diploma.</p></div>
-  <div class="q cx" style="background:var(--amarelo)"><h3 style="color:var(--tinta)">Indicadores desta cena</h3><ul class="lst"><li>Abandono de 6,2% a 6,6% por série (Censo 2022)</li><li>Evasão de até 8,8% no 1º ano (2019–2020)</li><li>Detalhes na página do diagnóstico</li></ul></div>
- </div>
-</section>
-
+ <div class="arte"><img src="img/capa.jpg" alt="Ana e Rafael diante da escola"><div class="lema">Uma história de pessoas, decisões, dados e resultados para transformar a educação no Brasil.</div><div class="tags">POLÍTICA PÚBLICA<br>DADOS<br>GOVERNANÇA<br>IMPACTO<br>FUTURO</div></div>
+</section><section class="pg abre"><div class="corpo"><div><div class="parte">PARTE I · O NASCIMENTO DE UMA POLÍTICA PÚBLICA</div><div class="n">1</div><h2>O Brasil antes do Pé-de-Meia</h2><p class="per">O problema público · contexto anterior a 2024</p></div><p style="font-size:2.3cqw;max-width:62ch">Estudantes entram no ensino médio, mas muitos não conseguem permanecer e concluir. Matrícula, abandono, evasão, conclusão e desigualdade socioeconômica formam o ponto de partida.</p><div class="cen"><img src="img/capa.jpg" alt=""></div><div class="fecha"><span>PERGUNTA DE ENCERRAMENTO</span>Por que a permanência escolar passou a exigir novas respostas de política pública?</div></div></section>
 <section class="pg">
- <span class="tipo">Documentos · Capítulo 1 · 2021</span>
- <h2>O projeto que veio antes</h2>
-
- <p>A Lei n.º 14.818/2024 tem origem no <b>PL n.º 54/2021</b>, apresentado à Câmara em 3 de fevereiro de 2021 por Tabata Amaral, Idilvan Alencar, Professor Israel Batista e outros parlamentares. A ementa original alterava a legislação do Bolsa Família para criar um incentivo ao estudante do ensino médio.</p>
- <div class="doc" style="position:relative"><span class="carimbo" style="border-color:var(--petroleo);color:var(--petroleo)">TEXTO ORIGINAL</span>
- <b>Justificativa do PL n.º 54/2021</b><br>Exclusão escolar, desigualdades regionais, vulnerabilidade econômica e efeitos da pandemia. Referências a transferências condicionadas de renda e a experiências no Rio de Janeiro, no México e na Colômbia. Previsão de inscrição automática e de poupança social digital.</div>
- <div class="grade g2">
-  <div class="q cx" style="background:#e3ebff"><span class="num" style="font-size:7cqw;color:var(--azul)">2,49 mi</span><p>estudantes no público potencial estimado pelo PL, com dados de 2019</p></div>
-  <div class="q cx" style="background:#ffe7d6"><span class="num" style="font-size:7cqw">R$ 214 bi</span><p>perdas anuais estimadas pela não conclusão da educação básica; R$ 372 mil por jovem, segundo estudo citado</p></div>
- </div>
- <div class="grade g2 fill">
-  <div class="q cx" style="background:var(--amarelo)"><h3 style="color:var(--tinta)">A poupança já estava lá</h3><p>O texto de 2021 já previa poupança com liberação parcial e incentivos pela aprovação em cada ano e pelo desempenho no ENEM. A modalidade não nasceu em 2023.</p></div>
-  <div class="q cx"><h3>Divergência interna</h3><p>A justificativa fala em saque parcial de até <b>30%</b>; o texto articulado fixa <b>40%</b> em certas etapas. <span class="pend">EXAMINAR VERSÕES</span></p></div>
- </div>
- <p class="fonte">Fonte: PL n.º 54/2021, texto original e justificativa (Câmara dos Deputados). Valores históricos citados pelos autores, não custos atuais do programa.</p>
-</section>
-
-<section class="pg">
- <span class="tipo">Documentos · Capítulo 1 · 2021–2024</span>
- <h2>Tramitação em quatro tempos</h2>
-
- <div class="grade g2 fill">
-  <div class="q cx"><h3>2021</h3><p>Apresentação do PL. Em maio, passa a tramitar em regime de urgência.</p></div>
-  <div class="q cx" style="background:#dff1ef"><h3>2022</h3><p>A revogação da antiga lei do Bolsa Família levanta a tese de prejudicialidade. A Câmara reconsidera e o projeto segue.</p></div>
-  <div class="q cx" style="background:#e3ebff"><h3>2023</h3><p>27/11: MP n.º 1.198/23 cria a poupança de incentivo à permanência. Em dezembro, o Congresso aprova o PL e o envia à sanção.</p></div>
-  <div class="q cx" style="background:var(--amarelo)"><h3 style="color:var(--tinta)">2024</h3><p>16/01: Lei n.º 14.818 sancionada com vetos parciais. Em maio, parte dos dispositivos vetados é promulgada após deliberação do Congresso.</p></div>
- </div>
- <div class="q cx" style="display:flex;align-items:center;gap:2cqw"><svg viewBox="0 0 100 210" style="width:8cqw;flex:none"><use href="#prof"/></svg><div class="balao">“Começou como mudança no Bolsa Família e terminou como política educacional própria. Essa virada é a pergunta do capítulo.”</div></div>
- <p class="fonte">Fontes: Portal da Câmara dos Deputados; histórico bicameral no Congresso Nacional.</p>
-</section>
-
-<section class="pg">
- <span class="tipo">Dados · Capítulo 1 · Diagnóstico</span>
- <h2>O retrato de 2022</h2>
-
- <p>A Exposição de Motivos Interministerial n.º 00069/2023, que acompanhou a MP, mostra que reprovação, abandono e distorção idade-série persistiam mesmo com o acesso ampliado.</p>
- <div class="q cx fill" style="display:flex;flex-direction:column">
-  <svg viewBox="0 0 640 390" style="width:100%;flex:1;min-height:0"><g font-family="Roboto Mono" font-size="13" fill="#121417">
-   <g stroke="#121417" stroke-opacity=".15"><line x1="70" y1="40" x2="620" y2="40"/><line x1="70" y1="115" x2="620" y2="115"/><line x1="70" y1="190" x2="620" y2="190"/><line x1="70" y1="265" x2="620" y2="265"/></g>
-   <text x="62" y="44" text-anchor="end">28%</text><text x="62" y="119" text-anchor="end">21%</text><text x="62" y="194" text-anchor="end">14%</text><text x="62" y="269" text-anchor="end">7%</text><text x="62" y="344" text-anchor="end">0</text>
-   <g stroke="#121417" stroke-width="3"><rect x="110" y="230.7" width="44" height="109.3" fill="#1d4fd8"/><text x="132" y="224.7" text-anchor="middle" font-family="Bangers" font-size="18" stroke="none" fill="#121417">10,2%</text><rect x="156" y="273.6" width="44" height="66.4" fill="#f27427"/><text x="178" y="267.6" text-anchor="middle" font-family="Bangers" font-size="18" stroke="none" fill="#121417">6,2%</text><rect x="202" y="80.7" width="44" height="259.3" fill="#0b7a75"/><text x="224" y="74.7" text-anchor="middle" font-family="Bangers" font-size="18" stroke="none" fill="#121417">24,2%</text><rect x="280" y="251.1" width="44" height="88.9" fill="#1d4fd8"/><text x="302" y="245.1" text-anchor="middle" font-family="Bangers" font-size="18" stroke="none" fill="#121417">8,3%</text><rect x="326" y="269.3" width="44" height="70.7" fill="#f27427"/><text x="348" y="263.3" text-anchor="middle" font-family="Bangers" font-size="18" stroke="none" fill="#121417">6,6%</text><rect x="372" y="111.8" width="44" height="228.2" fill="#0b7a75"/><text x="394" y="105.8" text-anchor="middle" font-family="Bangers" font-size="18" stroke="none" fill="#121417">21,3%</text><rect x="450" y="273.6" width="44" height="66.4" fill="#1d4fd8"/><text x="472" y="267.6" text-anchor="middle" font-family="Bangers" font-size="18" stroke="none" fill="#121417">6,2%</text><rect x="496" y="270.4" width="44" height="69.6" fill="#f27427"/><text x="518" y="264.4" text-anchor="middle" font-family="Bangers" font-size="18" stroke="none" fill="#121417">6,5%</text><rect x="542" y="121.4" width="44" height="218.6" fill="#0b7a75"/><text x="564" y="115.4" text-anchor="middle" font-family="Bangers" font-size="18" stroke="none" fill="#121417">20,4%</text></g>
-   <line x1="70" y1="340" x2="620" y2="340" stroke="#121417" stroke-width="4"/>
-   <g font-family="Nunito" font-weight="900" font-size="16" text-anchor="middle"><text x="178" y="366">1º ano</text><text x="348" y="366">2º ano</text><text x="518" y="366">3º ano</text></g>
-   <g font-family="Nunito" font-weight="700" font-size="14"><rect x="380" y="10" width="14" height="14" fill="#1d4fd8" stroke="#121417" stroke-width="2"/><text x="400" y="22">Reprovação</text><rect x="480" y="10" width="14" height="14" fill="#f27427" stroke="#121417" stroke-width="2"/><text x="500" y="22">Abandono</text><rect x="380" y="-2" width="0" height="0"/><rect x="560" y="10" width="14" height="14" fill="#0b7a75" stroke="#121417" stroke-width="2"/><text x="580" y="22">Dist.</text></g>
-  </g></svg>
- </div>
- <div class="grade g2">
-  <div class="q cx" style="background:var(--amarelo)"><h3 style="color:var(--tinta)">Evasão (2019–2020)</h3><p><b>8,8%</b> no 1º ano · <b>8,3%</b> no 2º · <b>4,6%</b> no 3º. Evasão e abandono são indicadores diferentes, com períodos diferentes.</p></div>
-  <div class="q cx"><h3>Leitura correta</h3><p>São dados anteriores ao programa. Servem de linha de base, não de resultado.</p></div>
- </div>
- <p class="fonte">Fonte: EMI n.º 00069/2023, com base no Censo Escolar 2022 (INEP). “Dist.” = distorção idade-série.</p>
-</section>
-
-<section class="pg">
- <span class="tipo">Análise · Capítulo 1 · Teoria da mudança</span>
- <h2>A lógica da intervenção</h2>
-
- <p>A exposição de motivos não trata o dinheiro como solução isolada. Liga o incentivo à reestruturação do ensino médio, à educação integral, à formação de professores, aos alertas de evasão e à busca ativa.</p>
- <div class="grade fill" style="grid-template-rows:repeat(4,1fr)">
-  <div class="q cx" style="background:var(--pend);color:#fff"><h3 style="color:#fff">Problema público</h3><p>Abandono, evasão, reprovação e desigualdades educacionais.</p></div>
-  <div class="q cx" style="background:var(--azul);color:#fff"><h3 style="color:var(--amarelo)">Mecanismo</h3><p>Incentivo financeiro condicionado à trajetória escolar: curto prazo (matrícula e frequência) e poupança (progressão e conclusão).</p></div>
-  <div class="q cx" style="background:var(--petroleo);color:#fff"><h3 style="color:var(--amarelo)">Resultados esperados</h3><p>Mais permanência e mais conclusão do ensino médio.</p></div>
-  <div class="q cx" style="background:var(--amarelo)"><h3 style="color:var(--tinta)">Impactos pretendidos</h3><p>Inclusão educacional, mobilidade social, menos desigualdade.</p></div>
- </div>
- <div class="faixa"><b>Hipótese:</b> o Pé-de-Meia passou de um incentivo ligado à proteção social para uma política educacional com elegibilidade, financiamento, coordenação federativa e gestão próprios.</div>
- <p class="fonte">Reconstrução analítica dos objetivos da EMI n.º 00069/2023. Não comprova efeitos causais.</p>
-</section>
-
-<!-- 5 MP -->
-<section class="pg" data-n="5">
- <span class="tipo">Documentos · Novembro de 2023</span>
- <h2>A Medida Provisória</h2>
- <div class="grade g2 fill" style="grid-template-columns:1.25fr 1fr">
-  <div class="doc" style="position:relative">
-   <b>MEDIDA PROVISÓRIA N.º 1.198, DE 2023</b><br><br>
-   Institui incentivo financeiro-educacional, na modalidade de poupança, destinado a promover a permanência e a conclusão escolar de estudantes matriculados no ensino médio público.<br><br>
-   <span class="mono">Texto resumido para fins didáticos. Conferir redação integral no Diário Oficial da União.</span>
+ <div class="cab"><span class="cap">Capítulo 1 · O problema público</span><h2>A pergunta que deu origem à política</h2><p>Por que o Pé-de-Meia nasceu?</p></div>
+ <div class="corpo">
+  <div class="cena fill" style="align-items:stretch">
+   <figure class="pers" style="width:44cqw"><img src="img/ana-pensa.jpg" alt="Ana estuda e pensa no futuro" style="aspect-ratio:auto;height:100%;object-position:center"><figcaption>Ana<small>Estudante do ensino médio</small></figcaption></figure>
+   <div style="display:flex;flex-direction:column;gap:2cqw;justify-content:center">
+    <div class="balao">Eu quero terminar o ensino médio, fazer uma faculdade e ter mais oportunidades. Mas nem sempre é fácil continuar na escola.</div>
+    <div class="c">Ana é uma das milhões de estudantes que sonham com um futuro melhor. Para muitos jovens no Brasil, permanecer na escola também depende das condições de vida da família.</div>
+   </div>
   </div>
-  <div class="q cena" style="background:var(--azul)">
-   <svg viewBox="0 0 300 420" preserveAspectRatio="xMidYMid slice"><rect width="300" height="420" fill="#1d4fd8"/><rect width="300" height="420" fill="url(#dots)"/>
-    <g stroke="#121417" stroke-width="5"><rect x="40" y="250" width="220" height="110" fill="#fffaf0"/><path d="M30 250 h240 l-20 -40 h-200z" fill="#ffc934"/></g>
-    <g fill="#fffaf0" stroke="#121417" stroke-width="4"><rect x="60" y="60" width="140" height="180" transform="rotate(-8 130 150)"/><rect x="90" y="50" width="140" height="180" transform="rotate(6 160 140)"/></g>
-    <path d="M115 100h90M115 125h90M115 150h70" stroke="#121417" stroke-width="5" transform="rotate(6 160 140)"/>
-    <text x="150" y="320" text-anchor="middle" font-family="Bangers" font-size="34">BRASÍLIA</text></svg>
-  </div>
+  <div class="faixa">Em <b>2021</b>, um projeto de lei propôs um incentivo financeiro para apoiar estudantes de baixa renda a concluir o ensino médio, combinando transferência de renda e <b>poupança educacional</b>.</div>
  </div>
- <div class="grade g3">
-  <div class="q cx"><h3>O quê</h3><p>Incentivo em forma de poupança.</p></div>
-  <div class="q cx"><h3>Para quem</h3><p>Ensino médio público, famílias de baixa renda.</p></div>
-  <div class="q cx"><h3>Por quê</h3><p>Permanência e conclusão.</p></div>
- </div>
-</section>
-
-<!-- 6 LEI -->
-<section class="pg" data-n="6">
- <span class="tipo">Documentos · Janeiro de 2024</span>
- <h2>Lei n.º 14.818/2024</h2>
- <p>Em 16 de janeiro de 2024, o programa ganha forma de lei. Dez dias depois, um decreto detalha valores, calendário e regras de pagamento.</p>
- <div class="doc"><b>LEI N.º 14.818, DE 16 DE JANEIRO DE 2024</b><br><br>Institui incentivo financeiro-educacional, na modalidade de poupança, aos estudantes matriculados no ensino médio público; e altera leis relacionadas ao financiamento do programa.</div>
- <div class="grade g2 fill">
-  <div class="q cx" style="background:var(--amarelo)"><h3 style="color:var(--tinta)">O que a lei fixa</h3><ul class="lst"><li>Público: estudantes do ensino médio público de famílias no CadÚnico.</li><li>Condições: matrícula, frequência mínima e aprovação.</li><li>Financiamento por fundo privado gerido por instituição financeira federal.</li></ul></div>
-  <div class="q cx"><h3>O que o decreto detalha</h3><ul class="lst"><li>Decreto n.º 11.901, de 26/01/2024.</li><li>Valores por parcela e calendário.</li><li>Regras de saque e de retenção.</li></ul><p class="mono" style="margin-top:1cqw">Conferir redação integral e alterações posteriores.</p></div>
- </div>
- <div class="q cx" style="display:flex;align-items:center;gap:2cqw"><svg viewBox="0 0 100 200" style="width:8cqw;flex:none"><use href="#prof"/></svg><div class="balao">“Agora a regra está escrita: frequentou, foi aprovado, o dinheiro entra.”</div></div>
-</section>
-
-<section class="pg">
- <span class="tipo">Documentos · Capítulo 1 · Normas</span>
- <h2>Da lei às portarias</h2>
-
- <div class="fill" style="overflow-x:auto"><table class="t"><tr><th>Data</th><th>Ato</th><th>Significado</th></tr>
- <tr><td>2021</td><td>PL n.º 54/2021</td><td>Antecedente legislativo da lei</td></tr>
- <tr><td>27/11/2023</td><td>MP n.º 1.198/23</td><td>Poupança de incentivo à permanência e conclusão</td></tr>
- <tr><td>16/01/2024</td><td>Lei n.º 14.818/24</td><td>Instituição legal do incentivo</td></tr>
- <tr><td>26/01/2024</td><td>Decreto n.º 11.901/24</td><td>Regulamentação e criação do programa</td></tr>
- <tr><td>07/02/2024</td><td>Portarias MEC 83 e 84</td><td>Regras de gestão e calendário operacional</td></tr>
- <tr><td>Mar–abr/2024</td><td>Portarias 210, 275 e 364</td><td>Ajustes de normas e calendário inicial</td></tr>
- <tr><td>Ago/2024</td><td>Ampliação e normas da EJA</td><td>Expansão da cobertura</td></tr>
- <tr><td>Ago–set/2024</td><td>Portarias 792, 861 e 916</td><td>Gestão e calendários</td></tr>
- <tr><td>07/07/2025</td><td>Portaria MEC 496</td><td>Estratégia Rumo Certo e Renapem</td></tr>
- <tr><td>2026</td><td>Portaria MEC 539/26</td><td>Dados de 2025 e Incentivo Conclusão</td></tr></table></div>
- <p class="fonte">Fontes: repositório normativo do MEC; registro legislativo da Câmara.</p>
-</section>
-
-<!-- 7 QUEM PODE -->
-<section class="pg" data-n="7">
- <span class="tipo">Dados · Elegibilidade</span>
- <h2>Quem pode receber</h2>
- <div class="grade g2 fill">
-  <div class="q cx" style="display:flex;flex-direction:column;gap:1.4cqw">
-   <div><span class="num">14–24</span><p><b>anos</b>, no ensino médio regular público</p></div>
-   <div><span class="num" style="color:var(--azul)">19–24</span><p><b>anos</b>, na Educação de Jovens e Adultos (EJA)</p></div>
-   <p class="mono">Conferir alterações nas faixas etárias em normas posteriores.</p>
-  </div>
-  <div class="q cena" style="background:var(--petroleo)"><svg viewBox="0 0 300 400" preserveAspectRatio="xMidYMid slice"><rect width="300" height="400" fill="#0b7a75"/><rect width="300" height="400" fill="url(#dots)"/><use href="#ana" x="80" y="80" width="150" height="300"/><g stroke="#121417" stroke-width="4"><rect x="20" y="30" width="120" height="70" rx="10" fill="#fff"/></g><text x="80" y="62" text-anchor="middle" font-family="Bangers" font-size="22">CadÚnico</text><text x="80" y="88" text-anchor="middle" font-family="Bangers" font-size="22" fill="#0b7a75">✔ inscrita</text></svg></div>
- </div>
- <div class="grade g3">
-  <div class="q cx"><h3>1 · Matrícula</h3><p>Rede pública, ensino médio.</p></div>
-  <div class="q cx"><h3>2 · Renda</h3><p>Família inscrita no CadÚnico, com prioridade a quem recebe Bolsa Família.</p></div>
-  <div class="q cx"><h3>3 · Frequência</h3><p>Presença mínima exigida em cada mês letivo.</p></div>
- </div>
- <div class="faixa">Desde ago/2024: também CadÚnico com renda de até <b>½ salário mínimo por pessoa</b> e estudantes da EJA</div>
-</section>
-
-<!-- 8 VALORES (gráfico) -->
-<section class="pg" data-n="8">
- <span class="tipo">Dados · Valores</span>
- <h2>Como o pé-de-meia cresce</h2>
- <p>Valores previstos por estudante ao longo dos três anos. A parte azul pode ser sacada durante o ano; a parte laranja fica guardada até a conclusão do ensino médio.</p>
- <div class="q cx fill" style="display:flex;flex-direction:column">
-  <svg viewBox="0 0 640 400" style="width:100%;flex:1;min-height:0">
-   <g font-family="Roboto Mono" font-size="13" fill="#121417">
-    <g stroke="#121417" stroke-opacity=".15"><line x1="70" y1="40" x2="620" y2="40"/><line x1="70" y1="120" x2="620" y2="120"/><line x1="70" y1="200" x2="620" y2="200"/><line x1="70" y1="280" x2="620" y2="280"/></g>
-    <text x="62" y="44" text-anchor="end">9.200</text><text x="62" y="124" text-anchor="end">6.900</text><text x="62" y="204" text-anchor="end">4.600</text><text x="62" y="284" text-anchor="end">2.300</text><text x="62" y="364" text-anchor="end">0</text>
-    <!-- escala: 320px = R$9.200 → 1px ≈ R$28,75 -->
-    <g stroke="#121417" stroke-width="4">
-     <rect x="100" y="290.4" width="90" height="69.6" fill="#1d4fd8"/><rect x="100" y="255.6" width="90" height="34.8" fill="#f27427"/>
-     <rect x="230" y="220.9" width="90" height="139.1" fill="#1d4fd8"/><rect x="230" y="151.3" width="90" height="69.6" fill="#f27427"/>
-     <rect x="360" y="151.3" width="90" height="208.7" fill="#1d4fd8"/><rect x="360" y="46.9" width="90" height="104.4" fill="#f27427"/>
-     <rect x="490" y="144.3" width="90" height="215.7" fill="#1d4fd8"/><rect x="490" y="40" width="90" height="104.3" fill="#f27427"/>
+</section><section class="pg">
+ <div class="cab"><span class="cap">Capítulo 1 · Indicadores</span><h2>O retrato do ensino médio em 2022</h2><p>Indicadores citados pelo Executivo na Exposição de Motivos da MP n.º 1.198/23</p></div>
+ <div class="corpo">
+  <div class="c br fill" style="display:flex;flex-direction:column">
+   <svg viewBox="0 0 640 380" style="width:100%;flex:1;min-height:0" font-family="Nunito Sans,sans-serif">
+    <g stroke="#1b2733" stroke-opacity=".12"><line x1="70" y1="40" x2="620" y2="40"/><line x1="70" y1="115" x2="620" y2="115"/><line x1="70" y1="190" x2="620" y2="190"/><line x1="70" y1="265" x2="620" y2="265"/></g>
+    <g font-size="13" fill="#5a6b7b" text-anchor="end"><text x="62" y="44">28%</text><text x="62" y="119">21%</text><text x="62" y="194">14%</text><text x="62" y="269">7%</text><text x="62" y="344">0</text></g>
+    <!-- escala: 300px = 28% -->
+    <g font-family="Barlow Semi Condensed,sans-serif" font-weight="800" font-size="17" text-anchor="middle" fill="#1b2733">
+     <rect x="110" y="230.7" width="44" height="109.3" rx="3" fill="#1f78c8"/><text x="132" y="224">10,2%</text>
+     <rect x="156" y="273.6" width="44" height="66.4" rx="3" fill="#f2862b"/><text x="178" y="267">6,2%</text>
+     <rect x="202" y="80.7" width="44" height="259.3" rx="3" fill="#0e6f7a"/><text x="224" y="74">24,2%</text>
+     <rect x="280" y="251.1" width="44" height="88.9" rx="3" fill="#1f78c8"/><text x="302" y="245">8,3%</text>
+     <rect x="326" y="269.3" width="44" height="70.7" rx="3" fill="#f2862b"/><text x="348" y="263">6,6%</text>
+     <rect x="372" y="111.8" width="44" height="228.2" rx="3" fill="#0e6f7a"/><text x="394" y="105">21,3%</text>
+     <rect x="450" y="273.6" width="44" height="66.4" rx="3" fill="#1f78c8"/><text x="472" y="267">6,2%</text>
+     <rect x="496" y="270.4" width="44" height="69.6" rx="3" fill="#f2862b"/><text x="518" y="264">6,5%</text>
+     <rect x="542" y="121.4" width="44" height="218.6" rx="3" fill="#0e6f7a"/><text x="564" y="115">20,4%</text>
     </g>
-    <line x1="70" y1="360" x2="620" y2="360" stroke="#121417" stroke-width="4"/>
-    <g font-family="Bangers" font-size="24" text-anchor="middle"><text x="145" y="246">3.000</text><text x="275" y="142">6.000</text><text x="405" y="38">9.000</text><text x="535" y="32">9.200</text></g>
-    <g font-family="Nunito" font-weight="900" font-size="15" text-anchor="middle"><text x="145" y="384">1º ano</text><text x="275" y="384">2º ano</text><text x="405" y="384">3º ano</text><text x="535" y="384">+ ENEM</text></g>
-   </g>
-  </svg>
-  <p class="mono">Valores acumulados em R$. Escala vertical linear.</p>
+    <line x1="70" y1="340" x2="620" y2="340" stroke="#1b2733" stroke-width="2"/>
+    <g font-weight="800" font-size="16" text-anchor="middle" fill="#1b2733"><text x="178" y="364">1º ano</text><text x="348" y="364">2º ano</text><text x="518" y="364">3º ano</text></g>
+    <g font-size="14" font-weight="700" fill="#1b2733"><rect x="300" y="8" width="14" height="14" rx="2" fill="#1f78c8"/><text x="320" y="20">Reprovação</text><rect x="410" y="8" width="14" height="14" rx="2" fill="#f2862b"/><text x="430" y="20">Abandono</text><rect x="510" y="8" width="14" height="14" rx="2" fill="#0e6f7a"/><text x="530" y="20">Distorção idade-série</text></g>
+   </svg>
+  </div>
+  <div class="g g2">
+   <div class="c am"><h3>Evasão (2019–2020)</h3><p><b>8,8%</b> no 1º ano · <b>8,3%</b> no 2º · <b>4,6%</b> no 3º. Evasão e abandono são indicadores diferentes, com períodos diferentes.</p></div>
+   <div class="c"><h3>Leitura correta</h3><p>São dados anteriores ao programa. Servem de linha de base, não de resultado.</p></div>
+  </div>
+  <p class="fonte">Fonte: EMI n.º 00069/2023, com base no Censo Escolar 2022 (INEP).</p>
  </div>
- <div class="grade g3">
-  <div class="q cx" style="background:#e3ebff"><span class="num" style="font-size:6cqw;color:var(--azul)">R$ 200</span><p>na matrícula, a cada ano</p></div>
-  <div class="q cx" style="background:#e3ebff"><span class="num" style="font-size:6cqw;color:var(--azul)">9 × R$ 200</span><p>parcelas mensais por frequência</p></div>
-  <div class="q cx" style="background:#ffe7d6"><span class="num" style="font-size:6cqw">R$ 1.000</span><p>por ano concluído, guardados até o diploma; mais R$ 200 por participar do ENEM</p></div>
- </div>
-</section>
-
-<!-- 9 FLUXO -->
-<section class="pg" data-n="9">
- <span class="tipo">Análise · Governança</span>
- <h2>O caminho do dinheiro</h2>
- <div class="q cx fill" style="display:flex">
-  <svg viewBox="0 0 640 560" style="width:100%">
-   <defs><marker id="sp" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#121417"/></marker></defs>
-   <g stroke="#121417" stroke-width="4" font-family="Bangers" font-size="24" text-anchor="middle">
-    <rect x="30" y="30" width="250" height="90" fill="#1d4fd8"/><text x="155" y="70" fill="#fff" stroke="none">TESOURO / UNIÃO</text><text x="155" y="100" fill="#ffc934" stroke="none" font-size="17">aporta recursos</text>
-    <rect x="360" y="30" width="250" height="90" fill="#ffc934"/><text x="485" y="70" stroke="none">FUNDO DO PROGRAMA</text><text x="485" y="100" stroke="none" font-size="17">gerido pela Caixa</text>
-    <rect x="30" y="230" width="250" height="90" fill="#0b7a75"/><text x="155" y="270" fill="#fff" stroke="none">MEC</text><text x="155" y="300" fill="#fff" stroke="none" font-size="17">cruza matrícula e CadÚnico</text>
-    <rect x="360" y="230" width="250" height="90" fill="#fff"/><text x="485" y="270" stroke="none">REDES ESTADUAIS</text><text x="485" y="300" stroke="none" font-size="17">informam frequência e aprovação</text>
-    <rect x="195" y="430" width="250" height="100" fill="#f27427"/><text x="320" y="475" stroke="none">ESTUDANTE</text><text x="320" y="505" stroke="none" font-size="17">conta poupança digital</text>
-   </g>
-   <g stroke="#121417" stroke-width="4" fill="none" marker-end="url(#sp)">
-    <path d="M280 75 H352"/><path d="M360 255 H288"/><path d="M155 320 V380 H290 V424"/><path d="M485 120 V170 H560 V380 H360 V424"/>
-   </g>
-  </svg>
- </div>
- <div class="grade g2">
-  <div class="q cx"><h3>Ponto de atenção</h3><p>A EMI previa fundo privado criado pela Caixa, gestão do MEC e participação da Fazenda nas decisões do fundo, além da adesão de estados e municípios em regime de colaboração.</p></div>
-  <div class="q cx" style="background:var(--amarelo)"><h3 style="color:var(--tinta)">Dependência de dados</h3><p>O pagamento só acontece se a escola informar frequência no prazo. A qualidade do registro escolar vira condição para o benefício.</p></div>
- </div>
-</section>
-
+</section><section class="pg abre"><div class="corpo"><div><div class="parte">PARTE I · O NASCIMENTO DE UMA POLÍTICA PÚBLICA</div><div class="n">2</div><h2>Da ideia à lei</h2><p class="per">2021–2024 · Origem legislativa</p></div><p style="font-size:2.3cqw;max-width:62ch">Do PL n.º 54/2021 à MP n.º 1.198/23, à Lei n.º 14.818/24 e ao Decreto n.º 11.901/24, distinguindo propostas, normas aprovadas e regulamentação.</p><div class="cen">Cenário: 12. Congresso Nacional</div><div class="fecha"><span>PERGUNTA DE ENCERRAMENTO</span>O programa tem fundamento legal. Como organizar sua execução nacional?</div></div></section>
 <section class="pg">
- <span class="tipo">Análise · Capítulo 3 · Governança</span>
- <h2>Seis camadas de governança</h2>
-
- <p>Órgão responsável: Secretaria de Educação Básica do MEC. Parceiros: Ministério da Fazenda, área federal de desenvolvimento social, Caixa Econômica Federal e Nees/Ufal, que opera o Sistema Gestão Presente (SGP).</p>
- <div class="fill" style="overflow-x:auto"><table class="t"><tr><th>Camada</th><th>Questão</th><th>Objeto</th></tr>
- <tr><td><b>Estratégica</b></td><td>Quem define objetivos e critérios?</td><td>Formulação, direção, regulamentação</td></tr>
- <tr><td><b>Interinstitucional</b></td><td>Como os atores se coordenam?</td><td>Pactuações, competências, fluxos</td></tr>
- <tr><td><b>Operacional</b></td><td>Como o benefício chega?</td><td>Dados, processamento, calendários, pagamentos</td></tr>
- <tr><td><b>Tecnológica</b></td><td>Que capacidade digital sustenta?</td><td>SGP, integrações, qualidade dos dados</td></tr>
- <tr><td><b>Educacional</b></td><td>Como se articula às redes?</td><td>Matrícula, frequência, conclusão, apoio pedagógico</td></tr>
- <tr><td><b>Controle</b></td><td>Como se verifica a execução?</td><td>Evidências, prestação de contas, transparência</td></tr></table></div>
- <div class="faixa">Governança do programa nacional ≠ escopo das entregas registradas nos <b>RCOs</b>.</div>
- <p class="fonte">Fonte: página institucional do Pé-de-Meia, MEC.</p>
-</section>
-
-<!-- 10 CENA PRIMEIRO DEPÓSITO -->
-<section class="pg" data-n="10">
- <span class="tipo">Narrativa · Março de 2024</span>
- <h2>O primeiro depósito</h2>
- <div class="q cena fill">
-  <svg viewBox="0 0 700 560" preserveAspectRatio="xMidYMid slice">
-   <rect width="700" height="560" fill="#ffc934"/><rect width="700" height="560" fill="url(#dots)"/>
-   <g fill="#fff" opacity=".7"><path d="M350 280 L0 0 H120Z"/><path d="M350 280 L700 0 H560Z"/><path d="M350 280 L700 560 V420Z"/><path d="M350 280 L0 560 V420Z"/></g>
-   <rect x="0" y="470" width="700" height="90" fill="#0b7a75" stroke="#121417" stroke-width="5"/>
-   <use href="#ana" x="150" y="170" width="160" height="320"/>
-   <g transform="translate(330 220) rotate(10)"><rect width="120" height="210" rx="16" fill="#121417"/><rect x="10" y="20" width="100" height="160" rx="6" fill="#fff"/><text x="60" y="80" text-anchor="middle" font-family="Bangers" font-size="22" fill="#0b7a75">DEPÓSITO</text><text x="60" y="125" text-anchor="middle" font-family="Bangers" font-size="38" fill="#1d4fd8">R$ 200</text></g>
-   <use href="#moeda" x="480" y="140" width="70" height="70"/><use href="#moeda" x="560" y="240" width="50" height="50"/><use href="#moeda" x="90" y="110" width="44" height="44"/>
-   <path d="M400 40 h270 v110 h-170 l-40 40 v-40 h-60z" fill="#fff" stroke="#121417" stroke-width="5"/>
-   <text x="535" y="85" text-anchor="middle" font-family="Nunito" font-weight="900" font-size="22">Caiu! E tem mais</text>
-   <text x="535" y="115" text-anchor="middle" font-family="Nunito" font-weight="900" font-size="22">guardado pro fim.</text>
-  </svg>
-  <span class="leg">Primeiros pagamentos do programa</span>
+ <div class="cab"><span class="cap">Capítulo 2 · Da ideia à lei</span><h2>A justificativa do projeto</h2><p>Os dados que motivaram a proposta</p></div>
+ <div class="corpo">
+  <div class="cena inv">
+   <div class="balao">Investir na permanência escolar não é só uma questão educacional. É uma estratégia de desenvolvimento social e econômico.</div>
+   <figure class="pers"><img src="img/eduardo.jpg" alt=""><figcaption>Eduardo<small>Analista de políticas públicas</small></figcaption></figure>
+  </div>
+  <p>A justificativa do PL n.º 54/2021 apresenta um diagnóstico sobre exclusão escolar, desigualdades regionais, vulnerabilidade econômica e efeitos da pandemia, e estima os custos sociais da não conclusão.</p>
+  <div class="g g3 fill">
+   <div class="c"><h3>Custo social anual</h3><div class="big">R$ 214<small>bilhões</small></div><p class="fonte">Perdas anuais estimadas pela não conclusão da educação básica, segundo estudo citado no PL</p></div>
+   <div class="c am"><h3>Por jovem</h3><div class="big">R$ 372<small>mil</small></div><p class="fonte">Custo social estimado por jovem que não conclui a educação básica</p></div>
+   <div class="c ve"><h3>Público potencial</h3><div class="big">2,49<small>milhões</small></div><p class="fonte">Estudantes, estimativa do PL com dados de 2019</p></div>
+  </div>
+  <p class="fonte">Fonte: PL n.º 54/2021, justificativa. Valores históricos citados pelos autores, não custos atuais do programa.</p>
  </div>
- <div class="q cx"><p>Os primeiros incentivos chegaram no início do ano letivo de 2024. Para muitas famílias, era a primeira conta bancária em nome do jovem. A data exata de cada lote segue o calendário escalonado pelo mês de nascimento <span class="pend">A VALIDAR · calendário oficial</span>.</p></div>
-</section>
-
+</section><section class="pg">
+ <div class="cab"><span class="cap">Capítulo 2 · Da ideia à lei</span><h2>Quem são os potenciais beneficiários?</h2><p>Estimativa da justificativa do PL n.º 54/2021</p></div>
+ <div class="corpo">
+  <div class="g g2" style="grid-template-columns:1fr 1.3fr;align-items:center">
+   <div><div class="big" style="font-size:12cqw">2,49</div><div class="big" style="font-size:4cqw">milhões de estudantes</div><p class="fonte" style="margin-top:1cqw">Potenciais beneficiários no Brasil</p></div>
+   <div class="c br" style="display:grid;gap:1.4cqw">
+    <h3>Distribuição regional estimada</h3>
+    <div class="barra"><span>Nordeste</span><div class="b" style="width:100%"></div><em>52,1%</em></div>
+    <div class="barra"><span>Sudeste</span><div class="b" style="width:38%;background:var(--azul)"></div><em>19,8%</em></div>
+    <div class="barra"><span>Norte</span><div class="b" style="width:26.3%;background:var(--verde)"></div><em>13,7%</em></div>
+    <div class="barra"><span>Sul</span><div class="b" style="width:15.5%;background:var(--laranja)"></div><em>8,1%</em></div>
+    <div class="barra"><span>Centro-Oeste</span><div class="b" style="width:12.1%;background:var(--amarelo)"></div><em>6,3%</em></div>
+   </div>
+  </div>
+  <div class="cena fill">
+   <figure class="pers" style="width:30cqw"><img src="img/rafael.jpg" alt=""><figcaption>Rafael<small>Estudante da EJA</small></figcaption></figure>
+   <div style="display:grid;gap:2cqw">
+    <div class="balao">Eu faço a EJA porque acredito numa nova chance. O Pé-de-Meia também pensa em estudantes como eu, que voltaram aos estudos.</div>
+    <div class="c am">O foco inicial eram estudantes de famílias em situação de pobreza ou extrema pobreza, inscritos no Cadastro Único.</div>
+   </div>
+  </div>
+  <p class="fonte">Fonte: PL n.º 54/2021, justificativa. Barras proporcionais ao percentual.</p>
+ </div>
+</section><section class="pg">
+ <div class="cab"><span class="cap">Capítulo 2 · Da ideia à lei</span><h2>A proposta original</h2><p>O que previa o PL n.º 54/2021, apresentado em 3 de fevereiro de 2021</p></div>
+ <div class="corpo">
+  <div class="c br" style="font-family:Georgia,serif;font-size:2.3cqw;background:#fbf8ef;border-color:#e7dcc0">
+   <b style="font-family:var(--f-tit);font-size:3cqw;color:var(--marinho)">PROJETO DE LEI N.º 54/2021</b><br>
+   Altera a Lei n.º 10.836, de 9 de janeiro de 2004, para criar o incentivo à permanência e conclusão escolar de estudantes do ensino médio.
+   <p class="fonte" style="font-family:var(--f-txt);margin-top:1cqw">Autoria: Tabata Amaral, Idilvan Alencar, Professor Israel Batista e outros.</p>
+  </div>
+  <div class="cena inv fill">
+   <div style="display:grid;gap:2cqw">
+    <div class="balao">O projeto propunha incluir o incentivo no Bolsa Família, com pagamento direto ao estudante por conta digital, vinculado à trajetória escolar.</div>
+    <div class="g g2">
+     <div class="c"><h3>Base científica</h3><p>Transferências condicionadas de renda e experiências no Rio de Janeiro, no México e na Colômbia.</p></div>
+     <div class="c ve"><h3>Inovação</h3><p>Inscrição automática e abertura de poupança social digital.</p></div>
+    </div>
+   </div>
+   <figure class="pers" style="width:28cqw"><img src="img/luciana.jpg" alt=""><figcaption>Luciana<small>Gestora do MEC</small></figcaption></figure>
+  </div>
+ </div>
+</section><section class="pg">
+ <div class="cab"><span class="cap">Capítulo 2 · Da ideia à lei</span><h2>Como funcionaria o incentivo?</h2><p>Valores originalmente propostos no PL n.º 54/2021</p></div>
+ <div class="corpo">
+  <div class="g g2" style="grid-template-columns:1.3fr 1fr">
+   <table class="t num"><tr><th>Ano do ensino médio</th><th style="text-align:right">Valor proposto (R$)</th></tr>
+    <tr><td>1º ano</td><td>500</td></tr><tr><td>2º ano</td><td>600</td></tr><tr><td>3º ano</td><td>700</td></tr><tr><td>4º ano (profissionalizante)</td><td>800</td></tr><tr><td>Desempenho no ENEM</td><td>300</td></tr></table>
+   <div class="c am">Os valores cresciam a cada ano de estudo e incluíam um incentivo adicional pelo desempenho no ENEM.</div>
+  </div>
+  <div class="c ve"><h3>A poupança já estava lá</h3><p>O texto de 2021 já previa poupança com liberação parcial dos recursos. A modalidade de poupança não surgiu só em 2023: o que mudou foi o desenho financeiro, institucional e operacional.</p></div>
+  <div class="cena fill">
+   <figure class="pers" style="width:28cqw"><img src="img/beatriz.jpg" alt=""><figcaption>Beatriz<small>Banco operador</small></figcaption></figure>
+   <div class="balao">A ideia era criar um incentivo que acompanhasse o estudante ao longo de toda a jornada, até a conclusão do ensino médio.</div>
+  </div>
+ </div>
+</section><section class="pg">
+ <div class="cab"><span class="cap">Capítulo 2 · Da ideia à lei</span><h2>Condições e regras propostas</h2><p>O incentivo seria concedido mediante:</p></div>
+ <div class="corpo">
+  <div class="g g2">
+   <div class="c"><h3>Matrícula</h3><p>No início de cada ano letivo.</p></div>
+   <div class="c ve"><h3>Aprovação anual</h3><p>Ao final de cada ano escolar.</p></div>
+   <div class="c am"><h3>Desempenho no ENEM</h3><p>Incentivo adicional por boa performance.</p></div>
+   <div class="c la"><h3>Conta digital</h3><p>Abertura automática em nome do estudante na Caixa Econômica Federal.</p></div>
+  </div>
+  <div class="cena fill">
+   <figure class="pers" style="width:32cqw"><img src="img/carlos.jpg" alt=""><figcaption>Carlos<small>Gestor escolar</small></figcaption></figure>
+   <div class="balao">A proposta já trazia elementos de gestão, como o uso da conta digital e a integração com o Cadastro Único, para garantir que o benefício chegasse a quem tem direito.</div>
+  </div>
+ </div>
+</section><section class="pg">
+ <div class="cab"><span class="cap">Capítulo 2 · Da ideia à lei</span><h2>Um detalhe importante</h2><p>Diferença entre a justificativa e o texto articulado do projeto</p></div>
+ <div class="corpo">
+  <div class="g g2">
+   <div class="c" style="text-align:center"><h3>Justificativa do PL</h3><p style="font-family:Georgia,serif">“[…] permite-se o saque de até 30% do total depositado, em caso de desligamento do programa Bolsa Família.”</p><div class="big" style="margin-top:2cqw;color:var(--azul)">30%</div></div>
+   <div class="c la" style="text-align:center"><h3>Texto articulado</h3><p style="font-family:Georgia,serif">“Poderá ser sacado até 40% dos recursos depositados na hipótese de desligamento do Bolsa Família […]”</p><div class="big" style="margin-top:2cqw;color:var(--laranja)">40%</div></div>
+  </div>
+  <div class="cena fill">
+   <figure class="pers" style="width:32cqw"><img src="img/mariana.jpg" alt=""><figcaption>Prof.ª Mariana<small>Professora da rede pública</small></figcaption></figure>
+   <div class="balao">Essa diferença mostra que a proposta ainda estava em discussão e podia mudar durante a tramitação no Congresso.</div>
+  </div>
+  <div class="faixa">Não eliminamos a divergência: ela fica registrada até a comparação das versões. <span class="pend">EXAMINAR VERSÕES</span></div>
+ </div>
+</section><section class="pg">
+ <div class="cab"><span class="cap">Capítulo 2 · Da ideia à lei</span><h2>Da proposta à política pública</h2><p>Linha do tempo da evolução normativa</p></div>
+ <div class="corpo">
+  <div class="tl fill">
+   <div class="ano">2021<small>fev</small></div><div class="ev"><h3>PL n.º 54/2021</h3><p>Iniciativa parlamentar no âmbito do Bolsa Família. Em maio, passa a tramitar em urgência.</p></div>
+   <div class="ano">2022</div><div class="ev a"><h3>Risco de prejudicialidade</h3><p>A revogação da antiga lei do Bolsa Família levanta a tese. A Câmara reconsidera e o projeto segue.</p></div>
+   <div class="ano">2023<small>27 nov</small></div><div class="ev"><h3>MP n.º 1.198/2023</h3><p>Iniciativa do Executivo: institui a poupança de incentivo à permanência no MEC. Em dezembro, o Congresso aprova o PL.</p></div>
+   <div class="ano">2024<small>16 jan</small></div><div class="ev"><h3>Lei n.º 14.818/2024</h3><p>Cria o incentivo financeiro-educacional autônomo, com vetos parciais. Define público, objetivos e diretrizes.</p></div>
+   <div class="ano">2024<small>26 jan</small></div><div class="ev"><h3>Decreto n.º 11.901/2024</h3><p>Regulamenta a lei e cria o Programa Pé-de-Meia: incentivos, governança e execução.</p></div>
+   <div class="ano">2024<small>mai</small></div><div class="ev x"><h3>MP perde eficácia · vetos derrubados</h3><p>A MP não é convertida em lei. Parte dos dispositivos vetados é promulgada após deliberação do Congresso.</p></div>
+  </div>
+  <div class="faixa">O PL, a MP, a lei e o decreto têm origens e funções diferentes. <b>A Lei n.º 14.818/2024 resultou do PL, não da conversão da MP.</b></div>
+  <p class="fonte">Fontes: Portal da Câmara dos Deputados; Congresso Nacional.</p>
+ </div>
+</section><section class="pg">
+ <div class="cab"><span class="cap">Capítulo 2 · Da ideia à lei</span><h2>Comparando os desenhos</h2><p>Da proposta inicial ao programa regulamentado</p></div>
+ <div class="corpo">
+  <div class="fill" style="overflow-x:auto"><table class="t" style="font-size:1.85cqw">
+   <tr><th>Dimensão</th><th>PL n.º 54/2021<br>(proposta)</th><th>Lei n.º 14.818/2024<br>(consolidação)</th><th>Decreto n.º 11.901/2024<br>(regulamentação)</th></tr>
+   <tr><td><b>Natureza</b></td><td>Alteração do Bolsa Família</td><td>Incentivo financeiro-educacional autônomo</td><td>Criação do Programa Pé-de-Meia</td></tr>
+   <tr><td><b>Público</b></td><td>Pobreza ou extrema pobreza</td><td>Baixa renda, ensino médio público</td><td>Critérios operacionais de elegibilidade</td></tr>
+   <tr><td><b>Incentivos</b></td><td>Aprovação anual e ENEM</td><td>Modalidade de poupança e requisitos gerais</td><td>Matrícula, frequência, conclusão e ENEM</td></tr>
+   <tr><td><b>Financiamento</b></td><td>Integrado ao Bolsa Família</td><td>Fundo privado gerido por instituição financeira federal</td><td>Regras operacionais</td></tr>
+   <tr><td><b>Governança</b></td><td>Vinculação à proteção social</td><td>Responsabilidades legais e regime de colaboração</td><td>Gestão no MEC e execução</td></tr>
+  </table></div>
+  <div class="faixa"><b>Hipótese do capítulo:</b> o Pé-de-Meia passou de um incentivo ligado à proteção social para uma política educacional própria, com elegibilidade, financiamento, coordenação federativa e gestão específicos.</div>
+ </div>
+</section><section class="pg">
+ <div class="cab"><span class="cap">Capítulo 2 · Da ideia à lei</span><h2>A lógica da intervenção</h2><p>Teoria da mudança reconstruída da Exposição de Motivos de 2023</p></div>
+ <div class="corpo">
+  <div class="seta">
+   <div style="background:var(--vermelho)"><b>Problema</b>Abandono, evasão, reprovação</div>
+   <div style="background:var(--marinho)"><b>Mecanismo</b>Incentivo condicionado à trajetória</div>
+   <div style="background:var(--azul)"><b>Execução</b>Fundo, MEC, redes, Caixa</div>
+   <div style="background:var(--petroleo)"><b>Resultados</b>Permanência e conclusão</div>
+   <div style="background:var(--verde)"><b>Impactos</b>Inclusão e mobilidade social</div>
+  </div>
+  <p>A exposição de motivos não trata o dinheiro como solução isolada. Liga o incentivo à reestruturação do ensino médio, à educação integral, à formação de professores, aos alertas de evasão e à busca ativa.</p>
+  <div class="g g3">
+   <div class="c"><h3>Governança federativa</h3><p>Como a União se articula com as redes que oferecem o ensino médio?</p></div>
+   <div class="c am"><h3>Governança financeira</h3><p>Fundo privado criado pela Caixa, gestão do MEC, Fazenda nas decisões do fundo.</p></div>
+   <div class="c ve"><h3>Governança operacional</h3><p>Como critérios legais viram dados, verificações e pagamentos?</p></div>
+  </div>
+  <div class="cena inv fill">
+   <div class="balao">É uma reconstrução analítica dos objetivos. Ela não comprova efeito causal: isso exige avaliação.</div>
+   <figure class="pers" style="width:26cqw"><img src="img/eduardo.jpg" alt=""><figcaption>Eduardo<small>Analista</small></figcaption></figure>
+  </div>
+ </div>
+</section><section class="pg">
+ <div class="cab"><span class="cap">Capítulo 2 · Da ideia à lei</span><h2>Da lei às portarias</h2><p>Cronologia documental confirmada, 2021–2026</p></div>
+ <div class="corpo">
+  <div class="fill" style="overflow-x:auto"><table class="t"><tr><th>Data</th><th>Ato</th><th>Significado institucional</th></tr>
+   <tr><td>2021</td><td>PL n.º 54/2021</td><td>Antecedente legislativo da lei</td></tr>
+   <tr><td>27/11/2023</td><td>MP n.º 1.198/23</td><td>Poupança de incentivo à permanência e conclusão</td></tr>
+   <tr><td>16/01/2024</td><td>Lei n.º 14.818/24</td><td>Instituição legal do incentivo</td></tr>
+   <tr><td>26/01/2024</td><td>Decreto n.º 11.901/24</td><td>Regulamentação e criação do programa</td></tr>
+   <tr><td>07/02/2024</td><td>Portarias MEC 83 e 84</td><td>Regras de gestão e calendário operacional</td></tr>
+   <tr><td>Mar–abr/2024</td><td>Portarias 210, 275 e 364</td><td>Ajustes de normas e calendário inicial</td></tr>
+   <tr><td>Ago/2024</td><td>Ampliação e normas da EJA</td><td>Expansão da cobertura</td></tr>
+   <tr><td>Ago–set/2024</td><td>Portarias 792, 861 e 916</td><td>Gestão e calendários</td></tr>
+   <tr><td>07/07/2025</td><td>Portaria MEC 496</td><td>Estratégia Rumo Certo e Renapem</td></tr>
+   <tr><td>2026</td><td>Portaria MEC 539/26</td><td>Dados de 2025 e Incentivo Conclusão</td></tr></table></div>
+  <p class="fonte">Fontes: repositório normativo do MEC; registro legislativo da Câmara.</p>
+ </div>
+</section><section class="pg abre"><div class="corpo"><div><div class="parte">PARTE II · DA LEI À REALIDADE</div><div class="n">3</div><h2>Como funciona o Pé-de-Meia</h2><p class="per">2024–2026 · Regras e incentivos</p></div><p style="font-size:2.3cqw;max-width:62ch">Quem pode receber, como a elegibilidade é verificada e quais condições se ligam a matrícula, frequência, conclusão e ENEM.</p><div class="cen">Cenário: 2. Sala de aula</div><div class="fecha"><span>PERGUNTA DE ENCERRAMENTO</span>Entendidas as regras, como o programa começou a funcionar?</div></div></section>
 <section class="pg">
- <span class="tipo">Dados · Capítulos 1 e 2 · Alcance</span>
- <h2>Quantos foram alcançados</h2>
-
- <div class="grade g3">
-  <div class="q cx" style="background:#e3ebff"><span class="num" style="font-size:7cqw;color:var(--azul)">2,7 mi</span><p>início de 2024, estudantes do Bolsa Família</p></div>
-  <div class="q cx" style="background:#dff1ef"><span class="num" style="font-size:7cqw;color:var(--petroleo)">+1 mi</span><p>ago/2024: CadÚnico até ½ salário mínimo por pessoa e EJA</p></div>
-  <div class="q cx" style="background:#ffe7d6"><span class="num" style="font-size:7cqw">R$ 5,6 bi</span><p>investimentos em 2024, segundo o PPA</p></div>
+ <div class="cab"><span class="cap">Capítulo 3 · Regras e incentivos</span><h2>As regras em vigor</h2><p>Do desenho inicial ao programa regulamentado</p></div>
+ <div class="corpo">
+  <div class="g g2">
+   <div class="c"><h3>PL n.º 54/2021</h3><ul style="margin:0;padding-left:2.4cqw;display:grid;gap:.6cqw"><li>Vinculação ao Bolsa Família</li><li>Incentivo por aprovação e ENEM</li><li>Saque parcial em algumas situações</li><li>Conta digital já prevista</li><li>Foco na conclusão escolar</li></ul></div>
+   <div class="c ve"><h3>Decreto n.º 11.901/2024</h3><ul style="margin:0;padding-left:2.4cqw;display:grid;gap:.6cqw"><li>Matrícula: R$ 200 por ano</li><li>Frequência: 9 × R$ 200 = R$ 1.800 por ano</li><li>Conclusão: R$ 1.000 por ano, retidos até o diploma</li><li>ENEM: R$ 200, uma vez</li><li>Regras de elegibilidade e verificação</li></ul></div>
+  </div>
+  <div class="c br">
+   <h3>Quanto um estudante pode acumular (R$)</h3>
+   <svg viewBox="0 0 640 170" style="width:100%" font-family="Barlow Semi Condensed,sans-serif" font-weight="800">
+    <!-- escala: 520px = R$ 9.200 -->
+    <g font-size="17" fill="#1b2733"><text x="0" y="32">1º ano</text><text x="0" y="72">2º ano</text><text x="0" y="112">3º ano</text><text x="0" y="152">+ ENEM</text></g>
+    <rect x="80" y="14" width="113" height="26" rx="4" fill="#1f78c8"/><rect x="193" y="14" width="56.5" height="26" rx="4" fill="#f2862b"/>
+    <rect x="80" y="54" width="226" height="26" rx="4" fill="#1f78c8"/><rect x="306" y="54" width="113" height="26" rx="4" fill="#f2862b"/>
+    <rect x="80" y="94" width="339" height="26" rx="4" fill="#1f78c8"/><rect x="419" y="94" width="169.5" height="26" rx="4" fill="#f2862b"/>
+    <rect x="80" y="134" width="350.3" height="26" rx="4" fill="#1f78c8"/><rect x="430.3" y="134" width="169.5" height="26" rx="4" fill="#f2862b"/>
+    <g font-size="18" fill="#1b2733"><text x="257" y="33">3.000</text><text x="427" y="73">6.000</text><text x="595" y="113">9.000</text><text x="606" y="153">9.200</text></g>
+   </svg>
+   <p class="fonte"><span style="color:var(--azul)">■</span> livre para saque durante o ano · <span style="color:var(--laranja)">■</span> retido até a conclusão do ensino médio</p>
+  </div>
+  <div class="cena inv fill">
+   <div class="balao">O programa ganhou novas regras, mas manteve o objetivo central: apoiar a permanência e a conclusão do ensino médio.</div>
+   <figure class="pers" style="width:26cqw"><img src="img/ana.jpg" alt=""><figcaption>Ana<small>Estudante</small></figcaption></figure>
+  </div>
  </div>
- <div class="q cx fill" style="display:flex;flex-direction:column">
-  <h3>Estudantes beneficiados</h3>
-  <svg viewBox="0 0 640 300" style="width:100%;flex:1;min-height:0"><g font-family="Roboto Mono" font-size="13" fill="#121417">
-   <g stroke="#121417" stroke-opacity=".15"><line x1="110" y1="30" x2="110" y2="250"/><line x1="276" y1="30" x2="276" y2="250"/><line x1="443" y1="30" x2="443" y2="250"/><line x1="610" y1="30" x2="610" y2="250"/></g>
-   <text x="110" y="272" text-anchor="middle">0</text><text x="276" y="272" text-anchor="middle">2 mi</text><text x="443" y="272" text-anchor="middle">4 mi</text><text x="610" y="272" text-anchor="middle">6 mi</text>
-   <g stroke="#121417" stroke-width="4"><rect x="110" y="60" width="333.3" height="60" fill="#1d4fd8"/><rect x="110" y="160" width="341.7" height="60" fill="#f27427"/></g>
-   <g font-family="Bangers" font-size="30"><text x="60" y="100" text-anchor="middle">2024</text><text x="60" y="200" text-anchor="middle">2025</text><text x="455" y="100">~4 mi</text><text x="463" y="200">~4,1 mi</text></g>
-  </g></svg>
- </div>
- <div class="grade g2">
-  <div class="q cx" style="background:var(--amarelo)"><span class="num" style="font-size:7cqw;color:var(--azul)">99,61%</span><p>dos elegíveis cobertos em 31/12/2025 (monitoramento do PPA)</p></div>
-  <div class="q cx"><h3>Cuidado</h3><p>Fontes com critérios distintos, ainda sem série harmonizada. Volume não prova queda da evasão.</p></div>
- </div>
- <p class="fonte">Fontes: Mensagem ao Congresso Nacional 2026; relatório de monitoramento do PPA (gov.br).</p>
-</section>
-
+</section><section class="pg abre"><div class="corpo"><div><div class="parte">PARTE II · DA LEI À REALIDADE</div><div class="n">4</div><h2>O desafio de implementar uma política nacional</h2><p class="per">2024–2026 · Operação e capacidades</p></div><p style="font-size:2.3cqw;max-width:62ch">Uma lei não gera pagamentos sozinha. É preciso identificar estudantes, integrar bases, verificar requisitos e dividir responsabilidades.</p><div class="cen">Cenário: 15. Sistema e dados</div><div class="fecha"><span>PERGUNTA DE ENCERRAMENTO</span>Por que qualidade da informação e coordenação se tornaram decisivas?</div></div></section>
+<section class="pg"><div class="cab"><span class="cap">Capítulo 4 · Implementação</span><h2>Conteúdo em apuração</h2><p>Páginas que entram quando as fontes estiverem lidas</p></div><div class="corpo"><div class="c fill"><h3>O que este capítulo vai mostrar</h3><ul style="margin:0;padding-left:2.4cqw;display:grid;gap:1cqw"><li>Fluxo do registro escolar ao pagamento</li><li>Integração de bases: Censo, CadÚnico, SGP, Caixa</li><li>Cooperação federativa com as redes</li><li>RCOs como evidência de execução e capacidade</li></ul></div><div class="c am"><h3>Fontes necessárias</h3><p>RCOs do projeto; portarias de gestão 2024; documentação do SGP. <span class="pend">PENDENTE</span></p></div></div></section>
+<section class="pg abre"><div class="corpo"><div><div class="parte">PARTE III · A EXPANSÃO E OS DESAFIOS</div><div class="n">5</div><h2>A expansão do programa pelo Brasil</h2><p class="per">2024–2026 · Cobertura, públicos e recursos</p></div><p style="font-size:2.3cqw;max-width:62ch">Elegíveis, atendidos, pagamentos, recursos e distribuição territorial, sem confundir cobertura com impacto.</p><div class="cen">Cenário: 9. Comunidade</div><div class="fecha"><span>PERGUNTA DE ENCERRAMENTO</span>Quanto maior a abrangência, maiores as exigências de coordenação e controle.</div></div></section>
 <section class="pg">
- <span class="tipo">Narrativa · Capítulo 2 · 2025–2026</span>
- <h2>Consolidação e novas capacidades</h2>
-
- <div class="q cena fill">
-  <svg viewBox="0 0 700 420" preserveAspectRatio="xMidYMid slice"><rect width="700" height="420" fill="#0b7a75"/><rect width="700" height="420" fill="url(#dots)"/>
-   <g stroke="#121417" stroke-width="5"><rect x="60" y="80" width="300" height="200" fill="#fffaf0"/><path d="M90 230 L150 180 L210 200 L270 130 L330 110" fill="none" stroke="#f27427" stroke-width="8"/><rect x="420" y="70" width="230" height="140" rx="14" fill="#fff"/></g>
-   <text x="535" y="125" text-anchor="middle" font-family="Bangers" font-size="34">RUMO CERTO</text><text x="535" y="170" text-anchor="middle" font-family="Bangers" font-size="28" fill="#1d4fd8">RENAPEM</text>
-   <use href="#prof" x="400" y="200" width="110" height="230"/><use href="#ana" x="540" y="215" width="100" height="210"/>
-  </svg><span class="leg">A política ganha braço pedagógico</span>
+ <div class="cab"><span class="cap">Capítulo 5 · Cobertura</span><h2>Quantos estudantes foram alcançados</h2><p>Números oficiais de 2024 e 2025</p></div>
+ <div class="corpo">
+  <div class="g g3">
+   <div class="c"><div class="big">2,7 mi</div><p>início de 2024, estudantes do Bolsa Família</p></div>
+   <div class="c ve"><div class="big">+1 mi</div><p>ago/2024: CadÚnico até ½ salário mínimo por pessoa e EJA</p></div>
+   <div class="c la"><div class="big">R$ 5,6 bi</div><p>investimentos em 2024, segundo o PPA</p></div>
+  </div>
+  <div class="c br">
+   <h3>Estudantes beneficiados</h3>
+   <svg viewBox="0 0 640 150" style="width:100%" font-family="Barlow Semi Condensed,sans-serif" font-weight="800">
+    <!-- escala: 500px = 6 milhões -->
+    <g stroke="#1b2733" stroke-opacity=".12"><line x1="80" y1="5" x2="80" y2="125"/><line x1="246.7" y1="5" x2="246.7" y2="125"/><line x1="413.3" y1="5" x2="413.3" y2="125"/><line x1="580" y1="5" x2="580" y2="125"/></g>
+    <g font-size="13" fill="#5a6b7b" text-anchor="middle" font-family="Nunito Sans,sans-serif" font-weight="700"><text x="80" y="144">0</text><text x="246.7" y="144">2 mi</text><text x="413.3" y="144">4 mi</text><text x="580" y="144">6 mi</text></g>
+    <rect x="80" y="18" width="333.3" height="38" rx="4" fill="#1f78c8"/><rect x="80" y="72" width="341.7" height="38" rx="4" fill="#0e6f7a"/>
+    <g font-size="22" fill="#1b2733"><text x="20" y="45">2024</text><text x="20" y="99">2025</text><text x="422" y="45">~4 mi</text><text x="430" y="99">~4,1 mi</text></g>
+   </svg>
+  </div>
+  <div class="cena fill">
+   <figure class="pers" style="width:28cqw"><img src="img/luisa.jpg" alt=""><figcaption>Luísa<small>Estudante beneficiária</small></figcaption></figure>
+   <div style="display:grid;gap:2cqw">
+    <div class="c am"><div class="big">99,61%</div><p>dos elegíveis cobertos em 31/12/2025, segundo o monitoramento do PPA</p></div>
+    <div class="balao">Mais gente recebendo não prova que a evasão caiu. Isso precisa de outra análise.</div>
+   </div>
+  </div>
+  <p class="fonte">Fontes: Mensagem ao Congresso Nacional 2026; monitoramento do PPA. Critérios de apuração distintos; ainda não é uma série harmonizada.</p>
  </div>
- <div class="grade g2">
-  <div class="q cx" style="background:var(--amarelo)"><h3 style="color:var(--tinta)">2025</h3><p>Portaria MEC n.º 496 (07/07/2025) cria a Estratégia Rumo Certo e a Rede Nacional de Implementação do Pé-de-Meia (Renapem): apoio e articulação pedagógica com as redes.</p></div>
-  <div class="q cx"><h3>2026</h3><p>Normas fecham calendários anteriores, corrigem dados e definem procedimentos. A Portaria MEC n.º 539/26 trata do processamento de 2025 e do Incentivo Conclusão.</p></div>
- </div>
-</section>
-
-<!-- 11 LINHA DO TEMPO -->
-<section class="pg" data-n="11">
- <span class="tipo">Documentos · Cronologia</span>
- <h2>Linha do tempo</h2>
- <div class="q cx fill" style="display:flex">
-  <svg viewBox="0 0 640 700" style="width:100%">
-   <line x1="120" y1="20" x2="120" y2="680" stroke="#121417" stroke-width="8"/>
-   <g font-family="Nunito" font-size="17" fill="#121417">
-    <g><circle cx="120" cy="60" r="18" fill="#9a9a9a" stroke="#121417" stroke-width="4"/><text x="20" y="66" font-family="Bangers" font-size="24">2021</text><rect x="160" y="30" width="460" height="64" fill="#fff" stroke="#121417" stroke-width="4"/><text x="175" y="58" font-weight="900">PL n.º 54/2021 apresentado (3/fev)</text><text x="175" y="82">já previa poupança e incentivo ENEM</text></g>
-    <g><circle cx="120" cy="180" r="18" fill="#1d4fd8" stroke="#121417" stroke-width="4"/><text x="20" y="186" font-family="Bangers" font-size="24">NOV 2023</text><rect x="160" y="150" width="460" height="64" fill="#e3ebff" stroke="#121417" stroke-width="4"/><text x="175" y="178" font-weight="900">Medida Provisória n.º 1.198</text><text x="175" y="202">cria o incentivo-poupança</text></g>
-    <g><circle cx="120" cy="300" r="18" fill="#ffc934" stroke="#121417" stroke-width="4"/><text x="20" y="306" font-family="Bangers" font-size="24">16 JAN 2024</text><rect x="160" y="270" width="460" height="64" fill="#fff6d6" stroke="#121417" stroke-width="4"/><text x="175" y="298" font-weight="900">Lei n.º 14.818</text><text x="175" y="322">institui o programa</text></g>
-    <g><circle cx="120" cy="420" r="18" fill="#0b7a75" stroke="#121417" stroke-width="4"/><text x="20" y="426" font-family="Bangers" font-size="24">26 JAN 2024</text><rect x="160" y="390" width="460" height="64" fill="#dff1ef" stroke="#121417" stroke-width="4"/><text x="175" y="418" font-weight="900">Decreto n.º 11.901</text><text x="175" y="442">regulamenta valores e calendário</text></g>
-    <g><circle cx="120" cy="540" r="18" fill="#f27427" stroke="#121417" stroke-width="4"/><text x="20" y="546" font-family="Bangers" font-size="24">2024</text><rect x="160" y="510" width="460" height="64" fill="#ffe7d6" stroke="#121417" stroke-width="4"/><text x="175" y="538" font-weight="900">Lei, decreto e ampliação (ago)</text><text x="175" y="562">+1 mi com CadÚnico e EJA</text></g>
-    <g><circle cx="120" cy="650" r="18" fill="#e6334a" stroke="#121417" stroke-width="4"/><text x="20" y="656" font-family="Bangers" font-size="24">2025</text><rect x="160" y="620" width="460" height="60" fill="#fff" stroke="#121417" stroke-width="4"/><text x="175" y="646" font-weight="900">Rumo Certo e Renapem</text><text x="175" y="669">Portaria MEC 496 · 4,1 mi beneficiados</text></g>
-   </g>
-  </svg>
- </div>
-</section>
-
+</section><section class="pg"><div class="cab"><span class="cap">Capítulo 5 · Cobertura</span><h2>Conteúdo em apuração</h2><p>Páginas que entram quando as fontes estiverem lidas</p></div><div class="corpo"><div class="c fill"><h3>O que este capítulo vai mostrar</h3><ul style="margin:0;padding-left:2.4cqw;display:grid;gap:1cqw"><li>Mapa de beneficiários por UF</li><li>Série de pagamentos e recursos por ano</li><li>Elegíveis versus atendidos</li><li>Efeito da ampliação de ago/2024 e da EJA</li></ul></div><div class="c am"><h3>Fontes necessárias</h3><p>Painel do MEC; Tesouro; relatórios do PPA. <span class="pend">PENDENTE</span></p></div></div></section>
+<section class="pg abre"><div class="corpo"><div><div class="parte">PARTE III · A EXPANSÃO E OS DESAFIOS</div><div class="n">6</div><h2>A engrenagem institucional</h2><p class="per">2024–2026 · Governança e gestão</p></div><p style="font-size:2.3cqw;max-width:62ch">Quem coordena, quem executa e como sistemas, processos e acompanhamento se relacionam.</p><div class="cen">Cenário: 14. Reunião técnica</div><div class="fecha"><span>PERGUNTA DE ENCERRAMENTO</span>Uma política nacional precisa de governança permanente, não só de estrutura inicial.</div></div></section>
 <section class="pg">
- <span class="tipo">Análise · Capítulos 4 e 5 · Método</span>
- <h2>Como vamos medir a evolução</h2>
-
- <div class="grade g2">
-  <div class="q cx" style="background:#e3ebff"><h3>Normativa</h3><p>Critérios, regras de gestão, calendários, responsabilidades.</p></div>
-  <div class="q cx" style="background:#dff1ef"><h3>Institucional</h3><p>Capacidades administrativas, analíticas, operacionais e relacionais.</p></div>
-  <div class="q cx" style="background:#fff6d6"><h3>Cobertura</h3><p>Beneficiários, elegibilidade, território, modalidades, pagamentos.</p></div>
-  <div class="q cx" style="background:#ffe7d6"><h3>Resultados sociais</h3><p>Permanência, abandono, conclusão, desigualdades. Sem atribuição causal apressada.</p></div>
+ <div class="cab"><span class="cap">Capítulo 6 · Governança</span><h2>Quem faz o programa funcionar</h2><p>Arranjo institucional segundo a página oficial do MEC</p></div>
+ <div class="corpo">
+  <div class="g g4">
+   <div class="c" style="text-align:center"><h3>MEC · SEB</h3><p class="fonte">Órgão responsável</p></div>
+   <div class="c am" style="text-align:center"><h3>Fazenda</h3><p class="fonte">Decisões sobre o fundo</p></div>
+   <div class="c la" style="text-align:center"><h3>Caixa</h3><p class="fonte">Contas e pagamentos</p></div>
+   <div class="c ve" style="text-align:center"><h3>Nees/Ufal</h3><p class="fonte">Sistema Gestão Presente</p></div>
+  </div>
+  <table class="t"><tr><th>Camada</th><th>Questão</th><th>Objeto</th></tr>
+   <tr><td><b>Estratégica</b></td><td>Quem define objetivos e critérios?</td><td>Formulação, direção, regulamentação</td></tr>
+   <tr><td><b>Interinstitucional</b></td><td>Como os atores se coordenam?</td><td>Pactuações, competências, fluxos</td></tr>
+   <tr><td><b>Operacional</b></td><td>Como o benefício chega?</td><td>Dados, calendários, pagamentos</td></tr>
+   <tr><td><b>Tecnológica</b></td><td>Que capacidade digital sustenta?</td><td>SGP, integrações, qualidade dos dados</td></tr>
+   <tr><td><b>Educacional</b></td><td>Como se articula às redes?</td><td>Matrícula, frequência, conclusão</td></tr>
+   <tr><td><b>Controle</b></td><td>Como se verifica a execução?</td><td>Evidências, prestação de contas</td></tr></table>
+  <div class="g g2 fill">
+   <div class="cena" style="grid-template-columns:auto 1fr"><figure class="pers" style="width:16cqw"><img src="img/diego.jpg" alt=""><figcaption>Diego<small>TI</small></figcaption></figure><div class="balao" style="font-size:1.8cqw">Se a frequência não chega ao sistema, o pagamento não sai.</div></div>
+   <div class="cena" style="grid-template-columns:auto 1fr"><figure class="pers" style="width:16cqw"><img src="img/patricia.jpg" alt=""><figcaption>Patrícia<small>Controle</small></figcaption></figure><div class="balao" style="font-size:1.8cqw">Governança do programa não é o mesmo que o escopo dos RCOs.</div></div>
+  </div>
  </div>
- <h3>Ficha de cada norma</h3>
- <div class="fill" style="overflow-x:auto"><table class="t">
- <tr><td><b>Identificação</b></td><td>Número, data, órgão emissor, vigência</td></tr>
- <tr><td><b>Finalidade</b></td><td>Problema ou necessidade regulamentada</td></tr>
- <tr><td><b>Alteração</b></td><td>O que mudou em relação à regra anterior</td></tr>
- <tr><td><b>Público afetado</b></td><td>Beneficiários, redes, instituições</td></tr>
- <tr><td><b>Efeito operacional</b></td><td>Processos, dados, pagamentos, prazos</td></tr>
- <tr><td><b>Capacidade exigida</b></td><td>Recursos institucionais necessários</td></tr>
- <tr><td><b>Evidência</b></td><td>Dispositivo legal e documento comprobatório</td></tr></table></div>
-</section>
-
+</section><section class="pg">
+ <div class="cab"><span class="cap">Capítulo 6 · Novas capacidades</span><h2>Consolidação e novas capacidades</h2><p>A política ganha uma estratégia pedagógica</p></div>
+ <div class="corpo">
+  <div class="cena">
+   <figure class="pers" style="width:30cqw"><img src="img/luciana.jpg" alt=""><figcaption>Luciana<small>Gestora do MEC</small></figcaption></figure>
+   <div class="balao">Pagar em dia não basta. Agora precisamos apoiar as redes para que o estudante continue e conclua.</div>
+  </div>
+  <div class="g g2 fill">
+   <div class="c ve"><h3>2025 · Rumo Certo e Renapem</h3><p>A Portaria MEC n.º 496, de 7 de julho de 2025, criou a Estratégia Rumo Certo e a Rede Nacional de Implementação do Pé-de-Meia, para articulação pedagógica e apoio às redes de ensino.</p></div>
+   <div class="c"><h3>2026 · Ajustes e fechamento</h3><p>As normas encerram calendários anteriores, corrigem dados e definem procedimentos. A Portaria MEC n.º 539/26 trata do processamento de 2025 e do Incentivo Conclusão.</p></div>
+  </div>
+  <div class="faixa"><b>Três movimentos:</b> criação e implantação em 2024 · ampliação e instrumentos complementares · aperfeiçoamento de regras e processos em 2025–2026.</div>
+ </div>
+</section><section class="pg">
+ <div class="cab"><span class="cap">Capítulo 6 · Modelo conceitual</span><h2>Da política ao ganho social</h2><p>Como governança, gestão e capacidades geram valor público</p></div>
+ <div class="corpo">
+  <div class="seta">
+   <div style="background:var(--marinho)"><b>Insumos</b>Recursos financeiros, humanos e tecnológicos</div>
+   <div style="background:var(--petroleo)"><b>Atividades</b>Desenvolvimento, integração, operação</div>
+   <div style="background:var(--verde)"><b>Entregas</b>RCOs, sistemas, processos</div>
+   <div style="background:var(--laranja)"><b>Resultados</b>Acesso, permanência, gestão</div>
+   <div style="background:var(--vermelho)"><b>Impactos</b>Conclusão e menos desigualdade</div>
+  </div>
+  <h3>Premissas da pesquisa</h3>
+  <div class="g g2 fill" style="align-content:start">
+   <div class="passo"><i>1</i><p><b>Governança e gestão são complementares.</b> Governança direciona, gestão executa.</p></div>
+   <div class="passo"><i>2</i><p><b>Implementação depende de capacidades estatais</b> analíticas, operacionais e político-relacionais.</p></div>
+   <div class="passo"><i>3</i><p><b>Entregas são evidência de capacidade</b>, mas nem toda entrega é impacto.</p></div>
+   <div class="passo"><i>4</i><p><b>A evolução não é linear.</b> Há revisões, mudanças e adaptações.</p></div>
+   <div class="passo"><i>5</i><p><b>Governança é multinível</b>: União, estados, municípios e instituições.</p></div>
+   <div class="passo"><i>6</i><p><b>Prospectiva trabalha com cenários</b>, com hipóteses e incertezas explícitas.</p></div>
+  </div>
+  <p class="fonte">Referenciais: TCU (2020); Wu, Ramesh e Howlett (2015); literatura sobre implementação de políticas públicas.</p>
+ </div>
+</section><section class="pg abre"><div class="corpo"><div><div class="parte">PARTE III · A EXPANSÃO E OS DESAFIOS</div><div class="n">7</div><h2>Riscos, controles e proteção das informações</h2><p class="per">Governança de riscos</p></div><p style="font-size:2.3cqw;max-width:62ch">Qualidade de dados, elegibilidade, pagamentos, segurança, privacidade, disponibilidade e integração.</p><div class="cen">Cenário: 16. Pagamentos e banco operador</div><div class="fecha"><span>PERGUNTA DE ENCERRAMENTO</span>Risco identificado não é falha ocorrida; controle previsto não é controle comprovado.</div></div></section>
+<section class="pg"><div class="cab"><span class="cap">Capítulo 7 · Riscos</span><h2>Conteúdo em apuração</h2><p>Páginas que entram quando as fontes estiverem lidas</p></div><div class="corpo"><div class="c fill"><h3>O que este capítulo vai mostrar</h3><ul style="margin:0;padding-left:2.4cqw;display:grid;gap:1cqw"><li>Matriz de riscos do projeto</li><li>Controles previstos por risco</li><li>Evidências de tratamento</li><li>Distinção entre risco potencial e incidente</li></ul></div><div class="c am"><h3>Fontes necessárias</h3><p>Matriz de riscos do projeto; relatórios de controle. <span class="pend">PENDENTE</span></p></div></div></section>
+<section class="pg abre"><div class="corpo"><div><div class="parte">PARTE IV · RESULTADOS E FUTURO</div><div class="n">8</div><h2>O que o Pé-de-Meia conseguiu demonstrar?</h2><p class="per">2024–2026 · Resultados e limites da avaliação</p></div><p style="font-size:2.3cqw;max-width:62ch">Execução, permanência e conclusão: o que os dados sustentam e com que força de evidência.</p><div class="cen">Cenário: 19. Resultados e impacto</div><div class="fecha"><span>PERGUNTA DE ENCERRAMENTO</span>Quais conclusões os dados sustentam e quais perguntas seguem abertas?</div></div></section>
 <section class="pg">
- <span class="tipo">Análise · Situação da pesquisa</span>
- <h2>O que está provado e o que falta</h2>
-
- <div class="fill" style="overflow-x:auto"><table class="t"><tr><th>Frente</th><th>Situação</th></tr>
- <tr><td>Origem legislativa</td><td><span class="ok">OK</span> Identificada e texto original lido · tramitação detalhada <span class="pend">PENDENTE</span></td></tr>
- <tr><td>Normas 2023–2026</td><td><span class="ok">OK</span> Inventário inicial · análise artigo a artigo <span class="pend">PENDENTE</span></td></tr>
- <tr><td>Modelo de incentivos</td><td><span class="ok">OK</span> Estrutura geral · histórico de mudanças <span class="pend">PENDENTE</span></td></tr>
- <tr><td>Beneficiários 2024–2025</td><td><span class="ok">OK</span> Referências oficiais · desagregação <span class="pend">PENDENTE</span></td></tr>
- <tr><td>Beneficiários 2026</td><td>Agregado disponível · série fechada <span class="pend">PENDENTE</span></td></tr>
- <tr><td>Valores e pagamentos</td><td>Referências iniciais · série anual <span class="pend">PENDENTE</span></td></tr>
- <tr><td>Governança e atores</td><td><span class="ok">OK</span> Estrutura inicial</td></tr>
- <tr><td>Evolução tecnológica</td><td>SGP identificado · entregas <span class="pend">PENDENTE</span></td></tr>
- <tr><td>Resultados educacionais</td><td><span class="pend">PENDENTE</span></td></tr>
- <tr><td>RCOs</td><td>Aguardando documentação</td></tr>
- <tr><td>Cenários 2030</td><td>Após consolidação histórica</td></tr></table></div>
- <div class="faixa"><b>Três movimentos:</b> criação e implantação (2024) · ampliação e instrumentos complementares · aperfeiçoamento de regras e processos (2025–2026).</div>
- <div class="q cx" style="display:flex;align-items:center;gap:2cqw;background:var(--amarelo)"><svg viewBox="0 0 100 200" style="width:8cqw;flex:none"><use href="#ana"/></svg><div class="balao">Próximo: comparar PL 54/2021, MP 1.198, Lei 14.818 e Decreto 11.901 lado a lado.</div></div>
-</section>
-
-</main>
+ <div class="cab"><span class="cap">Capítulo 8 · Método de avaliação</span><h2>Como vamos medir a evolução</h2><p>Quatro dimensões, sem notas arbitrárias</p></div>
+ <div class="corpo">
+  <div class="g g2">
+   <div class="c"><h3>Normativa</h3><p>Critérios, regras de gestão, calendários, responsabilidades.</p></div>
+   <div class="c ve"><h3>Institucional</h3><p>Capacidades administrativas, analíticas, operacionais e relacionais.</p></div>
+   <div class="c am"><h3>Cobertura</h3><p>Beneficiários, elegibilidade, território, modalidades, pagamentos.</p></div>
+   <div class="c la"><h3>Resultados sociais</h3><p>Permanência, abandono, conclusão e desigualdades, sem atribuição causal apressada.</p></div>
+  </div>
+  <h3>Ficha de análise de cada norma</h3>
+  <table class="t"><tr><td><b>Identificação</b></td><td>Número, data, órgão emissor, vigência</td></tr><tr><td><b>Finalidade</b></td><td>Problema ou necessidade regulamentada</td></tr><tr><td><b>Alteração</b></td><td>O que mudou em relação à regra anterior</td></tr><tr><td><b>Público afetado</b></td><td>Beneficiários, redes, instituições</td></tr><tr><td><b>Efeito operacional</b></td><td>Processos, dados, pagamentos, prazos</td></tr><tr><td><b>Capacidade exigida</b></td><td>Recursos institucionais necessários</td></tr><tr><td><b>Evidência</b></td><td>Dispositivo legal e documento comprobatório</td></tr></table>
+  <div class="cena fill">
+   <figure class="pers" style="width:22cqw"><img src="img/rodrigo.jpg" alt=""><figcaption>Rodrigo<small>Dados e indicadores</small></figcaption></figure>
+   <div class="balao">Cada norma vira um registro comparável. Assim dá para ver o que mudou, quando e com que efeito.</div>
+  </div>
+ </div>
+</section><section class="pg"><div class="cab"><span class="cap">Capítulo 8 · Resultados</span><h2>Conteúdo em apuração</h2><p>Páginas que entram quando as fontes estiverem lidas</p></div><div class="corpo"><div class="c fill"><h3>O que este capítulo vai mostrar</h3><ul style="margin:0;padding-left:2.4cqw;display:grid;gap:1cqw"><li>Indicadores de permanência e conclusão pós-2024</li><li>Grupos de comparação adequados</li><li>Entregas, produtos, resultados e impactos</li><li>Limites de atribuição causal</li></ul></div><div class="c am"><h3>Fontes necessárias</h3><p>Censo Escolar 2024–2025 (INEP); avaliações independentes. <span class="pend">PENDENTE</span></p></div></div></section>
+<section class="pg abre"><div class="corpo"><div><div class="parte">EPÍLOGO</div><div class="n">2030</div><h2>O Pé-de-Meia em 2030</h2><p class="per">Cenários prospectivos, não previsões</p></div><p style="font-size:2.3cqw;max-width:62ch">Sustentabilidade financeira, sistemas, dados, governança e avaliação, com premissas explícitas.</p><div class="cen">Cenário: 17. Linha do tempo</div><div class="fecha"><span>PERGUNTA DE ENCERRAMENTO</span>O futuro depende dos objetivos educacionais e da capacidade de sustentá-los e avaliá-los.</div></div></section>
+<section class="pg">
+ <div class="cab"><span class="cap">Anexo · Situação da pesquisa</span><h2>O que está provado e o que falta</h2><p>Estado de cada frente de investigação</p></div>
+ <div class="corpo">
+  <table class="t"><tr><th>Frente</th><th>Situação</th></tr>
+   <tr><td>Origem legislativa</td><td><span class="ok">OK</span> Texto original e justificativa lidos · tramitação detalhada <span class="pend">PENDENTE</span></td></tr>
+   <tr><td>Normas 2023–2026</td><td><span class="ok">OK</span> Inventário inicial · análise artigo a artigo <span class="pend">PENDENTE</span></td></tr>
+   <tr><td>Modelo de incentivos</td><td><span class="ok">OK</span> Estrutura geral · histórico de mudanças <span class="pend">PENDENTE</span></td></tr>
+   <tr><td>Beneficiários 2024–2025</td><td><span class="ok">OK</span> Referências oficiais · desagregação <span class="pend">PENDENTE</span></td></tr>
+   <tr><td>Beneficiários 2026</td><td>Agregado disponível · série fechada <span class="pend">PENDENTE</span></td></tr>
+   <tr><td>Valores e pagamentos</td><td>Referências iniciais · série anual <span class="pend">PENDENTE</span></td></tr>
+   <tr><td>Governança e atores</td><td><span class="ok">OK</span> Estrutura inicial</td></tr>
+   <tr><td>Evolução tecnológica</td><td>SGP identificado · entregas <span class="pend">PENDENTE</span></td></tr>
+   <tr><td>Resultados educacionais</td><td><span class="pend">PENDENTE</span></td></tr>
+   <tr><td>RCOs</td><td>Aguardando documentação</td></tr>
+   <tr><td>Cenários 2030</td><td>Após consolidação histórica</td></tr></table>
+  <div class="faixa fill" style="display:flex;align-items:center">Próximo passo: comparar lado a lado o PL n.º 54/2021, a MP n.º 1.198/23, a Lei n.º 14.818/24 e o Decreto n.º 11.901/24, artigo por artigo.</div>
+ </div>
+</section></main>
