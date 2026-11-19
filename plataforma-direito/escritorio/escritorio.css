@@ -227,3 +227,15 @@ body.office { display: grid; grid-template-columns: 240px minmax(0, 1fr); min-he
 .as-tab table { border-collapse: collapse; width: 100%; font-size: .92rem; }
 .as-tab th, .as-tab td { border: 1px solid var(--line); padding: 6px 10px; text-align: left; vertical-align: top; }
 .as-tab th { background: var(--tint); }
+
+/* Acervo de processos */
+.ac-filtros { display: grid; grid-template-columns: 1fr 220px; gap: 10px; align-items: center; }
+.ac-filtros p { grid-column: 1 / -1; margin: 0; }
+.ac-lista { display: grid; gap: 12px; }
+.ac-item { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); padding: 16px 18px; display: grid; gap: 6px; }
+.ac-item.nova { border-left: 4px solid var(--amber); }
+.ac-topo { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.ac-num { font-family: ui-monospace, monospace; font-size: 1rem; }
+.ac-acoes { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-top: 6px; }
+.ac-pubs { display: grid; gap: 10px; border-top: 1px solid var(--line); padding-top: 10px; }
+@media (max-width: 640px) { .ac-filtros { grid-template-columns: 1fr; } }
