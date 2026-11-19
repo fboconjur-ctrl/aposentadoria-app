@@ -61,6 +61,11 @@
       if (c.etapa === "Caso ativo" && tel && procsDe(c).length && (!ult || Date.now() - new Date(ult) > 30 * 864e5) && !feitos.has(kM))
         lista.push({ k: kM, ord: "9", pri: 5, ico: "🗓️", tit: `Atualização mensal para ${c.nome}`, sub: ult ? `Último contato em ${fmt(new Date(ult))}` : "Nenhum contato registrado ainda", acao: "Enviar atualização", fazer: () => { marcar(kM); window.Acervo.abrirMsg(procsDe(c)[0], "Informar andamento"); } });
     }
+    // 7) mensagens novas pela área do cliente
+    for (const m of window.msgsPortalNaoLidas?.() || []) {
+      const c = clientes.find((x) => x.portal?.token === m.token); if (!c) continue;
+      lista.push({ k: `msg:${m.id}`, pri: 0, ord: String(m.criado), ico: "💬", tit: `${c.nome} mandou mensagem pela área do cliente`, sub: m.texto.slice(0, 140), acao: "Ler e responder", fazer: () => { abrirFicha(c.id); $("fi-portal")?.scrollIntoView({ behavior: "smooth" }); } });
+    }
     return lista.sort((a, b) => a.pri - b.pri || a.ord.localeCompare(b.ord));
   }
   let atuais = [];
