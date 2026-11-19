@@ -92,6 +92,14 @@
   };
   window.msgsPortalNaoLidas = () => ultimasMsgs.filter((m) => !m.lida);
 
+  const RAPIDAS = [
+    ["Recebi, vou analisar", "Olá, {nome}! Recebi sua mensagem e vou analisar com atenção. Retorno em breve por aqui."],
+    ["Documentos recebidos", "Olá, {nome}! Recebi os documentos, obrigada. Vou conferir e aviso se faltar alguma coisa."],
+    ["Falta documento", "Olá, {nome}! Para seguir com o seu caso, preciso que você envie: [PREENCHER]. Pode mandar por aqui mesmo, no campo de documentos."],
+    ["Sem novidade no processo", "Olá, {nome}! Por enquanto não houve novidade no seu processo. Estou acompanhando e aviso assim que algo acontecer."],
+    ["Processo aguardando o juiz", "Olá, {nome}! O processo está aguardando uma decisão do juiz. Esse tempo depende da Justiça e não temos como prever a data, mas estou acompanhando."],
+    ["Vamos conversar", "Olá, {nome}! Esse assunto é melhor conversarmos. Pode me chamar no WhatsApp para combinarmos um horário?"],
+  ];
   // Quadro na ficha.
   function render() {
     const c = cliPorId(fichaAtual), box = $("fi-portal"); if (!c || !box) return;
@@ -104,6 +112,7 @@
         <label class="small">Recado para o cliente (aparece no topo da área dele)<textarea id="fi-portal-recado" class="search" rows="2" style="width:100%;box-sizing:border-box">${esc(c.recado || "")}</textarea></label>
         <label class="small">Próximo passo (se vazio, usa o texto padrão da etapa)<input id="fi-portal-prox" class="search" style="width:100%;box-sizing:border-box" value="${esc(c.proximoCliente || "")}" placeholder="${esc(PROXIMO[c.etapa] || "")}"></label>
         ${(c.msgsPortal || []).length ? `<h3 class="small">Mensagens do cliente ${naoLidas.length ? `<span class="pill-s amber">${naoLidas.length} nova(s)</span>` : ""}</h3><ul class="list small">${[...c.msgsPortal.map((m) => ({ ...m, quem: "Cliente" })), ...(c.respostasPortal || []).map((m) => ({ ...m, quem: "Você" }))].sort((x, y) => String(y.em).localeCompare(String(x.em))).slice(0, 12).map((m) => `<li><span class="when">${new Date(m.em).toLocaleString("pt-BR")}</span><span><b>${m.quem}:</b> ${esc(m.texto)}</span></li>`).join("")}</ul>${naoLidas.length ? `<button class="linkish small" id="fi-portal-lidas">marcar como lidas</button>` : ""}` : ""}
+        <select id="fi-portal-modelo" class="search small" style="width:100%;box-sizing:border-box"><option value="">Resposta rápida (escolha e ajuste)…</option>${RAPIDAS.map(([t], i) => `<option value="${i}">${esc(t)}</option>`).join("")}</select>
         <label class="small">Responder pela área do cliente (ele vê na conversa dele)<textarea id="fi-portal-resp" class="search" rows="2" maxlength="2000" style="width:100%;box-sizing:border-box"></textarea></label>
         <div class="as-linha"><button class="btn" id="fi-portal-resp-ok">Enviar resposta</button><span class="small muted" id="fi-portal-resp-st"></span></div>`;
     $("fi-portal-criar")?.addEventListener("click", async () => { try { const t = await Portal.criar(c.id); c.portal = { token: t, ativo: true }; (c.hist ||= []).unshift({ em: new Date().toISOString(), o: "Área do cliente criada" }); salvarCrm(); publicarTodos(); render(); } catch (e) { alert("Não consegui criar: " + e.message); } });
@@ -112,6 +121,7 @@
     $("fi-portal-desligar")?.addEventListener("click", async () => { const ativo = p.ativo === false; if (!ativo && !confirm("Desativar o link? O cliente deixa de conseguir abrir a área.")) return; await Portal.ativar(p.token, ativo); p.ativo = ativo; salvarCrm(); render(); });
     $("fi-portal-recado")?.addEventListener("change", (e) => { c.recado = e.target.value.trim(); salvarCrm(); });
     $("fi-portal-prox")?.addEventListener("change", (e) => { c.proximoCliente = e.target.value.trim(); salvarCrm(); });
+    $("fi-portal-modelo")?.addEventListener("change", (e) => { const r = RAPIDAS[+e.target.value]; if (r) { $("fi-portal-resp").value = r[1].replace("{nome}", primeiroNome(c.nome)); $("fi-portal-resp").focus(); } e.target.value = ""; });
     $("fi-portal-resp-ok")?.addEventListener("click", async () => {
       const t = $("fi-portal-resp").value.trim(); if (!t) return;
       (c.respostasPortal ||= []).push({ texto: t, em: new Date().toISOString() });
