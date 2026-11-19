@@ -117,7 +117,8 @@
       (c.respostasPortal ||= []).push({ texto: t, em: new Date().toISOString() });
       (c.hist ||= []).unshift({ em: new Date().toISOString(), o: `Resposta pela área do cliente: ${t.slice(0, 80)}` });
       if (naoLidas.length) { await Portal.marcarLidas(naoLidas.map((m) => m.id)).catch(() => {}); naoLidas.forEach((m) => (m.lida = true)); }
-      salvarCrm(); publicarTodos(); render(); renderHoje(); $("fi-portal-resp-st").textContent = "✅ Enviada. Aparece para o cliente em instantes.";
+      salvarCrm(); publicarTodos(); render(); renderHoje(); $("fi-portal-resp-st").innerHTML = `✅ Enviada. ${telWa(c.tel) ? `<button class="wa-btn" id="fi-portal-avisar">Avisar pelo WhatsApp</button>` : ""}`;
+      $("fi-portal-avisar")?.addEventListener("click", () => { open(`https://wa.me/${telWa(c.tel)}?text=${encodeURIComponent(`Olá, ${primeiroNome(c.nome)}! Respondi a sua mensagem na sua área do cliente:\n\n${link(p.token)}`)}`, "_blank", "noopener"); (c.hist ||= []).unshift({ em: new Date().toISOString(), o: "WhatsApp: aviso de resposta na área do cliente" }); salvarCrm(); });
     });
     $("fi-portal-lidas")?.addEventListener("click", async () => { await Portal.marcarLidas(naoLidas.map((m) => m.id)); naoLidas.forEach((m) => (m.lida = true)); render(); renderHoje(); });
   }
