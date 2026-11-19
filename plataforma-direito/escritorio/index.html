@@ -116,9 +116,30 @@
       <button class="card-c" data-view="djen"><b>Publicações</b><span class="meta">DJEN e Recorte Digital da OAB/DF</span></button>
       <button class="card-c" data-view="prazos"><b>Calcular prazo</b><span class="meta">Cível, trabalhista, Juizado e penal</span></button>
       <button class="card-c" data-view="docs"><b>Documentos e kit da ação</b><span class="meta">Procuração, contrato, proposta, petição</span></button>
+      <button class="card-c" data-view="assistente"><b>✨ Assistente jurídico</b><span class="meta">Analisar sentença, resumir processo, responder contato, notificação, posts…</span></button>
       <button class="card-c so-titular" data-view="metricas"><b>📊 Números do escritório</b><span class="meta">Contatos, contratação, recebimentos, atrasos e prazos</span></button>
       <button class="card-c so-titular" data-view="equipe"><b>Equipe</b><span class="meta">Advogados associados e quem cuida de cada caso</span></button>
       <button class="card-c" data-view="importar"><b>Importar processos</b><span class="meta">Colar sua lista de processos</span></button>
+    </div>
+  </section>
+
+  <section id="v-assistente" class="oview">
+    <header class="ohead"><div><button class="back" data-voltar>← Voltar</button><h1>Assistente jurídico</h1><p class="muted">Escolha o que precisa, cole o texto (ou carregue o PDF) e clique em Gerar. É um rascunho de apoio: revise sempre antes de usar.</p></div></header>
+    <form class="panel" id="as-form">
+      <label><b>O que você precisa?</b><select id="as-tarefa" class="search"></select></label>
+      <label><b>Texto</b><textarea id="as-texto" class="search" rows="10"></textarea></label>
+      <div class="as-linha">
+        <label class="back as-pdf-btn">📎 Carregar PDF ou foto<input type="file" id="as-pdf" accept="application/pdf,image/*" hidden></label>
+        <span class="small muted" id="as-conta"></span>
+        <label class="small">Cliente <select id="as-cli" class="search"></select></label>
+      </div>
+      <p class="small muted">🔒 O texto é enviado ao Claude (Anthropic) só para gerar a resposta e não fica guardado no site. Para dados sensíveis, use antes a tarefa “Tirar dados pessoais de um texto”.</p>
+      <div><button class="btn" id="as-enviar">Gerar</button></div>
+      <p class="small" id="as-status" role="status"></p>
+    </form>
+    <div class="panel" id="as-saida" hidden>
+      <div id="as-resultado" class="as-resultado"></div>
+      <div id="as-acoes" class="as-linha" hidden><button class="btn" type="button" id="as-copiar">Copiar texto</button><button class="back" type="button" id="as-notas">Salvar nas anotações do cliente</button></div>
     </div>
   </section>
 
@@ -369,5 +390,6 @@
 <script src="entrada.js"></script>
 <script src="equipe.js"></script>
 <script src="metricas.js"></script>
+<script src="assistente.js"></script>
 </body>
 </html>

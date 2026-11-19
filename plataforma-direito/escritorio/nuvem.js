@@ -46,6 +46,7 @@
     const user = session?.user;
     if (!user) { capa.hidden = false; return; }
 
+    window.tokenPainel = async () => (await sb.auth.getSession()).data.session?.access_token;
     // 0) Quem entrou: titular (vê tudo) ou associado (vê só os casos atribuídos a ele).
     const { data: papel, error: ePapel } = await sb.rpc("meu_papel");
     if (ePapel) { msg("Erro ao conferir o acesso: " + ePapel.message); capa.hidden = false; return; }
