@@ -16,6 +16,7 @@
       const a = item(n), id = String(p.id ?? `${n}-${p.data_disponibilizacao}`);
       a.trib ||= p.siglaTribunal || ""; a.orgao ||= p.nomeOrgao || ""; a.classe ||= p.nomeClasse || "";
       (p.destinatarios || []).map((d) => d.nome).filter(Boolean).forEach((x) => a.partes.includes(x) || a.partes.push(x));
+      a.polos ||= {}; (p.destinatarios || []).forEach((d) => { if (d.nome && d.polo) a.polos[d.nome] = d.polo; });
       if (!a.pubs.some((x) => x.id === id)) {
         a.pubs.unshift({ id, data: String(p.data_disponibilizacao || p.datadisponibilizacao || "").slice(0, 10), tipo: p.tipoComunicacao || p.tipoDocumento || "Publicação", texto: String(p.texto || "").replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim().slice(0, 600) });
         a.pubs.sort((x, y) => y.data.localeCompare(x.data)); a.pubs = a.pubs.slice(0, 15); mudou = true;
@@ -23,6 +24,14 @@
     }
     for (const c of clientes) for (const n of procsDe(c)) if (n.length === 20 && !acervo[n]) { item(n); mudou = true; }
     for (const [n, d] of Object.entries(acomp)) if (acervo[n]) { const a = acervo[n]; a.trib ||= d.tribunal || ""; a.orgao ||= d.orgao || ""; a.classe ||= d.classe || ""; }
+    // Parte com o mesmo nome de um cliente já cadastrado: liga o processo à ficha dele.
+    const porNome = new Map(clientes.map((c) => [semAcento(c.nome).replace(/[^a-z0-9 ]/g, " ").replace(/\s+/g, " ").trim(), c]));
+    let crm = false;
+    for (const [n, a] of Object.entries(acervo)) for (const nome of a.partes || []) {
+      const c = porNome.get(semAcento(nome).replace(/[^a-z0-9 ]/g, " ").replace(/\s+/g, " ").trim());
+      if (c && !procsDe(c).includes(n) && !cliDoProc(n)) { c.procs = [String(c.procs || "").trim(), mascara(n)].filter(Boolean).join("\n"); (c.hist ||= []).unshift({ em: new Date().toISOString(), o: `Processo ${mascara(n)} ligado automaticamente (nome nas publicações)` }); crm = true; }
+    }
+    if (crm) salvarCrm();
     if (mudou) salvar();
   }
   const origRender = window.renderPubs;
@@ -150,5 +159,47 @@
   };
   const origGo = window.go;
   window.go = (v, o) => { origGo(v, o); if (v === "acervo") render(); };
+  // ---------- Clientes encontrados nos processos (sugestões para confirmar) ----------
+  const IGN_KEY = "pd-partes-ignoradas";
+  let ignoradas = new Set(ler(IGN_KEY, []));
+  const chaveNome = (x) => semAcento(x).replace(/[^a-z0-9 ]/g, " ").replace(/\s+/g, " ").trim();
+  const ehOrgao = (x) => /\b(uniao|instituto nacional|inss|estado|municipio|distrito federal|fazenda|ministerio publico|defensoria|banco|caixa economica|s\.?\/?a\b|ltda|me\b|eireli|seguro|saude|fundacao|autarquia|conselho|universidade|tribunal|procuradoria)\b/i.test(semAcento(x));
+  function sugestoes() {
+    const jaCli = new Set(clientes.map((c) => chaveNome(c.nome)));
+    const m = new Map();
+    for (const [n, a] of Object.entries(acervo)) for (const nome of a.partes || []) {
+      const k = chaveNome(nome); if (!k || k.length < 5 || jaCli.has(k) || ignoradas.has(k)) continue;
+      const s = m.get(k) || { nome: nomeProprio(nome), procs: [], polo: a.polos?.[nome] || "", orgao: ehOrgao(nome) };
+      if (!s.procs.includes(n)) s.procs.push(n); m.set(k, s);
+    }
+    return [...m.entries()].sort((x, y) => x[1].orgao - y[1].orgao || y[1].procs.length - x[1].procs.length || x[1].nome.localeCompare(y[1].nome));
+  }
+  const POLO = { A: "polo ativo", P: "polo passivo" };
+  function renderSug() {
+    const box = $("cli-sug"); if (!box) return;
+    const lista = sugestoes(); box.hidden = !lista.length;
+    if (!lista.length) return;
+    $("cli-sug-n").textContent = `${lista.length} nome(s)`;
+    $("cli-sug-lista").innerHTML = lista.map(([k, s]) => `<li data-k="${esc(k)}"><label style="display:flex;gap:10px;align-items:flex-start;flex:1"><input type="checkbox" class="cli-sug-ck"${s.orgao ? "" : " checked"}>
+      <span><b>${esc(s.nome)}</b>${s.orgao ? ` <span class="pill-s">órgão/empresa</span>` : ""}<br><span class="small muted">${s.procs.map((n) => esc(mascara(n))).join(" · ")}${s.polo ? ` · ${POLO[s.polo] || s.polo}` : ""}</span></span></label>
+      <button class="linkish small" data-sug="ign">não é cliente</button></li>`).join("");
+  }
+  $("cli-sug-lista")?.addEventListener("click", (e) => {
+    const b = e.target.closest("[data-sug=ign]"); if (!b) return;
+    ignoradas.add(b.closest("[data-k]").dataset.k); gravar(IGN_KEY, [...ignoradas]); renderSug();
+  });
+  $("cli-sug-add")?.addEventListener("click", () => {
+    const mapa = new Map(sugestoes()); let n = 0;
+    document.querySelectorAll("#cli-sug-lista li").forEach((li) => {
+      const s = mapa.get(li.dataset.k);
+      if (li.querySelector(".cli-sug-ck").checked && s) { clientes.push({ id: novoId("CL-"), criado: new Date().toISOString(), nome: s.nome, cpf: "", tel: "", email: "", area: "", origem: "Processos (DJEN)", etapa: "Caso ativo", procs: s.procs.map(mascara).join("\n"), hist: [{ em: new Date().toISOString(), o: "Cadastrado a partir das publicações do DJEN" }] }); n++; }
+      else if (s) { ignoradas.add(li.dataset.k); }
+    });
+    gravar(IGN_KEY, [...ignoradas]); salvarCrm(); renderClientes(); renderSug();
+    $("cli-sug-msg").textContent = n ? `${n} cliente(s) cadastrados. Complete o WhatsApp e o CPF na ficha de cada um.` : "";
+  });
+  $("cli-sug-todos")?.addEventListener("click", () => { const marcar = [...document.querySelectorAll(".cli-sug-ck")].some((c) => !c.checked); document.querySelectorAll(".cli-sug-ck").forEach((c) => (c.checked = marcar)); });
+  const origRC = window.renderClientes;
+  window.renderClientes = (...x) => { origRC(...x); renderSug(); };
   ingerir();
 })();

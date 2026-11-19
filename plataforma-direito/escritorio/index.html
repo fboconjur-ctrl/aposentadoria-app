@@ -46,6 +46,12 @@
   <section id="v-clientes" class="oview">
     <header class="ohead"><div><h1>Clientes</h1></div>
       <div style="display:flex;gap:8px;flex-wrap:wrap"><input id="crm-busca" class="search" placeholder="Buscar nome, telefone, processo"><button class="btn" id="crm-novo">Novo cliente</button></div></header>
+    <details class="panel" id="cli-sug" hidden open>
+      <summary><b>Clientes encontrados nos seus processos</b> <span class="small muted" id="cli-sug-n"></span></summary>
+      <p class="small">Estes nomes aparecem como partes intimadas nas publicações da sua OAB. A publicação traz <b>também a parte contrária</b>, então confira: deixe marcados só os seus clientes e clique em cadastrar. Os desmarcados não aparecem mais.</p>
+      <ul class="list" id="cli-sug-lista"></ul>
+      <div class="as-linha"><button class="btn" id="cli-sug-add">Cadastrar os marcados como clientes</button><button class="linkish small" id="cli-sug-todos">marcar/desmarcar todos</button><span class="small" id="cli-sug-msg"></span></div>
+    </details>
     <div class="panel"><ul class="list" id="cli-lista"></ul></div>
   </section>
 
