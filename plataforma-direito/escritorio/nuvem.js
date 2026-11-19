@@ -42,6 +42,13 @@
     const { data: papel, error: ePapel } = await sb.rpc("meu_papel");
     if (ePapel) { msg("Erro ao conferir o acesso: " + ePapel.message); capa.hidden = false; return; }
     if (!papel) { msg(`Acesso ainda não liberado para ${user.email}. Peça à titular do escritório.`); capa.hidden = false; await sb.auth.signOut(); return; }
+    document.getElementById("trocar-senha")?.addEventListener("click", async () => {
+      const nova = prompt("Digite a NOVA senha (mínimo 8 caracteres):"); if (!nova) return;
+      if (nova.length < 8) return alert("A senha precisa ter pelo menos 8 caracteres.");
+      if (prompt("Digite a nova senha de novo, para confirmar:") !== nova) return alert("As duas senhas não são iguais. Tente de novo.");
+      const { error } = await sb.auth.updateUser({ password: nova });
+      alert(error ? "Não foi possível trocar: " + error.message : "Senha trocada! Use a nova senha da próxima vez.");
+    });
     document.getElementById("sair")?.addEventListener("click", () => { sessionStorage.removeItem("pd-sync-ok"); sb.auth.signOut().then(() => location.reload()); });
     if (papel === "associado") return modoAssociado(sb, user);
 
