@@ -73,6 +73,17 @@
         <div><span>03</span><h3>Advogada, se precisar</h3><p>Seu caso chega organizado. Você não repete nada.</p></div>
       </div>
 
+      <section class="porque" aria-labelledby="porque-tit">
+        <p class="eyebrow">Por que usar a Plataforma</p>
+        <h2 id="porque-tit">Informação séria, explicada de um jeito que dá para entender</h2>
+        <div class="porque-grid">
+          <div><span class="porque-ico" aria-hidden="true">🗣️</span><h3>Sem juridiquês</h3><p>Cada assunto explicado em português claro, com o que fazer, quais documentos juntar e qual o prazo.</p></div>
+          <div><span class="porque-ico" aria-hidden="true">📚</span><h3>Fontes oficiais</h3><p>As informações vêm da lei, dos órgãos públicos e dos tribunais, com o link para você conferir.</p></div>
+          <div><span class="porque-ico" aria-hidden="true">🔒</span><h3>Seus dados protegidos</h3><p>Nada é guardado enquanto você navega. Documentos são lidos no seu próprio aparelho.</p></div>
+          <div><span class="porque-ico" aria-hidden="true">⚖️</span><h3>Advogada de verdade</h3><p>Quando o caso pede, quem analisa é a advogada, com o seu caso já organizado. Você não repete a história.</p></div>
+        </div>
+      </section>
+
       <div class="extras">
         <h2>Ferramentas</h2>
         <div class="extras-grid dois">
@@ -310,8 +321,12 @@
 
 <a href="#" class="wa-float" data-wa aria-label="Falar no WhatsApp"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm5.3 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.4-.7-2.8-1.1-4.6-4-4.8-4.2-.1-.2-1.1-1.5-1.1-2.9s.7-2 1-2.3c.3-.3.6-.3.8-.3h.6c.2 0 .4 0 .6.5l.9 2.1c.1.2.1.4 0 .5l-.4.6-.4.4c-.1.2-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.3 2.4 1.5.3.1.5.1.7-.1l.9-1.1c.2-.3.4-.2.7-.1l2 1c.3.1.5.2.5.3.1.2.1.7-.1 1.3z"/></svg></a>
   <footer class="foot">
-  Este portal segue estritamente as regras da OAB (Código de Ética e Disciplina e Provimento 205/2021). As informações têm caráter exclusivamente informativo, são organizadas a partir de fontes oficiais e não devem ser lidas como aconselhamento ou orientação jurídica profissional. A análise de cada caso é feita pessoalmente pela advogada.
-    <p class="small"><a href="#" data-go="sobre">Como funciona este portal</a></p>
+    <div class="foot-cols">
+      <div class="foot-marca"><span class="brand">Plataforma do Direito</span><p>Seus direitos em linguagem simples: INSS, saúde, servidor público, bancos, consumidor e cartório.</p></div>
+      <div><h4>Plataforma</h4><a href="#" data-go="sobre">Como funciona</a><a href="/simulador/">Simulador de aposentadoria</a><a href="#" data-go="guia">Onde reclamar</a><a href="#" data-go="calculadoras">Calculadoras de prazo</a></div>
+      <div><h4>Atendimento</h4><a href="#" data-wa>WhatsApp</a><a href="#" data-go="empresas">Empresas e gestores públicos</a></div>
+    </div>
+    <p class="foot-aviso">Este portal segue estritamente as regras da OAB (Código de Ética e Disciplina e Provimento 205/2021). As informações têm caráter exclusivamente informativo, são organizadas a partir de fontes oficiais e não devem ser lidas como aconselhamento ou orientação jurídica profissional. A análise de cada caso é feita pessoalmente pela advogada.</p>
     <details class="privacidade"><summary>🔒 Seus dados: não guardamos nada, a menos que você peça para falar com a advogada</summary>
       <ul>
         <li><strong>Navegar, ler informações e responder perguntas</strong>: nada é salvo nem enviado. Ao fechar a página, tudo some.</li>
@@ -322,7 +337,9 @@
         <li>Você pode pedir a qualquer momento que seus dados sejam apagados, pelo WhatsApp.</li>
       </ul>
     </details>
+    <p class="foot-copy">© <span id="ano"></span> Plataforma do Direito</p>
 </footer>
+<script>document.getElementById("ano").textContent = new Date().getFullYear();</script>
 
 <script src="flows.js"></script>
 <script src="faq.js"></script>
