@@ -342,6 +342,7 @@ $("crm-excluir").onclick = async () => {
   clientes = clientes.filter((x) => x.id !== id); itens = itens.filter((x) => x.cli !== id); fin = fin.filter((l) => l.cli !== id);
   salvarCrm(); salvarItens(); salvarFin();
   let nuvem = "";
+  try { if (window.DocsPedido && (c.docsPedido || []).length) await window.DocsPedido.apagar(c.docsPedido.map((d) => d.caminho)); } catch {}
   try { if (window.apagarPedidoNuvem && c.protocolo) nuvem = (await window.apagarPedidoNuvem(c.protocolo)) ? " e o pedido original no banco" : ""; } catch {}
   fecharForm(); fichaAtual = null; go("clientes");
   alert(`Dados de ${c.nome} apagados do painel${nuvem}.` + (c.origem === "Plataforma" ? "\n\nSe o pedido também chegou por e-mail, apague a mensagem e a entrada em Netlify → Forms." : ""));
@@ -416,7 +417,7 @@ function importarPacote(texto) {
   const area = { previdenciario: "Previdenciário", consumidor: "Consumidor", saude: "Saúde", administrativo: "Administrativo", cartorio: "Cartório/Extrajudicial" }[pk.key] || pk.area || "Outra";
   const resumo = [pk.relato && `Relato: ${pk.relato}`, pk.cnis, pk.documento, ...String(pk.continuacao || "").split(" | "), ...(pk.respostas || [])].filter(Boolean).join("\n");
   const c = { id: novoId("CL-"), protocolo: pk.protocolo, criado: new Date().toISOString(), nome: pk.nome, cpf: pk.cpf || "", tel: pk.telefone, email: pk.email || "", area, origem: "Plataforma",
-    etapa: "Novo pedido", assunto: pk.area || "", resumo, notas: `Protocolo ${pk.protocolo}${pk.periodo ? ` · prefere ${String(pk.periodo).toLowerCase()}` : ""}`, procs: "", hist: [{ em: pk.criado, o: "Pedido pela plataforma" }] };
+    etapa: "Novo pedido", assunto: pk.area || "", resumo, relato: pk.relato || "", docsPedido: (pk.docs || []).map((d) => ({ ...d, em: pk.criado })), notas: `Protocolo ${pk.protocolo}${pk.periodo ? ` · prefere ${String(pk.periodo).toLowerCase()}` : ""}`, procs: "", hist: [{ em: pk.criado, o: "Pedido pela plataforma" }] };
   clientes.push(c); salvarCrm();
   const falta = (pk.faltaSaber || []).length ? ` — perguntar: ${pk.faltaSaber.join("; ")}` : "";
   itens.push({ id: novoId("I-"), tipo: "tarefa", texto: `Retornar contato${pk.periodo ? ` (prefere ${String(pk.periodo).toLowerCase()})` : ""}${falta}`, quando: hojeIso, cli: c.id, feita: false }); salvarItens();

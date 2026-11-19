@@ -142,8 +142,11 @@
         <input id="f-tel" name="telefone" type="tel" required autocomplete="tel">
         <label for="f-periodo">Melhor período para a consulta online</label>
         <select id="f-periodo" name="periodo"><option>Manhã</option><option>Tarde</option><option>Noite</option></select>
+        <label for="f-docs">Documentos do caso <span class="muted small">(opcional — PDF ou fotos, até 8 arquivos de 10 MB)</span></label>
+        <input id="f-docs" type="file" multiple accept="application/pdf,image/*">
+        <p class="muted small" id="f-docs-info">Carta do INSS, negativa do plano, contrato, laudos… Ficam guardados com segurança só até a advogada analisar o seu pedido, e são apagados em no máximo 60 dias.</p>
         <label class="consent"><input type="checkbox" id="f-lgpd" name="consentimento" value="sim" required>
-          Autorizo o envio do meu relato, das minhas respostas e dos dados lidos dos documentos à advogada, só para o contato e a preparação do atendimento. Posso pedir que sejam apagados a qualquer momento.</label>
+          Autorizo o envio do meu relato, das minhas respostas, dos dados lidos e dos documentos que eu anexar à advogada, só para o contato e a preparação do atendimento. Os documentos ficam guardados até a análise do pedido (no máximo 60 dias). Posso pedir que sejam apagados a qualquer momento.</label>
         <label class="consent"><input type="checkbox" id="f-lembrete" name="lembrete" value="sim">
           Se eu não responder ao contato, aceito receber <strong>um único lembrete</strong> pelo WhatsApp. (Opcional)</label>
         <p class="muted small">Nenhum serviço é iniciado antes da assinatura do contrato de honorários e da procuração. Se você não contratar, seus dados são apagados em até 90 dias.</p>
@@ -331,7 +334,8 @@
       <ul>
         <li><strong>Navegar, ler informações e responder perguntas</strong>: nada é salvo nem enviado. Ao fechar a página, tudo some.</li>
         <li><strong>Quando você conta a sua história</strong>: o texto é lido por um sistema de inteligência artificial (Anthropic) só para organizar os fatos e apontar as informações que se relacionam com eles. Não guardamos o texto, e a leitura não é análise jurídica: quem avalia o caso é a advogada. Evite escrever CPF ou números de documentos.</li>
-        <li><strong>Documentos (PDF)</strong>: são lidos no seu próprio aparelho. O arquivo nunca é enviado nem guardado por nós.</li>
+        <li><strong>Documentos (PDF)</strong>: na leitura de cartas e decisões, o arquivo é lido no seu próprio aparelho e não é enviado.</li>
+        <li><strong>Documentos anexados ao pedido para a advogada</strong>: só se você anexar e autorizar. Ficam em área privada, acessível apenas à advogada, e são apagados quando ela termina a análise do pedido (atendido ou recusado) ou, no máximo, em 60 dias.</li>
         <li><strong>Só quando você pede para falar com a advogada</strong> e marca a autorização, enviamos o que você contou, suas respostas e os dados lidos dos documentos — apenas para a advogada preparar o atendimento.</li>
         <li>Esses dados não são vendidos nem compartilhados. Para indicar seu caso a outro(a) advogado(a), pedimos sua autorização antes.</li>
         <li>Você pode pedir a qualquer momento que seus dados sejam apagados, pelo WhatsApp.</li>

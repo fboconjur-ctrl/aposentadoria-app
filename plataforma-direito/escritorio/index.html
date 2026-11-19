@@ -104,6 +104,10 @@
       <div style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn" id="wa-abrir">Abrir no WhatsApp</button><button class="back" id="wa-fechar">Fechar</button></div>
     </div>
     <div class="dossie">
+      <div class="panel wide" id="fi-dp" hidden><div class="fi-tit"><h2>📎 Documentos enviados pelo cliente</h2><span class="small muted" id="fi-dp-prazo"></span></div>
+        <ul class="list" id="fi-dp-lista"></ul>
+        <div class="as-linha"><button class="btn" type="button" id="fi-dp-zip">📂 Baixar todos organizados</button><button class="back" type="button" id="fi-dp-ok">✅ Já baixei — apagar do servidor</button><button class="linkish small" type="button" id="fi-dp-recusar" style="color:#b42318">Recusar pedido e apagar documentos</button></div>
+        <p class="small" id="fi-dp-msg" role="status"></p></div>
       <div class="panel wide" id="fi-spin" hidden><div class="fi-tit"><h2>Roteiro de conversa (WhatsApp)</h2><span class="small muted">Atendimento consultivo: entender antes de propor</span></div>
         <div id="fi-spin-passos" class="spin-passos"></div></div>
       <div class="panel wide" id="fi-onb" hidden><div class="fi-tit"><h2>Primeiros passos do cliente</h2><span class="small muted" id="fi-onb-prog"></span></div>
@@ -565,5 +569,6 @@
 <script src="guia.js"></script>
 <script src="automacoes.js"></script>
 <script src="novocaso.js"></script>
+<script src="docspedido.js"></script>
 </body>
 </html>

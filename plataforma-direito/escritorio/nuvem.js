@@ -91,6 +91,18 @@
       if (ids.length) await sb.from("pedidos").delete().in("id", ids);
       return ids.length;
     };
+    // Documentos anexados pelos clientes no site (área privada). Prazo máximo de guarda: 60 dias.
+    const BK = sb.storage.from("pedidos-docs");
+    window.DocsPedido = {
+      baixar: async (caminho) => { const { data, error } = await BK.download(caminho); if (error) throw error; return data; },
+      apagar: async (caminhos) => { if (!caminhos.length) return; const { error } = await BK.remove(caminhos); if (error) throw error; },
+    };
+    (async () => { // limpeza automática do que passou de 60 dias
+      const { data: pastas } = await BK.list("", { limit: 1000 }); const limite = Date.now() - 60 * 864e5, velhos = [];
+      for (const p of pastas || []) { const { data: arqs } = await BK.list(p.name, { limit: 100 }); (arqs || []).forEach((a) => { if (a.created_at && new Date(a.created_at).getTime() < limite) velhos.push(`${p.name}/${a.name}`); }); }
+      if (velhos.length) await BK.remove(velhos);
+    })().catch(() => {});
+
     // 3) Pedidos da plataforma chegam sozinhos (verifica ao abrir e a cada minuto).
     const buscarPedidos = async () => {
       const { data } = await sb.from("pedidos").select("id, pacote").eq("importado", false);
