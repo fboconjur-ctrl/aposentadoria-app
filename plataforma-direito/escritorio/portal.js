@@ -40,6 +40,7 @@
       documentosRecebidos: [...(c.docsRecebidos || []), ...(c.docsPedido || [])].slice(-20).map((d) => d.nome),
       docsStatus: ["Contratado", "Caso ativo"].includes(c.etapa) ? (window.docsStatus?.(c) || []) : [],
       feitos: feitos(c), guia: GUIA[c.area] || null, duvidas: DUVIDAS,
+      conversa: [...(c.msgsPortal || []).map((m) => ({ de: "voce", texto: m.texto, em: m.em })), ...(c.respostasPortal || []).map((m) => ({ de: "advogada", texto: m.texto, em: m.em }))].sort((x, y) => String(y.em).localeCompare(String(x.em))).slice(0, 30),
       contato: { horario: "Segunda a sexta, das 9h às 18h", resposta: "Respondemos em até 1 dia útil." },
     };
     const textoProc = JSON.stringify(d.processos);
@@ -102,13 +103,22 @@
         <p class="small muted">${p.ativo === false ? "⛔ Link desativado: o cliente não consegue abrir." : p.visto ? `Última visita do cliente: ${new Date(p.visto).toLocaleString("pt-BR")}` : "O cliente ainda não abriu."}</p>
         <label class="small">Recado para o cliente (aparece no topo da área dele)<textarea id="fi-portal-recado" class="search" rows="2" style="width:100%;box-sizing:border-box">${esc(c.recado || "")}</textarea></label>
         <label class="small">Próximo passo (se vazio, usa o texto padrão da etapa)<input id="fi-portal-prox" class="search" style="width:100%;box-sizing:border-box" value="${esc(c.proximoCliente || "")}" placeholder="${esc(PROXIMO[c.etapa] || "")}"></label>
-        ${(c.msgsPortal || []).length ? `<h3 class="small">Mensagens do cliente ${naoLidas.length ? `<span class="pill-s amber">${naoLidas.length} nova(s)</span>` : ""}</h3><ul class="list small">${c.msgsPortal.slice(0, 10).map((m) => `<li><span class="when">${new Date(m.em).toLocaleString("pt-BR")}</span><span>${esc(m.texto)}</span></li>`).join("")}</ul>${naoLidas.length ? `<button class="linkish small" id="fi-portal-lidas">marcar como lidas</button>` : ""}` : ""}`;
+        ${(c.msgsPortal || []).length ? `<h3 class="small">Mensagens do cliente ${naoLidas.length ? `<span class="pill-s amber">${naoLidas.length} nova(s)</span>` : ""}</h3><ul class="list small">${[...c.msgsPortal.map((m) => ({ ...m, quem: "Cliente" })), ...(c.respostasPortal || []).map((m) => ({ ...m, quem: "Você" }))].sort((x, y) => String(y.em).localeCompare(String(x.em))).slice(0, 12).map((m) => `<li><span class="when">${new Date(m.em).toLocaleString("pt-BR")}</span><span><b>${m.quem}:</b> ${esc(m.texto)}</span></li>`).join("")}</ul>${naoLidas.length ? `<button class="linkish small" id="fi-portal-lidas">marcar como lidas</button>` : ""}` : ""}
+        <label class="small">Responder pela área do cliente (ele vê na conversa dele)<textarea id="fi-portal-resp" class="search" rows="2" maxlength="2000" style="width:100%;box-sizing:border-box"></textarea></label>
+        <div class="as-linha"><button class="btn" id="fi-portal-resp-ok">Enviar resposta</button><span class="small muted" id="fi-portal-resp-st"></span></div>`;
     $("fi-portal-criar")?.addEventListener("click", async () => { try { const t = await Portal.criar(c.id); c.portal = { token: t, ativo: true }; (c.hist ||= []).unshift({ em: new Date().toISOString(), o: "Área do cliente criada" }); salvarCrm(); publicarTodos(); render(); } catch (e) { alert("Não consegui criar: " + e.message); } });
     $("fi-portal-copiar")?.addEventListener("click", () => navigator.clipboard?.writeText(link(p.token)));
     $("fi-portal-wa")?.addEventListener("click", () => { if (!telWa(c.tel)) return alert("Cadastre o WhatsApp do cliente em “Editar dados”."); open(`https://wa.me/${telWa(c.tel)}?text=${encodeURIComponent(`Olá, ${primeiroNome(c.nome)}! Criei uma área só sua para acompanhar o seu caso: em que etapa está, próximos passos, documentos que faltam e novidades do processo. Por ali você também pode me mandar mensagens e documentos.\n\n${link(p.token)}\n\nGuarde este link: ele é pessoal.`)}`, "_blank", "noopener"); (c.hist ||= []).unshift({ em: new Date().toISOString(), o: "WhatsApp: link da área do cliente" }); salvarCrm(); });
     $("fi-portal-desligar")?.addEventListener("click", async () => { const ativo = p.ativo === false; if (!ativo && !confirm("Desativar o link? O cliente deixa de conseguir abrir a área.")) return; await Portal.ativar(p.token, ativo); p.ativo = ativo; salvarCrm(); render(); });
     $("fi-portal-recado")?.addEventListener("change", (e) => { c.recado = e.target.value.trim(); salvarCrm(); });
     $("fi-portal-prox")?.addEventListener("change", (e) => { c.proximoCliente = e.target.value.trim(); salvarCrm(); });
+    $("fi-portal-resp-ok")?.addEventListener("click", async () => {
+      const t = $("fi-portal-resp").value.trim(); if (!t) return;
+      (c.respostasPortal ||= []).push({ texto: t, em: new Date().toISOString() });
+      (c.hist ||= []).unshift({ em: new Date().toISOString(), o: `Resposta pela área do cliente: ${t.slice(0, 80)}` });
+      if (naoLidas.length) { await Portal.marcarLidas(naoLidas.map((m) => m.id)).catch(() => {}); naoLidas.forEach((m) => (m.lida = true)); }
+      salvarCrm(); publicarTodos(); render(); renderHoje(); $("fi-portal-resp-st").textContent = "✅ Enviada. Aparece para o cliente em instantes.";
+    });
     $("fi-portal-lidas")?.addEventListener("click", async () => { await Portal.marcarLidas(naoLidas.map((m) => m.id)); naoLidas.forEach((m) => (m.lida = true)); render(); renderHoje(); });
   }
   const orig = window.renderOnb;
