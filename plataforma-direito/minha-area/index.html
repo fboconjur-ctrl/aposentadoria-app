@@ -44,6 +44,8 @@
   .glossario { margin: 0; display: grid; grid-template-columns: max-content 1fr; gap: 6px 14px; } .glossario dt { font-weight: 700; } .glossario dd { margin: 0; color: var(--muted); }
   @media (max-width: 560px) { .glossario { grid-template-columns: 1fr; } .glossario dd { margin-bottom: 8px; } }
   .duvida { border-top: 1px solid var(--line); padding: 10px 0; } .duvida summary { cursor: pointer; font-weight: 600; } .duvida p { margin: 8px 0 0; color: var(--muted); }
+  .so-tela { margin-top: 8px; }
+  @media print { .acoes, textarea, .btn, .btn-wa, .so-tela, details.duvida { display: none !important; } body { background: #fff; } .cartao { box-shadow: none; break-inside: avoid; } }
 </style>
 </head>
 <body>
@@ -81,6 +83,7 @@
         <p class="eyebrow">Minha área</p>
         <h1>Olá, ${esc(d.nome)}.</h1>
         <p class="muted">${esc([d.area, d.assunto].filter(Boolean).join(" · "))}${d.advogada ? ` · acompanhado por ${esc(d.advogada)}` : ""}</p>
+        <p class="so-tela"><button class="small" style="background:none;border:0;color:inherit;text-decoration:underline;cursor:pointer;padding:0" onclick="window.print()">🖨️ Imprimir ou salvar um resumo do meu caso</button></p>
       </section>
       ${d.recado ? `<div class="cartao recado"><h2>📌 Recado da advogada</h2><p style="margin:0;white-space:pre-line">${esc(d.recado)}</p></div>` : ""}
       <div class="cartao">
