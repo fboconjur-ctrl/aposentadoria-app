@@ -56,6 +56,10 @@
       const kN = `novo:${c.id}`;
       if (c.etapa === "Novo pedido" && c.criado && Date.now() - new Date(c.criado) > 864e5 && !ultimoContato(c) && !feitos.has(kN))
         lista.push({ k: kN, ord: c.criado.slice(0, 10), pri: 2, ico: "📲", tit: `Responder ${c.nome}`, sub: `Contato novo há ${Math.floor((Date.now() - new Date(c.criado)) / 864e5)} dia(s) sem resposta`, acao: "Abrir roteiro", fazer: () => { marcar(kN); abrirFicha(c.id); $("fi-spin")?.scrollIntoView({ behavior: "smooth" }); } });
+      // 5b) aniversário do cliente (data de nascimento lida dos documentos)
+      const nasc = String(c.qualif?.nascimento || c.nascimento || "").match(/^(\d{2})\/(\d{2})/), kB = `aniv:${c.id}:${hojeIso.slice(0, 4)}`;
+      if (nasc && tel && hojeIso.slice(5) === `${nasc[2]}-${nasc[1]}` && !feitos.has(kB) && c.etapa !== "Encerrado")
+        lista.push({ k: kB, ord: "0", pri: 2, ico: "🎂", tit: `Hoje é aniversário de ${c.nome}`, sub: "Uma mensagem curta de parabéns fortalece a relação", acao: "Mandar parabéns", fazer: () => { open(`https://wa.me/${tel}?text=${encodeURIComponent(`Olá, ${primeiroNome(c.nome)}! Passando para desejar um feliz aniversário, com muita saúde e alegria. Um abraço!`)}`, "_blank", "noopener"); (c.hist ||= []).unshift({ em: new Date().toISOString(), o: "WhatsApp: parabéns pelo aniversário" }); salvarCrm(); marcar(kB); } });
       // 6) cliente ativo sem notícias há 30 dias
       const ult = ultimoContato(c), kM = `mensal:${c.id}:${hojeIso.slice(0, 7)}`;
       if (c.etapa === "Caso ativo" && tel && procsDe(c).length && (!ult || Date.now() - new Date(ult) > 30 * 864e5) && !feitos.has(kM))
