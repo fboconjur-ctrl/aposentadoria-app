@@ -69,7 +69,9 @@
         <label>Origem<select id="c-origem" class="search"><option>Plataforma</option><option>Indicação</option><option>WhatsApp</option><option>Instagram</option><option>Google</option><option>Outra</option></select></label>
         <label class="wide">Assunto (uma linha)<input id="c-assunto" class="search" placeholder="Ex.: Plano negou cirurgia"></label>
         <label class="wide">Processos (números CNJ, um por linha)<textarea id="c-procs" rows="2" class="search"></textarea></label>
+        <label class="wide">Parte contrária (nome ou CPF/CNPJ, uma por linha) — usada na verificação de conflito<textarea id="c-contra" rows="2" class="search" placeholder="Ex.: Banco X S/A"></textarea></label>
       </div>
+      <div id="c-conflito" class="small" hidden></div>
       <div style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn" id="crm-salvar">Salvar</button><button class="back" id="crm-cancelar">Cancelar</button><button class="back" id="crm-excluir" style="color:#b42318">Apagar dados deste cliente</button></div>
     </div>
     <div class="panel" id="crm-wa" hidden>
@@ -79,6 +81,9 @@
       <div style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn" id="wa-abrir">Abrir no WhatsApp</button><button class="back" id="wa-fechar">Fechar</button></div>
     </div>
     <div class="dossie">
+      <div class="panel wide" id="fi-onb" hidden><div class="fi-tit"><h2>Primeiros passos do cliente</h2><span class="small muted" id="fi-onb-prog"></span></div>
+        <ul class="list" id="fi-onb-lista" style="list-style:none;padding-left:0"></ul>
+        <button class="linkish small" id="fi-onb-pedir" type="button">Pedir pelo WhatsApp os documentos que faltam</button></div>
       <div class="panel wide"><div class="fi-tit"><h2>A fazer</h2><span class="small"><button class="linkish" id="fi-calc">Calcular prazo</button></span></div>
         <form id="fi-qa" class="fi-qa"><input id="fi-qa-texto" class="search" placeholder="Anotar para este cliente… ex.: réplica vence 20/10"></form>
         <div id="fi-qa-prev" class="qa-prev" hidden></div>
@@ -129,7 +134,8 @@
       <div class="calc-abas"><button type="button" class="on" data-pz-area="civel">Cível, trabalhista e Juizado</button><button type="button" data-pz-area="penal">Penal</button></div>
       <p class="calc-regra" id="pz-regra"></p>
       <div class="crm-grid">
-        <label>A partir de<select id="pz-tipo" class="search"><option value="disponibilizacao">Disponibilização no DJEN/DJe</option><option value="publicacao">Publicação</option><option value="intimacao">Intimação / ciência</option><option value="portal">Intimação no portal (ciência em 10 dias)</option></select></label>
+        <label class="wide">O que vence<select id="pz-preset" class="search"></select></label>
+        <label>A partir de<select id="pz-tipo" class="search"><option value="disponibilizacao">Disponibilização no DJEN/DJe</option><option value="publicacao">Publicação</option><option value="intimacao">Intimação / ciência / juntada do mandado ou AR</option><option value="portal">Intimação no portal (ciência em 10 dias)</option></select></label>
         <label>Data<input id="pz-data" class="search" type="date" required></label>
         <label>Prazo (dias)<input id="pz-dias" class="search" type="number" min="1" value="15" required></label>
         <input type="hidden" id="pz-contagem" value="uteis">
@@ -137,9 +143,11 @@
           <span><input type="checkbox" id="pz-dobro"> <span id="pz-dobro-txt">Prazo em dobro (Fazenda, MP, Defensoria, litisconsortes em autos físicos)</span></span>
           <span><input type="checkbox" id="pz-recesso" checked> <span id="pz-recesso-txt">Recesso 20/12–20/01 (CPC, art. 220)</span></span>
           <span><input type="checkbox" id="pz-forenses" checked> Carnaval, Quinta-feira Santa, Corpus Christi e Dia da Justiça</span></label>
+        <label>Estado (feriado estadual)<select id="pz-uf" class="search"><option value="">— só nacionais —</option></select></label>
         <label class="wide">Feriados locais e suspensões do tribunal (um por linha: dd/mm/aaaa motivo) — ficam salvos<textarea id="pz-extras" rows="2" class="search" placeholder="28/10/2026 Dia do Servidor (TJDFT)"></textarea></label>
         <label class="wide">Providência<input id="pz-prov" class="search" placeholder="Ex.: Réplica, Contrarrazões, Embargos de declaração"></label>
         <label>Cliente<select id="pz-caso" class="search"></select></label>
+        <label class="wide" style="display:flex;gap:8px;align-items:center"><input type="checkbox" id="pz-revisao" checked> Ao lançar, criar também uma tarefa de revisão da peça 3 dias úteis antes do vencimento</label>
       </div>
       <div><button class="btn" type="submit">Calcular</button></div>
       <div id="pz-res" hidden></div>
@@ -309,5 +317,6 @@
 <script src="precificacao.js"></script>
 <script src="dac-painel.js"></script>
 <script src="nuvem.js"></script>
+<script src="entrada.js"></script>
 </body>
 </html>

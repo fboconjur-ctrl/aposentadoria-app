@@ -17,6 +17,12 @@ Prévia: https://deploy-preview-1--prevcalculadora.netlify.app/plataforma-direit
 **Skills** (`skills/`): `peticao` (kit + petição com jurisprudência verificada do foro) e `protocolo-pje` (preenche o PJe e PARA antes da assinatura).
 **Rotina**: "Publicações diárias" (9h44, dias úteis) — falta marcar o conector Gmail nela em claude.ai → Routines.
 
+## Melhorias de nov/2026 (referência: pack de skills jurídicas do Chat Jurídico, reescrito do zero)
+- Prazos: lista de peças com dias e base legal; feriado estadual por UF (padrão DF, fica salvo); avisos D-5/D-3/D-1 em dias úteis; ao lançar, cria tarefa "Revisar e protocolar" 3 dias úteis antes. Testes: `node plataforma-direito/ferramentas/testar-prazos.js`.
+- Cadastro: campo "Parte contrária" + verificação de conflito de interesses na carteira (direto / possível / sem indício), registrada no histórico (`escritorio/entrada.js`).
+- Ficha: "Primeiros passos do cliente" (contratado/caso ativo) com checklist por área e pedido dos documentos que faltam pelo WhatsApp.
+- WhatsApp: modelos novos (boas-vindas, lembrete de documento, aviso de prazo/assinatura, retomar proposta, encerramento e avaliação).
+
 ## Pendências (em ordem)
 0. **PRÓXIMO PASSO — Login com Google (fazer pelo Claude in Chrome, ela pediu que o Claude faça):**
    a) console.cloud.google.com/auth/clients → criar projeto "escritorio" se pedir; tela de consentimento (nome do app + e-mail dela);

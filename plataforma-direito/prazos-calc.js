@@ -31,6 +31,62 @@ const Prazos = (() => {
     f.set(`${ano}-08-11`, "Dia da Justiça (verificar)"); f.set(`${ano}-12-08`, "Dia da Justiça / Imaculada Conceição (verificar)");
     return f;
   }
+  // Feriados estaduais fixos (lei estadual/distrital). Só os de data fixa e amplamente reconhecidos; os demais entram
+  // como "feriados locais". Conferir sempre no calendário do tribunal.
+  const FERIADOS_UF = {
+    DF: [["11-30", "Dia do Evangélico (Lei distrital 963/1995)"]],
+    SP: [["07-09", "Revolução Constitucionalista (Lei estadual 9.497/1997)"]],
+    RJ: [["04-23", "Dia de São Jorge (Lei estadual 5.198/2008)"]],
+    BA: [["07-02", "Independência da Bahia"]],
+    PE: [["03-06", "Data Magna de Pernambuco"]],
+    RS: [["09-20", "Revolução Farroupilha"]],
+    CE: [["03-25", "Data Magna do Ceará"]],
+    AM: [["09-05", "Elevação do Amazonas a província"]],
+    PA: [["08-15", "Adesão do Pará à Independência"]],
+    MA: [["07-28", "Adesão do Maranhão à Independência"]],
+    PI: [["10-19", "Dia do Piauí"]],
+    TO: [["10-05", "Criação do Tocantins"]],
+    AC: [["06-15", "Aniversário do Acre"]],
+    AP: [["10-05", "Criação do Amapá"]],
+    RR: [["10-05", "Criação de Roraima"]],
+    RN: [["10-03", "Mártires de Cunhaú e Uruaçu"]],
+    PB: [["08-05", "Fundação do Estado da Paraíba"]],
+    SE: [["07-08", "Emancipação de Sergipe"]],
+    AL: [["06-24", "São João"], ["09-16", "Emancipação de Alagoas"]],
+    MS: [["10-11", "Criação de Mato Grosso do Sul"]],
+    SC: [],
+    PR: [["12-19", "Emancipação do Paraná (verificar)"]],
+    ES: [], MG: [], GO: [], MT: [], RO: [["01-04", "Criação de Rondônia"]],
+  };
+  function feriadosUF(uf, ano) {
+    const f = new Map(); (FERIADOS_UF[uf] || []).forEach(([md, n]) => f.set(`${ano}-${md}`, `${n} — ${uf}`)); return f;
+  }
+  // Prazos usuais (ponto de partida; prazo fixado pelo juiz ou rito especial prevalece).
+  const PRESETS = [
+    { id: "contestacao", nome: "Contestação", dias: 15, area: "civel", base: "CPC, art. 335" },
+    { id: "replica", nome: "Réplica", dias: 15, area: "civel", base: "CPC, arts. 350 e 351" },
+    { id: "manifestacao", nome: "Manifestação (prazo geral)", dias: 5, area: "civel", base: "CPC, art. 218, §3º" },
+    { id: "apelacao", nome: "Apelação", dias: 15, area: "civel", base: "CPC, art. 1.003, §5º" },
+    { id: "contrarrazoes", nome: "Contrarrazões", dias: 15, area: "civel", base: "CPC, art. 1.010, §1º" },
+    { id: "agravo-instrumento", nome: "Agravo de instrumento", dias: 15, area: "civel", base: "CPC, art. 1.003, §5º" },
+    { id: "agravo-interno", nome: "Agravo interno", dias: 15, area: "civel", base: "CPC, art. 1.070" },
+    { id: "embargos-declaracao", nome: "Embargos de declaração", dias: 5, area: "civel", base: "CPC, art. 1.023" },
+    { id: "resp-re", nome: "Recurso especial / extraordinário", dias: 15, area: "civel", base: "CPC, art. 1.003, §5º" },
+    { id: "cumprimento", nome: "Pagamento voluntário (cumprimento de sentença)", dias: 15, area: "civel", base: "CPC, art. 523" },
+    { id: "impugnacao-cumprimento", nome: "Impugnação ao cumprimento de sentença", dias: 15, area: "civel", base: "CPC, art. 525" },
+    { id: "embargos-execucao", nome: "Embargos à execução", dias: 15, area: "civel", base: "CPC, art. 915" },
+    { id: "recurso-inominado", nome: "Recurso inominado (Juizado)", dias: 10, area: "civel", base: "Lei 9.099/1995, arts. 12-A e 42" },
+    { id: "embargos-jec", nome: "Embargos de declaração (Juizado)", dias: 5, area: "civel", base: "Lei 9.099/1995, arts. 12-A e 49" },
+    { id: "recurso-ordinario", nome: "Recurso ordinário (trabalhista)", dias: 8, area: "civel", base: "CLT, arts. 775 e 895" },
+    { id: "embargos-clt", nome: "Embargos de declaração (trabalhista)", dias: 5, area: "civel", base: "CLT, arts. 775 e 897-A" },
+    { id: "recurso-revista", nome: "Recurso de revista", dias: 8, area: "civel", base: "CLT, art. 896" },
+    { id: "resposta-acusacao", nome: "Resposta à acusação", dias: 10, area: "penal", base: "CPP, art. 396" },
+    { id: "alegacoes-finais", nome: "Alegações finais (memoriais)", dias: 5, area: "penal", base: "CPP, art. 403, §3º" },
+    { id: "apelacao-penal", nome: "Apelação criminal (interposição)", dias: 5, area: "penal", base: "CPP, art. 593" },
+    { id: "razoes-apelacao", nome: "Razões de apelação criminal", dias: 8, area: "penal", base: "CPP, art. 600" },
+    { id: "rese", nome: "Recurso em sentido estrito", dias: 5, area: "penal", base: "CPP, art. 586" },
+    { id: "embargos-penal", nome: "Embargos de declaração (penal)", dias: 2, area: "penal", base: "CPP, art. 619" },
+  ];
   const noRecesso = (d) => (d.getMonth() === 11 && d.getDate() >= 20) || (d.getMonth() === 0 && d.getDate() <= 20);
 
   function motivoNaoUtil(d, op) {
@@ -40,6 +96,7 @@ const Prazos = (() => {
     if (op.recesso && noRecesso(d)) return op.penal ? "suspensão de 20/12 a 20/01 (CPP, art. 798-A)" : "recesso forense (CPC, art. 220)";
     if (op.extras?.has(k)) return op.extras.get(k);
     const nac = feriadosNacionais(d.getFullYear()).get(k); if (nac) return nac;
+    if (op.uf) { const est = feriadosUF(op.uf, d.getFullYear()).get(k); if (est) return est; }
     if (op.forenses) { const fo = feriadosForenses(d.getFullYear()).get(k); if (fo) return fo; }
     return null;
   }
@@ -51,7 +108,7 @@ const Prazos = (() => {
    */
   function calcular(o) {
     const penal = o.contagem === "penal";
-    const op = { recesso: o.recesso !== false, forenses: o.forenses !== false, extras: o.extras || new Map(), penal };
+    const op = { recesso: o.recesso !== false, forenses: o.forenses !== false, extras: o.extras || new Map(), penal, uf: o.uf || "" };
     const pulos = [], passos = [];
     let marco = dia(o.marco);
     if (o.tipoMarco === "disponibilizacao") {
@@ -77,8 +134,14 @@ const Prazos = (() => {
     if (chave(fimUtil) !== chave(fim)) passos.push([penal ? "Vencimento caiu em dia sem expediente — prorrogado (CPP, art. 798, §3º)" : "Vencimento original caiu em dia sem expediente", chave(fim)]);
     passos.push([`Vencimento (${total} dia${total > 1 ? "s" : ""} ${penal ? "contínuos — CPP, art. 798" : o.contagem === "corridos" ? "corridos" : "úteis"}${o.dobro ? ", em dobro" : ""})`, chave(fimUtil)]);
     const vistos = new Set();
-    return { vencimento: chave(fimUtil), inicio: chave(inicio), passos, pulos: pulos.filter(([k]) => !vistos.has(k) && vistos.add(k)) };
+    return { vencimento: chave(fimUtil), inicio: chave(inicio), passos, pulos: pulos.filter(([k]) => !vistos.has(k) && vistos.add(k)), alertas: alertas(chave(fimUtil), o) };
   }
-  return { calcular, pascoa, feriadosNacionais, feriadosForenses, chave };
+  // Datas de aviso antes do vencimento, contadas em dias úteis (com os mesmos feriados do cálculo),
+  // para o aviso nunca cair num sábado ou feriado. Ex.: [5, 3, 1] → D-5, D-3, D-1 úteis.
+  function alertas(venc, o = {}, antes = [5, 3, 1]) {
+    const op = { recesso: o.recesso !== false, forenses: o.forenses !== false, extras: o.extras || new Map(), uf: o.uf || "" };
+    return antes.map((n) => { let d = dia(venc), c = 0; while (c < n) { d = soma(d, -1); if (!motivoNaoUtil(d, op)) c++; } return [n, chave(d)]; });
+  }
+  return { calcular, alertas, pascoa, feriadosNacionais, feriadosForenses, feriadosUF, UFS: Object.keys(FERIADOS_UF).sort(), PRESETS, chave };
 })();
 if (typeof module !== "undefined") module.exports = Prazos;
