@@ -162,7 +162,11 @@
   function camposExtras() {
     const m = modelos[$("pe-modelo").value]; if (!m) { $("pe-campos").innerHTML = ""; return; }
     const extras = marcadores(m.corpo).filter((x) => !FIXOS[x]);
-    $("pe-campos").innerHTML = extras.map((x) => `<label>${esc(x.replace(/_/g, " ").toLowerCase())}<input class="search pe-extra" data-k="${x}"></label>`).join("") || `<p class="small muted">Este modelo só usa os dados automáticos.</p>`;
+    const c = cliPorId($("pe-cli").value), q = c?.qualif || {};
+    const rel = c?.relato || "", achar = (re) => (rel.match(re) || [])[1];
+    const doCliente = { DER: achar(/\bDER\b[^\d]{0,15}(\d{1,2}\/\d{1,2}\/\d{4})/i), NB: achar(/\b(?:NB|benef[ií]cio n[º°.]?)\s*:?\s*([\d.\-\/]{6,})/i), DATA_DA_DISPONIBILIZACAO: achar(/disponibiliza[çc][ãa]o[^\d]{0,20}(\d{1,2}\/\d{1,2}\/\d{4})/i), ENDERECO: q.endereco, RG: q.rg, FATOS: c?.relato, FATOS_DO_CASO: c?.relato, FATOS_E_QUADRO_CLINICO: c?.relato, PARTE_CONTRARIA: c?.contra, RECLAMANTE: c?.contra };
+    const antes = Object.fromEntries([...document.querySelectorAll(".pe-extra")].map((i) => [i.dataset.k, i.value]));
+    $("pe-campos").innerHTML = extras.map((x) => { const val = antes[x] || doCliente[x] || ""; const longo = /FATOS|TRECHO|ARGUMENTOS|RESUMO|SITUACAO/.test(x); return `<label class="${longo ? "wide" : ""}">${esc(x.replace(/_/g, " ").toLowerCase())}${doCliente[x] ? ' <span class="small muted">(do cadastro do cliente)</span>' : ""}${longo ? `<textarea class="search pe-extra" data-k="${x}" rows="4">${esc(val)}</textarea>` : `<input class="search pe-extra" data-k="${x}" value="${esc(val)}">`}</label>`; }).join("") || `<p class="small muted">Este modelo só usa os dados automáticos.</p>`;
   }
   function montar() {
     const m = modelos[$("pe-modelo").value]; if (!m) { $("pe-status").textContent = "Escolha um modelo."; return null; }
@@ -170,8 +174,11 @@
     const AVISO_DIST = "[DISTINÇÃO: explique por que o(s) precedente(s) abaixo, em sentido contrário, não se aplica(m) ao caso — diferença de fatos, de fundamento ou superação.]";
     const marcados = [...sel].map((i) => juris[i]).filter(Boolean);
     const escolhidos = marcados.filter((j) => j.pos !== "con"), opostos = marcados.filter((j) => j.pos === "con");
-    const v = { CLIENTE: c?.nome, CPF: c?.cpf, EMAIL: c?.email, TELEFONE: c?.tel, PROCESSO: $("pe-proc").value, ADVOGADA: a.nome, OAB: a.oab, CIDADE_DATA: `${a.cidade || "Brasília/DF"}, ${new Date().toLocaleDateString("pt-BR", { day: "numeric", month: "long", year: "numeric" })}` };
-    document.querySelectorAll(".pe-extra").forEach((i) => (v[i.dataset.k] = i.value.trim()));
+    const q = c?.qualif || {};
+    const qualifTxt = c && q.endereco ? [q.nacionalidade || "brasileiro(a)", q.civil, q.profissao, q.rg ? `portador(a) do RG n.º ${q.rg}${q.orgao ? ` ${q.orgao}` : ""}` : "", c.cpf ? `inscrito(a) no CPF sob o n.º ${c.cpf}` : "", `residente e domiciliado(a) em ${q.endereco}`].filter(Boolean).join(", ") : "";
+    const rel = c?.relato || "", achar = (re) => (rel.match(re) || [])[1];
+    const v = { DER: achar(/\bDER\b[^\d]{0,15}(\d{1,2}\/\d{1,2}\/\d{4})/i), NB: achar(/\b(?:NB|benef[ií]cio n[º°.]?)\s*:?\s*([\d.\-\/]{6,})/i), ENDERECO: q.endereco, RG: q.rg, QUALIFICACAO: qualifTxt, FATOS: c?.relato, FATOS_DO_CASO: c?.relato, FATOS_E_QUADRO_CLINICO: c?.relato, PARTE_CONTRARIA: c?.contra, RECLAMANTE: c?.contra, CLIENTE: c?.nome, CPF: c?.cpf, EMAIL: c?.email, TELEFONE: c?.tel, PROCESSO: $("pe-proc").value, ADVOGADA: a.nome, OAB: a.oab, CIDADE_DATA: `${a.cidade || "Brasília/DF"}, ${new Date().toLocaleDateString("pt-BR", { day: "numeric", month: "long", year: "numeric" })}` };
+    document.querySelectorAll(".pe-extra").forEach((i) => { if (i.value.trim()) v[i.dataset.k] = i.value.trim(); });
     const faltam = [];
     let html = esc(m.corpo).replace(/\{\{\s*([A-Z0-9_ÁÉÍÓÚÂÊÔÃÕÇ]+)\s*\}\}/gi, (_, k) => {
       k = k.toUpperCase();
@@ -199,6 +206,7 @@
   }
   $("pe-modelo").onchange = () => { camposExtras(); $("pe-prev").hidden = true; };
   $("pe-cli").onfocus = () => { const val = $("pe-cli").value; $("pe-cli").innerHTML = `<option value="">— escolher —</option>` + [...clientes].sort((a, b) => a.nome.localeCompare(b.nome)).map((c) => `<option value="${c.id}">${esc(c.nome)}</option>`).join(""); $("pe-cli").value = val; };
+  $("pe-cli").addEventListener("change", () => camposExtras());
   $("pe-cli").onchange = () => { const c = cliPorId($("pe-cli").value); $("pe-proc").innerHTML = (c ? procsDe(c) : []).map((n) => `<option>${mascara(n)}</option>`).join("") + `<option value="">— sem processo —</option>`; };
   $("pe-montar").onclick = () => { const r = montar(); if (!r) return; $("pe-folha").innerHTML = r.html; $("pe-prev").hidden = false; };
   const docHtml = (corpo) => `<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word"><head><meta charset="utf-8"><style>body{font:12pt/1.5 "Times New Roman",serif}p{text-align:justify;text-indent:2cm}.cit{margin-left:4cm;text-indent:0;font-size:11pt;line-height:1.2}mark{background:#ff0}</style></head><body>${corpo}</body></html>`;
