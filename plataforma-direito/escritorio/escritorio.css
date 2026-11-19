@@ -123,6 +123,9 @@ body.office { display: grid; grid-template-columns: 240px minmax(0, 1fr); min-he
   .side nav { display: flex; flex-wrap: nowrap; overflow-x: auto; gap: 4px; margin: 0; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
   .side nav::-webkit-scrollbar { display: none; }
   .nav { white-space: nowrap; flex: none; padding: 8px 12px; }
+  .nav-txt { display: none; }
+  .nav { padding: 8px 8px; font-size: .95rem; }
+  .side nav { gap: 2px; }
   .demo-note { display: none; }
   .office-main { padding: 18px 16px 48px; }
   .search { min-width: 0; width: 100%; }

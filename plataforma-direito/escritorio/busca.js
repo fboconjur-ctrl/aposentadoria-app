@@ -1,7 +1,7 @@
 // Busca rápida: aperte "/" (ou o botão 🔍) em qualquer tela e ache cliente ou processo pelo nome, CPF, telefone ou número.
 (() => {
   const nav = document.querySelector("nav"); if (!nav) return;
-  const bt = document.createElement("button"); bt.className = "nav"; bt.textContent = "🔍 Buscar"; bt.title = "Buscar (atalho: /)"; nav.appendChild(bt);
+  const bt = document.createElement("button"); bt.className = "nav"; bt.innerHTML = `🔍<span class="nav-txt"> Buscar</span>`; bt.setAttribute("aria-label", "Buscar"); bt.title = "Buscar (atalho: /)"; nav.appendChild(bt);
   const ov = document.createElement("div");
   ov.style.cssText = "position:fixed;inset:0;background:rgba(10,20,50,.45);z-index:9999;display:none;align-items:flex-start;justify-content:center;padding:10vh 16px";
   ov.innerHTML = `<div class="panel" style="width:min(640px,100%);max-height:75vh;overflow:auto;margin:0"><input id="bg-q" class="search" style="width:100%;box-sizing:border-box;font-size:17px" placeholder="Nome, CPF, telefone ou número do processo"><ul class="list" id="bg-res" style="margin-top:8px"></ul><p class="small muted" style="margin:6px 0 0">Enter abre o primeiro · Esc fecha</p></div>`;
