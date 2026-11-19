@@ -290,9 +290,10 @@ function abrirFicha(id, { manterScroll } = {}) {
   $("fi-wa").hidden = !telWa(c.tel);
   $("crm-form").hidden = true; $("crm-wa").hidden = true; $("fi-ind").hidden = true;
   window.renderOnb?.();
+  window.renderSpin?.();
   window.renderResp?.();
 }
-$("fi-etapa").onchange = () => { const c = cliPorId(fichaAtual); c.etapa = $("fi-etapa").value; (c.hist ||= []).unshift({ em: new Date().toISOString(), o: `Etapa: ${c.etapa}` }); salvarCrm(); renderTudo(); };
+$("fi-etapa").onchange = () => { const c = cliPorId(fichaAtual); c.etapa = $("fi-etapa").value; (c.hist ||= []).unshift({ em: new Date().toISOString(), o: `Etapa: ${c.etapa}` }); salvarCrm(); renderTudo(); window.renderSpin?.(); };
 let notasTimer;
 $("fi-notas").oninput = () => { clearTimeout(notasTimer); notasTimer = setTimeout(() => { const c = cliPorId(fichaAtual); if (c) { c.notas = $("fi-notas").value; salvarCrm(); } }, 600); };
 $("fi-calc").onclick = () => { go("prazos"); $("pz-caso").dispatchEvent(new Event("focus")); $("pz-caso").value = fichaAtual; };

@@ -177,14 +177,15 @@
   const POLO = { A: "polo ativo", P: "polo passivo" };
   function renderSug() {
     const box = $("cli-sug"); if (!box) return;
-    const lista = sugestoes(); box.hidden = !lista.length;
-    if (!lista.length) return;
+    const lista = sugestoes(); box.hidden = !lista.length && !ignoradas.size;
+    $("cli-sug-desc").innerHTML = ignoradas.size ? `<details><summary class="small">Nomes que você marcou como “não é cliente” (${ignoradas.size}) — clique para desfazer</summary><ul class="list small">${[...ignoradas].map((k) => `<li>${esc(nomeProprio(k))} <button class="linkish small" data-sug="volta" data-k2="${esc(k)}">desfazer</button></li>`).join("")}</ul></details>` : "";
     $("cli-sug-n").textContent = `${lista.length} nome(s)`;
     $("cli-sug-lista").innerHTML = lista.map(([k, s]) => `<li data-k="${esc(k)}"><label style="display:flex;gap:10px;align-items:flex-start;flex:1"><input type="checkbox" class="cli-sug-ck"${s.orgao ? "" : " checked"}>
       <span><b>${esc(s.nome)}</b>${s.orgao ? ` <span class="pill-s">órgão/empresa</span>` : ""}<br><span class="small muted">${s.procs.map((n) => esc(mascara(n))).join(" · ")}${s.polo ? ` · ${POLO[s.polo] || s.polo}` : ""}</span></span></label>
       <button class="linkish small" data-sug="ign">não é cliente</button></li>`).join("");
   }
-  $("cli-sug-lista")?.addEventListener("click", (e) => {
+  $("cli-sug")?.addEventListener("click", (e) => {
+    const v = e.target.closest("[data-sug=volta]"); if (v) { ignoradas.delete(v.dataset.k2); gravar(IGN_KEY, [...ignoradas]); renderSug(); return; }
     const b = e.target.closest("[data-sug=ign]"); if (!b) return;
     ignoradas.add(b.closest("[data-k]").dataset.k); gravar(IGN_KEY, [...ignoradas]); renderSug();
   });

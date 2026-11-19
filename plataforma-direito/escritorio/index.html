@@ -51,13 +51,14 @@
       <p class="small">Estes nomes aparecem como partes intimadas nas publicações da sua OAB. A publicação traz <b>também a parte contrária</b>, então confira: deixe marcados só os seus clientes e clique em cadastrar. Os desmarcados não aparecem mais.</p>
       <ul class="list" id="cli-sug-lista"></ul>
       <div class="as-linha"><button class="btn" id="cli-sug-add">Cadastrar os marcados como clientes</button><button class="linkish small" id="cli-sug-todos">marcar/desmarcar todos</button><span class="small" id="cli-sug-msg"></span></div>
+      <div id="cli-sug-desc"></div>
     </details>
     <div class="panel"><ul class="list" id="cli-lista"></ul></div>
   </section>
 
   <section id="v-ficha" class="oview">
     <header class="ohead"><div><button class="back" data-view="clientes">← Clientes</button><h1 id="fi-nome"></h1><p class="muted" id="fi-sub"></p></div>
-      <div class="fi-acoes"><select id="fi-etapa" class="search" aria-label="Etapa"></select><button class="wa-btn" id="fi-wa">WhatsApp</button><button class="back" id="fi-editar">Editar dados</button><button class="back" id="fi-docs">Documentos / kit</button><button class="back" id="fi-dac">⚖️ Motor DAC</button><button class="back" id="fi-ind-abrir">Indicar a colega</button><label class="small so-titular" id="fi-resp-box" hidden>Responsável <select id="fi-resp" class="search"></select></label></div></header>
+      <div class="fi-acoes"><select id="fi-etapa" class="search" aria-label="Etapa"></select><button class="wa-btn" id="fi-wa">WhatsApp</button><button class="back" id="fi-editar">Editar dados</button><button class="back" id="fi-docs">Documentos / kit</button><button class="back" id="fi-org" onclick="abrirOrganizador(fichaAtual)">📂 Organizar arquivos</button><button class="back" id="fi-dac">⚖️ Motor DAC</button><button class="back" id="fi-ind-abrir">Indicar a colega</button><label class="small so-titular" id="fi-resp-box" hidden>Responsável <select id="fi-resp" class="search"></select></label></div></header>
     <form class="panel" id="fi-ind" hidden>
       <h2>Indicar a colega</h2>
       <div class="crm-grid">
@@ -92,6 +93,8 @@
       <div style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn" id="wa-abrir">Abrir no WhatsApp</button><button class="back" id="wa-fechar">Fechar</button></div>
     </div>
     <div class="dossie">
+      <div class="panel wide" id="fi-spin" hidden><div class="fi-tit"><h2>Roteiro de conversa (WhatsApp)</h2><span class="small muted">Atendimento consultivo: entender antes de propor</span></div>
+        <div id="fi-spin-passos" class="spin-passos"></div></div>
       <div class="panel wide" id="fi-onb" hidden><div class="fi-tit"><h2>Primeiros passos do cliente</h2><span class="small muted" id="fi-onb-prog"></span></div>
         <ul class="list" id="fi-onb-lista" style="list-style:none;padding-left:0"></ul>
         <button class="linkish small" id="fi-onb-pedir" type="button">Pedir pelo WhatsApp os documentos que faltam</button></div>
@@ -123,6 +126,8 @@
       <button class="card-c" data-view="djen"><b>Publicações</b><span class="meta">DJEN e Recorte Digital da OAB/DF</span></button>
       <button class="card-c" data-view="prazos"><b>Calcular prazo</b><span class="meta">Cível, trabalhista, Juizado e penal</span></button>
       <button class="card-c" data-view="docs"><b>Documentos e kit da ação</b><span class="meta">Procuração, contrato, proposta, petição</span></button>
+      <button class="card-c" data-view="organizador"><b>📂 Organizador de documentos</b><span class="meta">Separa os arquivos do cliente por tipo e baixa tudo em pastas</span></button>
+      <button class="card-c" data-view="peticoes"><b>✍️ Redator de petições</b><span class="meta">Seus modelos + sua jurisprudência conferida. Não inventa nada</span></button>
       <button class="card-c" data-view="assistente"><b>✨ Assistente jurídico</b><span class="meta">Analisar sentença, resumir processo, responder contato, notificação, posts…</span></button>
       <button class="card-c so-titular" data-view="metricas"><b>📊 Números do escritório</b><span class="meta">Contatos, contratação, recebimentos, atrasos e prazos</span></button>
       <button class="card-c so-titular" data-view="equipe"><b>Equipe</b><span class="meta">Advogados associados e quem cuida de cada caso</span></button>
@@ -153,6 +158,55 @@
       <div><button class="wa-btn" id="ac-msg-enviar">Abrir no WhatsApp</button> <span class="small muted">Você revisa e envia pelo seu WhatsApp. Fica registrado no histórico do cliente.</span></div>
     </div>
     <div id="ac-lista" class="ac-lista"></div>
+  </section>
+
+  <section id="v-organizador" class="oview">
+    <header class="ohead"><div><button class="back" data-voltar>← Voltar</button><h1>Organizador de documentos</h1><p class="muted">Arraste os arquivos que o cliente mandou (PDF ou fotos). O painel lê cada um no seu computador, separa por tipo, dá nomes padronizados e baixa tudo em pastas. Nada é enviado.</p></div></header>
+    <div class="panel">
+      <label class="small" style="max-width:360px">Cliente<select id="or-cli" class="search"></select></label>
+      <div id="or-zona" class="or-zona"><p><b>Arraste os arquivos aqui</b> ou</p><label class="btn">Escolher arquivos<input type="file" id="or-arquivos" multiple accept="application/pdf,image/*,.doc,.docx" hidden></label>
+        <p class="small"><label><input type="checkbox" id="or-ocr"> Ler também o texto das fotos (mais lento, melhora a separação)</label></p></div>
+      <p class="small" id="or-status" role="status"></p>
+    </div>
+    <div class="panel" id="or-saida" hidden>
+      <div class="as-tab"><table><thead><tr><th>Arquivo recebido</th><th>Categoria</th><th>Novo nome</th><th></th></tr></thead><tbody id="or-tab"></tbody></table></div>
+      <div class="as-linha"><button class="btn" id="or-zip">Baixar tudo organizado (ZIP)</button><button class="linkish small" id="or-limpar">limpar</button></div>
+      <div class="small" id="or-falta"></div>
+    </div>
+  </section>
+
+  <section id="v-peticoes" class="oview">
+    <header class="ohead"><div><button class="back" data-voltar>← Voltar</button><h1>Redator de petições</h1><p class="muted">Monta a minuta só com o seu modelo, os dados do cliente e os julgados que você cadastrou. O que faltar fica marcado em amarelo como [PREENCHER]. Nada é inventado.</p></div></header>
+    <div class="panel">
+      <h2>Montar petição</h2>
+      <div class="crm-grid">
+        <label>Modelo<select id="pe-modelo" class="search"></select></label>
+        <label>Cliente<select id="pe-cli" class="search"></select></label>
+        <label>Processo<select id="pe-proc" class="search"><option value="">— sem processo —</option></select></label>
+      </div>
+      <div class="crm-grid" id="pe-campos"></div>
+      <details class="small"><summary><b>Jurisprudência do seu banco</b> (marque as que entram na peça)</summary>
+        <input id="pe-jur-busca" class="search" placeholder="Buscar por tema, tribunal, número, palavra da ementa" style="width:100%;box-sizing:border-box;margin:8px 0">
+        <ul class="list" id="pe-jur-lista"></ul></details>
+      <div class="as-linha"><button class="back" id="pe-montar">Ver prévia</button><button class="btn" id="pe-word">Baixar em Word</button></div>
+      <p class="small" id="pe-status" role="status"></p>
+    </div>
+    <div class="panel" id="pe-prev" hidden><div id="pe-folha" class="doc-folha pe-folha"></div></div>
+    <details class="panel" id="pe-banco"><summary><b>Meu banco de modelos</b> <span class="small muted">(suas petições-modelo)</span></summary>
+      <ul class="list" id="pe-mod-lista"></ul>
+      <form id="pe-mod-form" style="display:grid;gap:10px;margin-top:10px">
+        <div class="crm-grid"><label>Título<input id="pe-mod-tit" class="search" required placeholder="Ex.: Inicial – negativa de cirurgia pelo plano"></label><label>Área<input id="pe-mod-area" class="search" placeholder="Saúde"></label></div>
+        <label class="small">Texto do modelo. Use marcadores entre chaves duplas: <code>{{CLIENTE}}</code> <code>{{CPF}}</code> <code>{{PROCESSO}}</code> <code>{{ADVOGADA}}</code> <code>{{OAB}}</code> <code>{{CIDADE_DATA}}</code> <code>{{JURISPRUDENCIA}}</code> e qualquer outro que quiser, como <code>{{ENDERECO}}</code> ou <code>{{VALOR_DA_CAUSA}}</code> (o painel pede na hora de montar).
+          <textarea id="pe-mod-corpo" class="search" rows="10" style="width:100%;box-sizing:border-box"></textarea></label>
+        <div class="as-linha"><button class="btn" id="pe-mod-salvar">Salvar modelo</button><label class="back as-pdf-btn">Importar de um arquivo Word (.docx) ou .txt<input type="file" id="pe-mod-arq" accept=".docx,.txt" hidden></label></div>
+      </form></details>
+    <details class="panel"><summary><b>Meu banco de jurisprudência</b> <span class="small muted">(só julgados que você leu e conferiu)</span></summary>
+      <form id="pe-jur-form" style="display:grid;gap:10px;margin-top:10px">
+        <div class="crm-grid"><label>Tribunal<input id="pe-jur-trib" class="search" required placeholder="STJ"></label><label>Número<input id="pe-jur-num" class="search" required placeholder="REsp 1.234.567/DF"></label><label>Relator(a)<input id="pe-jur-rel" class="search"></label><label>Data do julgamento<input id="pe-jur-data" class="search" type="date"></label><label>Tema<input id="pe-jur-tema" class="search" placeholder="Plano de saúde – rol da ANS"></label><label>Link oficial<input id="pe-jur-link" class="search" type="url"></label></div>
+        <label class="small">Ementa ou trecho exato<textarea id="pe-jur-ementa" class="search" rows="4" required style="width:100%;box-sizing:border-box"></textarea></label>
+        <label class="small"><input type="checkbox" id="pe-jur-conf" checked> Conferi no site oficial do tribunal</label>
+        <div><button class="btn">Adicionar ao banco</button></div>
+      </form></details>
   </section>
 
   <section id="v-assistente" class="oview">
@@ -424,5 +478,8 @@
 <script src="metricas.js"></script>
 <script src="assistente.js"></script>
 <script src="acervo.js"></script>
+<script src="organizador.js"></script>
+<script src="peticoes.js"></script>
+<script src="spin.js"></script>
 </body>
 </html>
