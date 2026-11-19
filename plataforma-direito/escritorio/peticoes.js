@@ -46,6 +46,40 @@
     $("pe-jur-form").reset(); salvarJ(); renderJuris();
   };
   $("pe-jur-busca").oninput = renderJuris;
+  // Colar julgado: separa tribunal, número, relator e data do texto copiado do site do tribunal.
+  function lerJulgado(t) {
+    const txt = t.replace(/\s+/g, " ").trim();
+    const trib = (txt.match(/\b(STF|STJ|TST|TSE|TNU|TRF ?\d|TRT ?\d{1,2}|TJ[A-Z]{2,4}|TJDFT|TCU)\b/) || [])[1]?.replace(" ", "") || "";
+    const num = (txt.match(/\b((?:REsp|AREsp|AgInt|AgRg|EDcl|RE|ARE|ADI|ADPF|MS|RMS|HC|RR|AIRR|Ag|Ap|AC|AI|Rcl|PEDILEF|IRDR|Tema)[\s\w.-]*?\s?n?º?\s?[\d.\/-]{3,}[\w\/-]*)/i) || [])[1] || (txt.match(/\b\d{7}-?\d{2}\.?\d{4}\.?\d\.?\d{2}\.?\d{4}\b/) || [])[0] || "";
+    const rel = (txt.match(/[Rr]el(?:ator|atora|\.)?(?:\(a\))?:?\s*(?:p\/ (?:o )?ac[óo]rd[ãa]o\s*)?(?:Min(?:istro|istra|\.)?|Des(?:embargador|embargadora|\.)?(?:\(a\))?|Juiz(?:a)?(?: Federal)?)?\.?\s*([A-ZÁÉÍÓÚÂÊÔÃÕÇ][\wÁÉÍÓÚÂÊÔÃÕÇáéíóúâêôãõç]+(?:\s(?:de|da|do|dos|das|e|[A-ZÁÉÍÓÚÂÊÔÃÕÇ][\wÁÉÍÓÚÂÊÔÃÕÇáéíóúâêôãõç]+)){0,5})/) || [])[1] || "";
+    const dm = txt.match(/(?:julgad[oa] em|julgamento:?|data do julgamento:?)\s*(\d{1,2})\/(\d{1,2})\/(\d{4})/i) || txt.match(/\b(\d{1,2})\/(\d{1,2})\/(\d{4})\b/);
+    const tribF = trib || (/\b(REsp|AREsp|RMS|EREsp)\b/.test(num) ? "STJ" : /\b(RE|ARE|ADI|ADPF|ADC)\b/.test(num) ? "STF" : /\b(RR|AIRR|RO)\b/.test(num) ? "TST" : /PEDILEF/.test(num) ? "TNU" : "");
+    const p2 = (x) => String(x).padStart(2, "0");
+    return { trib: tribF, num: num.trim(), rel: rel.trim(), data: dm ? `${dm[3]}-${p2(dm[2])}-${p2(dm[1])}` : "", ementa: t.trim() };
+  }
+  $("pe-jur-colar-ler").onclick = () => {
+    const t = $("pe-jur-colar").value; if (t.trim().length < 40) { $("pe-jur-colar-msg").textContent = "Cole a ementa inteira, com o número do processo e o relator."; return; }
+    const j = lerJulgado(t);
+    $("pe-jur-trib").value = j.trib; $("pe-jur-num").value = j.num; $("pe-jur-rel").value = j.rel; $("pe-jur-data").value = j.data; $("pe-jur-ementa").value = j.ementa;
+    $("pe-jur-colar-msg").textContent = "Pronto: confira os campos abaixo, ajuste o que precisar, dê um tema e clique em Adicionar.";
+    $("pe-jur-tema").focus();
+  };
+  // Pesquisa direta nos sites oficiais (abre a busca já com o termo).
+  const BUSCAS = {
+    STJ: (q) => `https://scon.stj.jus.br/SCON/pesquisar.jsp?livre=${encodeURIComponent(q)}`,
+    STF: (q) => `https://jurisprudencia.stf.jus.br/pages/search?base=acordaos&queryString=${encodeURIComponent(q)}`,
+    TST: (q) => `https://www.google.com/search?q=${encodeURIComponent(q + " site:tst.jus.br")}`,
+    TJDFT: (q) => `https://www.google.com/search?q=${encodeURIComponent(q + " site:tjdft.jus.br")}`,
+    TRF1: (q) => `https://www.google.com/search?q=${encodeURIComponent(q + " site:trf1.jus.br")}`,
+    TNU: (q) => `https://www.google.com/search?q=${encodeURIComponent(q + " TNU site:cjf.jus.br")}`,
+    TCU: (q) => `https://www.google.com/search?q=${encodeURIComponent(q + " site:tcu.gov.br")}`,
+  };
+  $("pe-jur-pesq-botoes").innerHTML = Object.keys(BUSCAS).map((k) => `<button type="button" class="back" data-pesq="${k}">${k}</button>`).join("");
+  $("pe-jur-pesq-botoes").addEventListener("click", (e) => {
+    const b = e.target.closest("[data-pesq]"); if (!b) return;
+    const q = $("pe-jur-pesq").value.trim(); if (!q) { $("pe-jur-pesq").focus(); return; }
+    open(BUSCAS[b.dataset.pesq](q), "_blank", "noopener");
+  });
   $("pe-jur-lista").addEventListener("click", (e) => { const b = e.target.closest("[data-pj=del]"); if (b && confirm("Excluir este julgado do banco?")) { juris.splice(+b.dataset.i, 1); salvarJ(); renderJuris(); } });
 
   // ---------- Montar a petição ----------
