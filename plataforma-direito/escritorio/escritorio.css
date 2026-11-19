@@ -253,3 +253,27 @@ body.office { display: grid; grid-template-columns: 240px minmax(0, 1fr); min-he
 .spin-passo[open] { display: grid; gap: 8px; }
 .spin-passo.feito { opacity: .75; }
 .spin-passo textarea { width: 100%; box-sizing: border-box; }
+
+/* Ferramentas por grupo */
+.mais-grupo { font-size: 1rem; margin: 22px 0 10px; }
+.mais-grupo:first-of-type { margin-top: 4px; }
+.card-c b { font-size: 1rem; }
+/* Guia de primeiros passos */
+.guia { border-color: var(--brand); }
+.guia-lista { list-style: none; padding: 0; margin: 0; display: grid; gap: 8px; }
+.guia-lista li { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 10px 12px; border-radius: 10px; border: 1px solid var(--line); }
+.guia-lista li.agora { border-color: var(--brand); background: var(--tint); }
+.guia-lista li.feito { opacity: .6; }
+/* Ficha: ações */
+.fi-acoes { align-items: center; }
+.fi-etapa-l { display: flex; gap: 6px; align-items: center; }
+.fi-mais { position: relative; }
+.fi-mais > summary { list-style: none; cursor: pointer; }
+.fi-mais > summary::-webkit-details-marker { display: none; }
+.fi-mais-menu { position: absolute; right: 0; top: calc(100% + 6px); z-index: 20; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; box-shadow: var(--shadow); padding: 8px; display: grid; gap: 6px; min-width: 240px; }
+.fi-mais-menu .back { text-align: left; width: 100%; }
+@media (max-width: 640px) { .fi-mais-menu { left: 0; right: auto; } }
+.auto { border-color: var(--amber); }
+.auto-acoes { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; justify-content: flex-end; }
+#auto-lista li { align-items: center; }
+@media (max-width: 640px) { #auto-lista li { flex-wrap: wrap; } .auto-acoes { width: 100%; justify-content: flex-start; } }

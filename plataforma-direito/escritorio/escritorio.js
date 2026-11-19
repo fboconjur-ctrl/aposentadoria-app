@@ -485,7 +485,12 @@ async function consultaDjen(params) {
   for (let pagina = 1; pagina <= 5; pagina++) {
     const qs = new URLSearchParams({ ...params, pagina, itensPorPagina: 100 });
     let r = null;
-    try { r = await fetch(`https://comunicaapi.pje.jus.br/api/v1/comunicacao?${qs}`, { headers: { Accept: "application/json" } }); } catch { r = null; }
+    // Até 4 tentativas, esperando mais a cada recusa (o CNJ limita consultas muito seguidas).
+    for (let tent = 0; tent < 4; tent++) {
+      if (tent) await new Promise((ok) => setTimeout(ok, 2500 * 2 ** (tent - 1)));
+      try { r = await fetch(`https://comunicaapi.pje.jus.br/api/v1/comunicacao?${qs}`, { headers: { Accept: "application/json" } }); } catch { r = null; }
+      if (r && (r.ok || (r.status >= 400 && r.status < 429 && r.status !== 403))) break;
+    }
     if (!r || !r.ok) { const v = await fetch(`/api/djen?${qs}`).catch(() => null); if (v && (v.ok || !r)) r = v; }
     if (!r) throw new Error("sem conexão com o DJEN");
     const j = await r.json().catch(() => ({}));
@@ -496,14 +501,29 @@ async function consultaDjen(params) {
   }
   return lista;
 }
-async function buscarDjen({ dias, soOab } = {}) {
+async function buscarDjen({ dias, soOab, feitas: jaFeitas } = {}) {
   const oab = $("djen-oab").value.trim(), uf = $("djen-uf").value.trim().toUpperCase();
   const n = dias || Math.min(60, Math.max(1, +$("djen-dias").value || 7));
   // Períodos longos vão em janelas de 30 dias, uma depois da outra (o DJEN limita o tamanho de cada resposta).
   const janelas = [];
   for (let fim = n; fim > 0; fim -= 30) janelas.push({ dataDisponibilizacaoInicio: iso(new Date(hoje.getTime() - fim * DAY)), dataDisponibilizacaoFim: iso(new Date(hoje.getTime() - Math.max(0, fim - 30) * DAY + (fim <= 30 ? DAY : 0))) });
   let feitas = 0, total = 1;
-  const porJanelas = async (params) => { const tudo = []; for (const j of janelas) { tudo.push(...await consultaDjen({ ...params, ...j })); feitas++; window.aoProgressoDjen?.(feitas / total); $("djen-status").textContent = `Consultando o DJEN… ${Math.min(99, Math.round((feitas / total) * 100))}%`; } return tudo; };
+  // Cada janela que dá certo é anotada (okJanelas); numa nova tentativa, as já feitas são puladas.
+  const okJanelas = [], falhas = [];
+  const porJanelas = async (params) => {
+    const tudo = [];
+    for (const j of janelas) {
+      const chave = `${params.numeroOab || params.nomeAdvogado || params.nomeParte || params.numeroProcesso}|${j.dataDisponibilizacaoInicio}`;
+      if (window.pararDjen) break;
+      if (jaFeitas?.has(chave)) { feitas++; continue; }
+      try { tudo.push(...await consultaDjen({ ...params, ...j })); okJanelas.push(chave); }
+      catch (e) { falhas.push(e.message); }
+      feitas++; window.aoProgressoDjen?.(feitas / total); $("djen-status").textContent = `Consultando o DJEN… ${Math.min(99, Math.round((feitas / total) * 100))}%`;
+      if (janelas.length > 2) await new Promise((ok) => setTimeout(ok, 400)); // ritmo mais calmo nas buscas longas
+    }
+    if (!tudo.length && falhas.length && !okJanelas.length) throw new Error(falhas[0]);
+    return tudo;
+  };
   try { localStorage.setItem(MONIT_KEY, $("djen-monit").value); localStorage.setItem(PARTES_KEY, $("djen-partes").value); } catch {}
   $("djen-status").textContent = "Consultando o DJEN…";
   const consultas = [];
@@ -526,7 +546,7 @@ async function buscarDjen({ dias, soOab } = {}) {
   $("djen-status").textContent = `${ultimasDjen.length} publicação(ões) em ${n} dia(s) · ${novas} nova(s) — ${detalhe}`;
   try { localStorage.setItem("pd-djen-ultima", String(Date.now())); } catch {}
   renderPubs(); renderTudo();
-  return { total: ultimasDjen.length, erros: res.filter((x) => x.status === "rejected").length };
+  return { total: ultimasDjen.length, erros: falhas.length + res.filter((x) => x.status === "rejected").length, okJanelas, totalJanelas: total };
 }
 function pubsTodas() {
   const ids = new Set(ultimasDjen.map((p) => so20(numPub(p)) + String(p.data_disponibilizacao || "").slice(0, 10)));

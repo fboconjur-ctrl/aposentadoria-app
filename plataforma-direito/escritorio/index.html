@@ -19,7 +19,7 @@
     <button class="nav on" data-view="hoje">Hoje</button>
     <button class="nav" data-view="clientes">Clientes</button>
     <button class="nav" data-view="acervo">Processos</button>
-    <button class="nav" data-view="mais">Mais</button>
+    <button class="nav" data-view="mais">Ferramentas</button>
   </nav>
   <div class="side-conta">
     <p class="small" id="nuvem-status"></p>
@@ -35,6 +35,16 @@
 
   <section id="v-hoje" class="oview on">
     <header class="ohead"><div><p class="eyebrow" id="hoje-data"></p><h1 id="hoje-ola">Bom dia.</h1></div></header>
+    <div class="panel guia" id="guia" hidden>
+      <div class="fi-tit"><h2>Primeiros passos</h2><span class="small muted" id="guia-prog"></span></div>
+      <ol class="guia-lista" id="guia-lista"></ol>
+      <button class="linkish small" id="guia-ocultar">ocultar este guia</button>
+    </div>
+    <div class="panel auto" id="auto" hidden>
+      <div class="fi-tit"><h2>✨ Feito para você</h2><span class="small muted" id="auto-n"></span></div>
+      <p class="small muted" style="margin:0">O painel olhou suas publicações, prazos, compromissos e pagamentos e preparou estas tarefas. Um clique e está feito.</p>
+      <ul class="list" id="auto-lista"></ul>
+    </div>
     <div class="panel"><h2>Atrasado e hoje</h2><ul class="list" id="h-agora"></ul></div>
     <div class="panel"><h2>Próximos 7 dias</h2><ul class="list" id="h-semana"></ul></div>
     <div class="panel"><h2>Novidades</h2><ul class="list" id="h-novidades"></ul>
@@ -58,7 +68,8 @@
 
   <section id="v-ficha" class="oview">
     <header class="ohead"><div><button class="back" data-view="clientes">← Clientes</button><h1 id="fi-nome"></h1><p class="muted" id="fi-sub"></p></div>
-      <div class="fi-acoes"><select id="fi-etapa" class="search" aria-label="Etapa"></select><button class="wa-btn" id="fi-wa">WhatsApp</button><button class="back" id="fi-editar">Editar dados</button><button class="back" id="fi-docs">Documentos / kit</button><button class="back" id="fi-org" onclick="abrirOrganizador(fichaAtual)">📂 Organizar arquivos</button><button class="back" id="fi-dac">⚖️ Motor DAC</button><button class="back" id="fi-ind-abrir">Indicar a colega</button><label class="small so-titular" id="fi-resp-box" hidden>Responsável <select id="fi-resp" class="search"></select></label></div></header>
+      <div class="fi-acoes"><label class="small fi-etapa-l">Etapa <select id="fi-etapa" class="search" aria-label="Etapa"></select></label><button class="wa-btn" id="fi-wa">💬 WhatsApp</button><button class="back" id="fi-editar">✏️ Editar dados</button>
+        <details class="fi-mais"><summary class="back">Mais ações ▾</summary><div class="fi-mais-menu"><button class="back" id="fi-docs">🧾 Procuração, contrato e kit</button><button class="back" id="fi-pet" onclick="go('peticoes');$('pe-cli').dispatchEvent(new Event('focus'));$('pe-cli').value=fichaAtual;$('pe-cli').dispatchEvent(new Event('change'))">✍️ Montar petição</button><button class="back" id="fi-org" onclick="abrirOrganizador(fichaAtual)">📂 Organizar arquivos</button><button class="back" id="fi-dac">⚖️ Motor DAC</button><button class="back" id="fi-ind-abrir">↗️ Indicar a colega</button></div></details><label class="small so-titular" id="fi-resp-box" hidden>Responsável <select id="fi-resp" class="search"></select></label></div></header>
     <form class="panel" id="fi-ind" hidden>
       <h2>Indicar a colega</h2>
       <div class="crm-grid">
@@ -119,19 +130,29 @@
   </section>
 
   <section id="v-mais" class="oview">
-    <header class="ohead"><div><h1>Mais</h1></div></header>
+    <header class="ohead"><div><h1>Ferramentas</h1><p class="muted">Tudo o que o painel faz, separado por assunto.</p></div></header>
+    <h2 class="mais-grupo">📁 Processos e prazos</h2>
     <div class="mais-grid">
-      <button class="card-c" data-view="dac"><b>⚖️ Motor de Direito Administrativo</b><span class="meta">Fatos, regras com fonte, lacunas e perguntas (3.292 regras · 28 domínios)</span></button>
-      <button class="card-c" data-view="fin"><b>Financeiro do mês</b><span class="meta">Recebido, a receber, despesas e planilha</span></button>
-      <button class="card-c" data-view="djen"><b>Publicações</b><span class="meta">DJEN e Recorte Digital da OAB/DF</span></button>
-      <button class="card-c" data-view="prazos"><b>Calcular prazo</b><span class="meta">Cível, trabalhista, Juizado e penal</span></button>
-      <button class="card-c" data-view="docs"><b>Documentos e kit da ação</b><span class="meta">Procuração, contrato, proposta, petição</span></button>
-      <button class="card-c" data-view="organizador"><b>📂 Organizador de documentos</b><span class="meta">Separa os arquivos do cliente por tipo e baixa tudo em pastas</span></button>
+      <button class="card-c" data-view="djen"><b>🔔 Publicações</b><span class="meta">Busque as intimações da sua OAB no Diário (DJEN)</span></button>
+      <button class="card-c" data-view="prazos"><b>📅 Calcular prazo</b><span class="meta">Dias úteis, feriados e recesso. Já lança na ficha</span></button>
+      <button class="card-c" data-view="importar"><b>📋 Importar processos</b><span class="meta">Cole uma lista de números de processo</span></button>
+    </div>
+    <h2 class="mais-grupo">📄 Documentos e peças</h2>
+    <div class="mais-grid">
+      <button class="card-c" data-view="docs"><b>🧾 Procuração, contrato e kit</b><span class="meta">Gera os documentos de entrada do cliente</span></button>
       <button class="card-c" data-view="peticoes"><b>✍️ Redator de petições</b><span class="meta">Seus modelos + sua jurisprudência conferida. Não inventa nada</span></button>
-      <button class="card-c" data-view="assistente"><b>✨ Assistente jurídico</b><span class="meta">Analisar sentença, resumir processo, responder contato, notificação, posts…</span></button>
-      <button class="card-c so-titular" data-view="metricas"><b>📊 Números do escritório</b><span class="meta">Contatos, contratação, recebimentos, atrasos e prazos</span></button>
-      <button class="card-c so-titular" data-view="equipe"><b>Equipe</b><span class="meta">Advogados associados e quem cuida de cada caso</span></button>
-      <button class="card-c" data-view="importar"><b>Importar processos</b><span class="meta">Colar sua lista de processos</span></button>
+      <button class="card-c" data-view="organizador"><b>📂 Organizar arquivos do cliente</b><span class="meta">Separa por tipo, renomeia e baixa em pastas</span></button>
+    </div>
+    <h2 class="mais-grupo">🧠 Análise e apoio</h2>
+    <div class="mais-grid">
+      <button class="card-c" data-view="assistente"><b>✨ Assistente jurídico (IA)</b><span class="meta">Sentença, resumo, notificação, posts… (precisa ligar a chave)</span></button>
+      <button class="card-c" data-view="dac"><b>⚖️ Motor de Direito Administrativo</b><span class="meta">Fatos, regras com fonte, lacunas e perguntas</span></button>
+    </div>
+    <h2 class="mais-grupo so-titular">💼 Gestão do escritório</h2>
+    <div class="mais-grid so-titular">
+      <button class="card-c" data-view="fin"><b>💰 Financeiro</b><span class="meta">Recebido, a receber, atrasados e despesas</span></button>
+      <button class="card-c" data-view="metricas"><b>📊 Números do escritório</b><span class="meta">Contatos, contratação, recebimentos e prazos</span></button>
+      <button class="card-c" data-view="equipe"><b>👥 Equipe</b><span class="meta">Associados e quem cuida de cada caso</span></button>
     </div>
   </section>
 
@@ -141,7 +162,7 @@
     <div class="panel ac-carga" id="ac-carga" hidden>
       <h2>Primeiro passo: trazer todos os seus processos</h2>
       <p class="small">Busca de uma vez tudo o que foi publicado no Diário Eletrônico (DJEN) com a sua OAB nos últimos 3 anos e monta o acervo. Só precisa fazer uma vez; depois a busca normal mantém tudo atualizado.</p>
-      <div class="as-linha"><button class="btn" id="ac-carga-btn">📥 Trazer todos os processos da minha OAB</button><b id="ac-carga-prog"></b></div>
+      <div class="as-linha"><button class="btn" id="ac-carga-btn">📥 Trazer todos os processos da minha OAB</button><button class="back" id="ac-carga-parar" hidden>⏹ Parar</button><b id="ac-carga-prog"></b></div>
     </div>
     <p class="small muted" id="ac-carga-ok"></p>
     <div class="panel ac-filtros">
@@ -481,5 +502,7 @@
 <script src="organizador.js"></script>
 <script src="peticoes.js"></script>
 <script src="spin.js"></script>
+<script src="guia.js"></script>
+<script src="automacoes.js"></script>
 </body>
 </html>
