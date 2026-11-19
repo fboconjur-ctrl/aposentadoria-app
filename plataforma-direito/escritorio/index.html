@@ -46,7 +46,7 @@
 
   <section id="v-ficha" class="oview">
     <header class="ohead"><div><button class="back" data-view="clientes">← Clientes</button><h1 id="fi-nome"></h1><p class="muted" id="fi-sub"></p></div>
-      <div class="fi-acoes"><select id="fi-etapa" class="search" aria-label="Etapa"></select><button class="wa-btn" id="fi-wa">WhatsApp</button><button class="back" id="fi-editar">Editar dados</button><button class="back" id="fi-docs">Documentos / kit</button><button class="back" id="fi-dac">⚖️ Motor DAC</button><button class="back" id="fi-ind-abrir">Indicar a colega</button></div></header>
+      <div class="fi-acoes"><select id="fi-etapa" class="search" aria-label="Etapa"></select><button class="wa-btn" id="fi-wa">WhatsApp</button><button class="back" id="fi-editar">Editar dados</button><button class="back" id="fi-docs">Documentos / kit</button><button class="back" id="fi-dac">⚖️ Motor DAC</button><button class="back" id="fi-ind-abrir">Indicar a colega</button><label class="small so-titular" id="fi-resp-box" hidden>Responsável <select id="fi-resp" class="search"></select></label></div></header>
     <form class="panel" id="fi-ind" hidden>
       <h2>Indicar a colega</h2>
       <div class="crm-grid">
@@ -112,8 +112,31 @@
       <button class="card-c" data-view="djen"><b>Publicações</b><span class="meta">DJEN e Recorte Digital da OAB/DF</span></button>
       <button class="card-c" data-view="prazos"><b>Calcular prazo</b><span class="meta">Cível, trabalhista, Juizado e penal</span></button>
       <button class="card-c" data-view="docs"><b>Documentos e kit da ação</b><span class="meta">Procuração, contrato, proposta, petição</span></button>
+      <button class="card-c so-titular" data-view="equipe"><b>Equipe</b><span class="meta">Advogados associados e quem cuida de cada caso</span></button>
       <button class="card-c" data-view="importar"><b>Importar processos</b><span class="meta">Colar sua lista de processos</span></button>
     </div>
+  </section>
+
+  <section id="v-equipe" class="oview">
+    <header class="ohead"><div><button class="back" data-voltar>← Voltar</button><h1>Equipe</h1><p class="muted">Cada associado vê só os casos que você atribuir a ele (ficha, prazos e tarefas). Ele não vê o financeiro, os outros clientes nem os pedidos do site.</p></div></header>
+    <div class="panel">
+      <h2>Advogados associados</h2>
+      <ul class="list" id="eq-lista"></ul>
+      <p class="small muted" id="eq-status"></p>
+    </div>
+    <form class="panel" id="eq-form">
+      <h2>Cadastrar associado</h2>
+      <ol class="small">
+        <li>Peça ao associado para abrir este painel e clicar em <b>“Primeiro acesso? Criar minha senha”</b> com o e-mail dele.</li>
+        <li>Depois, preencha abaixo com o mesmo e-mail. O acesso é liberado na hora.</li>
+      </ol>
+      <div class="crm-grid">
+        <label>Nome<input id="eq-nome" class="search" required></label>
+        <label>E-mail<input id="eq-email" class="search" type="email" required></label>
+        <label>OAB (número/UF)<input id="eq-oab" class="search"></label>
+      </div>
+      <div><button class="btn">Liberar acesso</button></div>
+    </form>
   </section>
 
   <section id="v-dac" class="oview">
@@ -318,5 +341,6 @@
 <script src="dac-painel.js"></script>
 <script src="nuvem.js"></script>
 <script src="entrada.js"></script>
+<script src="equipe.js"></script>
 </body>
 </html>

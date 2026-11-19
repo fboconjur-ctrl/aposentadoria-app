@@ -38,6 +38,13 @@
     const user = session?.user;
     if (!user) { capa.hidden = false; return; }
 
+    // 0) Quem entrou: titular (vê tudo) ou associado (vê só os casos atribuídos a ele).
+    const { data: papel, error: ePapel } = await sb.rpc("meu_papel");
+    if (ePapel) { msg("Erro ao conferir o acesso: " + ePapel.message); capa.hidden = false; return; }
+    if (!papel) { msg(`Acesso ainda não liberado para ${user.email}. Peça à titular do escritório.`); capa.hidden = false; await sb.auth.signOut(); return; }
+    document.getElementById("sair")?.addEventListener("click", () => { sessionStorage.removeItem("pd-sync-ok"); sb.auth.signOut().then(() => location.reload()); });
+    if (papel === "associado") return modoAssociado(sb, user);
+
     // 1) Traz o que está na nuvem para este navegador (a nuvem é a fonte da verdade).
     const { data: linhas, error } = await sb.from("estado").select("chave, valor");
     if (error) { msg("Erro ao ler o painel: " + error.message); return; }
@@ -74,7 +81,91 @@
       for (const p of data || []) if (typeof importarPacote === "function" && importarPacote(p.pacote)) await sb.from("pedidos").update({ importado: true }).eq("id", p.id);
     };
     buscarPedidos(); setInterval(buscarPedidos, 60000);
-    document.getElementById("sair")?.addEventListener("click", () => { sessionStorage.removeItem("pd-sync-ok"); sb.auth.signOut().then(() => location.reload()); });
+
+    // 4) Equipe: casos atribuídos a associados vão para a tabela "casos"; o que o associado altera volta para cá.
+    window.Equipe = {
+      listar: async () => { const { data, error } = await sb.from("associados").select("uid, nome, email, oab, ativo").order("nome"); if (error) throw error; localStorage.setItem("pd-equipe", JSON.stringify(data.map(({ uid, nome, ativo }) => ({ uid, nome, ativo })))); return data; },
+      adicionar: async (email, nome, oab) => { const { data, error } = await sb.rpc("adicionar_associado", { p_email: email, p_nome: nome, p_oab: oab || null }); if (error) throw error; return data; },
+      ativar: async (uid, ativo) => { const { error } = await sb.from("associados").update({ ativo }).eq("uid", uid); if (error) throw error; },
+    };
+    Equipe.listar().catch(() => {});
+    const enviados = new Map(); // id → JSON do último envio/recebimento (evita reenviar o que não mudou)
+    const pacoteDe = (c) => JSON.stringify({ ficha: c, itens: itens.filter((x) => x.cli === c.id) });
+    const puxarCasos = async () => {
+      const { data, error } = await sb.from("casos").select("id, ficha, itens, em, por"); if (error) return;
+      let mudou = false;
+      for (const r of data) {
+        const c = clientes.find((x) => x.id === r.id);
+        if (c && r.por !== user.id && r.em > (c.casoEm || 0)) {
+          const { resp, ...resto } = r.ficha; Object.assign(c, resto, { casoEm: r.em });
+          itens = itens.filter((x) => x.cli !== r.id).concat(r.itens);
+          mudou = true;
+        }
+        if (c) enviados.set(r.id, pacoteDe(c));
+      }
+      if (mudou) { localStorage.setItem("pd-crm", JSON.stringify(clientes)); localStorage.setItem("pd-itens", JSON.stringify(itens)); renderTudo(); }
+      return data;
+    };
+    let timer;
+    const enviarCasos = () => { clearTimeout(timer); timer = setTimeout(async () => {
+      const atribuidos = clientes.filter((c) => c.resp);
+      for (const c of atribuidos) {
+        const pk = pacoteDe(c); if (enviados.get(c.id) === pk) continue;
+        const em = Date.now(); c.casoEm = em;
+        const { error } = await sb.from("casos").upsert({ id: c.id, associado: c.resp, ficha: c, itens: itens.filter((x) => x.cli === c.id), em });
+        if (!error) enviados.set(c.id, pacoteDe(c)); else status("Erro ao compartilhar caso: " + error.message);
+      }
+      const ids = new Set(atribuidos.map((c) => c.id)), sobrando = [...enviados.keys()].filter((id) => !ids.has(id));
+      if (sobrando.length) { await sb.from("casos").delete().in("id", sobrando); sobrando.forEach((id) => enviados.delete(id)); }
+    }, 1500); };
+    puxarCasos().then((rows) => { (rows || []).forEach((r) => enviados.has(r.id) || enviados.set(r.id, "")); enviarCasos(); });
+    setInterval(puxarCasos, 60000);
+    const setItemTitular = Storage.prototype.setItem;
+    Storage.prototype.setItem = function (k, v) { setItemTitular.call(this, k, v); if (this === localStorage && (k === "pd-crm" || k === "pd-itens")) enviarCasos(); };
   };
+
+  // ---------- Modo associado: só os casos atribuídos, sem financeiro nem cadastro de clientes ----------
+  async function modoAssociado(sb, user) {
+    const { data: rows, error } = await sb.from("casos").select("id, ficha, itens, em");
+    if (error) { msg("Erro ao ler seus casos: " + error.message); return; }
+    const montar = (rs) => ({ crm: JSON.stringify(rs.map((r) => ({ ...r.ficha, casoEm: r.em }))), itens: JSON.stringify(rs.flatMap((r) => r.itens)) });
+    if (!sessionStorage.getItem("pd-sync-ok") || localStorage.getItem("pd-papel") !== "associado") {
+      // Limpa qualquer dado de outra pessoa que tenha ficado neste navegador e carrega só os casos dele.
+      Object.keys(localStorage).filter((k) => k.startsWith("pd-")).forEach((k) => localStorage.removeItem(k));
+      const m = montar(rows);
+      localStorage.setItem("pd-papel", "associado"); localStorage.setItem("pd-crm", m.crm); localStorage.setItem("pd-itens", m.itens);
+      sessionStorage.setItem("pd-sync-ok", "1"); location.reload(); return;
+    }
+    document.body.classList.add("modo-associado");
+    capa.hidden = true; status(`Associado · ${user.email}`);
+    const enviados = new Map(rows.map((r) => [r.id, JSON.stringify({ ficha: { ...r.ficha, casoEm: r.em }, itens: r.itens })]));
+    let timer;
+    const enviar = () => { clearTimeout(timer); timer = setTimeout(async () => {
+      for (const c of clientes) {
+        if (!enviados.has(c.id)) continue; // não cria casos novos
+        const ii = itens.filter((x) => x.cli === c.id), pk = JSON.stringify({ ficha: c, itens: ii });
+        if (enviados.get(c.id) === pk) continue;
+        const em = Date.now(); c.casoEm = em;
+        const { error } = await sb.from("casos").update({ ficha: c, itens: ii, em }).eq("id", c.id);
+        status(error ? "Erro ao salvar — tente recarregar" : `Associado · ${user.email}`);
+        if (!error) enviados.set(c.id, JSON.stringify({ ficha: c, itens: ii }));
+      }
+    }, 1500); };
+    const original = Storage.prototype.setItem;
+    Storage.prototype.setItem = function (k, v) { original.call(this, k, v); if (this === localStorage && (k === "pd-crm" || k === "pd-itens")) enviar(); };
+    // Novidades da titular (ou caso retirado) a cada minuto.
+    setInterval(async () => {
+      const { data } = await sb.from("casos").select("id, ficha, itens, em"); if (!data) return;
+      const ids = new Set(data.map((r) => r.id));
+      let mudou = clientes.some((c) => !ids.has(c.id));
+      for (const r of data) { const c = clientes.find((x) => x.id === r.id); if (!c || r.em > (c.casoEm || 0)) mudou = true; }
+      if (!mudou) return;
+      const m = montar(data); original.call(localStorage, "pd-crm", m.crm); original.call(localStorage, "pd-itens", m.itens);
+      clientes = JSON.parse(m.crm); itens = JSON.parse(m.itens);
+      data.forEach((r) => enviados.set(r.id, JSON.stringify({ ficha: { ...r.ficha, casoEm: r.em }, itens: r.itens })));
+      [...enviados.keys()].forEach((id) => ids.has(id) || enviados.delete(id));
+      renderTudo();
+    }, 60000);
+  }
   document.head.appendChild(s);
 })();

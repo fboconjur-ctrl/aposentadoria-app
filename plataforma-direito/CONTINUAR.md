@@ -23,6 +23,11 @@ Prévia: https://deploy-preview-1--prevcalculadora.netlify.app/plataforma-direit
 - Ficha: "Primeiros passos do cliente" (contratado/caso ativo) com checklist por área e pedido dos documentos que faltam pelo WhatsApp.
 - WhatsApp: modelos novos (boas-vindas, lembrete de documento, aviso de prazo/assinatura, retomar proposta, encerramento e avaliação).
 
+## Equipe (associados) — nov/2026
+- Titular: Mais → Equipe → cadastra o associado pelo e-mail (ele antes cria a senha em "Primeiro acesso"); na ficha, "Responsável" atribui o caso.
+- Associado vê só os casos atribuídos (ficha, prazos, tarefas); sem financeiro, sem outros clientes, sem pedidos/publicações/equipe. Desativar acesso corta na hora.
+- Banco: tabelas `associados` e `casos`, funções `meu_papel`, `adicionar_associado` (fim de `supabase.sql`). Edição simultânea do mesmo caso: vale a última gravação.
+
 ## Pendências (em ordem)
 0. **PRÓXIMO PASSO — Login com Google (fazer pelo Claude in Chrome, ela pediu que o Claude faça):**
    a) console.cloud.google.com/auth/clients → criar projeto "escritorio" se pedir; tela de consentimento (nome do app + e-mail dela);

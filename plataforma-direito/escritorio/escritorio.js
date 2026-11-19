@@ -290,6 +290,7 @@ function abrirFicha(id, { manterScroll } = {}) {
   $("fi-wa").hidden = !telWa(c.tel);
   $("crm-form").hidden = true; $("crm-wa").hidden = true; $("fi-ind").hidden = true;
   window.renderOnb?.();
+  window.renderResp?.();
 }
 $("fi-etapa").onchange = () => { const c = cliPorId(fichaAtual); c.etapa = $("fi-etapa").value; (c.hist ||= []).unshift({ em: new Date().toISOString(), o: `Etapa: ${c.etapa}` }); salvarCrm(); renderTudo(); };
 let notasTimer;
