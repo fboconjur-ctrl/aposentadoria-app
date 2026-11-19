@@ -127,6 +127,12 @@
   <section id="v-acervo" class="oview">
     <header class="ohead"><div><h1>Processos</h1><p class="muted">Todos os seus processos num lugar só. A lista cresce sozinha a cada busca de publicações e com os números cadastrados nos clientes.</p></div>
       <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn" data-view="djen">Buscar publicações</button><button class="back" id="ac-csv">Baixar planilha</button></div></header>
+    <div class="panel ac-carga" id="ac-carga" hidden>
+      <h2>Primeiro passo: trazer todos os seus processos</h2>
+      <p class="small">Busca de uma vez tudo o que foi publicado no Diário Eletrônico (DJEN) com a sua OAB nos últimos 3 anos e monta o acervo. Só precisa fazer uma vez; depois a busca normal mantém tudo atualizado.</p>
+      <div class="as-linha"><button class="btn" id="ac-carga-btn">📥 Trazer todos os processos da minha OAB</button><b id="ac-carga-prog"></b></div>
+    </div>
+    <p class="small muted" id="ac-carga-ok"></p>
     <div class="panel ac-filtros">
       <input id="ac-busca" class="search" placeholder="Buscar por número, parte, cliente, vara…">
       <select id="ac-filtro" class="search"><option value="ativos">Todos ativos</option><option value="novos">Com novidade</option><option value="semcli">Sem cliente vinculado</option><option value="arquivados">Arquivados</option></select>

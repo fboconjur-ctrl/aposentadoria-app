@@ -126,6 +126,22 @@
     if (b.dataset.ac === "arquivar") { a.arquivado = !a.arquivado; salvar(); render(); }
     if (b.dataset.ac === "novo") { abrirForm(null); $("c-procs").value = mascara(n); }
   });
+  // Carga inicial: busca tudo o que o DJEN tem na OAB (últimos 3 anos) uma única vez; depois as buscas normais mantêm atualizado.
+  const CARGA_KEY = "pd-acervo-carga";
+  const mostrarCarga = () => { const feita = ler(CARGA_KEY, null); $("ac-carga").hidden = !!feita; $("ac-carga-ok").textContent = feita ? `Carga completa feita em ${fmt(new Date(feita.em))} (${feita.n} publicações).` : ""; };
+  $("ac-carga-btn").onclick = async () => {
+    if (!$("djen-oab").value.trim()) { const o = prompt("Qual o número da sua OAB? (só números)"); if (!o) return; $("djen-oab").value = soDig(o); $("djen-oab").dispatchEvent(new Event("input")); }
+    if (!$("djen-uf").value.trim()) $("djen-uf").value = "DF";
+    const b = $("ac-carga-btn"); b.disabled = true; b.textContent = "Buscando… pode levar alguns minutos";
+    window.aoProgressoDjen = (f) => ($("ac-carga-prog").textContent = `${Math.min(99, Math.round(f * 100))}%`);
+    try {
+      const r = await buscarDjen({ dias: 3 * 365, soOab: true });
+      if (r.erros) { $("ac-carga-prog").textContent = "O DJEN recusou parte da busca. Tente de novo mais tarde."; }
+      else { gravar(CARGA_KEY, { em: new Date().toISOString(), n: r.total }); $("ac-carga-prog").textContent = ""; }
+    } catch (e) { $("ac-carga-prog").textContent = "Erro: " + e.message; }
+    finally { window.aoProgressoDjen = null; b.disabled = false; b.textContent = "📥 Trazer todos os processos da minha OAB"; mostrarCarga(); render(); }
+  };
+  mostrarCarga();
   $("ac-busca").oninput = render; $("ac-filtro").onchange = render;
   $("ac-csv").onclick = () => {
     const linhas = [["Processo", "Tribunal", "Classe", "Órgão", "Cliente", "Última publicação", "Tipo", "Arquivado"], ...Object.entries(acervo).map(([n, a]) => [mascara(n), a.trib, a.classe, a.orgao, cliDoProc(n)?.nome || "", a.pubs[0]?.data || "", a.pubs[0]?.tipo || "", a.arquivado ? "sim" : ""])];

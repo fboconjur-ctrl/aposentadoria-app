@@ -495,22 +495,27 @@ async function consultaDjen(params) {
   }
   return lista;
 }
-async function buscarDjen() {
+async function buscarDjen({ dias, soOab } = {}) {
   const oab = $("djen-oab").value.trim(), uf = $("djen-uf").value.trim().toUpperCase();
-  const n = Math.min(60, Math.max(1, +$("djen-dias").value || 7));
-  const datas = { dataDisponibilizacaoInicio: iso(new Date(hoje.getTime() - n * DAY)), dataDisponibilizacaoFim: iso(new Date(hoje.getTime() + DAY)) };
+  const n = dias || Math.min(60, Math.max(1, +$("djen-dias").value || 7));
+  // Períodos longos vão em janelas de 30 dias, uma depois da outra (o DJEN limita o tamanho de cada resposta).
+  const janelas = [];
+  for (let fim = n; fim > 0; fim -= 30) janelas.push({ dataDisponibilizacaoInicio: iso(new Date(hoje.getTime() - fim * DAY)), dataDisponibilizacaoFim: iso(new Date(hoje.getTime() - Math.max(0, fim - 30) * DAY + (fim <= 30 ? DAY : 0))) });
+  let feitas = 0, total = 1;
+  const porJanelas = async (params) => { const tudo = []; for (const j of janelas) { tudo.push(...await consultaDjen({ ...params, ...j })); feitas++; window.aoProgressoDjen?.(feitas / total); $("djen-status").textContent = `Consultando o DJEN… ${Math.min(99, Math.round((feitas / total) * 100))}%`; } return tudo; };
   try { localStorage.setItem(MONIT_KEY, $("djen-monit").value); localStorage.setItem(PARTES_KEY, $("djen-partes").value); } catch {}
   $("djen-status").textContent = "Consultando o DJEN…";
   const consultas = [];
   const rot = (nome, pr) => pr.then((v) => ((v.rotulo = nome), v), (e) => { e.rotulo = nome; throw e; });
   // Alguns tribunais (ex.: TRT10) gravam a OAB com zeros à esquerda (ex.: 012345); consulta as duas formas.
-  if (oab) new Set([oab.replace(/^0+/, ""), oab.replace(/^0+/, "").padStart(6, "0")]).forEach((x) => consultas.push(rot(`OAB ${x}`, consultaDjen({ numeroOab: x, ufOab: uf, ...datas }))));
-  const nome = $("djen-nome").value.trim();
-  if (nome) consultas.push(rot("Seu nome", consultaDjen({ nomeAdvogado: nome, ...datas })));
-  $("djen-partes").value.split(/\n/).map((x) => x.trim()).filter((x) => x.length >= 5).forEach((parte) => {
-    new Set([parte, parte.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase()]).forEach((f) => consultas.push(rot(`Parte "${f}"`, consultaDjen({ nomeParte: f, ...datas }))));
+  if (oab) new Set([oab.replace(/^0+/, ""), oab.replace(/^0+/, "").padStart(6, "0")]).forEach((x) => consultas.push(rot(`OAB ${x}`, porJanelas({ numeroOab: x, ufOab: uf }))));
+  const nome = soOab ? "" : $("djen-nome").value.trim();
+  if (nome) consultas.push(rot("Seu nome", porJanelas({ nomeAdvogado: nome })));
+  if (!soOab) $("djen-partes").value.split(/\n/).map((x) => x.trim()).filter((x) => x.length >= 5).forEach((parte) => {
+    new Set([parte, parte.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase()]).forEach((f) => consultas.push(rot(`Parte "${f}"`, porJanelas({ nomeParte: f }))));
   });
-  todosProcs().forEach((p) => consultas.push(rot(`Processo ${mascara(p)}`, consultaDjen({ numeroProcesso: p, ...datas }))));
+  if (!soOab) todosProcs().forEach((p) => consultas.push(rot(`Processo ${mascara(p)}`, porJanelas({ numeroProcesso: p }))));
+  total = consultas.length * janelas.length;
   const res = await Promise.allSettled(consultas);
   const porId = new Map();
   res.forEach((r) => r.status === "fulfilled" && r.value.forEach((it) => porId.set(it.id ?? JSON.stringify(it).slice(0, 200), it)));
@@ -520,6 +525,7 @@ async function buscarDjen() {
   $("djen-status").textContent = `${ultimasDjen.length} publicação(ões) em ${n} dia(s) · ${novas} nova(s) — ${detalhe}`;
   try { localStorage.setItem("pd-djen-ultima", String(Date.now())); } catch {}
   renderPubs(); renderTudo();
+  return { total: ultimasDjen.length, erros: res.filter((x) => x.status === "rejected").length };
 }
 function pubsTodas() {
   const ids = new Set(ultimasDjen.map((p) => so20(numPub(p)) + String(p.data_disponibilizacao || "").slice(0, 10)));
