@@ -111,8 +111,8 @@
       <div class="cartao">
         <h2>💬 Fale com a advogada</h2>
         <p class="small muted" style="margin:0">${d.advogada ? `Seu caso é cuidado por <b>${esc(d.advogada)}</b>. ` : ""}${esc(d.contato?.horario || "")}. ${esc(d.contato?.resposta || "")}</p>
-        ${(d.mensagens || []).length ? `<ul class="lista small">${d.mensagens.slice(0, 5).map((m) => `<li><span class="data">${new Date(m.criado).toLocaleDateString("pt-BR")}</span><span>${esc(m.texto)}</span></li>`).join("")}</ul>` : ""}
-        <textarea id="ma-msg" rows="3" maxlength="2000" placeholder="Escreva sua dúvida ou recado. A resposta vem pelo WhatsApp."></textarea>
+        ${(d.conversa || []).length ? `<ul class="lista small">${d.conversa.slice(0, 10).map((m) => `<li><span class="data">${new Date(m.em).toLocaleDateString("pt-BR")}</span><span><b>${m.de === "advogada" ? "Advogada" : "Você"}:</b> ${esc(m.texto)}</span></li>`).join("")}</ul>` : (d.mensagens || []).length ? `<ul class="lista small">${d.mensagens.slice(0, 5).map((m) => `<li><span class="data">${new Date(m.criado).toLocaleDateString("pt-BR")}</span><span>${esc(m.texto)}</span></li>`).join("")}</ul>` : ""}
+        <textarea id="ma-msg" rows="3" maxlength="2000" placeholder="Escreva sua dúvida ou recado. A resposta aparece aqui nesta conversa."></textarea>
         <div class="acoes"><button class="btn" id="ma-enviar">Enviar mensagem</button><a class="btn btn-wa" href="https://wa.me/${WA}?text=${encodeURIComponent(`Olá! Sou ${d.nome} e queria falar sobre o meu caso.`)}" target="_blank" rel="noopener">WhatsApp</a><span class="small" id="ma-msg-st"></span></div>
       </div>
       ${(d.duvidas || []).length ? `<div class="cartao"><h2>❓ Dúvidas comuns</h2>${d.duvidas.map(([q, a]) => `<details class="duvida"><summary>${esc(q)}</summary><p>${esc(a)}</p></details>`).join("")}</div>` : ""}
