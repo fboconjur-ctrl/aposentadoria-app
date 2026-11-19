@@ -206,8 +206,9 @@
         <label>Processo<select id="pe-proc" class="search"><option value="">— sem processo —</option></select></label>
       </div>
       <div class="crm-grid" id="pe-campos"></div>
-      <details class="small"><summary><b>Jurisprudência do seu banco</b> (marque as que entram na peça)</summary>
+      <details class="small" open><summary><b>Jurisprudência do seu banco</b> (marque as que entram na peça)</summary>
         <input id="pe-jur-busca" class="search" placeholder="Buscar por tema, tribunal, número, palavra da ementa" style="width:100%;box-sizing:border-box;margin:8px 0">
+        <div class="as-linha pe-jur-barra"><b class="small" id="pe-jur-sel-n"></b><button type="button" class="linkish small" id="pe-jur-marcar-fav">marcar todos os favoráveis desta tese</button><button type="button" class="linkish small" id="pe-jur-limpar">desmarcar</button><button type="button" class="btn" id="pe-jur-usar">➜ Usar na minuta</button></div>
         <ul class="list" id="pe-jur-lista"></ul></details>
       <div class="as-linha"><button class="back" id="pe-montar">Ver prévia</button><button class="btn" id="pe-word">Baixar em Word</button></div>
       <div class="as-linha small"><span id="pe-timb-info"></span><label class="linkish as-pdf-btn">trocar timbrado (.docx)<input type="file" id="pe-timb" accept=".docx" hidden></label><button class="linkish small" id="pe-timb-tirar" hidden>usar sem timbrado</button></div>
@@ -234,6 +235,7 @@
           <div><b class="small">👎 Procurar <u>contrários</u> em:</b> <span class="as-linha" data-polo="con"></span></div>
           <div><b class="small">🔎 Busca neutra em:</b> <span id="pe-jur-pesq-botoes" class="as-linha"></span></div>
         </div>
+        <p class="small" id="pe-jur-pesq-msg" role="status"></p>
         <div id="pe-mapa" class="small"></div>
         <p class="small"><b>2. Copie a ementa do julgado que você leu e cole aqui</b> — o painel separa tribunal, número, relator e data:</p>
         <textarea id="pe-jur-colar" class="search" rows="4" style="width:100%;box-sizing:border-box" placeholder="Cole aqui a ementa completa copiada do site do tribunal"></textarea>
