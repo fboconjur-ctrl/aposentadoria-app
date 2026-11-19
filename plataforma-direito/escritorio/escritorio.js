@@ -472,7 +472,8 @@ setTimeout(() => {
   $("djen-oab").value = salvo.oab || soDig(a.oab || "");
   $("djen-uf").value = salvo.uf || ((a.oab || "").match(/[A-Z]{2}/i)?.[0] || "DF").toUpperCase();
   $("djen-nome").value = salvo.nome || nomeProprio(a.nome || "");
-  if (a.nome) $("hoje-ola").textContent = `Bom dia, ${primeiroNome(nomeProprio(a.nome))}.`;
+  const h = new Date().getHours(), saud = h < 12 ? "Bom dia" : h < 18 ? "Boa tarde" : "Boa noite";
+  $("hoje-ola").textContent = a.nome ? `${saud}, ${primeiroNome(nomeProprio(a.nome))}.` : `${saud}.`;
   ["djen-oab", "djen-uf", "djen-nome"].forEach((id) => ($(id).oninput = () => gravar(DJEN_ID_KEY, { oab: $("djen-oab").value.trim(), uf: $("djen-uf").value.trim(), nome: $("djen-nome").value.trim() })));
 }, 0);
 const numPub = (p) => p.numeroprocessocommascara || mascara(p.numero_processo || p.numeroProcesso || "");

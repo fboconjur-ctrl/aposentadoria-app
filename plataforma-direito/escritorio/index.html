@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
 <title>Escritório — Plataforma do Direito</title>
+<meta name="theme-color" content="#16224a">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Figtree:wght@400;500;600&display=swap">
 <link rel="stylesheet" href="../styles.css">
@@ -18,9 +20,10 @@
     <button class="nav" data-view="clientes">Clientes</button>
     <button class="nav" data-view="mais">Mais</button>
   </nav>
-  <p class="small" id="nuvem-status" style="opacity:.8;margin:0"></p>
-  <button class="nav" id="trocar-senha" style="opacity:.6">Trocar minha senha</button>
-  <button class="nav" id="sair" style="opacity:.6">Sair</button>
+  <div class="side-conta">
+    <p class="small" id="nuvem-status"></p>
+    <div class="side-conta-acoes"><button class="linkish" id="trocar-senha">Trocar senha</button><button class="linkish" id="sair">Sair</button></div>
+  </div>
 </aside>
 
 <main class="office-main">

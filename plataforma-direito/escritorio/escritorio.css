@@ -190,3 +190,27 @@ body.office { display: grid; grid-template-columns: 240px minmax(0, 1fr); min-he
 .mt-linha { display: grid; grid-template-columns: minmax(110px, 1.4fr) 2fr auto; gap: 10px; align-items: center; font-size: .9rem; }
 .mt-trilho { background: var(--line); border-radius: 99px; height: 10px; overflow: hidden; }
 .mt-barra { background: var(--brand); height: 100%; border-radius: 99px; }
+
+/* Rodapé do menu: status do login + conta */
+.side-conta { margin-top: auto; display: grid; gap: 6px; font-size: .85rem; opacity: .85; }
+.side-conta p { margin: 0; }
+.side-conta-acoes { display: flex; gap: 14px; }
+.side-conta .linkish { color: var(--bg); opacity: .8; }
+@media (max-width: 860px) {
+  .side-conta { margin-top: 0; grid-template-columns: 1fr auto; align-items: center; font-size: .78rem; }
+}
+
+/* Tela de login */
+#login-capa { background: radial-gradient(1200px 600px at 50% -10%, var(--tint, #e8ecfb), var(--bg)); padding: 16px; }
+.login-box { width: min(400px, 100%); background: var(--surface); border: 1px solid var(--line); border-radius: 20px; padding: 32px 28px; box-shadow: var(--shadow); text-align: left; gap: 14px; }
+.login-box .brand { margin-bottom: 8px; }
+.login-box h1 { margin: 0; font-size: 1.7rem; }
+.login-box > p { margin: 0; }
+.login-box form { display: grid; gap: 14px; }
+.login-box label { display: grid; gap: 6px; font-weight: 600; font-size: .9rem; }
+.login-box .search { width: 100%; }
+.login-box .btn { width: 100%; justify-content: center; padding: 12px; font-size: 1rem; }
+.login-senha { position: relative; display: block; }
+.login-senha .linkish { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); }
+#login-msg:empty { display: none; }
+#login-msg { color: #b42318; font-weight: 600; }
