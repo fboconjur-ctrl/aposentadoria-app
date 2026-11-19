@@ -223,6 +223,14 @@
         <div class="as-linha"><button class="btn" id="pe-mod-salvar">Salvar modelo</button><label class="back as-pdf-btn">Importar de um arquivo Word (.docx) ou .txt<input type="file" id="pe-mod-arq" accept=".docx,.txt" hidden></label></div>
       </form></details>
     <details class="panel"><summary><b>Meu banco de jurisprudência</b> <span class="small muted">(só julgados que você leu e conferiu)</span></summary>
+      <div class="pe-jur-ajuda">
+        <p class="small"><b>1. Pesquise no site oficial</b> — digite o tema e escolha o tribunal:</p>
+        <div class="as-linha"><input id="pe-jur-pesq" class="search" placeholder="Ex.: honorários sucumbenciais justiça gratuita 791-A" style="flex:1;min-width:220px"><span id="pe-jur-pesq-botoes" class="as-linha"></span></div>
+        <p class="small"><b>2. Copie a ementa do julgado que você leu e cole aqui</b> — o painel separa tribunal, número, relator e data:</p>
+        <textarea id="pe-jur-colar" class="search" rows="4" style="width:100%;box-sizing:border-box" placeholder="Cole aqui a ementa completa copiada do site do tribunal"></textarea>
+        <div class="as-linha"><button type="button" class="btn" id="pe-jur-colar-ler">Ler julgado colado</button><span class="small" id="pe-jur-colar-msg"></span></div>
+        <p class="small"><b>3. Confira e adicione:</b></p>
+      </div>
       <form id="pe-jur-form" style="display:grid;gap:10px;margin-top:10px">
         <div class="crm-grid"><label>Tribunal<input id="pe-jur-trib" class="search" required placeholder="STJ"></label><label>Número<input id="pe-jur-num" class="search" required placeholder="REsp 1.234.567/DF"></label><label>Relator(a)<input id="pe-jur-rel" class="search"></label><label>Data do julgamento<input id="pe-jur-data" class="search" type="date"></label><label>Tema<input id="pe-jur-tema" class="search" placeholder="Plano de saúde – rol da ANS"></label><label>Link oficial<input id="pe-jur-link" class="search" type="url"></label></div>
         <label class="small">Ementa ou trecho exato<textarea id="pe-jur-ementa" class="search" rows="4" required style="width:100%;box-sizing:border-box"></textarea></label>
