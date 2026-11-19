@@ -112,9 +112,31 @@
       <button class="card-c" data-view="djen"><b>Publicações</b><span class="meta">DJEN e Recorte Digital da OAB/DF</span></button>
       <button class="card-c" data-view="prazos"><b>Calcular prazo</b><span class="meta">Cível, trabalhista, Juizado e penal</span></button>
       <button class="card-c" data-view="docs"><b>Documentos e kit da ação</b><span class="meta">Procuração, contrato, proposta, petição</span></button>
+      <button class="card-c so-titular" data-view="metricas"><b>📊 Números do escritório</b><span class="meta">Contatos, contratação, recebimentos, atrasos e prazos</span></button>
       <button class="card-c so-titular" data-view="equipe"><b>Equipe</b><span class="meta">Advogados associados e quem cuida de cada caso</span></button>
       <button class="card-c" data-view="importar"><b>Importar processos</b><span class="meta">Colar sua lista de processos</span></button>
     </div>
+  </section>
+
+  <section id="v-metricas" class="oview">
+    <header class="ohead"><div><button class="back" data-voltar>← Voltar</button><h1>Números do escritório</h1><p class="muted">Calculados com os dados deste painel. Cada número compara com o período anterior do mesmo tamanho.</p></div></header>
+    <div class="panel"><label class="small" style="max-width:260px">Período<select id="mt-periodo" class="search"><option value="30">Últimos 30 dias</option><option value="90">Últimos 90 dias</option><option value="365">Últimos 12 meses</option></select></label></div>
+    <div class="panel"><h2>O que merece atenção</h2><div id="mt-leitura"></div></div>
+    <div class="kpis" id="mt-kpis" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px"></div>
+    <div class="two">
+      <div class="panel"><h2>Onde estão os novos contatos</h2><div id="mt-funil"></div></div>
+      <div class="panel"><h2>De onde vêm</h2><div id="mt-origem"></div></div>
+      <div class="panel"><h2>Áreas</h2><div id="mt-area"></div></div>
+    </div>
+    <details class="panel small"><summary><b>Como cada número é calculado</b></summary><ul>
+      <li><b>Novos contatos:</b> clientes cadastrados no período (pelo site ou à mão).</li>
+      <li><b>Viraram clientes:</b> desses, os que estão em Contratado, Caso ativo ou Encerrado.</li>
+      <li><b>1º contato:</b> tempo entre o cadastro e o primeiro registro no histórico da ficha (WhatsApp, mudança de etapa). Mediana: metade foi mais rápida, metade mais lenta.</li>
+      <li><b>Recebido:</b> parcelas marcadas como recebidas no período.</li>
+      <li><b>Inadimplência:</b> das parcelas que venceram no período, a parte (em R$) ainda não paga.</li>
+      <li><b>Honorários por cliente novo:</b> soma das parcelas lançadas para os novos clientes ÷ número desses clientes.</li>
+      <li><b>Prazos em aberto:</b> prazos não marcados como feitos; “data vencida” são os com data anterior a hoje.</li>
+    </ul></details>
   </section>
 
   <section id="v-equipe" class="oview">
@@ -342,5 +364,6 @@
 <script src="nuvem.js"></script>
 <script src="entrada.js"></script>
 <script src="equipe.js"></script>
+<script src="metricas.js"></script>
 </body>
 </html>
