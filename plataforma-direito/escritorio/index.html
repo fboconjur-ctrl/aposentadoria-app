@@ -18,6 +18,7 @@
   <nav>
     <button class="nav on" data-view="hoje">Hoje</button>
     <button class="nav" data-view="clientes">Clientes</button>
+    <button class="nav" data-view="acervo">Processos</button>
     <button class="nav" data-view="mais">Mais</button>
   </nav>
   <div class="side-conta">
@@ -121,6 +122,25 @@
       <button class="card-c so-titular" data-view="equipe"><b>Equipe</b><span class="meta">Advogados associados e quem cuida de cada caso</span></button>
       <button class="card-c" data-view="importar"><b>Importar processos</b><span class="meta">Colar sua lista de processos</span></button>
     </div>
+  </section>
+
+  <section id="v-acervo" class="oview">
+    <header class="ohead"><div><h1>Processos</h1><p class="muted">Todos os seus processos num lugar só. A lista cresce sozinha a cada busca de publicações e com os números cadastrados nos clientes.</p></div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn" data-view="djen">Buscar publicações</button><button class="back" id="ac-csv">Baixar planilha</button></div></header>
+    <div class="panel ac-filtros">
+      <input id="ac-busca" class="search" placeholder="Buscar por número, parte, cliente, vara…">
+      <select id="ac-filtro" class="search"><option value="ativos">Todos ativos</option><option value="novos">Com novidade</option><option value="semcli">Sem cliente vinculado</option><option value="arquivados">Arquivados</option></select>
+      <p class="small muted" id="ac-resumo"></p>
+    </div>
+    <div class="panel" id="ac-msg" hidden>
+      <div class="fi-tit"><h2>Mensagem para <span id="ac-msg-nome"></span></h2><button class="linkish small" id="ac-msg-fechar">fechar</button></div>
+      <p class="small" id="ac-msg-aviso"></p>
+      <label class="small">Tipo de mensagem<select id="ac-msg-modelo" class="search"></select></label>
+      <textarea id="ac-msg-texto" rows="7" class="search" style="width:100%;box-sizing:border-box"></textarea>
+      <p class="small atrasada" id="ac-msg-semtel" hidden>Este cliente não tem WhatsApp cadastrado. Abra a ficha e use “Editar dados”.</p>
+      <div><button class="wa-btn" id="ac-msg-enviar">Abrir no WhatsApp</button> <span class="small muted">Você revisa e envia pelo seu WhatsApp. Fica registrado no histórico do cliente.</span></div>
+    </div>
+    <div id="ac-lista" class="ac-lista"></div>
   </section>
 
   <section id="v-assistente" class="oview">
@@ -391,5 +411,6 @@
 <script src="equipe.js"></script>
 <script src="metricas.js"></script>
 <script src="assistente.js"></script>
+<script src="acervo.js"></script>
 </body>
 </html>

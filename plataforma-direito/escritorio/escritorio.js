@@ -72,7 +72,7 @@ function go(view, { semHistorico } = {}) {
   const atual = document.querySelector(".oview.on")?.id.slice(2);
   if (!semHistorico && atual && atual !== view) historico.push(atual);
   document.querySelectorAll(".oview").forEach((v) => v.classList.toggle("on", v.id === "v-" + view));
-  const grupo = ["hoje", "clientes"].includes(view) ? view : view === "ficha" ? "clientes" : "mais";
+  const grupo = ["hoje", "clientes", "acervo"].includes(view) ? view : view === "ficha" ? "clientes" : "mais";
   document.querySelectorAll(".nav[data-view]").forEach((b) => b.classList.toggle("on", b.dataset.view === grupo));
   window.scrollTo(0, 0);
   if (view === "hoje") renderHoje();
