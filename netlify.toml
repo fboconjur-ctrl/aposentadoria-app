@@ -46,3 +46,24 @@
   to = "/404"
   status = 404
   force = true
+
+# Proteções básicas do navegador em todas as páginas.
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    X-Frame-Options = "SAMEORIGIN"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=()"
+    Strict-Transport-Security = "max-age=31536000"
+# Painel e área do cliente: nunca indexar nem enviar o endereço (com o link pessoal) para outros sites.
+[[headers]]
+  for = "/plataforma-direito/escritorio/*"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow"
+    Referrer-Policy = "no-referrer"
+[[headers]]
+  for = "/plataforma-direito/minha-area/*"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow"
+    Referrer-Policy = "no-referrer"

@@ -1,0 +1,4 @@
+User-agent: *
+Disallow: /plataforma-direito/escritorio/
+Disallow: /plataforma-direito/minha-area/
+Sitemap: https://plataformadodireito.com.br/sitemap.xml
