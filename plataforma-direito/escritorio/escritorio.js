@@ -289,6 +289,7 @@ function abrirFicha(id, { manterScroll } = {}) {
   $("fi-hist").innerHTML = (c.hist || []).map((h) => `<li><span class="when">${fmt(new Date(h.em))}</span><span>${esc(h.o)}</span></li>`).join("") || `<li class="muted">Sem registros.</li>`;
   $("fi-wa").hidden = !telWa(c.tel);
   $("crm-form").hidden = true; $("crm-wa").hidden = true; $("fi-ind").hidden = true;
+  window.renderOnb?.();
 }
 $("fi-etapa").onchange = () => { const c = cliPorId(fichaAtual); c.etapa = $("fi-etapa").value; (c.hist ||= []).unshift({ em: new Date().toISOString(), o: `Etapa: ${c.etapa}` }); salvarCrm(); renderTudo(); };
 let notasTimer;
@@ -301,7 +302,7 @@ $("fi-procs").addEventListener("click", (e) => { const b = e.target.closest("[da
 $("fi-atualizar").onclick = () => atualizarAcomp(procsDe(cliPorId(fichaAtual)));
 
 // Cadastro (novo/editar) — CPF pode ficar para depois.
-const CAMPOS = { nome: "c-nome", cpf: "c-cpf", tel: "c-tel", email: "c-email", area: "c-area", origem: "c-origem", assunto: "c-assunto", procs: "c-procs" };
+const CAMPOS = { nome: "c-nome", cpf: "c-cpf", tel: "c-tel", email: "c-email", area: "c-area", origem: "c-origem", assunto: "c-assunto", procs: "c-procs", contra: "c-contra" };
 let editando = null;
 function abrirForm(c) {
   editando = c || null;
@@ -320,8 +321,15 @@ $("crm-salvar").onclick = () => {
   if (dados.cpf && !DocId.valido(dados.cpf)) { $("c-cpf").setCustomValidity("CPF ou CNPJ inválido"); $("c-cpf").reportValidity(); return; }
   $("c-cpf").setCustomValidity(""); if (dados.cpf) dados.cpf = DocId.formatar(dados.cpf);
   dados.procs = [...dados.procs.matchAll(CNJ_RE)].map(fmtCnj).join("\n") || dados.procs;
+  // Conflito de interesses: confere a carteira antes de cadastrar (ou quando muda a parte contrária).
+  let conflito = null;
+  if (window.checarConflito && (!editando || dados.contra !== (editando.contra || "") || dados.nome !== editando.nome)) {
+    conflito = window.checarConflito(dados, editando?.id);
+    if (conflito.grau === "direto" && !confirm(`Atenção: conflito de interesses direto.\n\n${conflito.achados.map((a) => "• " + a.txt).join("\n")}\n\nSalvar mesmo assim?`)) return;
+  }
   let c = editando;
   if (c) Object.assign(c, dados); else { c = { id: novoId("CL-"), criado: new Date().toISOString(), etapa: "Novo pedido", hist: [], ...dados }; clientes.push(c); }
+  if (conflito) (c.hist ||= []).unshift({ em: conflito.quando, o: `Verificação de conflito: ${conflito.grau}${conflito.achados.length ? ` (${conflito.achados.length} achado(s))` : ""}` });
   salvarCrm(); fecharForm(); abrirFicha(c.id);
   if (procsDe(c).some((n) => !acomp[n])) atualizarAcomp(procsDe(c));
 };
@@ -345,14 +353,19 @@ const telWa = (t) => { const d = soDig(t); return d.length >= 12 ? d : d.length 
 const MODELOS_WA = {
   "Primeiro contato": (c) => `Olá, ${primeiroNome(c.nome)}! Aqui é ${eu()}. Recebi seu pedido${c.assunto ? ` sobre ${c.assunto.toLowerCase()}` : ""} e gostaria de entender melhor o seu caso. Qual o melhor horário para conversarmos?`,
   "Confirmar consulta": (c) => { const p = itens.find((x) => x.cli === c.id && x.tipo === "compromisso" && !x.feita && x.quando >= hojeIso); return `Olá, ${primeiroNome(c.nome)}! Confirmando nossa conversa${p ? ` em ${fmt(deIso(p.quando))}${p.hora ? ` às ${p.hora}` : ""}` : ""}. Se puder, separe os documentos que tiver sobre o caso.`; },
-  "Pedir documentos": (c) => `Olá, ${primeiroNome(c.nome)}! Para darmos andamento, preciso dos seguintes documentos:\n- \n- \nPode enviar foto ou PDF por aqui mesmo. Obrigada!`,
+  "Boas-vindas": (c) => `Olá, ${primeiroNome(c.nome)}! Seja bem-vindo(a). A partir de agora, ${eu()} cuida do seu caso${c.assunto ? ` (${c.assunto.toLowerCase()})` : ""}.\n\nComo vamos funcionar:\n- Falamos por este WhatsApp; respondo em horário comercial.\n- Vou te avisar sempre que houver novidade importante, e no mínimo uma vez por mês.\n- Processos levam tempo e nenhum resultado pode ser garantido, mas você vai saber cada passo.\n\nNos próximos dias vou te pedir alguns documentos.`,
+  "Pedir documentos": (c) => { const f = window.docsFaltando?.(c) || []; return `Olá, ${primeiroNome(c.nome)}! Para darmos andamento, preciso dos seguintes documentos:\n${(f.length ? f : ["", ""]).map((d) => "- " + d).join("\n")}\nPode enviar foto ou PDF por aqui mesmo. Obrigada!`; },
+  "Lembrete de documento": (c) => `Olá, ${primeiroNome(c.nome)}! Tudo bem? Ainda estou aguardando ${(window.docsFaltando?.(c) || [])[0] ? `o documento: ${window.docsFaltando(c)[0]}` : "os documentos que combinamos"}. Sem ele não consigo seguir com essa etapa. Se tiver dificuldade para conseguir, me avise que eu te ajudo.`,
+  "Aviso de prazo ou assinatura": (c) => { const p = itens.filter((x) => x.cli === c.id && !x.feita && x.quando >= hojeIso).sort((a, b) => a.quando.localeCompare(b.quando))[0]; return `Olá, ${primeiroNome(c.nome)}! Preciso da sua ajuda até ${p ? fmt(deIso(p.quando)) : "[data]"}: [o que o cliente precisa fazer]. Isso é importante porque [motivo em uma frase]. Qualquer dúvida, me chame.`; },
   "Proposta de honorários": (c) => `Olá, ${primeiroNome(c.nome)}! Conforme conversamos, segue a proposta para atuação no seu caso. Fico à disposição para qualquer dúvida.`,
   "Atualização do processo": (c) => `Olá, ${primeiroNome(c.nome)}! Passando para atualizar sobre o seu processo${procsDe(c)[0] ? ` (${mascara(procsDe(c)[0])})` : ""}: `,
+  "Retomar proposta": (c) => `Olá, ${primeiroNome(c.nome)}! Passando para saber se ficou alguma dúvida sobre a proposta que te enviei. Se preferir, podemos conversar rapidamente por aqui ou por ligação.`,
+  "Encerramento e avaliação": (c) => `Olá, ${primeiroNome(c.nome)}! Seu caso${c.assunto ? ` (${c.assunto.toLowerCase()})` : ""} foi concluído. Obrigada pela confiança!\n\nDe 0 a 10, quanto você recomendaria meu trabalho a um amigo? Sua resposta me ajuda a melhorar.\n\nOs documentos do caso ficam guardados pelo prazo legal; se precisar de algum, é só pedir.`,
   "Mensagem livre": (c) => `Olá, ${primeiroNome(c.nome)}! `,
 };
 $("fi-wa").onclick = () => {
   const c = cliPorId(fichaAtual);
-  const sug = { "Novo pedido": "Primeiro contato", "Consulta marcada": "Confirmar consulta", "Proposta enviada": "Proposta de honorários", "Contratado": "Pedir documentos", "Caso ativo": "Atualização do processo" }[c.etapa] || "Mensagem livre";
+  const sug = { "Novo pedido": "Primeiro contato", "Consulta marcada": "Confirmar consulta", "Proposta enviada": "Proposta de honorários", "Contratado": "Boas-vindas", "Caso ativo": "Atualização do processo", "Encerrado": "Encerramento e avaliação" }[c.etapa] || "Mensagem livre";
   $("wa-nome").textContent = c.nome;
   $("wa-modelo").innerHTML = Object.keys(MODELOS_WA).map((m) => `<option${m === sug ? " selected" : ""}>${m}</option>`).join("");
   $("wa-texto").value = MODELOS_WA[sug](c); $("crm-wa").hidden = false; $("crm-form").hidden = true; $("wa-texto").focus();
@@ -607,15 +620,30 @@ const PZ_EXTRAS_KEY = "pd-feriados-locais";
 try { $("pz-extras").value = localStorage.getItem(PZ_EXTRAS_KEY) || ""; } catch {}
 const lerExtras = () => new Map($("pz-extras").value.split("\n").map((l) => l.match(/(\d{2})\/(\d{2})\/(\d{4})\s*(.*)/)).filter(Boolean).map((m) => [`${m[3]}-${m[2]}-${m[1]}`, m[4] || "feriado local / suspensão"]));
 $("pz-caso").onfocus = () => { const v = $("pz-caso").value; $("pz-caso").innerHTML = `<option value="">— só calcular —</option>` + [...clientes].sort((a, b) => a.nome.localeCompare(b.nome)).map((c) => `<option value="${c.id}">${esc(c.nome)}</option>`).join(""); $("pz-caso").value = v; };
+// Estado do foro (feriado estadual) — fica salvo; padrão DF.
+$("pz-uf").innerHTML += Prazos.UFS.map((u) => `<option>${u}</option>`).join("");
+try { $("pz-uf").value = localStorage.getItem("pd-pz-uf") ?? "DF"; } catch { $("pz-uf").value = "DF"; }
+// Peça → quantidade de dias e base legal (ponto de partida; prazo fixado pelo juiz prevalece).
+function opcoesPreset(area) {
+  $("pz-preset").innerHTML = `<option value="">— outro (digite os dias) —</option>` + Prazos.PRESETS.filter((p) => p.area === area).map((p) => `<option value="${p.id}">${esc(p.nome)} — ${p.dias} dias (${esc(p.base)})</option>`).join("");
+}
+$("pz-preset").onchange = () => {
+  const p = Prazos.PRESETS.find((x) => x.id === $("pz-preset").value); if (!p) return;
+  $("pz-dias").value = p.dias; $("pz-prov").value = p.nome;
+};
+const optsPrazo = () => ({ marco: $("pz-data").value, tipoMarco: $("pz-tipo").value, dias: $("pz-dias").value, contagem: $("pz-contagem").value,
+  dobro: $("pz-dobro").checked, recesso: $("pz-recesso").checked, forenses: $("pz-forenses").checked, extras: lerExtras(), uf: $("pz-uf").value });
 $("pz-form").onsubmit = (e) => {
   e.preventDefault();
-  try { localStorage.setItem(PZ_EXTRAS_KEY, $("pz-extras").value); } catch {}
-  const r = Prazos.calcular({ marco: $("pz-data").value, tipoMarco: $("pz-tipo").value, dias: $("pz-dias").value, contagem: $("pz-contagem").value,
-    dobro: $("pz-dobro").checked, recesso: $("pz-recesso").checked, forenses: $("pz-forenses").checked, extras: lerExtras() });
+  try { localStorage.setItem(PZ_EXTRAS_KEY, $("pz-extras").value); localStorage.setItem("pd-pz-uf", $("pz-uf").value); } catch {}
+  const r = Prazos.calcular(optsPrazo());
+  const preset = Prazos.PRESETS.find((x) => x.id === $("pz-preset").value);
   const venc = deIso(r.vencimento);
   $("pz-res").hidden = false;
   $("pz-res").innerHTML = `<div class="kpi alert" style="margin-top:12px"><span class="muted small">Vencimento</span><strong>${venc.toLocaleDateString("pt-BR", { weekday: "long", day: "2-digit", month: "2-digit", year: "numeric" })}</strong><span class="small">${dias(venc)} dia(s) a partir de hoje</span></div>
     <ol class="small" style="margin:12px 0">${r.passos.map(([t, d]) => `<li><b>${brData(d)}</b> — ${esc(t)}</li>`).join("")}</ol>
+    ${preset ? `<p class="small muted">Base: ${esc(preset.base)}. Confira se o juiz fixou prazo diferente ou se o rito é especial.</p>` : ""}
+    <p class="small"><b>Avisos (dias úteis antes):</b> ${r.alertas.map(([n, d]) => `D-${n} ${brData(d)}`).join(" · ")} · <b>D ${brData(r.vencimento)}</b></p>
     ${r.pulos.length ? `<details class="small"><summary>${r.pulos.length} dia(s) pulado(s) (sem expediente ou suspensão)</summary><ul>${r.pulos.map(([d, m]) => `<li>${brData(d)} — ${esc(m)}</li>`).join("")}</ul></details>` : ""}
     <p class="small muted">Confira no calendário do tribunal: feriados locais, pontos facultativos e suspensões variam e só entram no cálculo se você os informar acima.</p>
     <div><button type="button" class="btn" id="pz-lancar">Lançar prazo${$("pz-caso").value ? " na ficha do cliente" : ""}</button></div>`;
@@ -623,6 +651,8 @@ $("pz-form").onsubmit = (e) => {
     const prov = $("pz-prov").value.trim() || "Prazo";
     const cli = $("pz-caso").value;
     itens.push({ id: novoId("I-"), tipo: "prazo", texto: `${prov} (${$("pz-dias").value} dias ${$("pz-contagem").value === "penal" ? "corridos" : "úteis"} de ${brData($("pz-data").value)})`, quando: r.vencimento, cli, feita: false });
+    const rev = r.alertas.find(([n]) => n === 3);
+    if ($("pz-revisao").checked && rev && rev[1] >= hojeIso) itens.push({ id: novoId("I-"), tipo: "tarefa", texto: `Revisar e protocolar: ${prov} (vence ${brData(r.vencimento)})`, quando: rev[1], cli, feita: false });
     salvarItens();
     if (cli) abrirFicha(cli); else go("hoje");
   };
@@ -637,7 +667,7 @@ function areaPrazo(a) {
   document.querySelectorAll("[data-pz-area]").forEach((b) => b.classList.toggle("on", b.dataset.pzArea === a));
   $("pz-contagem").value = a === "penal" ? "penal" : "uteis";
   $("pz-regra").innerHTML = PZ_AREA[a].regra; $("pz-recesso-txt").textContent = PZ_AREA[a].recesso; $("pz-dobro-txt").textContent = PZ_AREA[a].dobro;
-  $("pz-presc-box").hidden = a !== "penal"; $("pz-res").hidden = true;
+  $("pz-presc-box").hidden = a !== "penal"; $("pz-res").hidden = true; opcoesPreset(a);
 }
 document.querySelectorAll("[data-pz-area]").forEach((b) => (b.onclick = () => areaPrazo(b.dataset.pzArea)));
 areaPrazo("civel");
