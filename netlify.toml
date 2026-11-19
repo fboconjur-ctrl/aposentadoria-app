@@ -14,3 +14,35 @@
 
 [functions]
   directory = "netlify/functions"
+
+# Arquivos internos (anotações, banco, revisão, testes) não ficam acessíveis no site.
+[[redirects]]
+  from = "/plataforma-direito/CONTINUAR.md"
+  to = "/404"
+  status = 404
+  force = true
+[[redirects]]
+  from = "/plataforma-direito/supabase.sql"
+  to = "/404"
+  status = 404
+  force = true
+[[redirects]]
+  from = "/plataforma-direito/conteudo/*"
+  to = "/404"
+  status = 404
+  force = true
+[[redirects]]
+  from = "/plataforma-direito/ferramentas/*"
+  to = "/404"
+  status = 404
+  force = true
+[[redirects]]
+  from = "/plataforma-direito/escritorio/dac/testes/*"
+  to = "/404"
+  status = 404
+  force = true
+[[redirects]]
+  from = "/netlify/*"
+  to = "/404"
+  status = 404
+  force = true
