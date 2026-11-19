@@ -107,6 +107,7 @@
     $("ac-msg-aviso").textContent = temAtraso ? "⚠️ Este cliente tem honorários em atraso." : "";
     preencher(); $("ac-msg").hidden = false; $("ac-msg").scrollIntoView({ behavior: "smooth", block: "center" });
     $("ac-msg-semtel").hidden = !!telWa(c.tel);
+    window.botaoEmail?.("ac-msg-email", c, `Seu processo ${mascara(n)}`, () => $("ac-msg-texto").value);
   }
   const preencher = () => ($("ac-msg-texto").value = MODELOS[$("ac-msg-modelo").value](atual.c, atual.n, acervo[atual.n]));
   $("ac-msg-modelo").onchange = preencher;

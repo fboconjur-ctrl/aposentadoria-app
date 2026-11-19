@@ -96,5 +96,6 @@
     $("fi-wa").click(); $("wa-modelo").value = "Pedir documentos"; $("wa-modelo").dispatchEvent(new Event("change"));
   });
   window.renderOnb = renderOnb; window.docsFaltando = docsFaltando;
+  window.docsStatus = (c) => passos(c).filter(([k]) => k === "docpessoal" || k.startsWith("doc")).map(([k, t]) => ({ doc: t, ok: (c.onb || []).includes(k) }));
   $("fi-etapa")?.addEventListener("change", renderOnb);
 })();
