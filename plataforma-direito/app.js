@@ -418,6 +418,9 @@ $("lead-form").onsubmit = async (e) => {
       faltaSaber: state.analise?.faltando || [], lembrete: !!$("f-lembrete")?.checked,
       respostas: state.followSummary ? state.answers : state.answers.map((r, i) => `${[...(state.flow?.questions || []), OBJECTIVE_Q][i]?.q || ""} ${r}`),
       nome: $("f-nome").value.trim(), cpf: "", email: "", telefone: $("f-tel").value.trim(), periodo: $("f-periodo").value };
+    // Documentos anexados (opcional): área privada do escritório, apagados após a análise ou em até 60 dias.
+    const arquivos = [...($("f-docs")?.files || [])].slice(0, 8).filter((f) => f.size <= 10 * 1024 * 1024);
+    if (arquivos.length) { $("f-msg").textContent = `Enviando ${arquivos.length} documento(s)…`; pacote.docs = await enviarDocumentos(protocolo, arquivos); $("f-msg").textContent = ""; }
     $("f-protocolo").value = protocolo;
     $("f-pacote").value = "PD1:" + btoa(unescape(encodeURIComponent(JSON.stringify(pacote))));
     const r = await fetch("/", { method: "POST", headers: { "Content-Type": "application/x-www-form-urlencoded" }, body: new URLSearchParams(new FormData(form)).toString() });
@@ -483,6 +486,20 @@ document.querySelectorAll("[data-calc]").forEach((b) => (b.onclick = () => {
   document.querySelectorAll(".calc-painel").forEach((p) => (p.hidden = p.id !== "calc-" + b.dataset.calc));
 }));
 $("calc-advogado").onclick = () => { state.text = state.text || "Dúvida sobre prazo ou prescrição (calculadora)"; state.key = null; state.flow = null; state.answers = []; openLawyer(); };
+
+// Envia os documentos anexados para a área privada (só a advogada lê). Devolve a lista do que foi enviado.
+async function enviarDocumentos(protocolo, arquivos) {
+  const CFG = window.SUPABASE_CONFIG; if (!CFG) return [];
+  const enviados = [];
+  for (const [i, f] of arquivos.entries()) {
+    const nome = `${i + 1}-${f.name.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^\w.\-]+/g, "_").slice(-80)}`;
+    try {
+      const r = await fetch(`${CFG.url}/storage/v1/object/pedidos-docs/${protocolo}/${encodeURIComponent(nome)}`, { method: "POST", headers: { apikey: CFG.anonKey, Authorization: `Bearer ${CFG.anonKey}`, "Content-Type": f.type || "application/octet-stream" }, body: f });
+      if (r.ok) enviados.push({ caminho: `${protocolo}/${nome}`, nome: f.name, tipo: f.type, tamanho: f.size });
+    } catch { /* segue com os demais */ }
+  }
+  return enviados;
+}
 
 // Se o Supabase estiver configurado, o pedido também cai direto no painel do escritório (tabela "pedidos").
 async function enviarPedidoNuvem(pacote) {

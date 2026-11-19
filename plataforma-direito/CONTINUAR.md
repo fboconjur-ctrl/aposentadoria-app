@@ -32,6 +32,11 @@ Prévia: https://deploy-preview-1--prevcalculadora.netlify.app/plataforma-direit
 - Painel → Mais → ✨ Assistente jurídico: 10 tarefas (triagem, sentença, resumo, prazos, comunicado, notificação, pesquisa de jurisprudência, posts, ética OAB, anonimizar). Prompts próprios em `netlify/edge-functions/assistente.js` (escritos do zero, inspirados no pack do Chat Jurídico).
 - Edge function `/api/assistente`: exige login (rpc meu_papel), repassa o streaming do Claude (claude-opus-5-5). Precisa de `ANTHROPIC_API_KEY` nas variáveis do Netlify.
 
+## Documentos enviados pelo cliente — nov/2026
+- Decisão da advogada: o cliente pode anexar documentos no pedido do site. Ficam no bucket privado `pedidos-docs` (Supabase) até ela tratar/recusar, no máximo 60 dias.
+- Regras: qualquer visitante só ENVIA (pasta PD-AAMMDD-XXXX, PDF/imagem até 10 MB); só a titular lê/apaga. Limpeza dos >60 dias roda ao abrir o painel. Aviso de privacidade e termo de consentimento do site atualizados.
+- Há um arquivo de teste de 14 bytes em `PD-000000-TEST/` (sem dados): sai sozinho na limpeza dos 60 dias.
+
 ## Pendências (em ordem)
 0. **PRÓXIMO PASSO — Login com Google (fazer pelo Claude in Chrome, ela pediu que o Claude faça):**
    a) console.cloud.google.com/auth/clients → criar projeto "escritorio" se pedir; tela de consentimento (nome do app + e-mail dela);
