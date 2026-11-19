@@ -158,6 +158,8 @@
       <button class="card-c" data-view="fin"><b>💰 Financeiro</b><span class="meta">Recebido, a receber, atrasados e despesas</span></button>
       <button class="card-c" data-view="metricas"><b>📊 Números do escritório</b><span class="meta">Contatos, contratação, recebimentos e prazos</span></button>
       <button class="card-c" data-view="equipe"><b>👥 Equipe</b><span class="meta">Associados e quem cuida de cada caso</span></button>
+      <button class="card-c" id="bk-baixar"><b>💾 Cópia de segurança</b><span class="meta">Baixa um arquivo com tudo do painel (guarde no seu computador)</span></button>
+      <label class="card-c" style="cursor:pointer"><b>♻️ Restaurar cópia</b><span class="meta">Volta o painel a partir de um arquivo de cópia</span><input type="file" id="bk-restaurar" accept=".json,application/json" hidden></label>
     </div>
   </section>
 
@@ -573,5 +575,6 @@
 <script src="docspedido.js"></script>
 <script src="portal.js"></script>
 <script src="avisos.js"></script>
+<script src="backup.js"></script>
 </body>
 </html>
