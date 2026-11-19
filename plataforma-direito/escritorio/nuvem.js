@@ -7,13 +7,21 @@
 
   const capa = document.createElement("div");
   capa.id = "login-capa";
-  capa.innerHTML = `<div class="login-box"><h1>Escritório</h1><p class="muted">Acesso restrito.</p>
+  capa.innerHTML = `<div class="login-box">
+    <a class="brand" href="../">Plataforma do Direito</a>
+    <h1>Área do escritório</h1><p class="muted">Acesso restrito à equipe.</p>
     ${CFG.google ? `<button class="btn" type="button" id="login-google">Entrar com Google</button><p class="small muted">ou</p>` : ""}
-    <form id="login-form"><input id="login-email" type="email" required placeholder="seu e-mail" autocomplete="email"><br><input id="login-senha" type="password" required minlength="8" placeholder="senha (mín. 8 caracteres)" autocomplete="current-password"><br><button class="btn">Entrar</button></form>
+    <form id="login-form">
+      <label>E-mail<input id="login-email" class="search" type="email" required autocomplete="email" inputmode="email"></label>
+      <label>Senha<span class="login-senha"><input id="login-senha" class="search" type="password" required minlength="8" autocomplete="current-password"><button type="button" class="linkish small" id="login-ver" aria-label="Mostrar senha">mostrar</button></span></label>
+      <button class="btn">Entrar</button>
+    </form>
+    <p class="small muted" id="login-msg" role="alert"></p>
     <p class="small"><button type="button" class="linkish" id="login-criar">Primeiro acesso? Criar minha senha</button></p>
-    <p class="small muted" id="login-msg"></p></div>`;
+    <p class="small muted">Esqueceu a senha? Fale com a titular do escritório.</p></div>`;
   document.body.appendChild(capa);
   const msg = (t) => (document.getElementById("login-msg").textContent = t);
+  document.getElementById("login-ver").onclick = (e) => { const i = document.getElementById("login-senha"), ver = i.type === "password"; i.type = ver ? "text" : "password"; e.target.textContent = ver ? "ocultar" : "mostrar"; };
 
   const s = document.createElement("script");
   s.src = "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.99.3/dist/umd/supabase.js";
