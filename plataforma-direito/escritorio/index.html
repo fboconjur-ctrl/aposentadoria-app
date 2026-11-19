@@ -40,6 +40,11 @@
       <ol class="guia-lista" id="guia-lista"></ol>
       <button class="linkish small" id="guia-ocultar">ocultar este guia</button>
     </div>
+    <div class="panel auto" id="auto" hidden>
+      <div class="fi-tit"><h2>✨ Feito para você</h2><span class="small muted" id="auto-n"></span></div>
+      <p class="small muted" style="margin:0">O painel olhou suas publicações, prazos, compromissos e pagamentos e preparou estas tarefas. Um clique e está feito.</p>
+      <ul class="list" id="auto-lista"></ul>
+    </div>
     <div class="panel"><h2>Atrasado e hoje</h2><ul class="list" id="h-agora"></ul></div>
     <div class="panel"><h2>Próximos 7 dias</h2><ul class="list" id="h-semana"></ul></div>
     <div class="panel"><h2>Novidades</h2><ul class="list" id="h-novidades"></ul>
@@ -157,7 +162,7 @@
     <div class="panel ac-carga" id="ac-carga" hidden>
       <h2>Primeiro passo: trazer todos os seus processos</h2>
       <p class="small">Busca de uma vez tudo o que foi publicado no Diário Eletrônico (DJEN) com a sua OAB nos últimos 3 anos e monta o acervo. Só precisa fazer uma vez; depois a busca normal mantém tudo atualizado.</p>
-      <div class="as-linha"><button class="btn" id="ac-carga-btn">📥 Trazer todos os processos da minha OAB</button><b id="ac-carga-prog"></b></div>
+      <div class="as-linha"><button class="btn" id="ac-carga-btn">📥 Trazer todos os processos da minha OAB</button><button class="back" id="ac-carga-parar" hidden>⏹ Parar</button><b id="ac-carga-prog"></b></div>
     </div>
     <p class="small muted" id="ac-carga-ok"></p>
     <div class="panel ac-filtros">
@@ -498,5 +503,6 @@
 <script src="peticoes.js"></script>
 <script src="spin.js"></script>
 <script src="guia.js"></script>
+<script src="automacoes.js"></script>
 </body>
 </html>

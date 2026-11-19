@@ -273,3 +273,7 @@ body.office { display: grid; grid-template-columns: 240px minmax(0, 1fr); min-he
 .fi-mais-menu { position: absolute; right: 0; top: calc(100% + 6px); z-index: 20; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; box-shadow: var(--shadow); padding: 8px; display: grid; gap: 6px; min-width: 240px; }
 .fi-mais-menu .back { text-align: left; width: 100%; }
 @media (max-width: 640px) { .fi-mais-menu { left: 0; right: auto; } }
+.auto { border-color: var(--amber); }
+.auto-acoes { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; justify-content: flex-end; }
+#auto-lista li { align-items: center; }
+@media (max-width: 640px) { #auto-lista li { flex-wrap: wrap; } .auto-acoes { width: 100%; justify-content: flex-start; } }

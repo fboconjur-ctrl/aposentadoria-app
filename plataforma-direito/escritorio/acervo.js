@@ -118,6 +118,7 @@
     $("ac-msg").hidden = true; render();
   };
 
+  window.Acervo = { dados: () => (ingerir(), acervo), abrirMsg: (n, modelo) => { go("acervo"); abrirMsg(n); if (modelo) { $("ac-msg-modelo").value = modelo; preencher(); } } };
   // ---------- Ações ----------
   $("ac-lista").addEventListener("change", (e) => {
     if (!e.target.classList.contains("ac-vinc") || !e.target.value) return;
@@ -137,19 +138,31 @@
   });
   // Carga inicial: busca tudo o que o DJEN tem na OAB (últimos 3 anos) uma única vez; depois as buscas normais mantêm atualizado.
   const CARGA_KEY = "pd-acervo-carga";
-  const mostrarCarga = () => { const feita = ler(CARGA_KEY, null); $("ac-carga").hidden = !!feita; $("ac-carga-ok").textContent = feita ? `Carga completa feita em ${fmt(new Date(feita.em))} (${feita.n} publicações).` : ""; };
-  $("ac-carga-btn").onclick = async () => {
-    if (!$("djen-oab").value.trim()) { const o = prompt("Qual o número da sua OAB? (só números)"); if (!o) return; $("djen-oab").value = soDig(o); $("djen-oab").dispatchEvent(new Event("input")); }
-    if (!$("djen-uf").value.trim()) $("djen-uf").value = "DF";
-    const b = $("ac-carga-btn"); b.disabled = true; b.textContent = "Buscando… pode levar alguns minutos";
+  const mostrarCarga = () => { const feita = ler(CARGA_KEY, null); $("ac-carga").hidden = !!feita; $("ac-carga-ok").textContent = feita ? `Carga completa feita em ${fmt(new Date(feita.em))} (${feita.n} processos).` : ""; };
+  const PAUSA_KEY = "pd-acervo-carga-pausa";
+  let rodando = false;
+  async function carga({ auto } = {}) {
+    if (rodando) return; rodando = true; window.pararDjen = false;
+    const b = $("ac-carga-btn"); b.disabled = true; b.textContent = auto ? "Continuando sozinho…" : "Buscando… pode levar alguns minutos";
+    $("ac-carga-parar").hidden = false;
     window.aoProgressoDjen = (f) => ($("ac-carga-prog").textContent = `${Math.min(99, Math.round(f * 100))}%`);
     try {
-      const r = await buscarDjen({ dias: 3 * 365, soOab: true });
-      if (r.erros) { $("ac-carga-prog").textContent = "O DJEN recusou parte da busca. Tente de novo mais tarde."; }
-      else { gravar(CARGA_KEY, { em: new Date().toISOString(), n: r.total }); $("ac-carga-prog").textContent = ""; }
-    } catch (e) { $("ac-carga-prog").textContent = "Erro: " + e.message; }
-    finally { window.aoProgressoDjen = null; b.disabled = false; b.textContent = "📥 Trazer todos os processos da minha OAB"; mostrarCarga(); render(); }
-  };
+      const feitas = new Set(ler("pd-acervo-carga-ok", []));
+      const r = await buscarDjen({ dias: 3 * 365, soOab: true, feitas });
+      r.okJanelas.forEach((k) => feitas.add(k)); gravar("pd-acervo-carga-ok", [...feitas]);
+      const faltam = r.totalJanelas - feitas.size;
+      if (window.pararDjen) $("ac-carga-prog").textContent = `Parado com ${Math.round((feitas.size / r.totalJanelas) * 100)}% do histórico. Clique no botão azul quando quiser continuar.`;
+      else if (faltam > 0) $("ac-carga-prog").textContent = `Já veio ${Math.round((feitas.size / r.totalJanelas) * 100)}% do histórico. O DJEN limitou as consultas; com o painel aberto, continuo sozinho a cada hora até completar.`;
+      else { gravar(CARGA_KEY, { em: new Date().toISOString(), n: Object.keys(acervo).length }); $("ac-carga-prog").textContent = ""; }
+    } catch (e) { $("ac-carga-prog").textContent = "Erro: " + e.message + " — tento de novo daqui a uma hora."; }
+    finally { rodando = false; window.aoProgressoDjen = null; b.disabled = false; b.textContent = "📥 Trazer todos os processos da minha OAB"; $("ac-carga-parar").hidden = true; mostrarCarga(); render(); }
+  }
+  $("ac-carga-btn").onclick = () => { gravar(PAUSA_KEY, false); carga(); };
+  $("ac-carga-parar").onclick = () => { gravar(PAUSA_KEY, true); window.pararDjen = true; $("ac-carga-prog").textContent = "Busca automática parada. Clique no botão azul quando quiser retomar."; };
+  // Continua sozinho: ao abrir o painel e a cada hora, enquanto houver parte do histórico faltando e não estiver pausado.
+  const pendente = () => !ler(CARGA_KEY, null) && ler("pd-acervo-carga-ok", []).length > 0 && !ler(PAUSA_KEY, false);
+  setTimeout(() => pendente() && carga({ auto: true }), 20000);
+  setInterval(() => pendente() && carga({ auto: true }), 3600e3);
   mostrarCarga();
   $("ac-busca").oninput = render; $("ac-filtro").onchange = render;
   $("ac-csv").onclick = () => {
