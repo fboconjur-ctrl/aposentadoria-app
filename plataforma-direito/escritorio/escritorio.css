@@ -239,3 +239,17 @@ body.office { display: grid; grid-template-columns: 240px minmax(0, 1fr); min-he
 .ac-acoes { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-top: 6px; }
 .ac-pubs { display: grid; gap: 10px; border-top: 1px solid var(--line); padding-top: 10px; }
 @media (max-width: 640px) { .ac-filtros { grid-template-columns: 1fr; } }
+
+/* Organizador, redator e roteiro */
+.or-zona { border: 2px dashed var(--line); border-radius: var(--r); padding: 26px; text-align: center; display: grid; gap: 8px; justify-items: center; background: var(--tint); }
+.or-zona.sobre { border-color: var(--brand); }
+.or-zona p { margin: 0; }
+.pe-folha { background: #fff; color: #111; padding: 32px 40px; font: 12pt/1.6 "Times New Roman", serif; }
+.pe-folha p { text-align: justify; text-indent: 2cm; }
+.pe-folha .cit { margin-left: 4cm; text-indent: 0; font-size: 11pt; line-height: 1.3; }
+.pe-folha mark { background: #fff3a3; }
+.spin-passos { display: grid; gap: 8px; }
+.spin-passo { border: 1px solid var(--line); border-radius: 12px; padding: 10px 14px; }
+.spin-passo[open] { display: grid; gap: 8px; }
+.spin-passo.feito { opacity: .75; }
+.spin-passo textarea { width: 100%; box-sizing: border-box; }
