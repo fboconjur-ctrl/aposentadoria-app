@@ -1,0 +1,332 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Plataforma do Direito</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Figtree:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="#" data-go="home">Plataforma do Direito</a>
+  <nav>
+        <a href="#" data-go="sobre">Como funciona</a>
+        <a href="#" class="btn-wa-sm" data-wa>WhatsApp</a>
+      </nav>
+</header>
+
+<main>
+  <!-- HOME -->
+  <section id="view-home" class="view active">
+    <div class="hero hero-simples">
+        <p class="eyebrow">A plataforma que explica as leis em linguagem simples</p>
+        <h1>Como podemos <em>ajudar você?</em></h1>
+        <p class="lead">Toque no assunto ou conte o que aconteceu. Você vê o que a lei e os tribunais dizem sobre a sua situação e, se quiser, a advogada analisa o seu caso.</p>
+        <div class="tiles" id="shortcuts">
+          <button data-topic="previdenciario"><span aria-hidden="true">👵</span>INSS e aposentadoria</button>
+          <button data-topic="saude"><span aria-hidden="true">🩺</span>Plano de saúde ou SUS</button>
+          <button data-topic="administrativo"><span aria-hidden="true">🏛️</span>Servidor, concurso ou órgão público</button>
+          <button id="dividas"><span aria-hidden="true">💳</span>Dívidas e bancos</button>
+          <button data-topic="consumidor"><span aria-hidden="true">🏪</span>Problema com uma empresa</button>
+          <button data-topic="cartorio"><span aria-hidden="true">📄</span>Divórcio, inventário e cartório</button>
+          <button id="outro" class="tile-full"><span aria-hidden="true">💬</span>Outro assunto</button>
+        </div>
+        <form id="start-form" class="composer" hidden>
+          <label for="start-text">Conte seu problema com suas palavras</label>
+          <textarea id="start-text" rows="3" placeholder="Ex.: Meu plano de saúde negou uma cirurgia que meu médico pediu..."></textarea>
+          <div class="composer-bar">
+            <span class="privacy">Atendemos qualquer assunto: se não for nossa área, indicamos um colega de confiança. Não informe senhas ou dados bancários.</span>
+            <button type="submit" class="btn">Continuar <span aria-hidden="true">→</span></button>
+          </div>
+        </form>
+        <a href="#" class="btn btn-wa" id="wa-hero" data-wa>Prefiro falar no WhatsApp</a>
+        <p class="trust">Sem cadastro · Sem juridiquês · Análise do caso sempre feita pela advogada</p>
+        <section class="cnis-card doc-card home-doc" id="home-doc">
+          <h2>Recebeu carta, citação, notificação ou decisão? Envie que a gente lê</h2>
+          <p class="muted">Carta do INSS, negativa do plano de saúde, citação em processo administrativo, notificação ou decisão. <strong>A leitura acontece no seu aparelho: o arquivo não é enviado nem guardado.</strong></p>
+          <label class="btn" for="home-doc-file">Escolher PDF</label>
+          <input type="file" id="home-doc-file" accept="application/pdf" hidden>
+          <details><summary>Prefere colar o texto?</summary><textarea id="home-doc-text" rows="5"></textarea><button class="btn secondary" id="home-doc-paste" type="button">Ler texto</button></details>
+          <div id="home-doc-out" aria-live="polite"></div>
+        </section>
+        <a href="#" class="b2b-card" data-go="empresas"><b>🏢 Empresas e gestores públicos — Direito Administrativo</b><span>Licitações, contratos públicos, improbidade e controle externo →</span></a>
+      </div>
+
+      <div class="how" id="como">
+        <div><span>01</span><h3>Escolha o assunto</h3><p>Ou escreva do seu jeito.</p></div>
+        <div><span>02</span><h3>Veja informações gerais</h3><p>Documentos, prazos e fontes oficiais sobre o assunto.</p></div>
+        <div><span>03</span><h3>Advogada, se precisar</h3><p>Seu caso chega organizado. Você não repete nada.</p></div>
+      </div>
+
+      <div class="extras">
+        <h2>Ferramentas</h2>
+        <div class="extras-grid dois">
+          <a href="/simulador/"><span aria-hidden="true">📊</span><strong>Simulador de aposentadoria</strong><small>Veja quando e com quanto você pode se aposentar.</small></a>
+          <a href="#" data-go="guia"><span aria-hidden="true">🧭</span><strong>Onde reclamar e como consultar</strong><small>Procon, consumidor.gov, Banco Central, agências, Registrato.</small></a>
+          <a href="#" data-go="calculadoras"><span aria-hidden="true">📅</span><strong>Calculadoras de prazo</strong><small>Prazo do processo e prescrição penal.</small></a>
+        </div>
+      </div>
+    </section>
+
+    <!-- TRIAGEM -->
+  <section id="view-chat" class="view">
+    <div class="chat-layout">
+      <div class="chat">
+        <div id="messages" class="messages"></div>
+        <p class="qcount muted small" id="qcount"></p>
+          <div id="answers" class="answers"></div>
+          <p class="chat-extra"><button type="button" class="linkbtn" id="voltar" hidden>← Voltar</button> <a href="#" data-wa>Prefere falar com uma pessoa? Chame no WhatsApp</a></p>
+      </div>
+      <aside class="progress" aria-label="Seu atendimento">
+        <h4>Seu atendimento</h4>
+        <ol id="steps">
+          <li data-step="0">Problema informado</li>
+          <li data-step="1">Entendendo sua situação</li>
+          <li data-step="2">Informações gerais</li>
+          <li data-step="3">Próximos passos</li>
+        </ol>
+      </aside>
+    </div>
+  </section>
+
+  <!-- RESULTADO -->
+  <section id="view-result" class="view">
+    <div class="narrow" id="result"></div>
+  </section>
+
+  <!-- TRANSIÇÃO PARA ADVOGADO -->
+  <section id="view-lawyer" class="view">
+    <div class="narrow">
+      <h1>Já organizamos seu caso.</h1>
+      <p class="lead">Você não precisa contar tudo outra vez.</p>
+      <ul class="checks" id="case-summary"></ul>
+      <a href="#" class="btn btn-wa" data-wa>Enviar meu caso pelo WhatsApp</a>
+        <h2>Ou peça sua consulta por aqui</h2>
+      <form class="card lead-form" id="lead-form" name="contato-advogado" method="POST" data-netlify="true" netlify-honeypot="empresa-site">
+        <input type="hidden" name="form-name" value="contato-advogado">
+        <input type="hidden" name="area" id="f-area">
+        <input type="hidden" name="resumo" id="f-resumo">
+        <input type="hidden" name="codigo" id="f-codigo">
+        <input type="hidden" name="protocolo" id="f-protocolo">
+        <input type="hidden" name="pacote" id="f-pacote">
+        <p hidden><label>Não preencha: <input name="empresa-site"></label></p>
+        <label for="f-nome">Nome</label>
+        <input id="f-nome" name="nome" required autocomplete="name">
+        <label for="f-tel">WhatsApp ou telefone</label>
+        <input id="f-tel" name="telefone" type="tel" required autocomplete="tel">
+        <label for="f-periodo">Melhor período para a consulta online</label>
+        <select id="f-periodo" name="periodo"><option>Manhã</option><option>Tarde</option><option>Noite</option></select>
+        <label class="consent"><input type="checkbox" id="f-lgpd" name="consentimento" value="sim" required>
+          Autorizo o envio do meu relato, das minhas respostas e dos dados lidos dos documentos à advogada, só para o contato e a preparação do atendimento. Posso pedir que sejam apagados a qualquer momento.</label>
+        <label class="consent"><input type="checkbox" id="f-lembrete" name="lembrete" value="sim">
+          Se eu não responder ao contato, aceito receber <strong>um único lembrete</strong> pelo WhatsApp. (Opcional)</label>
+        <p class="muted small">Nenhum serviço é iniciado antes da assinatura do contrato de honorários e da procuração. Se você não contratar, seus dados são apagados em até 90 dias.</p>
+        <button class="btn" type="submit" id="f-send">Enviar e agendar →</button>
+        <p class="muted small" id="f-msg">Retornamos em até 1 dia útil com as opções de horário.</p>
+      </form>
+    </div>
+  </section>
+
+  <!-- EMPRESAS E GESTORES -->
+  <section id="view-calculadoras" class="view">
+    <div class="b2b">
+      <p class="eyebrow">Ferramentas</p>
+      <h1>Calculadoras jurídicas</h1>
+      <p class="muted">Confira quando vence um prazo do seu processo ou se um crime já pode estar prescrito. O cálculo é feito no seu aparelho; nada é enviado.</p>
+      <p class="calc-sub" style="margin-top:8px">Área cível</p>
+      <div class="calc-abas"><button class="on" data-calc="civel">Prazo cível, trabalhista e Juizado</button></div>
+      <p class="calc-sub" style="margin-top:12px">Área penal</p>
+      <div class="calc-abas"><button data-calc="penal">Prazo penal</button><button data-calc="prescricao">Prescrição penal</button></div>
+      <div class="card calc-painel" id="calc-civel" style="margin-top:16px"></div>
+      <div class="card calc-painel" id="calc-penal" style="margin-top:16px" hidden></div>
+      <div class="card calc-painel" id="calc-prescricao" style="margin-top:16px" hidden></div>
+      <div class="card decision" style="margin-top:16px"><h2>Ficou com dúvida sobre o resultado?</h2><p class="muted">Prazo perdido e prescrição mudam o rumo do caso. A advogada pode conferir para você.</p>
+        <div class="actions"><button class="btn" id="calc-advogado">Falar com a advogada</button></div></div>
+    </div>
+  </section>
+
+  <section id="view-empresas" class="view">
+    <div class="b2b">
+      <p class="eyebrow">Plataforma do Direito · Empresas e Gestores</p>
+      <h1>Direito Administrativo para empresas e gestores públicos</h1>
+      <p class="lead">Licitações e contratos, Tribunal de Contas, improbidade, processos sancionadores e servidores. A análise é feita pela advogada, com apoio de um método próprio de organização: 3.292 regras de Direito Administrativo, em 28 domínios, cada uma ligada à sua fonte legal.</p>
+      <div class="tools">
+        <article class="tool">
+          <h3>Licitações e contratos</h3>
+          <p>Impugnação de edital, recursos, contratação direta, reequilíbrio econômico-financeiro, execução contratual e sanções da Lei 14.133/2021.</p>
+        </article>
+        <article class="tool">
+          <h3>Tribunal de Contas</h3>
+          <p>Defesa em tomada de contas especial, contas julgadas irregulares, imputação de débito e multas do TCU e do TCDF.</p>
+        </article>
+        <article class="tool">
+          <h3>Improbidade e responsabilização</h3>
+          <p>Defesa em ação de improbidade (Lei 8.429/1992, com as mudanças de 2021), processo de responsabilização de empresas (Lei 12.846/2013) e acordos.</p>
+        </article>
+        <article class="tool">
+          <h3>Servidores e processo disciplinar</h3>
+          <p>Defesa em PAD e sindicância, direitos funcionais, concursos e atos de remoção, demissão ou cassação.</p>
+        </article>
+      </div>
+      <div class="card metodo">
+        <h2>Como a análise é organizada</h2>
+        <ol>
+          <li><strong>Fatos separados de alegações:</strong> o que está comprovado, o que é só alegado, o que é hipótese e o que é contestado nunca se misturam.</li>
+          <li><strong>Regras com fonte:</strong> cada ponto de análise aponta a lei, o artigo ou a decisão de onde vem.</li>
+          <li><strong>Lacunas e perguntas:</strong> o que falta esclarecer aparece como pergunta, antes de qualquer conclusão.</li>
+        </ol>
+        <p class="muted small">O método organiza a informação; a avaliação jurídica é sempre feita pessoalmente pela advogada.</p>
+        <div class="actions"><button class="btn" data-tool="Atendimento — empresas e gestores">Falar com a advogada</button><a href="#" class="btn btn-wa" data-wa>WhatsApp</a></div>
+      </div>
+      <form class="card lead-form" id="b2b-form" name="interesse-empresas" method="POST" data-netlify="true" netlify-honeypot="empresa-site" hidden>
+        <input type="hidden" name="form-name" value="interesse-empresas">
+        <input type="hidden" name="ferramenta" id="b2b-tool">
+        <p hidden><label>Não preencha: <input name="empresa-site"></label></p>
+        <h3 id="b2b-title">Falar com a advogada</h3>
+        <label for="b2b-nome">Nome</label><input id="b2b-nome" name="nome" required autocomplete="name">
+        <label for="b2b-tel">WhatsApp ou telefone</label><input id="b2b-tel" name="telefone" type="tel" required autocomplete="tel">
+        <label for="b2b-email">E-mail (opcional)</label><input id="b2b-email" name="email" type="email" autocomplete="email">
+        <label for="b2b-org">Empresa ou órgão</label><input id="b2b-org" name="organizacao">
+        <label for="b2b-perfil">Você é</label>
+        <select id="b2b-perfil" name="perfil"><option>Empresa que licita</option><option>Gestor(a) público(a)</option><option>Servidor(a)</option><option>Advogado(a)</option><option>Outro</option></select>
+        <label for="b2b-assunto">Assunto (em poucas palavras)</label><textarea id="b2b-assunto" name="assunto" rows="3" placeholder="Ex.: recebemos notificação do TCU para defesa em tomada de contas especial"></textarea>
+        <label class="consent"><input type="checkbox" name="consentimento" value="sim" required> Autorizo o envio destes dados à advogada, só para o contato e a preparação do atendimento. Posso pedir que sejam apagados a qualquer momento.</label>
+        <p class="muted small">Nenhum serviço é iniciado antes da assinatura do contrato de honorários e da procuração.</p>
+        <button class="btn" type="submit" id="b2b-send">Enviar</button>
+        <p class="muted small" id="b2b-msg"></p>
+      </form>
+      <p class="muted small">Conteúdo de licitações e contratos: <a href="https://www.codex14133.com.br" target="_blank" rel="noopener">Codex 14133</a>.</p>
+    </div>
+  </section>
+
+  <!-- GUIA: ONDE RECLAMAR E COMO CONSULTAR -->
+    <section id="view-guia" class="view">
+      <div class="narrow guia">
+        <p class="eyebrow">Guia prático</p>
+        <h1>Onde reclamar e como consultar</h1>
+        <p class="lead">Quem faz o quê, na ordem certa — e ferramentas oficiais e gratuitas para descobrir o que está no seu nome.</p>
+
+        <h2>A ordem que costuma funcionar</h2>
+        <ol>
+          <li><strong>A própria empresa (SAC):</strong> reclame por escrito e anote o protocolo.</li>
+          <li><strong>Ouvidoria da empresa:</strong> se o SAC não resolver. Nos bancos, a ouvidoria tem até 10 dias úteis para responder (Resolução CMN 4.860/2020).</li>
+          <li><strong>consumidor.gov.br ou Procon:</strong> canais públicos de reclamação (veja abaixo).</li>
+          <li><strong>Agência reguladora do setor:</strong> fiscaliza a empresa e, em alguns setores, intermedeia a solução.</li>
+          <li><strong>Justiça:</strong> Juizado Especial Cível, sem advogado até 20 salários mínimos e com advogado até 40 (Lei 9.099/1995) — ou a Justiça comum.</li>
+        </ol>
+        <p class="small muted">Guarde sempre: protocolos, prints, e-mails, notas e comprovantes. São eles que provam o seu caso.</p>
+
+        <h2>Quem faz o quê</h2>
+        <div class="orgaos"><div class="orgao"><h3>consumidor.gov.br</h3><p>Reclamar contra empresas cadastradas (bancos, telefonia, companhias aéreas, lojas, seguradoras). A empresa responde em até 10 dias.</p><p class="small muted">Como: Site ou app, com conta gov.br</p></div><div class="orgao"><h3>Procon</h3><p>Atendimento ao consumidor do seu estado ou cidade: pode chamar a empresa para audiência e aplicar multa.</p><p class="small muted">Como: Site, app ou presencial (no DF: Procon-DF)</p></div><div class="orgao"><h3>Banco Central</h3><p>Reclamar de banco, cartão, Pix, financeira. O BC fiscaliza e cobra explicações da instituição — mas não decide o seu caso individual nem devolve dinheiro.</p><p class="small muted">Como: Site do Banco Central (Meu BC) ou 145</p></div><div class="orgao"><h3>ANS</h3><p>Planos de saúde. A reclamação (NIP) obriga a operadora a responder em prazo curto.</p><p class="small muted">Como: Site da ANS ou 0800 701 9656</p></div><div class="orgao"><h3>Anatel</h3><p>Telefone, internet e TV por assinatura.</p><p class="small muted">Como: Site, app Anatel Consumidor ou 1331</p></div><div class="orgao"><h3>ANEEL</h3><p>Energia elétrica — depois de reclamar na distribuidora e na ouvidoria dela.</p><p class="small muted">Como: Site da ANEEL ou 167</p></div><div class="orgao"><h3>ANAC</h3><p>Companhias aéreas. As reclamações de passageiros são feitas pelo consumidor.gov.br.</p><p class="small muted">Como: consumidor.gov.br</p></div><div class="orgao"><h3>Susep</h3><p>Seguros, previdência privada e capitalização.</p><p class="small muted">Como: consumidor.gov.br e site da Susep</p></div><div class="orgao"><h3>INSS</h3><p>Benefícios, descontos, perícias.</p><p class="small muted">Como: Meu INSS, 135 e Ouvidoria do INSS</p></div><div class="orgao"><h3>Fala.BR</h3><p>Ouvidoria de órgãos públicos federais: reclamação, denúncia e pedido de informação (Lei de Acesso à Informação).</p><p class="small muted">Como: falabr.cgu.gov.br</p></div></div>
+
+        <h2>Registrato: veja o que está no seu nome no sistema financeiro</h2>
+        <p><strong>O que é:</strong> um serviço gratuito do Banco Central que mostra relatórios sobre você no sistema financeiro.</p>
+        <ul>
+          <li><strong>Empréstimos e financiamentos:</strong> todas as dívidas em seu nome em bancos e financeiras.</li>
+          <li><strong>Contas e relacionamentos:</strong> em quais bancos você tem conta ou outro vínculo.</li>
+          <li><strong>Chaves Pix:</strong> as chaves cadastradas no seu CPF.</li>
+          <li><strong>Cheques sem fundo e operações de câmbio</strong>, se houver.</li>
+        </ul>
+        <p><strong>Quando é útil:</strong> desconfia de empréstimo ou consignado que não fez; quer saber se abriram conta no seu nome; foi vítima de golpe; vai negociar dívidas (superendividamento) e precisa da lista completa; quer conferir chaves Pix desconhecidas.</p>
+        <p><strong>Como consultar:</strong> acesse o Registrato pelo site do Banco Central e entre com a sua conta gov.br (nível prata ou ouro). Os relatórios saem na hora e podem ser salvos em PDF — servem como prova.</p>
+
+        <h2>Valores a Receber: dinheiro esquecido em bancos</h2>
+        <p>Outro serviço gratuito do Banco Central mostra se você (ou alguém da família que faleceu) tem dinheiro esquecido em bancos, consórcios ou financeiras. A consulta e o pedido são feitos com a conta gov.br.</p>
+        <p class="warn-text"><strong>Atenção a golpes:</strong> o Banco Central não liga, não manda link e não cobra nada por esses serviços. Acesse sempre digitando o endereço oficial.</p>
+
+        <div class="card decision" style="margin-top:20px"><h2>Precisa de ajuda com o seu caso?</h2>
+          <p class="muted">Se a reclamação não resolveu, a advogada pode analisar o caminho na Justiça.</p>
+          <div class="actions"><a href="#" class="btn btn-wa" data-wa>Falar no WhatsApp</a></div></div>
+        <p class="small muted">Informações gerais, conferidas em fontes oficiais em outubro de 2026. Canais e telefones podem mudar: confira no site de cada órgão.</p>
+        <p><a href="#" data-go="home">← Voltar ao início</a></p>
+      </div>
+    </section>
+
+    <!-- COMO FUNCIONA ESTE PORTAL -->
+    <section id="view-sobre" class="view">
+      <div class="narrow">
+        <p class="eyebrow">Transparência</p>
+        <h1>Como funciona este portal</h1>
+        <h2>Quem está por trás</h2>
+        <p>Uma advogada inscrita na OAB/DF. O portal organiza informações gerais sobre a lei; a análise de cada caso é feita pessoalmente por ela, só quando você pede.</p>
+        <h2>De onde vêm as informações</h2>
+        <p>Da lei, de resoluções oficiais (ANS, INSS, CNJ) e de decisões dos tribunais superiores (STF e STJ), sempre com a fonte indicada. Cada página mostra quando as fontes foram conferidas e se já passou pela revisão da advogada. O que ainda não foi conferido não é publicado.</p>
+        <h2>O que o portal não faz</h2>
+        <ul>
+          <li>Não dá orientação jurídica sobre o seu caso: mostra o que a lei e os tribunais dizem, e a avaliação fica com a advogada.</li>
+          <li>Não usa inteligência artificial para responder: as informações são textos escritos e conferidos com antecedência. Quando há leitura automática do seu relato, ela só organiza o que você contou e escolhe, entre esses textos, os que se relacionam com o seu caso.</li>
+          <li>Não inicia nenhum serviço antes da assinatura do contrato de honorários e da procuração.</li>
+          <li>Não promete resultado, não oferece vantagens para contratar e não faz comparação com outros profissionais.</li>
+        </ul>
+        <h2>Leitura de documentos</h2>
+        <p>Quando você envia um PDF, a leitura é automática e acontece no seu próprio aparelho: o arquivo não é enviado nem guardado. O portal só organiza os dados que encontrou.</p>
+        <h2>Seus dados</h2>
+        <p>Nada é guardado enquanto você navega. Só quando você pede para falar com a advogada e autoriza, seu relato e suas respostas são enviados a ela. Você pode pedir a exclusão a qualquer momento. Se não houver contratação, os dados são apagados em até 90 dias. Não enviamos propaganda nem newsletter: no máximo um lembrete, e só se você autorizar.</p>
+        <h2>Regras que seguimos</h2>
+        <p>Código de Ética e Disciplina da OAB e Provimento 205/2021 (publicidade na advocacia), e a Lei Geral de Proteção de Dados (Lei 13.709/2018).</p>
+        <h2>Encontrou algum erro?</h2>
+        <p>Toda página tem o link “Encontrou algo desatualizado? Avise”. A correção é analisada pela advogada.</p>
+        <p><a href="#" data-go="home">← Voltar ao início</a></p>
+      </div>
+    </section>
+
+    <!-- CONFIRMAÇÃO DO PEDIDO -->
+    <section id="view-area" class="view">
+      <div class="narrow">
+        <p class="eyebrow">Pedido recebido</p>
+        <h1>Pronto! Seu caso chegou à advogada.</h1>
+        <div class="card">
+          <p class="muted small">Assunto</p>
+          <h3 id="area-title"></h3>
+          <p class="muted small" style="margin-top:12px">Seu protocolo</p>
+          <h3 id="area-protocolo"></h3>
+          <p class="muted">Guarde este número. Retornamos pelo WhatsApp em até 1 dia útil para entender seu caso e explicar como funciona o atendimento e os honorários.</p>
+          <p class="muted small">Nenhum serviço é iniciado antes da assinatura do contrato de honorários e da procuração.</p>
+        </div>
+        <div class="card">
+          <h3>Quer adiantar?</h3>
+          <p class="muted">Mande uma mensagem agora — seu resumo e o protocolo já vão escritos.</p>
+          <a href="#" class="btn btn-wa" data-wa>Falar no WhatsApp agora</a>
+        </div>
+        <p><a href="#" data-go="home">← Voltar ao início</a></p>
+      </div>
+    </section>
+</main>
+
+<a href="#" class="wa-float" data-wa aria-label="Falar no WhatsApp"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm5.3 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.4-.7-2.8-1.1-4.6-4-4.8-4.2-.1-.2-1.1-1.5-1.1-2.9s.7-2 1-2.3c.3-.3.6-.3.8-.3h.6c.2 0 .4 0 .6.5l.9 2.1c.1.2.1.4 0 .5l-.4.6-.4.4c-.1.2-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.3 2.4 1.5.3.1.5.1.7-.1l.9-1.1c.2-.3.4-.2.7-.1l2 1c.3.1.5.2.5.3.1.2.1.7-.1 1.3z"/></svg></a>
+  <footer class="foot">
+  Este portal segue estritamente as regras da OAB (Código de Ética e Disciplina e Provimento 205/2021). As informações têm caráter exclusivamente informativo, são organizadas a partir de fontes oficiais e não devem ser lidas como aconselhamento ou orientação jurídica profissional. A análise de cada caso é feita pessoalmente pela advogada.
+    <p class="small"><a href="#" data-go="sobre">Como funciona este portal</a></p>
+    <details class="privacidade"><summary>🔒 Seus dados: não guardamos nada, a menos que você peça para falar com a advogada</summary>
+      <ul>
+        <li><strong>Navegar, ler informações e responder perguntas</strong>: nada é salvo nem enviado. Ao fechar a página, tudo some.</li>
+        <li><strong>Quando você conta a sua história</strong>: o texto é lido por um sistema de inteligência artificial (Anthropic) só para organizar os fatos e apontar as informações que se relacionam com eles. Não guardamos o texto, e a leitura não é análise jurídica: quem avalia o caso é a advogada. Evite escrever CPF ou números de documentos.</li>
+        <li><strong>Documentos (PDF)</strong>: são lidos no seu próprio aparelho. O arquivo nunca é enviado nem guardado por nós.</li>
+        <li><strong>Só quando você pede para falar com a advogada</strong> e marca a autorização, enviamos o que você contou, suas respostas e os dados lidos dos documentos — apenas para a advogada preparar o atendimento.</li>
+        <li>Esses dados não são vendidos nem compartilhados. Para indicar seu caso a outro(a) advogado(a), pedimos sua autorização antes.</li>
+        <li>Você pode pedir a qualquer momento que seus dados sejam apagados, pelo WhatsApp.</li>
+      </ul>
+    </details>
+</footer>
+
+<script src="flows.js"></script>
+<script src="faq.js"></script>
+<script src="faq-areas.js"></script>
+<script src="faq-lote2.js"></script>
+<script src="faq-lote3.js"></script>
+<script src="continuacoes.js"></script>
+<script src="roteiros.js"></script>
+<script src="atlas.js"></script>
+<script src="dac.js"></script>
+<script src="cnis.js"></script>
+<script src="docs.js"></script>
+<script src="supabase-config.js"></script>
+<script src="documento-id.js"></script>
+<script src="prazos-calc.js"></script>
+<script src="prescricao.js"></script>
+<script src="calculadoras.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

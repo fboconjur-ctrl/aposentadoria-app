@@ -1,0 +1,310 @@
+[
+  {
+    "id": "E2E01",
+    "class": "NEGATION",
+    "domains": [
+      "DA-20"
+    ],
+    "text": "Não houve dano ao erário.",
+    "concept": "DANO_ERARIO",
+    "nfv2": "FALSE"
+  },
+  {
+    "id": "E2E02",
+    "class": "DIRECT_ASSERTION",
+    "domains": [
+      "DA-20"
+    ],
+    "text": "Houve dano ao erário.",
+    "concept": "DANO_ERARIO",
+    "nfv2": "TRUE"
+  },
+  {
+    "id": "E2E03",
+    "class": "HYPOTHETICAL",
+    "domains": [
+      "DA-20"
+    ],
+    "text": "Caso venha a se provar dolo, haverá responsabilização.",
+    "concept": "DOLO",
+    "nfv2": "UNKNOWN"
+  },
+  {
+    "id": "E2E04",
+    "class": "ALLEGATION",
+    "domains": [
+      "DA-19"
+    ],
+    "text": "A denúncia afirma que houve dolo.",
+    "concept": "DOLO",
+    "nfv2": "UNKNOWN"
+  },
+  {
+    "id": "E2E05",
+    "class": "CONTESTATION",
+    "domains": [
+      "DA-19"
+    ],
+    "text": "A denúncia afirma dolo, mas o servidor nega.",
+    "concept": "DOLO",
+    "nfv2": "UNKNOWN"
+  },
+  {
+    "id": "E2E06",
+    "class": "PROOF_NEGATION",
+    "domains": [
+      "DA-20"
+    ],
+    "text": "Não há prova de dolo.",
+    "concept": "DOLO",
+    "nfv2": "UNKNOWN"
+  },
+  {
+    "id": "E2E07",
+    "class": "PROOF_NEGATION",
+    "domains": [
+      "DA-20"
+    ],
+    "text": "O dolo não foi comprovado.",
+    "concept": "DOLO",
+    "nfv2": "UNKNOWN"
+  },
+  {
+    "id": "E2E08",
+    "class": "UNCERTAINTY",
+    "domains": [
+      "DA-20"
+    ],
+    "text": "Não está claro se houve dolo.",
+    "concept": "DOLO",
+    "nfv2": "UNKNOWN"
+  },
+  {
+    "id": "E2E09",
+    "class": "REPORTING",
+    "domains": [
+      "DA-23"
+    ],
+    "text": "Há notícia de dano ao erário.",
+    "concept": "DANO_ERARIO",
+    "nfv2": "UNKNOWN"
+  },
+  {
+    "id": "E2E10",
+    "class": "ACCOUNTABILITY",
+    "domains": [
+      "DA-23",
+      "DA-20"
+    ],
+    "text": "O TCU rejeitou as contas. Isso, por si só, não prova improbidade.",
+    "concept": "IMPROBIDADE",
+    "nfv2": "UNKNOWN"
+  },
+  {
+    "id": "E2E11",
+    "class": "CONTESTATION",
+    "domains": [
+      "DA-23"
+    ],
+    "text": "O TCU apontou dano ao erário, mas o gestor contesta a ocorrência do dano.",
+    "concept": "DANO_ERARIO",
+    "nfv2": "UNKNOWN"
+  },
+  {
+    "id": "E2E12",
+    "class": "HYPOTHETICAL",
+    "domains": [
+      "DA-05",
+      "DA-26"
+    ],
+    "text": "Se houver conluio entre licitantes, a situação deverá ser apurada.",
+    "concept": "CONLUIO",
+    "nfv2": "UNKNOWN"
+  },
+  {
+    "id": "E2E13",
+    "class": "DIRECT_ASSERTION",
+    "domains": [
+      "DA-17"
+    ],
+    "text": "O processo contém dados pessoais sensíveis.",
+    "concept": "DADOS_SENSIVEIS",
+    "nfv2": "TRUE"
+  },
+  {
+    "id": "E2E14",
+    "class": "NEGATION",
+    "domains": [
+      "DA-17"
+    ],
+    "text": "O processo não contém dados pessoais.",
+    "concept": "DADOS_PESSOAIS",
+    "nfv2": "FALSE"
+  },
+  {
+    "id": "E2E15",
+    "class": "ALLEGATION",
+    "domains": [
+      "DA-24"
+    ],
+    "text": "A petição sustenta fraude administrativa.",
+    "concept": "FRAUDE",
+    "nfv2": "UNKNOWN"
+  },
+  {
+    "id": "E2E16",
+    "class": "JUDICIAL_FINDING",
+    "domains": [
+      "DA-27",
+      "DA-20"
+    ],
+    "text": "A sentença transitada em julgado reconheceu que o fato não existiu.",
+    "concept": "ABSOLVICAO_INEXISTENCIA_FATO",
+    "nfv2": "TRUE"
+  },
+  {
+    "id": "E2E17",
+    "class": "DENIAL",
+    "domains": [
+      "DA-19"
+    ],
+    "text": "O servidor nega ter recebido vantagem indevida.",
+    "concept": "VANTAGEM_INDEVIDA",
+    "nfv2": "UNKNOWN"
+  },
+  {
+    "id": "E2E18",
+    "class": "ATTRIBUTED_REPORT",
+    "domains": [
+      "DA-23"
+    ],
+    "text": "A auditoria afirma que houve dano ao erário.",
+    "concept": "DANO_ERARIO",
+    "nfv2": "UNKNOWN"
+  },
+  {
+    "id": "E2E19",
+    "class": "MODALITY",
+    "domains": [
+      "DA-20"
+    ],
+    "text": "É possível que tenha havido dolo.",
+    "concept": "DOLO",
+    "nfv2": "UNKNOWN"
+  },
+  {
+    "id": "E2E20",
+    "class": "PROOF_INSUFFICIENCY",
+    "domains": [
+      "DA-20"
+    ],
+    "text": "Não se pode concluir pela existência de dolo.",
+    "concept": "DOLO",
+    "nfv2": "UNKNOWN"
+  },
+  {
+    "id": "E2E21",
+    "class": "COMPLEX_NEGATION",
+    "domains": [
+      "DA-20"
+    ],
+    "text": "Não há prova de que não houve dano ao erário.",
+    "concept": "DANO_ERARIO",
+    "nfv2": "UNKNOWN"
+  },
+  {
+    "id": "E2E22",
+    "class": "NEGATED_ALLEGATION",
+    "domains": [
+      "DA-20"
+    ],
+    "text": "A denúncia não afirma dolo.",
+    "concept": "DOLO",
+    "nfv2": "UNKNOWN"
+  },
+  {
+    "id": "E2E23",
+    "class": "MIXED_FACTS",
+    "domains": [
+      "DA-19",
+      "DA-20"
+    ],
+    "text": "Não houve dano ao erário, mas houve vantagem indevida comprovada.",
+    "concept": "VANTAGEM_INDEVIDA",
+    "nfv2": "TRUE"
+  },
+  {
+    "id": "E2E24",
+    "class": "MIXED_FACTS",
+    "domains": [
+      "DA-19",
+      "DA-20"
+    ],
+    "text": "Houve dano ao erário, mas não há prova de dolo.",
+    "concept": "DANO_ERARIO",
+    "nfv2": "TRUE"
+  },
+  {
+    "id": "E2E25",
+    "class": "CONDITIONAL_ANTECEDENT",
+    "domains": [
+      "DA-20"
+    ],
+    "text": "Se não houver dano ao erário, aplica-se a consequência prevista.",
+    "concept": "DANO_ERARIO",
+    "nfv2": "UNKNOWN"
+  },
+  {
+    "id": "E2E26",
+    "class": "CRIMINAL_ACQUITTAL",
+    "domains": [
+      "DA-27",
+      "DA-20"
+    ],
+    "text": "Houve absolvição penal por insuficiência de provas.",
+    "concept": "ABSOLVICAO_PENAL",
+    "nfv2": "TRUE"
+  },
+  {
+    "id": "E2E27",
+    "class": "CONFESSION",
+    "domains": [
+      "DA-19"
+    ],
+    "text": "O acusado confessou ter recebido vantagem indevida.",
+    "concept": "VANTAGEM_INDEVIDA",
+    "nfv2": "UNKNOWN"
+  },
+  {
+    "id": "E2E28",
+    "class": "TESTIMONY",
+    "domains": [
+      "DA-19"
+    ],
+    "text": "A testemunha afirmou que o servidor recebeu vantagem indevida.",
+    "concept": "VANTAGEM_INDEVIDA",
+    "nfv2": "UNKNOWN"
+  },
+  {
+    "id": "E2E29",
+    "class": "COORDINATION",
+    "domains": [
+      "DA-19",
+      "DA-26"
+    ],
+    "text": "Há suspeita de fraude e conluio, ainda não comprovados.",
+    "concept": "CONLUIO",
+    "nfv2": "UNKNOWN"
+  },
+  {
+    "id": "E2E30",
+    "class": "COORDINATION_NEGATION",
+    "domains": [
+      "DA-19",
+      "DA-26"
+    ],
+    "text": "Não houve fraude nem conluio.",
+    "concept": "CONLUIO",
+    "nfv2": "FALSE"
+  }
+]

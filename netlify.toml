@@ -1,3 +1,48 @@
+# Publica o repositório inteiro: plataforma na raiz, simulador em /simulador.
 [build]
-  publish = "aposentadoria-app"
-  functions = "netlify/functions"
+  publish = "."
+
+[[redirects]]
+  from = "/"
+  to = "/plataforma-direito/"
+  status = 301
+
+[[redirects]]
+  from = "/simulador/*"
+  to = "/aposentadoria-app/:splat"
+  status = 200
+
+[functions]
+  directory = "netlify/functions"
+
+# Arquivos internos (anotações, banco, revisão, testes) não ficam acessíveis no site.
+[[redirects]]
+  from = "/plataforma-direito/CONTINUAR.md"
+  to = "/404"
+  status = 404
+  force = true
+[[redirects]]
+  from = "/plataforma-direito/supabase.sql"
+  to = "/404"
+  status = 404
+  force = true
+[[redirects]]
+  from = "/plataforma-direito/conteudo/*"
+  to = "/404"
+  status = 404
+  force = true
+[[redirects]]
+  from = "/plataforma-direito/ferramentas/*"
+  to = "/404"
+  status = 404
+  force = true
+[[redirects]]
+  from = "/plataforma-direito/escritorio/dac/testes/*"
+  to = "/404"
+  status = 404
+  force = true
+[[redirects]]
+  from = "/netlify/*"
+  to = "/404"
+  status = 404
+  force = true
