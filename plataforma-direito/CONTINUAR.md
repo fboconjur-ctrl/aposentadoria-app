@@ -28,6 +28,10 @@ Prévia: https://deploy-preview-1--prevcalculadora.netlify.app/plataforma-direit
 - Associado vê só os casos atribuídos (ficha, prazos, tarefas); sem financeiro, sem outros clientes, sem pedidos/publicações/equipe. Desativar acesso corta na hora.
 - Banco: tabelas `associados` e `casos`, funções `meu_papel`, `adicionar_associado` (fim de `supabase.sql`). Edição simultânea do mesmo caso: vale a última gravação.
 
+## Assistente jurídico — nov/2026
+- Painel → Mais → ✨ Assistente jurídico: 10 tarefas (triagem, sentença, resumo, prazos, comunicado, notificação, pesquisa de jurisprudência, posts, ética OAB, anonimizar). Prompts próprios em `netlify/edge-functions/assistente.js` (escritos do zero, inspirados no pack do Chat Jurídico).
+- Edge function `/api/assistente`: exige login (rpc meu_papel), repassa o streaming do Claude (claude-opus-5-5). Precisa de `ANTHROPIC_API_KEY` nas variáveis do Netlify.
+
 ## Pendências (em ordem)
 0. **PRÓXIMO PASSO — Login com Google (fazer pelo Claude in Chrome, ela pediu que o Claude faça):**
    a) console.cloud.google.com/auth/clients → criar projeto "escritorio" se pedir; tela de consentimento (nome do app + e-mail dela);

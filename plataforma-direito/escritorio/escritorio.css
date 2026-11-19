@@ -214,3 +214,16 @@ body.office { display: grid; grid-template-columns: 240px minmax(0, 1fr); min-he
 .login-senha .linkish { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); }
 #login-msg:empty { display: none; }
 #login-msg { color: #b42318; font-weight: 600; }
+
+/* Assistente jurídico */
+.as-linha { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+.as-pdf-btn { cursor: pointer; }
+#as-form label > b { display: block; margin-bottom: 6px; }
+#as-form textarea { width: 100%; box-sizing: border-box; min-height: 200px; }
+.as-resultado { line-height: 1.65; }
+.as-resultado h3, .as-resultado h4 { margin: 18px 0 6px; }
+.as-resultado p { margin: 0 0 10px; }
+.as-tab { overflow-x: auto; margin: 8px 0 14px; }
+.as-tab table { border-collapse: collapse; width: 100%; font-size: .92rem; }
+.as-tab th, .as-tab td { border: 1px solid var(--line); padding: 6px 10px; text-align: left; vertical-align: top; }
+.as-tab th { background: var(--tint); }
