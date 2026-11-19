@@ -68,7 +68,7 @@ const LeituraDocs = (() => {
     if (rg) r.rg = rg[1].replace(/\s+/g, "");
     // Naturalidade.
     const iNat = linhas.findIndex((l) => /NATURALIDADE/i.test(semAc(l)));
-    if (iNat >= 0) { const v = linhas[iNat].replace(/.*naturalidade\s*:?\s*/i, "") || linhas[iNat + 1] || ""; v = v.split(/\s+(?:DATA|NASC|DOC|CPF)\b/i)[0].trim(); if (/[A-Za-z]/.test(v)) r.naturalidade = v; }
+    if (iNat >= 0) { let v = linhas[iNat].replace(/.*naturalidade\s*:?\s*/i, "") || linhas[iNat + 1] || ""; v = v.split(/\s+(?:DATA|NASC|DOC|CPF)\b/i)[0].trim(); if (/[A-Za-z]/.test(v)) r.naturalidade = v; }
     // Filiação (ajuda a conferir).
     const iFil = linhas.findIndex((l) => /FILIA[CÇ][AÃ]O/i.test(l));
     if (iFil >= 0) r.filiacao = linhas.slice(iFil + 1, iFil + 3).filter(ehNome).join(" e ");

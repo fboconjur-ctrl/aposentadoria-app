@@ -34,7 +34,7 @@
   </div>
 
   <section id="v-hoje" class="oview on">
-    <header class="ohead"><div><p class="eyebrow" id="hoje-data"></p><h1 id="hoje-ola">Bom dia.</h1></div></header>
+    <header class="ohead"><div><p class="eyebrow" id="hoje-data"></p><h1 id="hoje-ola">Bom dia.</h1></div><button class="btn" onclick="abrirNovoCaso()">➕ Novo caso</button></header>
     <div class="panel guia" id="guia" hidden>
       <div class="fi-tit"><h2>Primeiros passos</h2><span class="small muted" id="guia-prog"></span></div>
       <ol class="guia-lista" id="guia-lista"></ol>
@@ -55,7 +55,7 @@
 
   <section id="v-clientes" class="oview">
     <header class="ohead"><div><h1>Clientes</h1></div>
-      <div style="display:flex;gap:8px;flex-wrap:wrap"><input id="crm-busca" class="search" placeholder="Buscar nome, telefone, processo"><button class="btn" id="crm-novo">Novo cliente</button></div></header>
+      <div style="display:flex;gap:8px;flex-wrap:wrap"><input id="crm-busca" class="search" placeholder="Buscar nome, telefone, processo"><button class="btn" onclick="abrirNovoCaso()">➕ Novo caso</button><button class="back" id="crm-novo">Só cadastrar cliente</button></div></header>
     <details class="panel" id="cli-sug" hidden open>
       <summary><b>Clientes encontrados nos seus processos</b> <span class="small muted" id="cli-sug-n"></span></summary>
       <p class="small">Estes nomes aparecem como partes intimadas nas publicações da sua OAB. A publicação traz <b>também a parte contrária</b>, então confira: deixe marcados só os seus clientes e clique em cadastrar. Os desmarcados não aparecem mais.</p>
@@ -179,6 +179,39 @@
       <div><button class="wa-btn" id="ac-msg-enviar">Abrir no WhatsApp</button> <span class="small muted">Você revisa e envia pelo seu WhatsApp. Fica registrado no histórico do cliente.</span></div>
     </div>
     <div id="ac-lista" class="ac-lista"></div>
+  </section>
+
+  <section id="v-novocaso" class="oview">
+    <header class="ohead"><div><button class="back" data-voltar>← Voltar</button><h1>Novo caso</h1><p class="muted">Conte o caso e jogue os documentos: o painel cria a ficha, lê os dados, separa os arquivos, confere conflito e deixa a peça encaminhada.</p></div></header>
+    <div class="panel">
+      <h2>1. Cliente</h2>
+      <label class="small" style="max-width:420px">Cliente<select id="nc-cli" class="search"></select></label>
+      <div class="crm-grid" id="nc-novo">
+        <label>Nome<input id="nc-nome" class="search" placeholder="sai sozinho do RG/CNH, se você anexar"></label>
+        <label>WhatsApp<input id="nc-tel" class="search" inputmode="tel" placeholder="61 99999-9999"></label>
+        <label>CPF ou CNPJ<input id="nc-cpf" class="search" inputmode="numeric" placeholder="sai sozinho do documento"></label>
+        <label>E-mail<input id="nc-email" class="search" type="email"></label>
+      </div>
+    </div>
+    <div class="panel">
+      <h2>2. O caso</h2>
+      <div class="crm-grid">
+        <label>Área<select id="nc-area" class="search"></select></label>
+        <label>Parte contrária<input id="nc-contra" class="search" placeholder="Ex.: INSS, Banco X, Lightbase Ltda."></label>
+        <label class="wide">Número do processo (se já existir)<input id="nc-proc" class="search" placeholder="0000000-00.0000.0.00.0000"></label>
+      </div>
+      <label><b>Conte tudo o que sabe do caso</b> <span class="small muted">— fatos, datas, o que o cliente quer, o que já foi feito. Isso vira os “fatos” das peças.</span>
+        <textarea id="nc-relato" class="search" rows="8" style="width:100%;box-sizing:border-box"></textarea></label>
+    </div>
+    <div class="panel">
+      <h2>3. Documentos</h2>
+      <div id="nc-zona" class="or-zona"><p><b>Arraste aqui todos os documentos do cliente</b> (PDF ou fotos) ou</p><label class="btn">Escolher arquivos<input type="file" id="nc-arq" multiple accept="application/pdf,image/*" hidden></label><p class="small muted">Lidos no seu computador. Nada é enviado.</p></div>
+      <p class="small" id="nc-status" role="status"></p>
+      <ul class="list" id="nc-docs"></ul>
+      <p class="small" id="nc-lidos"></p>
+    </div>
+    <div class="as-linha"><button class="btn" id="nc-criar">✅ Registrar caso e preparar tudo</button><button class="linkish small" id="nc-limpar">limpar</button><span class="small atrasada" id="nc-msg"></span></div>
+    <div class="panel" id="nc-resultado" hidden></div>
   </section>
 
   <section id="v-organizador" class="oview">
@@ -531,5 +564,6 @@
 <script src="spin.js"></script>
 <script src="guia.js"></script>
 <script src="automacoes.js"></script>
+<script src="novocaso.js"></script>
 </body>
 </html>

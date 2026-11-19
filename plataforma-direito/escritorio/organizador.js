@@ -70,6 +70,7 @@
     l.href = URL.createObjectURL(blob); l.download = `Documentos - ${c?.nome || "cliente"}.zip`; document.body.appendChild(l); l.click(); l.remove();
     if (c) { (c.hist ||= []).unshift({ em: new Date().toISOString(), o: `Documentos organizados (${arquivos.length} arquivo(s))` }); salvarCrm(); }
   };
+  window.Organizador = { classificar, nomeSugerido: (file, texto, cat, i, nomeCli) => { const a = { file, texto, cat }; const sel = $("or-cli").value; const n = nomeSugerido(a, i); return nomeCli ? n.replace(/ - [^-]*(\.[a-z0-9]+)$/i, ` - ${nomeCli}$1`) : n; } };
   window.abrirOrganizador = (cliId) => { go("organizador"); $("or-cli").dispatchEvent(new Event("focus")); $("or-cli").value = cliId || ""; render(); };
   $("or-cli").dispatchEvent(new Event("focus")); render();
 })();
