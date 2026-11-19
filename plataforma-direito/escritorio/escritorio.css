@@ -184,3 +184,9 @@ body.office { display: grid; grid-template-columns: 240px minmax(0, 1fr); min-he
 .modo-associado .so-titular, .modo-associado [data-view="fin"], .modo-associado [data-view="importar"], .modo-associado [data-view="djen"],
 .modo-associado #crm-novo, .modo-associado #crm-excluir, .modo-associado #fi-hon-abrir, .modo-associado #fi-ind-abrir,
 .modo-associado .panel:has(> .fi-tit #fi-hon-abrir) { display: none !important; }
+
+/* Números do escritório */
+.mt-barras { display: grid; gap: 8px; }
+.mt-linha { display: grid; grid-template-columns: minmax(110px, 1.4fr) 2fr auto; gap: 10px; align-items: center; font-size: .9rem; }
+.mt-trilho { background: var(--line); border-radius: 99px; height: 10px; overflow: hidden; }
+.mt-barra { background: var(--brand); height: 100%; border-radius: 99px; }
