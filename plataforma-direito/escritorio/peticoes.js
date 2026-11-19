@@ -68,6 +68,7 @@
       if (v[k]) return esc(v[k]);
       faltam.push(k.toLowerCase().replace(/_/g, " ")); return `<mark>[PREENCHER: ${esc(k.toLowerCase().replace(/_/g, " "))}]</mark>`;
     });
+    html = html.replace(/\*\*([^*]+)\*\*/g, "<b>$1</b>");
     html = html.split(/\n{2,}/).map((p) => `<p>${p.replace(/\n/g, "<br>")}</p>`).join("").replace(/<p>@@JUR@@<\/p>|@@JUR@@/g, escolhidos.map(citacao).join(""));
     if (escolhidos.length && !/\{\{\s*JURISPRUDENCIA\s*\}\}/i.test(m.corpo)) html += escolhidos.map(citacao).join("");
     // Versão em blocos (para o Word com timbrado): parágrafos do modelo + citações.
