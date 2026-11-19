@@ -109,7 +109,7 @@
       </div>
       ${(d.glossario || []).length ? `<div class="cartao"><h2>📚 Palavras do seu processo</h2><dl class="glossario">${d.glossario.map(([t, e]) => `<dt>${esc(t)}</dt><dd>${esc(e)}</dd>`).join("")}</dl></div>` : ""}
       <div class="cartao">
-        <h2>💬 Fale com a advogada</h2>
+        <h2>💬 Fale com a advogada ${(() => { let v = ""; try { v = localStorage.getItem("ma-visto-" + token.slice(0, 8)) || ""; localStorage.setItem("ma-visto-" + token.slice(0, 8), new Date().toISOString()); } catch {} const n = (d.conversa || []).filter((m) => m.de === "advogada" && String(m.em) > v).length; return n && v ? `<span class="pill">${n} resposta(s) nova(s)</span>` : ""; })()}</h2>
         <p class="small muted" style="margin:0">${d.advogada ? `Seu caso é cuidado por <b>${esc(d.advogada)}</b>. ` : ""}${esc(d.contato?.horario || "")}. ${esc(d.contato?.resposta || "")}</p>
         ${(d.conversa || []).length ? `<ul class="lista small">${d.conversa.slice(0, 10).map((m) => `<li><span class="data">${new Date(m.em).toLocaleDateString("pt-BR")}</span><span><b>${m.de === "advogada" ? "Advogada" : "Você"}:</b> ${esc(m.texto)}</span></li>`).join("")}</ul>` : (d.mensagens || []).length ? `<ul class="lista small">${d.mensagens.slice(0, 5).map((m) => `<li><span class="data">${new Date(m.criado).toLocaleDateString("pt-BR")}</span><span>${esc(m.texto)}</span></li>`).join("")}</ul>` : ""}
         <textarea id="ma-msg" rows="3" maxlength="2000" placeholder="Escreva sua dúvida ou recado. A resposta aparece aqui nesta conversa."></textarea>
