@@ -118,6 +118,40 @@
     catch { $("pe-jur-pesq-msg").textContent = `Abri a pesquisa do ${trib}. Digite lá: ${termos}`; }
     open(t.pagina, "_blank", "noopener");
   }
+  // ---------- Resultados do TST dentro do painel ----------
+  let tstPag = 1, tstItens = [];
+  const jaNoBanco = (it) => juris.some((j) => j.trib === "TST" && j.num === it.num);
+  function renderTst() {
+    $("pe-tst-lista").innerHTML = tstItens.map((it, k) => `<li class="pe-tst-item"><div class="t-txt">
+      <b>${esc(it.num)}</b> <span class="small muted">${esc(it.turma)} · Rel. ${esc(it.rel)} · julgado em ${esc(brData(it.data))}</span>
+      ${it.resultado ? ` <span class="pill-s ${it.resultado === "provido" ? "green" : "amber"}">recurso ${esc(it.resultado)}</span>` : ""}
+      <details class="small"><summary>${esc(it.ementa.slice(0, 220))}${it.ementa.length > 220 ? "… (ler ementa inteira)" : ""}</summary><p>${esc(it.ementa)}</p>${it.dispositivo ? `<p><b>Dispositivo:</b> ${esc(it.dispositivo)}</p>` : ""}</details></div>
+      <div class="pe-tst-acoes">${jaNoBanco(it) ? `<span class="pill-s green">no seu banco</span>` : `<button type="button" class="back" data-tst-add="fav" data-k="${k}">👍 Favorável</button><button type="button" class="back" data-tst-add="con" data-k="${k}">👎 Contrário</button>`}</div></li>`).join("");
+  }
+  async function buscarTst(mais) {
+    const termos = ($("pe-jur-pesq").value.trim() || $("pe-jur-tese").value.trim());
+    if (!termos) { $("pe-tst-msg").textContent = "Escreva as palavras-chave (ou a tese) acima."; $("pe-jur-pesq").focus(); return; }
+    tstPag = mais ? tstPag + 1 : 1; if (!mais) tstItens = [];
+    $("pe-tst-msg").textContent = "Consultando o TST…"; $("pe-tst-buscar").disabled = true;
+    try {
+      const r = await fetch("/api/juris-tst", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ termos, pagina: tstPag }) });
+      const d = await r.json(); if (!r.ok) throw new Error(d.erro || `Erro ${r.status}`);
+      tstItens.push(...d.itens);
+      $("pe-tst-msg").textContent = d.total ? `${d.total.toLocaleString("pt-BR")} acórdão(s) do TST encontrados. Mostrando os ${tstItens.length} mais relevantes.` : "Nenhum acórdão encontrado. Tente outras palavras.";
+      $("pe-tst-mais").hidden = !d.total || tstItens.length >= d.total;
+      renderTst();
+    } catch (e) { $("pe-tst-msg").textContent = "Não consegui consultar o TST: " + e.message; }
+    finally { $("pe-tst-buscar").disabled = false; }
+  }
+  $("pe-tst-buscar").onclick = () => buscarTst(false);
+  $("pe-tst-mais").onclick = () => buscarTst(true);
+  $("pe-tst-lista").addEventListener("click", (e) => {
+    const b = e.target.closest("[data-tst-add]"); if (!b) return;
+    const it = tstItens[+b.dataset.k];
+    juris.push({ trib: "TST", num: it.num, rel: it.rel, data: it.data, tema: $("pe-jur-tese").value.trim() || $("pe-jur-pesq").value.trim(), pos: b.dataset.tstAdd, ementa: it.ementa, link: "", conf: hojeIso, fonte: "Pesquisa oficial do TST" });
+    salvarJ(); sel.add(juris.length - 1); renderJuris(); renderTst();
+    $("pe-tst-msg").textContent = `${it.num} adicionado ao banco como ${b.dataset.tstAdd === "fav" ? "favorável" : "contrário"} e já marcado para a minuta.`;
+  });
   document.querySelectorAll("[data-polo]").forEach((el) => { el.innerHTML = Object.keys(TRIB).map((k) => `<button type="button" class="back" data-busca-polo="${el.dataset.polo}" data-trib="${k}">${k}</button>`).join(""); });
   $("pe-jur-pesq-botoes").innerHTML = Object.keys(TRIB).map((k) => `<button type="button" class="back" data-busca-polo="neu" data-trib="${k}">${k}</button>`).join("");
   document.querySelector(".pe-polos")?.addEventListener("click", (e) => { const b = e.target.closest("[data-busca-polo]"); if (b) pesquisar(b.dataset.trib, b.dataset.buscaPolo); });
