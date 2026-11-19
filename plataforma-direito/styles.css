@@ -343,3 +343,29 @@ tr:last-child td { border-bottom: 0; }
 .rt-relacao ol { margin: 0; padding-left: 20px; display: grid; gap: 10px; }
 .an-cta { background: var(--amber-soft); border-radius: 12px; padding: 14px; display: grid; gap: 10px; }
 .wa-float.oculto { opacity: 0; pointer-events: none; transform: scale(.8); } .wa-float { transition: opacity .2s, transform .2s; }
+
+/* ===== Acabamento da página inicial ===== */
+#view-home { position: relative; }
+#view-home::before { content: ""; position: absolute; inset: -80px 0 auto 0; height: 560px; z-index: -1; pointer-events: none;
+  background: radial-gradient(700px 320px at 50% 0%, color-mix(in srgb, var(--brand) 12%, transparent), transparent 70%); }
+.tiles button { transition: transform .15s ease, box-shadow .15s ease, border-color .15s ease; }
+.tiles button:hover { transform: translateY(-2px); border-color: var(--brand); }
+.porque { max-width: 1160px; margin: 88px auto 0; padding: 0 16px; text-align: center; }
+.porque h2 { font-family: var(--font-display); font-size: clamp(1.5rem, 3vw, 2.1rem); letter-spacing: -.02em; margin: 6px auto 28px; max-width: 720px; }
+.porque-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; text-align: left; }
+.porque-grid > div { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); padding: 22px; box-shadow: var(--shadow); }
+.porque-grid h3 { margin: 10px 0 6px; font-size: 1.05rem; }
+.porque-grid p { margin: 0; color: var(--muted); font-size: .95rem; }
+.porque-ico { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 12px; background: var(--tint); font-size: 1.3rem; }
+@media (max-width: 960px) { .porque-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 560px) { .porque-grid { grid-template-columns: 1fr; } }
+.foot { text-align: left; }
+.foot-cols { max-width: 1160px; margin: 0 auto 24px; display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 32px; }
+.foot-cols h4 { margin: 0 0 10px; color: var(--ink); font-size: .9rem; }
+.foot-cols a { display: block; color: var(--muted); text-decoration: none; margin: 0 0 8px; font-size: .9rem; }
+.foot-cols a:hover { color: var(--brand); }
+.foot-marca p { margin: 10px 0 0; max-width: 340px; font-size: .9rem; }
+.foot-aviso, .foot-copy { max-width: 1160px; margin: 0 auto 12px !important; font-size: .8rem; }
+.foot .privacidade { max-width: 1160px; margin: 0 auto 12px; }
+.foot-copy { border-top: 1px solid var(--line); padding-top: 14px; }
+@media (max-width: 720px) { .foot-cols { grid-template-columns: 1fr 1fr; } .foot-marca { grid-column: 1 / -1; } }
