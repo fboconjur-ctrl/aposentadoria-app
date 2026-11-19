@@ -101,7 +101,7 @@
       <h2>Mensagem para <span id="wa-nome"></span></h2>
       <label class="small">Modelo<select id="wa-modelo" class="search"></select></label>
       <textarea id="wa-texto" rows="6" class="search" style="width:100%"></textarea>
-      <div style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn" id="wa-abrir">Abrir no WhatsApp</button><button class="back" id="wa-fechar">Fechar</button></div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn" id="wa-abrir">Abrir no WhatsApp</button><button class="back" id="wa-email" hidden>✉️ Enviar por e-mail</button><button class="back" id="wa-fechar">Fechar</button></div>
     </div>
     <div class="dossie">
       <div class="panel wide" id="fi-portal"><div class="fi-tit"><h2>🔗 Área do cliente</h2><span class="small muted">o que o cliente vê no site</span></div><div id="fi-portal-corpo"></div></div>
@@ -181,7 +181,7 @@
       <label class="small">Tipo de mensagem<select id="ac-msg-modelo" class="search"></select></label>
       <textarea id="ac-msg-texto" rows="7" class="search" style="width:100%;box-sizing:border-box"></textarea>
       <p class="small atrasada" id="ac-msg-semtel" hidden>Este cliente não tem WhatsApp cadastrado. Abra a ficha e use “Editar dados”.</p>
-      <div><button class="wa-btn" id="ac-msg-enviar">Abrir no WhatsApp</button> <span class="small muted">Você revisa e envia pelo seu WhatsApp. Fica registrado no histórico do cliente.</span></div>
+      <div><button class="wa-btn" id="ac-msg-enviar">Abrir no WhatsApp</button> <button class="back" id="ac-msg-email" hidden>✉️ Enviar por e-mail</button> <span class="small muted">Você revisa e envia pelo seu WhatsApp. Fica registrado no histórico do cliente.</span></div>
     </div>
     <div id="ac-lista" class="ac-lista"></div>
   </section>

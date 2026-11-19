@@ -371,6 +371,7 @@ $("fi-wa").onclick = () => {
   const sug = { "Novo pedido": "Primeiro contato", "Consulta marcada": "Confirmar consulta", "Proposta enviada": "Proposta de honorários", "Contratado": "Boas-vindas", "Caso ativo": "Atualização do processo", "Encerrado": "Encerramento e avaliação" }[c.etapa] || "Mensagem livre";
   $("wa-nome").textContent = c.nome;
   $("wa-modelo").innerHTML = Object.keys(MODELOS_WA).map((m) => `<option${m === sug ? " selected" : ""}>${m}</option>`).join("");
+  window.botaoEmail?.("wa-email", c, "Atualização do seu atendimento", () => $("wa-texto").value);
   $("wa-texto").value = MODELOS_WA[sug](c); $("crm-wa").hidden = false; $("crm-form").hidden = true; $("wa-texto").focus();
 };
 $("wa-modelo").onchange = () => ($("wa-texto").value = MODELOS_WA[$("wa-modelo").value](cliPorId(fichaAtual)));

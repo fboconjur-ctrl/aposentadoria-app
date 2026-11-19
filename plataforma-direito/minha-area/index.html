@@ -39,6 +39,11 @@
   @media (max-width: 720px) { .grade { grid-template-columns: 1fr; } .linha-tempo div span { font-size: .68rem; } }
   .vazio { color: var(--muted); font-size: .92rem; }
   .erro { text-align: center; padding: 60px 16px; }
+  .barra { height: 8px; background: var(--line); border-radius: 99px; overflow: hidden; } .barra i { display: block; height: 100%; background: var(--ok, #157f3b); }
+  .passos { margin: 0; padding-left: 20px; display: grid; gap: 8px; }
+  .glossario { margin: 0; display: grid; grid-template-columns: max-content 1fr; gap: 6px 14px; } .glossario dt { font-weight: 700; } .glossario dd { margin: 0; color: var(--muted); }
+  @media (max-width: 560px) { .glossario { grid-template-columns: 1fr; } .glossario dd { margin-bottom: 8px; } }
+  .duvida { border-top: 1px solid var(--line); padding: 10px 0; } .duvida summary { cursor: pointer; font-weight: 600; } .duvida p { margin: 8px 0 0; color: var(--muted); }
 </style>
 </head>
 <body>
@@ -85,7 +90,8 @@
       </div>
       <div class="cartao">
         <h2>📋 O que precisamos de você</h2>
-        ${(d.precisamos || []).length ? `<ul class="lista">${d.precisamos.map((x) => `<li>☐ <span>${esc(x)}</span></li>`).join("")}</ul>` : `<p class="vazio">Nenhum documento pendente no momento. 👍</p>`}
+        ${(d.docsStatus || []).length ? `<p class="small muted">${d.docsStatus.filter((x) => x.ok).length} de ${d.docsStatus.length} documentos já recebidos</p><div class="barra"><i style="width:${Math.round(100 * d.docsStatus.filter((x) => x.ok).length / d.docsStatus.length)}%"></i></div><ul class="lista">${d.docsStatus.map((x) => `<li>${x.ok ? "✅" : "☐"} <span class="${x.ok ? "muted" : ""}">${esc(x.doc)}</span></li>`).join("")}</ul>`
+          : (d.precisamos || []).length ? `<ul class="lista">${d.precisamos.map((x) => `<li>☐ <span>${esc(x)}</span></li>`).join("")}</ul>` : `<p class="vazio">Nenhum documento pendente no momento. 👍</p>`}
         <div class="acoes"><label class="btn">📎 Enviar documentos<input type="file" id="ma-arq" multiple accept="application/pdf,image/*" hidden></label><span class="small muted" id="ma-arq-msg">PDF ou foto, até 10 MB cada. Só a advogada tem acesso.</span></div>
         ${(d.documentosRecebidos || []).length ? `<p class="small muted">Já recebidos: ${d.documentosRecebidos.map(esc).join(" · ")}</p>` : ""}
       </div>
@@ -93,18 +99,23 @@
         <div class="cartao"><h2>📅 Agenda</h2>${(d.agenda || []).length ? `<ul class="lista">${d.agenda.map((a) => `<li><span class="data">${br(a.quando)}${a.hora ? `<br><span class="small muted">${esc(a.hora)}</span>` : ""}</span><span>${esc(a.texto)}${a.local ? `<br><span class="small muted">${esc(a.local)}</span>` : ""}</span></li>`).join("")}</ul>` : `<p class="vazio">Nenhum compromisso marcado.</p>`}</div>
         <div class="cartao"><h2>💳 Pagamentos</h2>${(d.pagamentos || []).length ? `${atraso.length ? `<p class="small"><span class="pill atraso">${atraso.length} em atraso</span> Se já pagou, desconsidere. Dúvidas, fale com a gente.</p>` : ""}<ul class="lista">${d.pagamentos.map((p) => `<li><span class="data">${br(p.venc)}</span><span>${esc(p.desc)}${p.parcela ? ` (${esc(p.parcela)})` : ""}<br><b>${reais(p.valor)}</b> ${p.pago ? `<span class="pill ok">pago em ${br(p.pago)}</span>` : p.venc < hoje ? `<span class="pill atraso">em atraso</span>` : `<span class="pill">a vencer</span>`}</span></li>`).join("")}</ul>` : `<p class="vazio">Nenhum pagamento lançado.</p>`}</div>
       </div>
+      ${(d.feitos || []).length ? `<div class="cartao"><h2>✔️ O que já fizemos</h2><ul class="lista linha-feitos">${d.feitos.map((f) => `<li><span class="data">${br(f.data)}</span><span>${esc(f.texto)}</span></li>`).join("")}</ul></div>` : ""}
+      ${d.guia ? `<div class="cartao"><h2>📖 Entenda o seu caso</h2><p style="margin:0"><b>${esc(d.guia.t)}</b></p><ol class="passos">${d.guia.passos.map((x) => `<li>${esc(x)}</li>`).join("")}</ol><p class="small muted" style="margin:0">⏱️ ${esc(d.guia.tempo)} Cada caso é único: a advogada explica o que vale para o seu.</p></div>` : ""}
       <div class="cartao">
         <h2>⚖️ Seus processos</h2>
         ${(d.processos || []).length ? d.processos.map((p) => `<div class="proc"><div><span class="num">${esc(p.numero)}</span> ${p.tribunal ? `<span class="pill">${esc(p.tribunal)}</span>` : ""}<br><span class="small muted">${esc([p.classe, p.orgao].filter(Boolean).join(" · "))}</span></div>
           ${(p.eventos || []).length ? `<ul class="lista">${p.eventos.map((e) => `<li><span class="data">${br(e.data)}</span><span><b>${esc(e.titulo)}</b>${e.explicacao ? `<br><span class="small">Em palavras simples: ${esc(e.explicacao)}.</span>` : ""}</span></li>`).join("")}</ul>` : `<p class="vazio">Ainda sem movimentações registradas.</p>`}</div>`).join("") : `<p class="vazio">Ainda não há processo judicial. Quando houver, as novidades aparecem aqui.</p>`}
         <p class="small muted">As movimentações são resumidas para facilitar. A análise de cada etapa é feita pela advogada, que avisa você do que for importante.</p>
       </div>
+      ${(d.glossario || []).length ? `<div class="cartao"><h2>📚 Palavras do seu processo</h2><dl class="glossario">${d.glossario.map(([t, e]) => `<dt>${esc(t)}</dt><dd>${esc(e)}</dd>`).join("")}</dl></div>` : ""}
       <div class="cartao">
         <h2>💬 Fale com a advogada</h2>
+        <p class="small muted" style="margin:0">${d.advogada ? `Seu caso é cuidado por <b>${esc(d.advogada)}</b>. ` : ""}${esc(d.contato?.horario || "")}. ${esc(d.contato?.resposta || "")}</p>
         ${(d.mensagens || []).length ? `<ul class="lista small">${d.mensagens.slice(0, 5).map((m) => `<li><span class="data">${new Date(m.criado).toLocaleDateString("pt-BR")}</span><span>${esc(m.texto)}</span></li>`).join("")}</ul>` : ""}
         <textarea id="ma-msg" rows="3" maxlength="2000" placeholder="Escreva sua dúvida ou recado. A resposta vem pelo WhatsApp."></textarea>
         <div class="acoes"><button class="btn" id="ma-enviar">Enviar mensagem</button><a class="btn btn-wa" href="https://wa.me/${WA}?text=${encodeURIComponent(`Olá! Sou ${d.nome} e queria falar sobre o meu caso.`)}" target="_blank" rel="noopener">WhatsApp</a><span class="small" id="ma-msg-st"></span></div>
       </div>
+      ${(d.duvidas || []).length ? `<div class="cartao"><h2>❓ Dúvidas comuns</h2>${d.duvidas.map(([q, a]) => `<details class="duvida"><summary>${esc(q)}</summary><p>${esc(a)}</p></details>`).join("")}</div>` : ""}
       <p class="small muted">🔒 Este link é pessoal: não compartilhe. As informações são um resumo para acompanhamento; a orientação sobre o seu caso é sempre dada pela advogada.</p>`;
     $("ma-enviar").onclick = async () => {
       const t = $("ma-msg").value.trim(); if (!t) return;
