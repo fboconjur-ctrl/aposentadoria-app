@@ -280,3 +280,5 @@ body.office { display: grid; grid-template-columns: 240px minmax(0, 1fr); min-he
 .pe-polos { display: grid; gap: 8px; margin: 6px 0 10px; }
 .pe-polos .back { padding: 4px 10px; font-size: .85rem; }
 #pe-mapa table td, #pe-mapa table th { font-size: .85rem; }
+.pe-jur-grupo { font-weight: 700; background: var(--tint); border-radius: 8px; padding: 6px 10px !important; }
+.pe-jur-barra { position: sticky; top: 0; background: var(--surface); padding: 6px 0; z-index: 2; }
