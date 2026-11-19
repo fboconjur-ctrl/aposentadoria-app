@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<meta name="referrer" content="no-referrer">
+<title>Minha área — Plataforma do Direito</title>
+<meta name="theme-color" content="#16224a">
+<link rel="icon" href="../../favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Figtree:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="../styles.css">
+<style>
+  body { background: var(--bg); }
+  .ma { max-width: 880px; margin: 0 auto; padding: 20px 16px 80px; display: grid; gap: 16px; }
+  .ma-topo { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+  .ma h1 { font-family: var(--font-display); font-size: clamp(1.6rem, 4vw, 2.2rem); margin: 4px 0; letter-spacing: -.02em; }
+  .cartao { background: var(--surface); border: 1px solid var(--line); border-radius: 18px; padding: 20px; box-shadow: var(--shadow); display: grid; gap: 12px; align-content: start; }
+  .cartao h2 { margin: 0; font-size: 1.1rem; display: flex; gap: 8px; align-items: center; }
+  .recado { border-left: 4px solid var(--amber); background: var(--amber-soft, #fff6e5); }
+  .linha-tempo { display: grid; grid-template-columns: repeat(var(--n), 1fr); gap: 6px; }
+  .linha-tempo div { text-align: center; font-size: .78rem; color: var(--muted); display: grid; gap: 6px; justify-items: center; }
+  .linha-tempo i { width: 100%; height: 8px; border-radius: 99px; background: var(--line); display: block; }
+  .linha-tempo .feito i { background: var(--brand); } .linha-tempo .atual i { background: var(--amber); }
+  .linha-tempo .atual { color: var(--ink); font-weight: 700; }
+  .lista { list-style: none; padding: 0; margin: 0; display: grid; gap: 10px; }
+  .lista li { display: flex; gap: 12px; align-items: flex-start; }
+  .lista .data { min-width: 86px; font-weight: 600; font-size: .9rem; }
+  .muted { color: var(--muted); } .small { font-size: .88rem; }
+  .pill { display: inline-block; padding: 2px 10px; border-radius: 99px; font-size: .78rem; font-weight: 600; background: var(--tint); }
+  .pill.ok { background: #e3f5ea; color: #157f3b; } .pill.atraso { background: #fde8e8; color: #b42318; }
+  .proc { border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; display: grid; gap: 8px; }
+  .proc .num { font-family: ui-monospace, monospace; font-weight: 700; }
+  textarea, input[type=file] { font: inherit; }
+  textarea { width: 100%; box-sizing: border-box; border: 1px solid var(--line); border-radius: 12px; padding: 10px; background: var(--surface); color: var(--ink); }
+  .acoes { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+  .grade { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media (max-width: 720px) { .grade { grid-template-columns: 1fr; } .linha-tempo div span { font-size: .68rem; } }
+  .vazio { color: var(--muted); font-size: .92rem; }
+  .erro { text-align: center; padding: 60px 16px; }
+</style>
+</head>
+<body>
+<main class="ma" id="ma">
+  <div class="ma-topo"><a class="brand" href="../">Plataforma do Direito</a><span class="small muted" id="ma-atual"></span></div>
+  <p class="muted" id="ma-carregando">Carregando sua área…</p>
+</main>
+<script src="../supabase-config.js"></script>
+<script>
+(() => {
+  const CFG = window.SUPABASE_CONFIG, WA = "5561999733111";
+  const token = (location.hash || "").slice(1).replace(/[^a-f0-9]/gi, "");
+  const $ = (id) => document.getElementById(id);
+  const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+  const br = (d) => d ? String(d).slice(0, 10).split("-").reverse().join("/") : "";
+  const reais = (v) => (+v || 0).toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+  const hoje = new Date().toISOString().slice(0, 10);
+  const rpc = (fn, body) => fetch(`${CFG.url}/rest/v1/rpc/${fn}`, { method: "POST", headers: { apikey: CFG.anonKey, Authorization: `Bearer ${CFG.anonKey}`, "Content-Type": "application/json" }, body: JSON.stringify(body) });
+
+  function erro(msg) { $("ma").innerHTML = `<div class="cartao erro"><h1>Não foi possível abrir</h1><p class="muted">${msg}</p><p><a class="btn" href="https://wa.me/${WA}" target="_blank" rel="noopener">Falar no WhatsApp</a></p></div>`; }
+
+  async function carregar() {
+    if (!token || token.length < 32) return erro("Este link está incompleto. Use o link que a advogada enviou pelo WhatsApp.");
+    let d; try { const r = await rpc("portal_ver", { p_token: token }); d = await r.json(); } catch { return erro("Sem conexão no momento. Tente de novo em instantes."); }
+    if (!d) return erro("Este link não está mais ativo. Peça um novo à advogada.");
+    render(d);
+  }
+
+  function render(d) {
+    const n = d.etapas?.length || 6;
+    const atraso = (d.pagamentos || []).filter((p) => !p.pago && p.venc < hoje);
+    $("ma").innerHTML = `
+      <div class="ma-topo"><a class="brand" href="../">Plataforma do Direito</a><span class="small muted">Atualizado em ${new Date(d.atualizado || Date.now()).toLocaleString("pt-BR")}</span></div>
+      <section>
+        <p class="eyebrow">Minha área</p>
+        <h1>Olá, ${esc(d.nome)}.</h1>
+        <p class="muted">${esc([d.area, d.assunto].filter(Boolean).join(" · "))}${d.advogada ? ` · acompanhado por ${esc(d.advogada)}` : ""}</p>
+      </section>
+      ${d.recado ? `<div class="cartao recado"><h2>📌 Recado da advogada</h2><p style="margin:0;white-space:pre-line">${esc(d.recado)}</p></div>` : ""}
+      <div class="cartao">
+        <h2>🧭 Onde está o seu caso</h2>
+        <div class="linha-tempo" style="--n:${n}">${(d.etapas || []).map((t, i) => `<div class="${i < d.etapaIdx ? "feito" : i === d.etapaIdx ? "atual" : ""}"><i></i><span>${esc(t)}</span></div>`).join("")}</div>
+        <p style="margin:0"><b>Agora:</b> ${esc(d.etapa)}. ${esc(d.proximo || "")}</p>
+      </div>
+      <div class="cartao">
+        <h2>📋 O que precisamos de você</h2>
+        ${(d.precisamos || []).length ? `<ul class="lista">${d.precisamos.map((x) => `<li>☐ <span>${esc(x)}</span></li>`).join("")}</ul>` : `<p class="vazio">Nenhum documento pendente no momento. 👍</p>`}
+        <div class="acoes"><label class="btn">📎 Enviar documentos<input type="file" id="ma-arq" multiple accept="application/pdf,image/*" hidden></label><span class="small muted" id="ma-arq-msg">PDF ou foto, até 10 MB cada. Só a advogada tem acesso.</span></div>
+        ${(d.documentosRecebidos || []).length ? `<p class="small muted">Já recebidos: ${d.documentosRecebidos.map(esc).join(" · ")}</p>` : ""}
+      </div>
+      <div class="grade">
+        <div class="cartao"><h2>📅 Agenda</h2>${(d.agenda || []).length ? `<ul class="lista">${d.agenda.map((a) => `<li><span class="data">${br(a.quando)}${a.hora ? `<br><span class="small muted">${esc(a.hora)}</span>` : ""}</span><span>${esc(a.texto)}${a.local ? `<br><span class="small muted">${esc(a.local)}</span>` : ""}</span></li>`).join("")}</ul>` : `<p class="vazio">Nenhum compromisso marcado.</p>`}</div>
+        <div class="cartao"><h2>💳 Pagamentos</h2>${(d.pagamentos || []).length ? `${atraso.length ? `<p class="small"><span class="pill atraso">${atraso.length} em atraso</span> Se já pagou, desconsidere. Dúvidas, fale com a gente.</p>` : ""}<ul class="lista">${d.pagamentos.map((p) => `<li><span class="data">${br(p.venc)}</span><span>${esc(p.desc)}${p.parcela ? ` (${esc(p.parcela)})` : ""}<br><b>${reais(p.valor)}</b> ${p.pago ? `<span class="pill ok">pago em ${br(p.pago)}</span>` : p.venc < hoje ? `<span class="pill atraso">em atraso</span>` : `<span class="pill">a vencer</span>`}</span></li>`).join("")}</ul>` : `<p class="vazio">Nenhum pagamento lançado.</p>`}</div>
+      </div>
+      <div class="cartao">
+        <h2>⚖️ Seus processos</h2>
+        ${(d.processos || []).length ? d.processos.map((p) => `<div class="proc"><div><span class="num">${esc(p.numero)}</span> ${p.tribunal ? `<span class="pill">${esc(p.tribunal)}</span>` : ""}<br><span class="small muted">${esc([p.classe, p.orgao].filter(Boolean).join(" · "))}</span></div>
+          ${(p.eventos || []).length ? `<ul class="lista">${p.eventos.map((e) => `<li><span class="data">${br(e.data)}</span><span><b>${esc(e.titulo)}</b>${e.explicacao ? `<br><span class="small">Em palavras simples: ${esc(e.explicacao)}.</span>` : ""}</span></li>`).join("")}</ul>` : `<p class="vazio">Ainda sem movimentações registradas.</p>`}</div>`).join("") : `<p class="vazio">Ainda não há processo judicial. Quando houver, as novidades aparecem aqui.</p>`}
+        <p class="small muted">As movimentações são resumidas para facilitar. A análise de cada etapa é feita pela advogada, que avisa você do que for importante.</p>
+      </div>
+      <div class="cartao">
+        <h2>💬 Fale com a advogada</h2>
+        ${(d.mensagens || []).length ? `<ul class="lista small">${d.mensagens.slice(0, 5).map((m) => `<li><span class="data">${new Date(m.criado).toLocaleDateString("pt-BR")}</span><span>${esc(m.texto)}</span></li>`).join("")}</ul>` : ""}
+        <textarea id="ma-msg" rows="3" maxlength="2000" placeholder="Escreva sua dúvida ou recado. A resposta vem pelo WhatsApp."></textarea>
+        <div class="acoes"><button class="btn" id="ma-enviar">Enviar mensagem</button><a class="btn btn-wa" href="https://wa.me/${WA}?text=${encodeURIComponent(`Olá! Sou ${d.nome} e queria falar sobre o meu caso.`)}" target="_blank" rel="noopener">WhatsApp</a><span class="small" id="ma-msg-st"></span></div>
+      </div>
+      <p class="small muted">🔒 Este link é pessoal: não compartilhe. As informações são um resumo para acompanhamento; a orientação sobre o seu caso é sempre dada pela advogada.</p>`;
+    $("ma-enviar").onclick = async () => {
+      const t = $("ma-msg").value.trim(); if (!t) return;
+      $("ma-enviar").disabled = true;
+      try { const r = await rpc("portal_enviar", { p_token: token, p_texto: t }); const ok = await r.json(); $("ma-msg-st").textContent = ok ? "Mensagem enviada! A advogada vai responder." : "Não foi possível enviar agora."; if (ok) $("ma-msg").value = ""; }
+      catch { $("ma-msg-st").textContent = "Sem conexão. Tente de novo."; }
+      $("ma-enviar").disabled = false;
+    };
+    $("ma-arq").onchange = async (e) => {
+      const fs = [...e.target.files].slice(0, 8); let ok = 0;
+      for (const [i, f] of fs.entries()) {
+        if (f.size > 10 * 1024 * 1024) continue;
+        $("ma-arq-msg").textContent = `Enviando ${i + 1} de ${fs.length}…`;
+        const nome = `${Date.now()}-${f.name.normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^\w.\-]+/g, "_").slice(-80)}`;
+        try { const r = await fetch(`${CFG.url}/storage/v1/object/pedidos-docs/portal/${token}/${encodeURIComponent(nome)}`, { method: "POST", headers: { apikey: CFG.anonKey, Authorization: `Bearer ${CFG.anonKey}`, "Content-Type": f.type || "application/octet-stream" }, body: f }); if (r.ok) ok++; } catch {}
+      }
+      $("ma-arq-msg").textContent = ok ? `✅ ${ok} documento(s) enviado(s). A advogada já recebeu.` : "Não foi possível enviar. Tente de novo ou mande pelo WhatsApp.";
+      e.target.value = "";
+    };
+  }
+  carregar();
+})();
+</script>
+</body>
+</html>

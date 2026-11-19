@@ -119,7 +119,7 @@
     $("ac-msg").hidden = true; render();
   };
 
-  window.Acervo = { dados: () => (ingerir(), acervo), abrirMsg: (n, modelo) => { go("acervo"); abrirMsg(n); if (modelo) { $("ac-msg-modelo").value = modelo; preencher(); } } };
+  window.Acervo = { explicar, dados: () => (ingerir(), acervo), abrirMsg: (n, modelo) => { go("acervo"); abrirMsg(n); if (modelo) { $("ac-msg-modelo").value = modelo; preencher(); } } };
   // ---------- Ações ----------
   $("ac-lista").addEventListener("change", (e) => {
     if (!e.target.classList.contains("ac-vinc") || !e.target.value) return;

@@ -99,9 +99,22 @@
     };
     (async () => { // limpeza automática do que passou de 60 dias
       const { data: pastas } = await BK.list("", { limit: 1000 }); const limite = Date.now() - 60 * 864e5, velhos = [];
-      for (const p of pastas || []) { const { data: arqs } = await BK.list(p.name, { limit: 100 }); (arqs || []).forEach((a) => { if (a.created_at && new Date(a.created_at).getTime() < limite) velhos.push(`${p.name}/${a.name}`); }); }
+      const pastasTodas = [...(pastas || []).filter((p) => p.name !== "portal").map((p) => p.name)];
+      if ((pastas || []).some((p) => p.name === "portal")) ((await BK.list("portal", { limit: 1000 })).data || []).forEach((p) => pastasTodas.push(`portal/${p.name}`));
+      for (const pasta of pastasTodas) { const { data: arqs } = await BK.list(pasta, { limit: 100 }); (arqs || []).forEach((a) => { if (a.created_at && new Date(a.created_at).getTime() < limite) velhos.push(`${pasta}/${a.name}`); }); }
       if (velhos.length) await BK.remove(velhos);
     })().catch(() => {});
+
+    // Área do cliente (link secreto por cliente).
+    window.Portal = {
+      criar: async (cliId) => { const b = new Uint8Array(24); crypto.getRandomValues(b); const token = [...b].map((x) => x.toString(16).padStart(2, "0")).join(""); const { error } = await sb.from("portal").insert({ token, cli_id: cliId, dados: {}, em: Date.now() }); if (error) throw error; return token; },
+      publicar: async (token, dados) => { const { error } = await sb.from("portal").update({ dados, em: Date.now() }).eq("token", token); if (error) throw error; },
+      ativar: async (token, ativo) => { const { error } = await sb.from("portal").update({ ativo }).eq("token", token); if (error) throw error; },
+      info: async () => (await sb.from("portal").select("token, cli_id, ativo, visto")).data || [],
+      msgs: async () => (await sb.from("portal_msgs").select("id, token, texto, criado, lida").order("criado", { ascending: false }).limit(200)).data || [],
+      marcarLidas: async (ids) => ids.length && sb.from("portal_msgs").update({ lida: true }).in("id", ids),
+      docs: async (token) => ((await BK.list(`portal/${token}`, { limit: 100 })).data || []).filter((a) => a.name && !a.name.startsWith(".")).map((a) => ({ caminho: `portal/${token}/${a.name}`, nome: a.name.replace(/^\d+-/, ""), tipo: a.metadata?.mimetype || "", tamanho: a.metadata?.size || 0, em: a.created_at })),
+    };
 
     // 3) Pedidos da plataforma chegam sozinhos (verifica ao abrir e a cada minuto).
     const buscarPedidos = async () => {
