@@ -33,19 +33,35 @@
   }
 
   // ---------- Banco de jurisprudência ----------
+  const POS = { fav: ["👍", "favorável", "green"], con: ["👎", "contrário", "red"], neu: ["•", "neutro", ""] };
+  function renderMapa() {
+    const tese = $("pe-jur-tese").value.trim(), dl = [...new Set(juris.map((j) => j.tema).filter(Boolean))];
+    $("pe-jur-teses").innerHTML = dl.map((t) => `<option value="${esc(t)}">`).join("");
+    const da = juris.filter((j) => tese && semAcento(j.tema || "") === semAcento(tese));
+    if (!tese) { $("pe-mapa").innerHTML = ""; return; }
+    const trib = [...new Set(da.map((j) => j.trib))].sort();
+    const n = (t, p) => da.filter((j) => j.trib === t && (j.pos || "fav") === p).length;
+    const fav = da.filter((j) => (j.pos || "fav") === "fav").length, con = da.filter((j) => j.pos === "con").length;
+    $("pe-mapa").innerHTML = `<p><b>Mapa da tese:</b> ${fav} favorável(is) · ${con} contrário(s) no seu banco${da.length ? "" : " — ainda nenhum julgado cadastrado para esta tese"}.</p>` +
+      (trib.length ? `<div class="as-tab"><table><tr><th>Tribunal</th><th>👍 Favoráveis</th><th>👎 Contrários</th><th>Leitura</th></tr>${trib.map((t) => { const f = n(t, "fav"), c = n(t, "con"); return `<tr><td>${esc(t)}</td><td>${f}</td><td>${c}</td><td>${c && !f ? "⚠️ só contrários: prepare a distinção ou evite este tribunal como fundamento" : c && f ? "Divergência: cite os favoráveis e enfrente os contrários" : "Favorável"}</td></tr>`; }).join("")}</table></div>` : "") +
+      (con ? `<p>⚠️ Há julgado contrário: a peça fica mais forte se enfrentar o argumento (distinguishing) em vez de ignorá-lo.</p>` : "");
+  }
   function renderJuris() {
+    renderMapa();
     const q = semAcento($("pe-jur-busca").value);
     const lista = juris.map((j, i) => ({ j, i })).filter(({ j }) => !q || semAcento([j.trib, j.num, j.tema, j.ementa].join(" ")).includes(q));
     $("pe-jur-lista").innerHTML = lista.map(({ j, i }) => `<li><label style="display:flex;gap:10px;align-items:flex-start;flex:1"><input type="checkbox" class="pe-jur-ck" data-i="${i}">
-      <span><b>${esc(j.trib)} — ${esc(j.num)}</b>${j.tema ? ` <span class="pill-s">${esc(j.tema)}</span>` : ""}${j.conf ? ` <span class="pill-s green">conferido ${esc(brData(j.conf))}</span>` : ` <span class="pill-s amber">não conferido</span>`}<br><span class="small muted">${esc(j.ementa.slice(0, 260))}${j.ementa.length > 260 ? "…" : ""}</span></span></label>
+      <span><b>${esc(j.trib)} — ${esc(j.num)}</b>${` <span class="pill-s ${POS[j.pos || "fav"][2]}">${POS[j.pos || "fav"][0]} ${POS[j.pos || "fav"][1]}</span>`}${j.tema ? ` <span class="pill-s">${esc(j.tema)}</span>` : ""}${j.conf ? ` <span class="pill-s green">conferido ${esc(brData(j.conf))}</span>` : ` <span class="pill-s amber">não conferido</span>`}<br><span class="small muted">${esc(j.ementa.slice(0, 260))}${j.ementa.length > 260 ? "…" : ""}</span></span></label>
       <button class="linkish small" data-pj="del" data-i="${i}" style="color:#b42318">excluir</button></li>`).join("") || `<li class="muted">${juris.length ? "Nada encontrado." : "Seu banco está vazio. Cadastre os julgados que você já leu e conferiu."}</li>`;
   }
   $("pe-jur-form").onsubmit = (e) => {
     e.preventDefault();
-    juris.push({ trib: $("pe-jur-trib").value.trim(), num: $("pe-jur-num").value.trim(), rel: $("pe-jur-rel").value.trim(), data: $("pe-jur-data").value, tema: $("pe-jur-tema").value.trim(), ementa: $("pe-jur-ementa").value.trim(), link: $("pe-jur-link").value.trim(), conf: $("pe-jur-conf").checked ? hojeIso : "" });
+    juris.push({ trib: $("pe-jur-trib").value.trim(), num: $("pe-jur-num").value.trim(), rel: $("pe-jur-rel").value.trim(), data: $("pe-jur-data").value, tema: $("pe-jur-tema").value.trim() || $("pe-jur-tese").value.trim(), pos: $("pe-jur-pos").value, ementa: $("pe-jur-ementa").value.trim(), link: $("pe-jur-link").value.trim(), conf: $("pe-jur-conf").checked ? hojeIso : "" });
     $("pe-jur-form").reset(); salvarJ(); renderJuris();
   };
   $("pe-jur-busca").oninput = renderJuris;
+  $("pe-jur-tese").oninput = () => { renderMapa(); if (!$("pe-jur-tema").value) $("pe-jur-tema").placeholder = $("pe-jur-tese").value || "a mesma tese do passo 1"; };
+  $("pe-jur-tese").onchange = () => { $("pe-jur-busca").value = $("pe-jur-tese").value; renderJuris(); };
   // Colar julgado: separa tribunal, número, relator e data do texto copiado do site do tribunal.
   function lerJulgado(t) {
     const txt = t.replace(/\s+/g, " ").trim();
@@ -74,10 +90,45 @@
     TNU: (q) => `https://www.google.com/search?q=${encodeURIComponent(q + " TNU site:cjf.jus.br")}`,
     TCU: (q) => `https://www.google.com/search?q=${encodeURIComponent(q + " site:tcu.gov.br")}`,
   };
+  // Favoráveis / contrários: mesma busca com palavras típicas do resultado (busca do Google restrita ao site oficial).
+  const SITES = { STJ: "stj.jus.br", STF: "stf.jus.br", TST: "tst.jus.br", TJDFT: "tjdft.jus.br", TRF1: "trf1.jus.br", TRT10: "trt10.jus.br", TNU: "cjf.jus.br", TCU: "tcu.gov.br" };
+  const POLO_TERMOS = { fav: '(provido OR procedente OR "dar provimento" OR reconhecido OR devido)', con: '("negado provimento" OR desprovido OR improcedente OR afastado OR indevido OR "não cabimento")' };
+  document.querySelectorAll("[data-polo]").forEach((el) => {
+    el.innerHTML = Object.keys(SITES).map((k) => `<button type="button" class="back" data-busca-polo="${el.dataset.polo}" data-trib="${k}">${k}</button>`).join("");
+  });
+  document.querySelector(".pe-polos")?.addEventListener("click", (e) => {
+    const b = e.target.closest("[data-busca-polo]"); if (!b) return;
+    const q = ($("pe-jur-pesq").value.trim() || $("pe-jur-tese").value.trim()); if (!q) { $("pe-jur-pesq").focus(); return; }
+    $("pe-jur-pos").value = b.dataset.buscaPolo; // o próximo julgado colado já vem marcado com esse lado
+    open(`https://www.google.com/search?q=${encodeURIComponent(`${q} ${POLO_TERMOS[b.dataset.buscaPolo]} site:${SITES[b.dataset.trib]}`)}`, "_blank", "noopener");
+  });
+  // Tema pelo processo: classe da ação + leis/artigos/súmulas/temas citados + palavras mais frequentes das publicações.
+  const PARADAS = new Set("para pelo pela pelos pelas como mais quando onde sobre entre desde ainda sendo estar foram seja sejam pode podem deve devem autos processo parte partes juiz juizo juízo vara tribunal justiça poder judiciário intimação intimado intimada fica prazo dias data número classe requerente requerido reclamante reclamado autor autora ré réu advogado advogada assinado documento despacho decisão sentença presente termos conforme referido referida nesta neste desta deste este esta isso essa esse qualquer forma caso então tendo sido cada outros outras art lei federal distrito brasília região turma relator relatora julgo pedidos concedo beneficios improcedentes procedentes".split(" ").map((w) => semAcento(w)));
+  function temaDoProcesso(n) {
+    const a = window.Acervo?.dados()[n] || {}, txt = (a.pubs || []).map((p) => p.texto).join(" ");
+    const refs = [...new Set((txt.match(/\b(?:art\.?|artigo)\s?\d+[º°]?(?:-[A-Z])?|\bLei\s?n?[º°.]?\s?[\d.]+(?:\/\d{2,4})?|\bS[úu]mula\s?(?:Vinculante\s?)?n?[º°.]?\s?\d+|\bTema\s?\d+|\bCLT\b|\bCDC\b|\bCPC\b/gi) || []).map((x) => x.replace(/\s+/g, " ")))].slice(0, 5);
+    const conta = {}; semAcento(txt).replace(/[^a-z\s]/g, " ").split(/\s+/).filter((w) => w.length > 5 && !PARADAS.has(w)).forEach((w) => (conta[w] = (conta[w] || 0) + 1));
+    const freq = Object.entries(conta).sort((x, y) => y[1] - x[1]).slice(0, 4).map(([w]) => w);
+    const classe = (a.classe || "").toLowerCase().replace(/[^a-zà-ú\s]/g, " ").replace(/\s+/g, " ").trim();
+    return { classe, chaves: [classe, ...refs, ...freq].filter(Boolean).join(" "), trib: a.trib || "" };
+  }
+  function opcoesProcJur() {
+    const ac = window.Acervo?.dados() || {};
+    $("pe-jur-proc").innerHTML = `<option value="">— pesquisar pelo tema de um processo —</option>` + Object.entries(ac).filter(([, a]) => !a.arquivado).map(([n, a]) => `<option value="${n}">${esc(mascara(n))} · ${esc(a.classe || a.trib || "")}${cliDoProc(n) ? ` · ${esc(cliDoProc(n).nome)}` : ""}</option>`).join("");
+  }
+  $("pe-jur-proc").onfocus = opcoesProcJur;
+  $("pe-jur-proc").onchange = () => {
+    const n = $("pe-jur-proc").value; if (!n) return;
+    const t = temaDoProcesso(n);
+    $("pe-jur-pesq").value = t.chaves;
+    $("pe-jur-proc-msg").textContent = `Palavras tiradas da classe e das publicações do processo${t.trib ? ` (${t.trib})` : ""}. Ajuste à vontade e escreva a sua tese acima.`;
+    if (!$("pe-jur-tese").value) $("pe-jur-tese").focus();
+  };
+  window.pesquisarJurDoProcesso = (n) => { go("peticoes"); document.querySelectorAll("#v-peticoes details").forEach((d) => d.querySelector("#pe-jur-form") && (d.open = true)); opcoesProcJur(); $("pe-jur-proc").value = n; $("pe-jur-proc").dispatchEvent(new Event("change")); $("pe-jur-tese").scrollIntoView({ behavior: "smooth", block: "center" }); };
   $("pe-jur-pesq-botoes").innerHTML = Object.keys(BUSCAS).map((k) => `<button type="button" class="back" data-pesq="${k}">${k}</button>`).join("");
   $("pe-jur-pesq-botoes").addEventListener("click", (e) => {
     const b = e.target.closest("[data-pesq]"); if (!b) return;
-    const q = $("pe-jur-pesq").value.trim(); if (!q) { $("pe-jur-pesq").focus(); return; }
+    const q = $("pe-jur-pesq").value.trim() || $("pe-jur-tese").value.trim(); if (!q) { $("pe-jur-pesq").focus(); return; }
     open(BUSCAS[b.dataset.pesq](q), "_blank", "noopener");
   });
   $("pe-jur-lista").addEventListener("click", (e) => { const b = e.target.closest("[data-pj=del]"); if (b && confirm("Excluir este julgado do banco?")) { juris.splice(+b.dataset.i, 1); salvarJ(); renderJuris(); } });
@@ -112,7 +163,9 @@
     resolver(m.corpo).split(/\n/).forEach((l) => { if (l.trim() === "@@JUR@@") escolhidos.forEach((j) => blocos.push(citTxt(j))); else blocos.push({ t: l.replace("@@JUR@@", "") }); });
     if (escolhidos.length && !/\{\{\s*JURISPRUDENCIA\s*\}\}/i.test(m.corpo)) escolhidos.forEach((j) => blocos.push(citTxt(j)));
     const naoConf = escolhidos.filter((j) => !j.conf).length;
-    $("pe-status").innerHTML = [faltam.length ? `⚠️ Falta preencher: ${[...new Set(faltam)].map(esc).join(", ")}.` : "✅ Todos os campos preenchidos.", naoConf ? ` ⚠️ ${naoConf} julgado(s) ainda sem conferência.` : ""].join("");
+    const teses = new Set(escolhidos.map((j) => semAcento(j.tema || "")).filter(Boolean));
+    const contrarios = juris.filter((j) => j.pos === "con" && teses.has(semAcento(j.tema || "")));
+    $("pe-status").innerHTML = [faltam.length ? `⚠️ Falta preencher: ${[...new Set(faltam)].map(esc).join(", ")}.` : "✅ Todos os campos preenchidos.", naoConf ? ` ⚠️ ${naoConf} julgado(s) ainda sem conferência.` : "", contrarios.length ? ` ⚠️ Há ${contrarios.length} julgado(s) contrário(s) a esta tese no seu banco (${contrarios.map((j) => `${esc(j.trib)} ${esc(j.num)}`).join("; ")}): vale enfrentá-los na peça.` : ""].join("");
     return { html, blocos, titulo: `${m.titulo} - ${c?.nome || "cliente"}`.replace(/[\\/:*?"<>|]/g, ""), c };
   }
   $("pe-modelo").onchange = () => { camposExtras(); $("pe-prev").hidden = true; };

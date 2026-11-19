@@ -61,6 +61,7 @@
           ${c ? `<button class="wa-btn" data-ac="msg">💬 Mensagem ao cliente</button>` : ""}
           <button class="back" data-ac="prazo">📅 Prazo</button>
           <button class="back" data-ac="ver">${a.pubs.length ? `Publicações (${a.pubs.length})` : "Publicações"}</button>
+          <button class="back" data-ac="juris">⚖️ Jurisprudência</button>
           <button class="back" data-ac="atualizar">🔄 Atualizar</button>
           <button class="linkish small" data-ac="arquivar">${a.arquivado ? "desarquivar" : "arquivar"}</button>
         </div>
@@ -133,6 +134,7 @@
     if (b.dataset.ac === "ver") { art.querySelector(".ac-pubs").hidden = !art.querySelector(".ac-pubs").hidden; a.pubs.forEach((p) => vistas.add(String(p.id))); gravar(VISTAS_KEY, [...vistas]); art.classList.remove("nova"); }
     if (b.dataset.ac === "prazo") { const c = cliDoProc(n); go("prazos"); $("pz-caso").dispatchEvent(new Event("focus")); $("pz-caso").value = c?.id || ""; if (a.pubs[0]) { $("pz-data").value = a.pubs[0].data; $("pz-tipo").value = "disponibilizacao"; } $("pz-prov").focus(); }
     if (b.dataset.ac === "atualizar") { b.textContent = "Atualizando…"; Promise.resolve(atualizarAcomp([n])).finally(() => { ingerir(); render(); }); }
+    if (b.dataset.ac === "juris") window.pesquisarJurDoProcesso?.(n);
     if (b.dataset.ac === "arquivar") { a.arquivado = !a.arquivado; salvar(); render(); }
     if (b.dataset.ac === "novo") { abrirForm(null); $("c-procs").value = mascara(n); }
   });
