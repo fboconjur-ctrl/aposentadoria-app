@@ -37,6 +37,8 @@
       processos: procsDe(c).map((n) => { const p = ac[n] || {}, mv = acomp[n]?.movs || []; return { numero: mascara(n), tribunal: p.trib || acomp[n]?.tribunal || "", classe: p.classe || acomp[n]?.classe || "", orgao: p.orgao || acomp[n]?.orgao || "",
         eventos: [...(p.pubs || []).slice(0, 6).map((x) => ({ data: x.data, titulo: x.tipo, explicacao: window.Acervo?.explicar(x.tipo, x.texto) || "" })), ...mv.slice(0, 4).map((m) => ({ data: String(m.data).slice(0, 10), titulo: m.nome, explicacao: "" }))].sort((x, y) => y.data.localeCompare(x.data)).slice(0, 8) }; }),
       pagamentos: fin.filter((l) => l.cli === c.id && l.tipo === "receita").sort((x, y) => x.venc.localeCompare(y.venc)).map((l) => ({ desc: l.desc, parcela: l.parcela || "", valor: l.valor, venc: l.venc, pago: l.pago || "" })),
+      recibos: [...fin.filter((l) => l.cli === c.id && l.reciboLib?.html).map((l) => ({ num: l.reciboLib.num, titulo: `Recibo nº ${l.reciboLib.num}`, desc: `${l.desc || "Honorários"}${l.parcela ? ` (${l.parcela})` : ""}`, valor: l.valor, data: l.pago, html: l.reciboLib.html })),
+        ...(c.quitacao?.html ? [{ num: c.quitacao.num, titulo: `Quitação geral nº ${c.quitacao.num}`, desc: "Recibo de quitação geral dos honorários", valor: null, data: c.quitacao.em.slice(0, 10), html: c.quitacao.html, geral: true }] : [])],
       documentosRecebidos: [...(c.docsRecebidos || []), ...(c.docsPedido || [])].slice(-20).map((d) => d.nome),
       docsStatus: ["Contratado", "Caso ativo"].includes(c.etapa) ? (window.docsStatus?.(c) || []) : [],
       feitos: feitos(c), guia: GUIA[c.area] || null, duvidas: DUVIDAS,

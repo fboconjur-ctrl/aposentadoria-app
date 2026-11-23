@@ -279,10 +279,11 @@ function abrirFicha(id, { manterScroll } = {}) {
   // pagamentos
   const meus = fin.filter((l) => l.cli === id).sort((a, b) => a.venc.localeCompare(b.venc));
   const recebido = meus.filter((l) => l.tipo === "receita" && l.pago).reduce((t, l) => t + l.valor, 0), aberto = meus.filter((l) => l.tipo === "receita" && !l.pago).reduce((t, l) => t + l.valor, 0);
-  $("fi-fin").innerHTML = (meus.length ? `<li class="small" style="display:block">Recebido ${reaisBR(recebido)} · em aberto <b>${reaisBR(aberto)}</b></li>` : "") + meus.map((l) => {
+  const quitado = meus.some((l) => l.tipo === "receita") && !meus.some((l) => l.tipo === "receita" && !l.pago);
+  $("fi-fin").innerHTML = (meus.length ? `<li class="small" style="display:block">Recebido ${reaisBR(recebido)} · em aberto <b>${reaisBR(aberto)}</b>${quitado ? `<br>🎉 Tudo quitado. <button class="linkish small" data-quit="ver">Recibo de quitação geral</button> · ${c.quitacao?.html ? `<span class="muted">✅ quitação liberada ao cliente</span>` : `<button class="linkish small" data-quit="liberar">liberar quitação ao cliente</button>`}` : ""}</li>` : "") + meus.map((l) => {
     const atras = !l.pago && l.venc < hojeIso;
     return `<li data-fin="${l.id}"><span class="ico">💰</span><div class="t-txt">${reaisBR(l.valor)} <span class="small muted">${esc(l.desc)}${l.parcela ? ` (${l.parcela})` : ""}</span><br><span class="small ${l.pago ? "muted" : atras ? "atrasada" : "muted"}">${l.pago ? `recebido em ${fmt(deIso(l.pago))}` : `${atras ? "atrasado · " : ""}vence ${fmt(deIso(l.venc))}`}</span></div>
-      <div class="fin-acoes small">${l.pago ? `<button class="linkish small" data-fa="desfazer">desfazer</button><button class="linkish small" data-fa="recibo">recibo</button>` : `<button class="linkish small" data-fa="pagar">recebido</button><button class="linkish small" data-fa="cobrar">cobrar</button>`}<button class="linkish small" data-fa="del" style="color:#b42318">×</button></div></li>`;
+      <div class="fin-acoes small">${l.pago ? `<button class="linkish small" data-fa="desfazer">desfazer</button><button class="linkish small" data-fa="recibo">recibo</button>${l.tipo === "receita" ? (l.reciboLib ? `<span class="small muted">✅ liberado</span>` : `<button class="linkish small" data-fa="liberar">liberar ao cliente</button>`) : ""}` : `<button class="linkish small" data-fa="pagar">recebido</button><button class="linkish small" data-fa="cobrar">cobrar</button>`}<button class="linkish small" data-fa="del" style="color:#b42318">×</button></div></li>`;
   }).join("") || `<li class="muted">Nenhum pagamento lançado.</li>`;
   $("fi-historia").innerHTML = c.resumo ? `<p>${esc(c.resumo)}</p>` : "";
   $("fi-notas").value = c.notas || "";
@@ -738,6 +739,11 @@ $("fin-lanc").onsubmit = (e) => {
   fin.push({ id: novoId("F-"), tipo: $("fl-tipo").value, cat: $("fl-cat").value, desc: $("fl-desc").value.trim(), valor: numBR($("fl-valor").value), venc: $("fl-data").value, pago: $("fl-pago").checked ? $("fl-data").value : null, cli: $("fl-vinculo").value });
   salvarFin(); $("fl-valor").value = ""; $("fl-desc").value = ""; renderFin();
 };
+document.addEventListener("click", (e) => {
+  const q = e.target.closest("[data-quit]"); if (!q) return; const c = cliPorId(fichaAtual); if (!c) return;
+  if (q.dataset.quit === "ver") window.Recibos.quitacao(c);
+  if (q.dataset.quit === "liberar" && confirm("Liberar o recibo de quitação geral na área do cliente?")) { window.Recibos.quitacao(c, { liberar: true }); renderTudo(); }
+});
 // Ações de pagamento valem igual na ficha e no financeiro.
 document.addEventListener("click", (e) => {
   const b = e.target.closest("[data-fin] [data-fa]"); if (!b) return;
@@ -746,7 +752,9 @@ document.addEventListener("click", (e) => {
   if (acao === "pagar") l.pago = hojeIso;
   if (acao === "desfazer") l.pago = null;
   if (acao === "del" && confirm("Excluir este lançamento?")) fin = fin.filter((x) => x !== l);
-  if (acao === "recibo") {
+  if (acao === "recibo") { window.Recibos.parcela(l); return; }
+  if (acao === "liberar") { if (confirm("Liberar este recibo na área do cliente? Ele poderá ver e imprimir.")) window.Recibos.parcela(l, { liberar: true }); renderTudo(); return; }
+  if (acao === "recibo-antigo") {
     if (!cli || !DocId.valido(cli.cpf)) { alert("Para o recibo, cadastre o CPF/CNPJ na ficha do cliente (Editar dados)."); return; }
     const D = window.DocGerador;
     const html = D.MODELOS.recibo.gerar({ nome: cli.nome, tipo: DocId.cnpj(cli.cpf) ? "pj" : "pf", doc: cli.cpf }, { valor: String(l.valor).replace(".", ","), referente: `da prestação de serviços jurídicos (${l.desc}${l.parcela ? `, parcela ${l.parcela}` : ""})`, cidade: D.adv().cidade });
