@@ -209,3 +209,118 @@ Object.assign(DUVIDAS_CASOS, {
     ["Quando vale a pena ir à Justiça?", "Quando há ilegalidade clara, risco de fechamento ou multa desproporcional. Há também a possibilidade de pedir decisão urgente."],
   ],
 });
+
+Object.assign(DUVIDAS_CASOS, {
+  "defeito": [
+    ["Qual o prazo para reclamar de um produto com defeito?", "30 dias para produtos não duráveis (alimentos, por exemplo) e 90 dias para duráveis (eletrodomésticos, roupas, celulares). Se o defeito for oculto, o prazo começa quando ele aparece."],
+    ["A loja diz que eu tenho que falar com o fabricante. É verdade?", "Não. A loja e o fabricante respondem juntos. Você pode reclamar com qualquer um deles."],
+    ["Mandei para o conserto e não resolveram. E agora?", "Se o defeito não for resolvido em até 30 dias, você pode escolher: troca por outro produto, devolução do dinheiro corrigido ou abatimento no preço."],
+    ["Preciso guardar a nota fiscal?", "Sim, e também protocolos de atendimento, ordens de serviço e conversas. São as suas provas."],
+  ],
+  "troca-devolucao": [
+    ["A loja é obrigada a trocar se não gostei da cor ou do tamanho?", "Na loja física, não é obrigação legal — mas, se a loja prometeu a troca (etiqueta, cartaz, vendedor), ela tem que cumprir. Compras pela internet seguem outra regra: o direito de arrependimento de 7 dias."],
+    ["E se o produto tiver defeito?", "Aí a troca é um direito, nos prazos de 30 (não duráveis) ou 90 dias (duráveis), e a loja tem até 30 dias para resolver."],
+    ["Posso trocar presente sem nota?", "Depende da política da loja. Sem defeito, a troca de presente é uma cortesia que, se oferecida, deve ser respeitada."],
+  ],
+  "arrependimento": [
+    ["Comprei pela internet e me arrependi. Posso devolver?", "Sim. Você tem 7 dias, a partir do recebimento, para desistir sem precisar explicar o motivo (Código de Defesa do Consumidor, art. 49)."],
+    ["Tenho que pagar o frete de volta?", "Não. A devolução deve ser sem custo para você, e o valor pago (inclusive o frete) precisa ser devolvido."],
+    ["E se eu já abri o produto?", "O direito continua. Basta que o produto seja devolvido em condições normais de quem só experimentou."],
+  ],
+  "compra-nao-entregue": [
+    ["Comprei pela internet e não chegou. O que posso exigir?", "Você pode escolher: exigir a entrega, aceitar outro produto equivalente ou cancelar a compra com devolução integral do valor, corrigido."],
+    ["A loja sumiu. Perdi meu dinheiro?", "Se pagou com cartão, peça o estorno (chargeback) ao banco. Se foi Pix ou boleto, registre reclamação e boletim de ocorrência. Marketplaces também podem responder pela venda."],
+    ["Onde reclamar antes de ir à Justiça?", "No consumidor.gov.br ou no Procon. Guarde prints do anúncio, do pedido e das conversas."],
+  ],
+  "voo": [
+    ["Meu voo atrasou. A companhia tem que me dar o quê?", "A partir de 1 hora de atraso: comunicação (internet, telefone). A partir de 2 horas: alimentação. A partir de 4 horas: hospedagem, se precisar pernoitar, e opções de reacomodação ou reembolso (Resolução ANAC 400)."],
+    ["Cabe indenização por danos morais?", "Depende das consequências: perder compromissos importantes, longa espera sem assistência, perda de conexão. Atrasos curtos e bem assistidos normalmente não geram indenização."],
+    ["Minha bagagem foi extraviada. E agora?", "Registre o RIB no aeroporto antes de sair. A companhia tem 7 dias (voo nacional) ou 21 dias (internacional) para devolver. Guarde notas do que precisou comprar."],
+    ["Qual o prazo para entrar com ação?", "Para voos nacionais, em regra 5 anos. Para internacionais, aplica-se o prazo de 2 anos da Convenção de Montreal. Não deixe para depois."],
+  ],
+  "telefonia": [
+    ["A operadora cobra serviço que não pedi. O que faço?", "Reclame na operadora (anote o protocolo). Se não resolver, registre na Anatel (app ou site) ou no consumidor.gov.br. Valores pagos indevidamente podem ser devolvidos em dobro."],
+    ["Quero cancelar e não deixam. Pode?", "Não. O cancelamento deve ser feito na hora, por qualquer canal, inclusive pela internet, e com protocolo."],
+    ["A internet não entrega a velocidade contratada. Tenho direito?", "As operadoras devem cumprir percentuais mínimos de velocidade. Faça testes registrados e reclame. Pode haver abatimento ou rescisão sem multa."],
+  ],
+  "cobranca-dobro": [
+    ["Paguei uma cobrança indevida. Recebo em dobro?", "Em muitos casos, sim. O Código de Defesa do Consumidor (art. 42) garante a devolução em dobro do que foi pago indevidamente, salvo engano justificável da empresa."],
+    ["Preciso provar que a empresa agiu de má-fé?", "Não necessariamente. O STJ entende que basta a cobrança contrariar a boa-fé, sem precisar provar a intenção. A análise é feita caso a caso."],
+    ["E se eu só fui cobrado, mas não paguei?", "Aí não há devolução em dobro, mas a cobrança indevida pode ser cancelada e, se houver negativação ou constrangimento, gerar indenização."],
+  ],
+  "ligacoes-cobranca": [
+    ["Recebo dezenas de ligações de cobrança por dia. Isso é permitido?", "Não. A cobrança não pode expor ao ridículo nem constranger. Ligações excessivas, em horários inadequados ou para familiares e trabalho podem gerar indenização."],
+    ["Como paro as ligações de telemarketing?", "Cadastre seu número no 'Não Me Perturbe' (naomeperturbe.com.br) e registre reclamação na Anatel."],
+    ["O que devo guardar como prova?", "Prints do histórico de chamadas com datas e horários, gravações (você pode gravar as próprias ligações) e mensagens."],
+  ],
+  "contas-essenciais": [
+    ["Estou devendo a conta de luz. Podem cortar?", "Podem, mas só depois de aviso prévio e por conta atual (dos últimos 90 dias). Dívidas antigas não autorizam corte: devem ser cobradas por outros meios."],
+    ["Posso parcelar a dívida?", "Sim, as distribuidoras oferecem parcelamento. Peça as condições por escrito e confira se não há cobranças indevidas embutidas."],
+    ["Tem alguém doente em casa que depende de aparelho. Muda algo?", "Sim. Há regras especiais de proteção quando há pessoa que depende de equipamento elétrico para sobreviver. Avise a distribuidora com laudo médico."],
+  ],
+  "falta-energia": [
+    ["Faltou luz e queimou um aparelho. Tenho direito a ressarcimento?", "Sim, se o dano foi causado por oscilação ou falha na rede. Peça o ressarcimento à distribuidora em até 5 anos, informando os aparelhos danificados."],
+    ["Como faço o pedido?", "Pelo site, app ou telefone da distribuidora. Ela tem prazo para fazer a vistoria e responder. Não conserte nem descarte o aparelho antes da vistoria."],
+    ["A falta de energia durou muito tempo. Recebo alguma compensação?", "As distribuidoras pagam compensações automáticas na conta quando ultrapassam os limites de duração e frequência de interrupções definidos pela ANEEL. Confira na fatura."],
+  ],
+  "conta-alta": [
+    ["Minha conta veio muito acima do normal. O que faço?", "Peça a revisão da fatura e a verificação do medidor à distribuidora, com protocolo. Compare com o histórico de consumo dos meses anteriores."],
+    ["Tenho que pagar enquanto contestam?", "O ideal é pedir que a cobrança seja suspensa até a análise. Se pagar e a cobrança for indevida, pode pedir devolução em dobro."],
+    ["Não resolveram. E agora?", "Reclame na ouvidoria da distribuidora e depois na ANEEL (ou na agência reguladora de água do seu estado). Se continuar, cabe ação."],
+  ],
+  "fraude-medidor": [
+    ["Me acusaram de fraude no medidor. Tenho que pagar?", "Não automaticamente. A distribuidora precisa seguir um procedimento: termo de ocorrência, perícia técnica com possibilidade de acompanhamento e cálculo correto. Sem isso, a cobrança pode ser anulada."],
+    ["Podem cortar minha luz por causa disso?", "O corte por dívida de recuperação de consumo antiga é questionável, e a jurisprudência restringe. Procure orientação antes de assinar qualquer acordo."],
+    ["Assinei um termo sem entender. Ainda dá para contestar?", "Sim. O termo assinado não impede a discussão, principalmente se não houve perícia ou o cálculo é abusivo."],
+  ],
+  "cancelamento-curso": [
+    ["Quero desistir do curso. Tenho que pagar o curso inteiro?", "Não. Multas que obrigam a pagar todas as parcelas restantes costumam ser abusivas. Em regra, cabe uma multa razoável e o pagamento proporcional ao que foi usado."],
+    ["Já paguei adiantado. Recebo de volta?", "Sim, a parte não utilizada, descontada uma multa razoável prevista no contrato."],
+    ["Como faço o cancelamento?", "Por escrito (e-mail ou protocolo), guardando o comprovante. A data desse pedido é importante para o cálculo."],
+  ],
+  "corte-luz-agua": [
+    ["A concessionária pode cortar minha luz ou água?", "Pode, por falta de pagamento de conta atual, depois de aviso prévio. Não pode cortar por dívida antiga, por dívida de outro morador (dívida pessoal) nem sem aviso."],
+    ["Cortaram sem aviso. O que faço?", "Peça a religação imediata, com protocolo. O corte irregular pode gerar indenização. Em casos graves, é possível pedir decisão urgente."],
+    ["Em quanto tempo têm que religar depois que eu pagar?", "Na energia, o prazo é de 24 horas na área urbana (ou menos, em religação de urgência paga). Para água, o prazo depende da agência reguladora do estado."],
+  ],
+  "academia-curso": [
+    ["Posso cancelar a academia antes do fim do plano?", "Pode. A multa deve ser proporcional e razoável. Cobrar todas as mensalidades restantes costuma ser abusivo."],
+    ["E a faculdade?", "O cancelamento deve ser aceito, e a cobrança se limita ao período cursado e a uma multa razoável, se prevista. Não podem reter documentos por causa de dívida."],
+    ["O que fazer se insistirem na cobrança?", "Reclame no consumidor.gov.br ou no Procon. Se houver negativação indevida, pode caber indenização."],
+  ],
+  "seguro-negado": [
+    ["A seguradora negou o pagamento. Ela tem que explicar?", "Sim. A recusa deve ser por escrito e fundamentada em cláusula clara do contrato. Peça a negativa formal e a cópia da apólice."],
+    ["Doença preexistente: podem negar?", "Só se a seguradora provar que você sabia da doença e omitiu de má-fé, ou se exigiu exames antes de contratar. Sem isso, a recusa costuma ser indevida."],
+    ["Qual o prazo para cobrar?", "Em regra, 1 ano para o segurado, contado da ciência da recusa. Para o beneficiário de seguro de vida, o prazo é maior. Não deixe passar."],
+  ],
+  "imovel-planta": [
+    ["A construtora atrasou a entrega. Tenho direito a quê?", "Existe uma tolerância de até 180 dias, se prevista no contrato. Depois disso, cabe multa ou indenização (por exemplo, valor equivalente a aluguel), ou a rescisão com devolução do que foi pago."],
+    ["Quero desistir da compra. Recebo o que paguei?", "Depende de quem deu causa. Se a construtora atrasou, a devolução deve ser integral. Se a desistência é sua, a Lei 13.786/2018 permite reter uma parte (até 25% ou 50% no patrimônio de afetação)."],
+    ["Preciso continuar pagando enquanto discuto?", "Não pare de pagar sem orientação: isso pode piorar a sua situação. A estratégia depende do caso."],
+  ],
+  "juros-abusivos": [
+    ["Como sei se os juros do meu contrato são abusivos?", "Uma referência é a taxa média de mercado divulgada pelo Banco Central para o mesmo tipo de operação e época. Taxas muito acima da média podem ser revistas."],
+    ["Posso parar de pagar enquanto discuto?", "Não é recomendado. O correto é pedir a revisão e, se for o caso, depositar o valor considerado devido, com orientação."],
+    ["O que preciso para analisar?", "O contrato, o extrato com as parcelas pagas e a data da contratação."],
+  ],
+  "conta-invadida": [
+    ["Meu celular foi roubado. O que faço primeiro?", "Bloqueie a linha com a operadora, peça o bloqueio do aparelho pelo IMEI, avise todos os bancos para bloquear apps e cartões e registre boletim de ocorrência."],
+    ["Fizeram transferências da minha conta. O banco devolve?", "Depende das circunstâncias. Se houve falha de segurança do banco ou transações muito fora do seu padrão, ele pode ser responsabilizado. Reclame imediatamente e peça o MED, se foi Pix."],
+    ["Usaram minha conta de WhatsApp para pedir dinheiro. E agora?", "Avise seus contatos, recupere a conta pelo próprio WhatsApp e ative a verificação em duas etapas. Registre boletim de ocorrência."],
+  ],
+  "tarifas-venda-casada": [
+    ["O banco incluiu seguro no empréstimo sem eu pedir. Pode?", "Não. Condicionar o empréstimo à contratação de seguro ou outro produto é venda casada, proibida pelo Código de Defesa do Consumidor. Você pode pedir o cancelamento e a devolução."],
+    ["Quais tarifas o banco não pode cobrar?", "Há serviços essenciais gratuitos (como um número mínimo de saques e transferências por mês na conta básica). Tarifas não contratadas ou não informadas também são indevidas."],
+    ["Recebo de volta?", "Sim, os valores cobrados indevidamente, em alguns casos em dobro."],
+  ],
+  "turismo": [
+    ["O pacote de viagem deu errado. Quem responde: agência ou hotel?", "Todos os que participaram da venda podem responder juntos: agência, operadora, hotel e companhia aérea. Você pode reclamar com quem preferir."],
+    ["A viagem foi cancelada. Tenho direito ao dinheiro de volta?", "Sim, ou à remarcação, à sua escolha, conforme o caso. Guarde o contrato e as comunicações."],
+    ["O hotel não era como anunciado. Posso pedir indenização?", "Sim, se houve diferença relevante em relação ao que foi oferecido. Fotos, prints do anúncio e reclamações no local são as melhores provas."],
+  ],
+  "vazamento-dados": [
+    ["Meus dados vazaram. Tenho direito a indenização?", "Depende. O STJ entende que o vazamento, sozinho, nem sempre gera indenização: é preciso mostrar prejuízo ou risco concreto. Dados sensíveis (saúde, por exemplo) recebem proteção maior."],
+    ["O que posso exigir da empresa?", "Informação sobre quais dados vazaram, as medidas tomadas e a correção ou exclusão dos seus dados (LGPD)."],
+    ["Como me proteger depois do vazamento?", "Troque senhas, ative verificação em duas etapas e acompanhe seu CPF no Registrato e em serviços de proteção de crédito."],
+  ],
+});
