@@ -134,6 +134,12 @@
       criar: async (cliId) => { const b = new Uint8Array(24); crypto.getRandomValues(b); const token = [...b].map((x) => x.toString(16).padStart(2, "0")).join(""); const { error } = await sb.from("portal").insert({ token, cli_id: cliId, dados: {}, em: Date.now() }); if (error) throw error; return token; },
       publicar: async (token, dados) => { const { error } = await sb.from("portal").update({ dados, em: Date.now() }).eq("token", token); if (error) throw error; },
       ativar: async (token, ativo) => { const { error } = await sb.from("portal").update({ ativo }).eq("token", token); if (error) throw error; },
+      paraAssinar: async (token, file) => {
+        const nome = `ASSINAR-${Date.now()}-${file.name.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^\w.\-]+/g, "_").slice(-70)}`, caminho = `portal/${token}/${nome}`;
+        const up = await BK.upload(caminho, file, { contentType: file.type || "application/pdf" }); if (up.error) throw up.error;
+        const { data, error } = await BK.createSignedUrl(caminho, 60 * 60 * 24 * 55); if (error) throw error;
+        return { caminho, url: data.signedUrl, expira: new Date(Date.now() + 55 * 864e5).toISOString().slice(0, 10) };
+      },
       info: async () => (await sb.from("portal").select("token, cli_id, ativo, visto")).data || [],
       msgs: async () => (await sb.from("portal_msgs").select("id, token, texto, criado, lida").order("criado", { ascending: false }).limit(200)).data || [],
       marcarLidas: async (ids) => ids.length && sb.from("portal_msgs").update({ lida: true }).in("id", ids),

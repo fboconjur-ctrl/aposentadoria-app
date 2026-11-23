@@ -160,7 +160,7 @@
     const ultima = evs[0] || (d.feitos || [])[0] && { data: d.feitos[0].data, titulo: d.feitos[0].texto };
     let visto = ""; try { visto = localStorage.getItem("ma-visto-" + token.slice(0, 8)) || ""; localStorage.setItem("ma-visto-" + token.slice(0, 8), new Date().toISOString()); } catch {}
     const novas = (d.conversa || []).filter((m) => m.de === "advogada" && String(m.em) > visto).length;
-    const pend = [...(docsPend.length ? [[`📋 ${docsPend.length} documento(s) para enviar`, "#docs"]] : []), ...(atraso.length ? [[`💳 ${atraso.length} pagamento(s) em atraso`, "#pagamentos"]] : []), ...(prox && dias(prox.quando) <= 7 ? [[`📅 ${prox.texto} ${quandoTxt(prox.quando)}`, "#agenda"]] : []), ...(novas && visto ? [[`💬 ${novas} resposta(s) nova(s) da advogada`, "#conversa"]] : [])];
+    const pend = [...(docsPend.length ? [[`📋 ${docsPend.length} documento(s) para enviar`, "#docs"]] : []), ...((d.assinar || []).filter((a) => !a.assinado).length ? [[`✍️ ${(d.assinar || []).filter((a) => !a.assinado).length} documento(s) para assinar`, "#assinar"]] : []), ...(atraso.length ? [[`💳 ${atraso.length} pagamento(s) em atraso`, "#pagamentos"]] : []), ...(prox && dias(prox.quando) <= 7 ? [[`📅 ${prox.texto} ${quandoTxt(prox.quando)}`, "#agenda"]] : []), ...(novas && visto ? [[`💬 ${novas} resposta(s) nova(s) da advogada`, "#conversa"]] : [])];
     const sec = (id, ico, tit, corpo, extra = "") => `<section class="cartao" id="${id}"><h2>${ico} ${tit}${extra}</h2>${corpo}</section>`;
 
     $("ma").innerHTML = `
@@ -181,7 +181,7 @@
       </section>
       ${pend.length ? `<section class="cartao alerta"><h2>👉 O que precisa de você</h2><div class="chips">${pend.map(([t, h]) => `<a class="chip" href="${h}">${esc(t)}</a>`).join("")}</div></section>` : ""}
       ${d.recado ? `<section class="cartao recado"><h2>📌 Recado da advogada</h2><p style="margin:0;white-space:pre-line">${esc(d.recado)}</p></section>` : ""}
-      <nav class="atalhos">${[["#caminho", "Etapas"], ["#processo", "Processo"], ["#docs", "Documentos"], ["#agenda", "Agenda"], ["#pagamentos", "Pagamentos"], ["#conversa", "Conversa"], ["#entenda", "Entenda"]].map(([h, t]) => `<a href="${h}">${t}</a>`).join("")}</nav>
+      <nav class="atalhos">${[...((d.assinar || []).some((a) => !a.assinado) ? [["#assinar", "Assinar"]] : []), ["#caminho", "Etapas"], ["#processo", "Processo"], ["#docs", "Documentos"], ["#agenda", "Agenda"], ["#pagamentos", "Pagamentos"], ["#conversa", "Conversa"], ["#entenda", "Entenda"]].map(([h, t]) => `<a href="${h}">${t}</a>`).join("")}</nav>
 
       ${sec("caminho", "🧭", "O caminho do seu caso", `
         <ol class="trilha">${(d.etapas || []).map((t, i) => `<li class="${i < idx ? "feito" : i === idx ? "atual" : ""}"><span class="bola">${i < idx ? "✓" : i + 1}</span><span>${esc(t)}${i === idx ? `<br><span class="small">${esc(d.proximo || "")}</span>` : ""}</span></li>`).join("")}</ol>
@@ -194,11 +194,23 @@
           ${(p.eventos || []).length > 1 ? `<details><summary class="small"><b>Histórico completo (${p.eventos.length})</b></summary><ul class="lista" style="margin-top:8px">${p.eventos.map((e) => `<li><span class="data">${br(e.data)}</span><span><b>${esc(e.titulo)}</b>${e.explicacao ? `<br><span class="small">${esc(e.explicacao)}.</span>` : ""}</span></li>`).join("")}</ul></details>` : ""}
         </div>`; }).join("") + `<p class="small muted" style="margin:0">As fases são uma visão simplificada. Nem todo processo passa por todas, e a ordem pode mudar.</p>` : `<p class="vazio">Ainda não há processo judicial. Quando houver, as novidades aparecem aqui, explicadas em palavras simples.</p>`)}
 
+      ${(d.assinar || []).length ? sec("assinar", "✍️", "Documentos para você assinar", `
+        <p class="small" style="margin:0">A assinatura é feita pelo <b>gov.br</b>, de graça e com validade jurídica (assinatura eletrônica avançada, Lei 14.063/2020). Você precisa de conta gov.br nível <b>prata ou ouro</b>.</p>
+        ${d.assinar.map((a) => `<div class="recibo${a.assinado ? " geral" : ""}"><span><b>${esc(a.nome)}</b><br><span class="small muted">${a.assinado ? "✅ Recebemos assinado. Obrigada!" : "Aguardando sua assinatura"}</span></span>${a.assinado ? "" : `<a class="btn" href="${esc(a.url)}" target="_blank" rel="noopener" download>1. Baixar</a>`}</div>`).join("")}
+        <details open><summary class="small"><b>Como assinar (passo a passo)</b></summary><ol class="passos small">
+          <li>Toque em <b>“1. Baixar”</b> e salve o PDF no celular ou computador.</li>
+          <li>Abra o assinador do gov.br: <a href="https://assinador.iti.br" target="_blank" rel="noopener">assinador.iti.br</a> e entre com sua conta gov.br.</li>
+          <li>Escolha o arquivo baixado, posicione a assinatura e toque em <b>Assinar</b>. O gov.br envia um código por SMS ou pelo app.</li>
+          <li>Baixe o arquivo <b>assinado</b> (o gov.br gera um PDF novo).</li>
+          <li>Volte aqui e envie em <b>Documentos → Enviar documentos</b>. Pronto: a advogada recebe na hora.</li>
+        </ol><p class="small muted">Não tem conta prata ou ouro? No app gov.br, use o reconhecimento facial ou entre pelo seu banco para subir o nível. Se tiver dificuldade, fale com a gente.</p></details>
+        <a class="btn btn-wa" href="https://assinador.iti.br" target="_blank" rel="noopener">2. Abrir o assinador gov.br</a>`) : ""}
       ${sec("docs", "📋", "Documentos", `
         ${(d.docsStatus || []).length ? `<p class="small muted" style="margin:0">${d.docsStatus.filter((x) => x.ok).length} de ${d.docsStatus.length} recebidos</p><div class="barra"><i style="width:${Math.round(100 * d.docsStatus.filter((x) => x.ok).length / d.docsStatus.length)}%"></i></div>` : ""}
         ${docsPend.length ? `<ul class="docs">${docsPend.map((x) => { const i = infoDoc(x); return `<li><details><summary>☐ <b>${esc(x)}</b></summary>${i ? `<p class="small"><b>Para que serve:</b> ${esc(i[1])}</p><p class="small"><b>Como conseguir:</b> ${esc(i[2])}</p>` : `<p class="small">Se tiver dúvida sobre este documento, pergunte na conversa abaixo.</p>`}</details></li>`; }).join("")}</ul>` : `<p class="vazio">Nenhum documento pendente no momento. 👍</p>`}
         ${(d.docsStatus || []).some((x) => x.ok) ? `<p class="small muted" style="margin:0">✅ Recebidos: ${d.docsStatus.filter((x) => x.ok).map((x) => esc(x.doc)).join(" · ")}</p>` : ""}
         ${(d.documentosRecebidos || []).length ? `<p class="small muted" style="margin:0">Arquivos já enviados: ${d.documentosRecebidos.map(esc).join(" · ")}</p>` : ""}
+        ${(d.assinar || []).some((a) => !a.assinado) ? `<label class="small"><input type="checkbox" id="ma-assinado"> Estou enviando um documento que assinei no gov.br</label>` : ""}
         <div class="acoes"><label class="btn">📎 Enviar documentos<input type="file" id="ma-arq" multiple accept="application/pdf,image/*" hidden></label><span class="small muted" id="ma-arq-msg">PDF ou foto nítida, até 10 MB cada. Só o escritório tem acesso.</span></div>`)}
 
       <div class="grade">
@@ -239,7 +251,7 @@
       for (const [i, f] of fs.entries()) {
         if (f.size > 10 * 1024 * 1024) continue;
         $("ma-arq-msg").textContent = `Enviando ${i + 1} de ${fs.length}…`;
-        const nome = `${Date.now()}-${f.name.normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^\w.\-]+/g, "_").slice(-80)}`;
+        const nome = `${Date.now()}-${document.getElementById("ma-assinado")?.checked ? "ASSINADO-" : ""}${f.name.normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^\w.\-]+/g, "_").slice(-80)}`;
         try { const r = await fetch(`${CFG.url}/storage/v1/object/pedidos-docs/portal/${token}/${encodeURIComponent(nome)}`, { method: "POST", headers: { apikey: CFG.anonKey, Authorization: `Bearer ${CFG.anonKey}`, "Content-Type": f.type || "application/octet-stream" }, body: f }); if (r.ok) ok++; } catch {}
       }
       $("ma-arq-msg").textContent = ok ? `✅ ${ok} documento(s) enviado(s). A advogada já recebeu.` : "Não foi possível enviar. Tente de novo ou mande pelo WhatsApp.";
