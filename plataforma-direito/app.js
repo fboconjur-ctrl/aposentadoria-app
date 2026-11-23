@@ -85,6 +85,7 @@ function pedirHistoria() {
     const t = $("hist-txt").value.trim(); if (!t) return $("hist-txt").focus();
     state.text = t; box.innerHTML = ""; say(t, "user");
     // Pergunta formulada como dúvida e com resposta pronta: mostra a informação geral direto.
+    if (window.respostaEspecial?.(t)) return;
     if (isQuestion(t) && findFaq(t)) return setTimeout(() => answerQuestion(t), 350);
     setTimeout(() => sugerirSituacoes(t), 350);
   };

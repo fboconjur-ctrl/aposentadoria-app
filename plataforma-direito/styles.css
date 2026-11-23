@@ -445,3 +445,4 @@ body:has(#view-result.active .barra-acao) .wa-float { display: none; }
 .tl-novo{display:flex;flex-wrap:wrap;gap:8px}.tl-novo input{padding:9px 10px;border:1px solid #c9d2f0;border-radius:10px;font:inherit}.tl-novo input[type=text]{flex:1;min-width:180px}
 #c-preparo textarea{width:100%;padding:10px;border:1px solid #c9d2f0;border-radius:10px;font:inherit}
 .etapas li{margin:6px 0}
+.busca-especial{margin-top:8px;padding:12px 14px;border-radius:12px;background:#fff7e6;border:1px solid #f3dfb5}.busca-especial p{margin:6px 0}
