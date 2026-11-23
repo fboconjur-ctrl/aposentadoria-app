@@ -21,8 +21,12 @@
     const d = await r.json().catch(() => ({})); if (!r.ok) throw new Error(d.erro || `Erro ${r.status}`); return d;
   }
   // Palavras-chave a partir das atividades (CNAE): tira palavras vazias e fica com o núcleo.
-  const VAZIAS = new Set("de da do das dos e em para com sem por a o as os ou não nao especificadas especificados anteriormente outras outros outro outra exceto inclusive serviços servicos serviço servico atividades atividade comércio comercio varejista atacadista fabricação fabricacao geral em geral".split(" "));
-  const termosDe = (cnaes) => [...new Set(cnaes.map((c) => String(c.descricao || "").toLowerCase().replace(/[;,()]/g, " ").split(/\s+/).filter((w) => w.length > 3 && !VAZIAS.has(w)).slice(0, 2).join(" ")).filter(Boolean))].slice(0, 6);
+  const VAZIAS = new Set("representantes comerciais agentes mercadorias especializado especializados especializada uso humano drogas pessoal medico cirurgico hospitalar de da do das dos e em para com sem por a o as os ou não nao especificadas especificados anteriormente outras outros outro outra exceto inclusive serviços servicos serviço servico atividades atividade comércio comercio varejista atacadista fabricação fabricacao geral em geral".split(" "));
+  const GEN = new Set(["material", "materiais", "equipamentos", "instrumentos", "produtos", "obras", "programas", "artigos", "peças", "pecas", "máquinas", "maquinas", "desenvolvimento", "serviços", "manutenção", "manutencao"]);
+  const termosDe = (cnaes) => [...new Set(cnaes.map((c) => {
+    const w = String(c.descricao || "").toLowerCase().replace(/[;,()]/g, " ").split(/\s+/).filter((x) => x.length > 3 && !VAZIAS.has(x));
+    return GEN.has(w[0]) ? (w[1] ? `${w[0]} ${w[1]}` : "") : w[0] || "";
+  }).filter(Boolean))].slice(0, 6);
   let empresa = null;
 
   function pontos(d) {
@@ -30,9 +34,10 @@
     const sit = String(d.situacao || "").toUpperCase();
     if (sit && sit !== "ATIVA") p.push(["🔴", `Situação cadastral: ${sit}${d.motivoSituacao && d.motivoSituacao !== "SEM MOTIVO" ? ` (${d.motivoSituacao})` : ""}`, "Verificar a causa e a regularização perante a Receita Federal. Empresa fora da situação ativa tem dificuldade para emitir notas, obter certidões e contratar com o poder público."]);
     if (d.situacaoEspecial) p.push(["🟠", `Situação especial: ${d.situacaoEspecial}`, "Verificar o que significa no caso (ex.: recuperação judicial, liquidação) e os efeitos para a empresa."]);
-    if (d.mei) p.push(["🔵", "Optante pelo MEI", "Verificar se o faturamento e a atividade continuam dentro dos limites do MEI; se ultrapassou, avaliar o desenquadramento para evitar cobrança retroativa."]);
+    if (d.simples === null || d.simples === undefined) p.push(["⚪", "Regime tributário não informado na base pública", "Confirmar com o cliente ou o contador se a empresa está no Simples, Lucro Presumido ou Lucro Real — os pontos de economia tributária dependem disso."]);
+    else if (d.mei) p.push(["🔵", "Optante pelo MEI", "Verificar se o faturamento e a atividade continuam dentro dos limites do MEI; se ultrapassou, avaliar o desenquadramento para evitar cobrança retroativa."]);
     else if (d.simples) p.push(["🔵", `Optante pelo Simples Nacional desde ${br(d.dataSimples)}`, "Verificar, com o contador, se há receitas com tributação concentrada (monofásica) ou com substituição tributária sendo tributadas de novo no Simples — se houver, pode existir valor pago a mais a recuperar. Conferir também se as atividades permitem o anexo mais favorável."]);
-    else if (["ME", "MICRO EMPRESA", "EPP", "EMPRESA DE PEQUENO PORTE"].some((x) => String(d.porte || "").toUpperCase().includes(x))) p.push(["🟡", `Porte ${d.porte} fora do Simples`, "Verificar se a empresa poderia optar pelo Simples Nacional (e se foi excluída, por quê). A mudança de regime pode reduzir a carga tributária."]);
+    else if (d.simples === false && ["ME", "MICRO EMPRESA", "EPP", "EMPRESA DE PEQUENO PORTE"].some((x) => String(d.porte || "").toUpperCase().includes(x))) p.push(["🟡", `Porte ${d.porte} fora do Simples`, "Verificar se a empresa poderia optar pelo Simples Nacional (e se foi excluída, por quê). A mudança de regime pode reduzir a carga tributária."]);
     if (d.exclusaoSimples && d.dataSimples && d.exclusaoSimples > d.dataSimples && !d.simples) p.push(["🟠", `Excluída do Simples em ${br(d.exclusaoSimples)}`, "Verificar o motivo da exclusão (débitos, atividade, faturamento). Exclusão por débito pode ser revertida com a regularização no prazo."]);
     const id = anos(d.abertura); if (id !== null && id < 2) p.push(["⚪", `Empresa aberta há ${id === 0 ? "menos de 1 ano" : "1 ano"}`, "Verificar se todas as inscrições estão em dia (estadual, municipal, alvarás)."]);
     if (!d.socios?.length) p.push(["⚪", "Sem sócios informados na base pública", "Normal para empresário individual e MEI; em sociedade, verificar o cadastro."]);
@@ -54,7 +59,7 @@
       <div class="fi-tit"><h2>${esc(d.razao || "")}</h2><span class="small muted">${fmtCnpj(c)}</span></div>
       <p class="small">${esc([d.fantasia, d.natureza, d.porte, d.matriz].filter(Boolean).join(" · "))}<br>
       ${esc([d.municipio, d.uf].filter(Boolean).join("/"))} · aberta em ${br(d.abertura)}${anos(d.abertura) !== null ? ` (${anos(d.abertura)} anos)` : ""} · capital ${reais(d.capital)}<br>
-      Situação: <b>${esc(d.situacao || "")}</b> desde ${br(d.dataSituacao)} · Simples: <b>${d.simples ? "sim" : "não"}</b> · MEI: <b>${d.mei ? "sim" : "não"}</b></p>
+      Situação: <b>${esc(d.situacao || "")}</b> desde ${br(d.dataSituacao)} · Simples: <b>${d.simples == null ? "não informado" : d.simples ? "sim" : "não"}</b> · MEI: <b>${d.mei == null ? "não informado" : d.mei ? "sim" : "não"}</b></p>
       <h3>Pontos a verificar</h3><p class="small muted">Sugestões de análise a partir dos dados públicos. Não são conclusões: confirme com documentos e com o contador.</p>
       <ul class="list small">${pontos(d).map(([i, t, s]) => `<li><span class="ico">${i}</span><div><b>${esc(t)}</b><br>${esc(s)}</div></li>`).join("")}</ul>
       <h3>Atividades (CNAE)</h3><ul class="list small">${cn.filter((x) => x?.codigo).map((x, i) => `<li>${i === 0 ? "<b>Principal:</b> " : ""}${esc(String(x.codigo))} — ${esc(x.descricao || "")}</li>`).join("")}</ul>
@@ -72,7 +77,7 @@
     if (e.target.id === "rx-ir-lic") { $q("#rx-lic").scrollIntoView({ behavior: "smooth" }); buscarLic(); }
     if (e.target.id === "rx-salvar" && empresa) {
       const c = clientes.find((x) => x.id === $q("#rx-cli").value); if (!c) { $q("#rx-salvo").textContent = "Escolha o cliente acima."; return; }
-      const txt = `Raio-x CNPJ ${fmtCnpj(empresa.cnpj)} (${new Date().toLocaleDateString("pt-BR")}): ${empresa.razao} · situação ${empresa.situacao} · Simples ${empresa.simples ? "sim" : "não"} · MEI ${empresa.mei ? "sim" : "não"}. Pontos: ${pontos(empresa).map((p) => p[1]).join("; ")}.`;
+      const txt = `Raio-x CNPJ ${fmtCnpj(empresa.cnpj)} (${new Date().toLocaleDateString("pt-BR")}): ${empresa.razao} · situação ${empresa.situacao} · Simples ${empresa.simples == null ? "não informado" : empresa.simples ? "sim" : "não"}. Pontos: ${pontos(empresa).map((p) => p[1]).join("; ")}.`;
       c.notas = (c.notas ? c.notas + "\n\n" : "") + txt; (c.hist ||= []).unshift({ em: new Date().toISOString(), o: `Raio-x do CNPJ ${fmtCnpj(empresa.cnpj)}` }); salvarCrm();
       $q("#rx-salvo").textContent = "✅ Salvo nas anotações do cliente.";
     }
