@@ -46,6 +46,37 @@
   .duvida { border-top: 1px solid var(--line); padding: 10px 0; } .duvida summary { cursor: pointer; font-weight: 600; } .duvida p { margin: 8px 0 0; color: var(--muted); }
   .so-tela { margin-top: 8px; }
   @media print { .acoes, textarea, .btn, .btn-wa, .so-tela, details.duvida { display: none !important; } body { background: #fff; } .cartao { box-shadow: none; break-inside: avoid; } }
+  .heroi { background: linear-gradient(135deg, color-mix(in srgb, var(--brand) 10%, var(--surface)), color-mix(in srgb, var(--amber) 14%, var(--surface))); border: 1px solid var(--line); border-radius: 22px; padding: 22px; display: grid; gap: 14px; }
+  .status { display: flex; gap: 16px; align-items: center; }
+  .anel { --p: 50; flex: none; width: 74px; height: 74px; border-radius: 50%; display: grid; place-items: center; background: conic-gradient(var(--brand) calc(var(--p) * 1%), var(--line) 0); position: relative; }
+  .anel::before { content: ""; position: absolute; inset: 8px; border-radius: 50%; background: var(--surface); }
+  .anel b { position: relative; font-size: 1.05rem; }
+  .grande { font-size: 1.25rem; }
+  .resumo { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+  .resumo > div { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 12px; }
+  .alerta { border-left: 4px solid var(--brand); }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; } .chip { background: var(--tint); border-radius: 99px; padding: 8px 14px; font-weight: 600; text-decoration: none; color: var(--ink); font-size: .92rem; }
+  .atalhos { position: sticky; top: 0; z-index: 5; display: flex; gap: 6px; overflow-x: auto; padding: 8px 0; background: var(--bg); scrollbar-width: none; }
+  .atalhos::-webkit-scrollbar { display: none; }
+  .atalhos a { flex: none; border: 1px solid var(--line); background: var(--surface); border-radius: 99px; padding: 6px 14px; font-size: .88rem; font-weight: 600; color: var(--ink); text-decoration: none; }
+  section.cartao { scroll-margin-top: 60px; }
+  .trilha { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+  .trilha li { display: flex; gap: 12px; align-items: flex-start; color: var(--muted); }
+  .trilha .bola { flex: none; width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center; border: 2px solid var(--line); font-weight: 700; font-size: .85rem; background: var(--surface); }
+  .trilha .feito .bola { background: var(--brand); border-color: var(--brand); color: #fff; }
+  .trilha .atual { color: var(--ink); font-weight: 600; } .trilha .atual .bola { border-color: var(--amber); background: var(--amber-soft, #fff6e5); }
+  .fases { display: flex; flex-wrap: wrap; gap: 4px; } .fases span { font-size: .75rem; padding: 3px 8px; border-radius: 99px; background: var(--line); color: var(--muted); }
+  .fases .feito { background: color-mix(in srgb, var(--brand) 18%, var(--surface)); color: var(--ink); } .fases .atual { background: var(--brand); color: #fff; font-weight: 700; }
+  .destaque { background: var(--tint); border-radius: 12px; padding: 12px; }
+  .docs { list-style: none; padding: 0; margin: 0; display: grid; gap: 6px; } .docs summary { cursor: pointer; } .docs p { margin: 6px 0 0 22px; }
+  .totais { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; } .totais div { background: var(--tint); border-radius: 12px; padding: 10px; }
+  .chat { display: grid; gap: 8px; max-height: 380px; overflow-y: auto; padding: 4px; }
+  .msg { max-width: 82%; padding: 10px 12px; border-radius: 14px; display: grid; gap: 4px; } .msg small { font-size: .72rem; color: var(--muted); }
+  .msg.minha { justify-self: end; background: color-mix(in srgb, var(--brand) 12%, var(--surface)); border-bottom-right-radius: 4px; }
+  .msg.dela { justify-self: start; background: var(--tint); border-bottom-left-radius: 4px; }
+  .linkbtn { background: none; border: 0; color: inherit; text-decoration: underline; cursor: pointer; padding: 0; font: inherit; }
+  @media (max-width: 720px) { .resumo { grid-template-columns: 1fr; } .heroi { padding: 16px; } }
+  @media print { .atalhos, .chips, .chat { display: none !important; } details { display: block; } }
 </style>
 </head>
 <body>
@@ -74,52 +105,111 @@
     render(d);
   }
 
+  // ---------- Conteúdo explicativo (informativo, sem prometer resultado) ----------
+  const DOC_INFO = [
+    [/cnis/i, "Mostra todo o seu histórico de trabalho e contribuições ao INSS. É a base para calcular tempo e valor.", "No app ou site Meu INSS: entre com a conta gov.br → “Extrato de contribuição (CNIS)” → baixar PDF."],
+    [/carteira.*trabalho|ctps/i, "Comprova vínculos e datas que às vezes faltam no CNIS.", "Fotografe todas as páginas com contratos e anotações. A Carteira Digital também ajuda (app Carteira de Trabalho Digital)."],
+    [/indeferimento|concess[ãa]o/i, "Mostra o que o INSS decidiu e por quê — é o ponto de partida do recurso ou da ação.", "No Meu INSS → “Consultar pedidos” → abra o pedido e baixe a carta/decisão."],
+    [/ppp|ltcat/i, "Comprova trabalho com agentes nocivos (ruído, químicos, etc.), que pode contar como tempo especial.", "Peça ao RH da empresa (é um direito seu). Se a empresa fechou, avise a advogada."],
+    [/laudo|exame|relat[óo]rio m[ée]dico/i, "Mostra a doença ou a necessidade do tratamento. Quanto mais detalhado e recente, melhor.", "Peça ao médico um relatório com CID, histórico, tratamento indicado e, se houver, a urgência."],
+    [/contrato|nota fiscal|fatura/i, "Prova a relação com a empresa e o que foi combinado ou cobrado.", "Procure no e-mail, no app da empresa ou peça a 2ª via no atendimento."],
+    [/protocolo|reclama/i, "Mostra que você tentou resolver antes, o que fortalece o pedido.", "Anote o número dos protocolos de SAC; prints do Procon ou do consumidor.gov.br servem."],
+    [/print|conversa|e-?mail|an[úu]ncio/i, "Registra o que foi dito ou prometido.", "Faça prints mostrando data, hora e o nome/número de quem enviou."],
+    [/comprovante.*pagamento/i, "Prova o que você pagou.", "Extrato do banco, comprovante do Pix ou boleto pago."],
+    [/plano de sa[úu]de|carteirinha/i, "Mostra o plano e a cobertura contratada.", "Foto da carteirinha (frente e verso) e o contrato ou o manual do plano."],
+    [/negativa/i, "É a prova de que o pedido foi recusado.", "Peça a negativa por escrito (o plano é obrigado a fornecer) ou anote o protocolo da ligação."],
+    [/rg|cnh|cpf|resid[êe]ncia/i, "Identificam você e confirmam onde mora (define qual juízo é competente).", "Foto nítida de frente e verso; comprovante de residência dos últimos 3 meses (luz, água, internet)."],
+    [/contracheque|fgts/i, "Mostram salário, descontos e depósitos.", "No app/portal do empregador; extrato do FGTS no app FGTS."],
+    [/rescis|trct/i, "Mostra o que foi pago na saída.", "Documento entregue pela empresa na demissão."],
+    [/certid/i, "Comprovam nascimento, casamento ou óbito.", "Cartório de registro civil ou o site Registro Civil (registrocivil.org.br)."],
+    [/matr[íi]cula/i, "Mostra quem é dono do imóvel e se há ônus.", "Cartório de Registro de Imóveis (pode ser pedida online)."],
+    [/ato|portaria|decis|edital|processo administrativo|ficha funcional/i, "Mostra exatamente o que o órgão decidiu e com base em quê.", "Pelo sistema do órgão, pelo Diário Oficial ou pedindo cópia ao setor responsável."],
+  ];
+  const infoDoc = (n) => DOC_INFO.find(([re]) => re.test(n));
+  const FASES = [["Início", /distribu|peti[çc][ãa]o inicial|autua/i], ["Citação/defesa", /cita|contesta|defesa|manifesta/i], ["Provas", /audi[êe]ncia|per[íi]cia|laudo|testemunh|instru/i], ["Decisão", /senten|julg/i], ["Recurso", /recurso|apela|agravo|ac[óo]rd|turma|c[âa]mara/i], ["Cumprimento", /cumprimento|rpv|precat|alvar|pagamento|execu/i]];
+  const faseDe = (evs) => { let f = 0; for (const e of [...evs].reverse()) FASES.forEach(([, re], i) => { if (re.test(e.titulo + " " + (e.explicacao || ""))) f = Math.max(f, i); }); return f; };
+  const DEPOIS = [[/cita/i, "A outra parte agora tem um prazo para apresentar a defesa."], [/contesta/i, "A advogada vai analisar a defesa e responder, se for o caso."], [/audi[êe]ncia/i, "Confira a data na Agenda. A advogada avisa se você precisa participar."], [/per[íi]cia/i, "Você será avisado(a) da data e de como se preparar."], [/senten/i, "A advogada vai analisar a decisão e conversar com você sobre os próximos passos, inclusive recurso."], [/recurso|apela/i, "O recurso será analisado por um tribunal. Esta fase costuma levar alguns meses."], [/ac[óo]rd/i, "A advogada vai analisar a decisão do tribunal e explicar o que muda."], [/rpv|precat|alvar/i, "É a fase de pagamento. A advogada acompanha a liberação do valor."], [/intima|despacho/i, "Em geral é um andamento do processo; se precisar de algo seu, avisamos aqui."]];
+  const depois = (e) => (DEPOIS.find(([re]) => re.test(e.titulo + " " + (e.explicacao || ""))) || [, ""])[1];
+  const PREPARO = [[/audi[êe]ncia/i, ["Chegue (ou entre na sala virtual) 15 minutos antes.", "Leve documento com foto.", "Fale a verdade, com calma; se não souber, diga que não sabe.", "Combine antes com a advogada o que será tratado."]], [/per[íi]cia/i, ["Leve documento com foto e todos os laudos, exames e receitas.", "Explique ao perito o que sente no dia a dia, sem exagerar nem minimizar.", "Leve a lista de remédios que usa."]], [/consulta|reuni/i, ["Separe os documentos que você tem sobre o caso.", "Anote suas dúvidas para não esquecer."]]];
+  const preparo = (t) => (PREPARO.find(([re]) => re.test(t)) || [, null])[1];
+  const gcal = (a) => { const d = a.quando.replace(/-/g, ""), h = (a.hora || "").replace(":", ""); const ini = h ? `${d}T${h}00` : d, fim = h ? `${d}T${String(Math.min(23, +h.slice(0, 2) + 1)).padStart(2, "0")}${h.slice(2)}00` : d; return "https://calendar.google.com/calendar/render?" + new URLSearchParams({ action: "TEMPLATE", text: a.texto, dates: `${ini}/${fim}`, location: a.local || "" }); };
+  const dias = (iso) => Math.round((new Date(iso + "T12:00:00") - new Date(hoje + "T12:00:00")) / 864e5);
+  const quandoTxt = (iso) => { const n = dias(iso); return n === 0 ? "hoje" : n === 1 ? "amanhã" : n > 1 ? `em ${n} dias` : `há ${-n} dia(s)`; };
+
   function render(d) {
-    const n = d.etapas?.length || 6;
-    const atraso = (d.pagamentos || []).filter((p) => !p.pago && p.venc < hoje);
+    const n = d.etapas?.length || 6, idx = d.etapaIdx || 0;
+    const pags = d.pagamentos || [], atraso = pags.filter((p) => !p.pago && p.venc < hoje), aPagar = pags.filter((p) => !p.pago), pago = pags.filter((p) => p.pago);
+    const docsPend = (d.docsStatus || []).length ? d.docsStatus.filter((x) => !x.ok).map((x) => x.doc) : (d.precisamos || []);
+    const prox = (d.agenda || [])[0];
+    const evs = (d.processos || []).flatMap((p) => p.eventos || []).sort((a, b) => b.data.localeCompare(a.data));
+    const ultima = evs[0] || (d.feitos || [])[0] && { data: d.feitos[0].data, titulo: d.feitos[0].texto };
+    let visto = ""; try { visto = localStorage.getItem("ma-visto-" + token.slice(0, 8)) || ""; localStorage.setItem("ma-visto-" + token.slice(0, 8), new Date().toISOString()); } catch {}
+    const novas = (d.conversa || []).filter((m) => m.de === "advogada" && String(m.em) > visto).length;
+    const pend = [...(docsPend.length ? [[`📋 ${docsPend.length} documento(s) para enviar`, "#docs"]] : []), ...(atraso.length ? [[`💳 ${atraso.length} pagamento(s) em atraso`, "#pagamentos"]] : []), ...(prox && dias(prox.quando) <= 7 ? [[`📅 ${prox.texto} ${quandoTxt(prox.quando)}`, "#agenda"]] : []), ...(novas && visto ? [[`💬 ${novas} resposta(s) nova(s) da advogada`, "#conversa"]] : [])];
+    const sec = (id, ico, tit, corpo, extra = "") => `<section class="cartao" id="${id}"><h2>${ico} ${tit}${extra}</h2>${corpo}</section>`;
+
     $("ma").innerHTML = `
-      <div class="ma-topo"><a class="brand" href="../">Plataforma do Direito</a><span class="small muted">Atualizado em ${new Date(d.atualizado || Date.now()).toLocaleString("pt-BR")}</span></div>
-      <section>
+      <div class="ma-topo"><a class="brand" href="../">Plataforma do Direito</a><span class="small muted">Atualizado em ${new Date(d.atualizado || Date.now()).toLocaleString("pt-BR", { dateStyle: "short", timeStyle: "short" })}</span></div>
+      <section class="heroi">
         <p class="eyebrow">Minha área</p>
         <h1>Olá, ${esc(d.nome)}.</h1>
-        <p class="muted">${esc([d.area, d.assunto].filter(Boolean).join(" · "))}${d.advogada ? ` · acompanhado por ${esc(d.advogada)}` : ""}</p>
-        <p class="so-tela"><button class="small" style="background:none;border:0;color:inherit;text-decoration:underline;cursor:pointer;padding:0" onclick="window.print()">🖨️ Imprimir ou salvar um resumo do meu caso</button></p>
+        <p class="muted" style="margin:0">${esc([d.area, d.assunto].filter(Boolean).join(" · "))}${d.advogada ? ` · com ${esc(d.advogada)}` : ""}</p>
+        <div class="status">
+          <div class="anel" style="--p:${Math.round(100 * (idx + (idx === n - 1 ? 1 : 0.5)) / n)}"><b>${idx + 1}/${n}</b></div>
+          <div><span class="small muted">Etapa atual</span><br><b class="grande">${esc(d.etapa)}</b><br><span class="small">${esc(d.proximo || "")}</span></div>
+        </div>
+        <div class="resumo">
+          <div><span class="small muted">Última novidade</span><br><b>${ultima ? `${esc(ultima.titulo)}` : "—"}</b>${ultima ? `<br><span class="small muted">${br(ultima.data)}</span>` : ""}</div>
+          <div><span class="small muted">Próximo compromisso</span><br><b>${prox ? esc(prox.texto) : "Nenhum marcado"}</b>${prox ? `<br><span class="small muted">${br(prox.quando)}${prox.hora ? " às " + esc(prox.hora) : ""} · ${quandoTxt(prox.quando)}</span>` : ""}</div>
+          <div><span class="small muted">Precisa de você?</span><br><b>${pend.length ? "Sim — veja abaixo" : "Nada agora 👍"}</b></div>
+        </div>
       </section>
-      ${d.recado ? `<div class="cartao recado"><h2>📌 Recado da advogada</h2><p style="margin:0;white-space:pre-line">${esc(d.recado)}</p></div>` : ""}
-      <div class="cartao">
-        <h2>🧭 Onde está o seu caso</h2>
-        <div class="linha-tempo" style="--n:${n}">${(d.etapas || []).map((t, i) => `<div class="${i < d.etapaIdx ? "feito" : i === d.etapaIdx ? "atual" : ""}"><i></i><span>${esc(t)}</span></div>`).join("")}</div>
-        <p style="margin:0"><b>Agora:</b> ${esc(d.etapa)}. ${esc(d.proximo || "")}</p>
-      </div>
-      <div class="cartao">
-        <h2>📋 O que precisamos de você</h2>
-        ${(d.docsStatus || []).length ? `<p class="small muted">${d.docsStatus.filter((x) => x.ok).length} de ${d.docsStatus.length} documentos já recebidos</p><div class="barra"><i style="width:${Math.round(100 * d.docsStatus.filter((x) => x.ok).length / d.docsStatus.length)}%"></i></div><ul class="lista">${d.docsStatus.map((x) => `<li>${x.ok ? "✅" : "☐"} <span class="${x.ok ? "muted" : ""}">${esc(x.doc)}</span></li>`).join("")}</ul>`
-          : (d.precisamos || []).length ? `<ul class="lista">${d.precisamos.map((x) => `<li>☐ <span>${esc(x)}</span></li>`).join("")}</ul>` : `<p class="vazio">Nenhum documento pendente no momento. 👍</p>`}
-        <div class="acoes"><label class="btn">📎 Enviar documentos<input type="file" id="ma-arq" multiple accept="application/pdf,image/*" hidden></label><span class="small muted" id="ma-arq-msg">PDF ou foto, até 10 MB cada. Só a advogada tem acesso.</span></div>
-        ${(d.documentosRecebidos || []).length ? `<p class="small muted">Já recebidos: ${d.documentosRecebidos.map(esc).join(" · ")}</p>` : ""}
-      </div>
+      ${pend.length ? `<section class="cartao alerta"><h2>👉 O que precisa de você</h2><div class="chips">${pend.map(([t, h]) => `<a class="chip" href="${h}">${esc(t)}</a>`).join("")}</div></section>` : ""}
+      ${d.recado ? `<section class="cartao recado"><h2>📌 Recado da advogada</h2><p style="margin:0;white-space:pre-line">${esc(d.recado)}</p></section>` : ""}
+      <nav class="atalhos">${[["#caminho", "Etapas"], ["#processo", "Processo"], ["#docs", "Documentos"], ["#agenda", "Agenda"], ["#pagamentos", "Pagamentos"], ["#conversa", "Conversa"], ["#entenda", "Entenda"]].map(([h, t]) => `<a href="${h}">${t}</a>`).join("")}</nav>
+
+      ${sec("caminho", "🧭", "O caminho do seu caso", `
+        <ol class="trilha">${(d.etapas || []).map((t, i) => `<li class="${i < idx ? "feito" : i === idx ? "atual" : ""}"><span class="bola">${i < idx ? "✓" : i + 1}</span><span>${esc(t)}${i === idx ? `<br><span class="small">${esc(d.proximo || "")}</span>` : ""}</span></li>`).join("")}</ol>
+        ${(d.feitos || []).length ? `<details><summary class="small"><b>Tudo o que já foi feito (${d.feitos.length})</b></summary><ul class="lista small" style="margin-top:8px">${d.feitos.map((f) => `<li><span class="data">${br(f.data)}</span><span>${esc(f.texto)}</span></li>`).join("")}</ul></details>` : ""}`)}
+
+      ${sec("processo", "⚖️", (d.processos || []).length > 1 ? "Seus processos" : "Seu processo", (d.processos || []).length ? d.processos.map((p) => { const f = faseDe(p.eventos || []), ult = (p.eventos || [])[0]; return `<div class="proc">
+          <div><span class="num">${esc(p.numero)}</span> ${p.tribunal ? `<span class="pill">${esc(p.tribunal)}</span>` : ""}<br><span class="small muted">${esc([p.classe, p.orgao].filter(Boolean).join(" · "))}</span></div>
+          <div class="fases">${FASES.map(([t], i) => `<span class="${i < f ? "feito" : i === f ? "atual" : ""}">${t}</span>`).join("")}</div>
+          ${ult ? `<div class="destaque"><span class="small muted">Último andamento · ${br(ult.data)}</span><br><b>${esc(ult.titulo)}</b>${ult.explicacao ? `<br>O que significa: ${esc(ult.explicacao)}.` : ""}${depois(ult) ? `<br><span class="small"><b>E agora?</b> ${esc(depois(ult))}</span>` : ""}<br><span class="small muted">Você não precisa fazer nada, a menos que a advogada avise.</span></div>` : `<p class="vazio">Ainda sem movimentações registradas.</p>`}
+          ${(p.eventos || []).length > 1 ? `<details><summary class="small"><b>Histórico completo (${p.eventos.length})</b></summary><ul class="lista" style="margin-top:8px">${p.eventos.map((e) => `<li><span class="data">${br(e.data)}</span><span><b>${esc(e.titulo)}</b>${e.explicacao ? `<br><span class="small">${esc(e.explicacao)}.</span>` : ""}</span></li>`).join("")}</ul></details>` : ""}
+        </div>`; }).join("") + `<p class="small muted" style="margin:0">As fases são uma visão simplificada. Nem todo processo passa por todas, e a ordem pode mudar.</p>` : `<p class="vazio">Ainda não há processo judicial. Quando houver, as novidades aparecem aqui, explicadas em palavras simples.</p>`)}
+
+      ${sec("docs", "📋", "Documentos", `
+        ${(d.docsStatus || []).length ? `<p class="small muted" style="margin:0">${d.docsStatus.filter((x) => x.ok).length} de ${d.docsStatus.length} recebidos</p><div class="barra"><i style="width:${Math.round(100 * d.docsStatus.filter((x) => x.ok).length / d.docsStatus.length)}%"></i></div>` : ""}
+        ${docsPend.length ? `<ul class="docs">${docsPend.map((x) => { const i = infoDoc(x); return `<li><details><summary>☐ <b>${esc(x)}</b></summary>${i ? `<p class="small"><b>Para que serve:</b> ${esc(i[1])}</p><p class="small"><b>Como conseguir:</b> ${esc(i[2])}</p>` : `<p class="small">Se tiver dúvida sobre este documento, pergunte na conversa abaixo.</p>`}</details></li>`; }).join("")}</ul>` : `<p class="vazio">Nenhum documento pendente no momento. 👍</p>`}
+        ${(d.docsStatus || []).some((x) => x.ok) ? `<p class="small muted" style="margin:0">✅ Recebidos: ${d.docsStatus.filter((x) => x.ok).map((x) => esc(x.doc)).join(" · ")}</p>` : ""}
+        ${(d.documentosRecebidos || []).length ? `<p class="small muted" style="margin:0">Arquivos já enviados: ${d.documentosRecebidos.map(esc).join(" · ")}</p>` : ""}
+        <div class="acoes"><label class="btn">📎 Enviar documentos<input type="file" id="ma-arq" multiple accept="application/pdf,image/*" hidden></label><span class="small muted" id="ma-arq-msg">PDF ou foto nítida, até 10 MB cada. Só o escritório tem acesso.</span></div>`)}
+
       <div class="grade">
-        <div class="cartao"><h2>📅 Agenda</h2>${(d.agenda || []).length ? `<ul class="lista">${d.agenda.map((a) => `<li><span class="data">${br(a.quando)}${a.hora ? `<br><span class="small muted">${esc(a.hora)}</span>` : ""}</span><span>${esc(a.texto)}${a.local ? `<br><span class="small muted">${esc(a.local)}</span>` : ""}</span></li>`).join("")}</ul>` : `<p class="vazio">Nenhum compromisso marcado.</p>`}</div>
-        <div class="cartao"><h2>💳 Pagamentos</h2>${(d.pagamentos || []).length ? `${atraso.length ? `<p class="small"><span class="pill atraso">${atraso.length} em atraso</span> Se já pagou, desconsidere. Dúvidas, fale com a gente.</p>` : ""}<ul class="lista">${d.pagamentos.map((p) => `<li><span class="data">${br(p.venc)}</span><span>${esc(p.desc)}${p.parcela ? ` (${esc(p.parcela)})` : ""}<br><b>${reais(p.valor)}</b> ${p.pago ? `<span class="pill ok">pago em ${br(p.pago)}</span>` : p.venc < hoje ? `<span class="pill atraso">em atraso</span>` : `<span class="pill">a vencer</span>`}</span></li>`).join("")}</ul>` : `<p class="vazio">Nenhum pagamento lançado.</p>`}</div>
+        ${sec("agenda", "📅", "Agenda", (d.agenda || []).length ? `<ul class="lista">${d.agenda.map((a) => { const pr = preparo(a.texto); return `<li><span class="data">${br(a.quando)}${a.hora ? `<br><span class="small muted">${esc(a.hora)}</span>` : ""}</span><span><b>${esc(a.texto)}</b> <span class="pill">${quandoTxt(a.quando)}</span>${a.local ? `<br><span class="small muted">${esc(a.local)}</span>` : ""}
+          ${pr ? `<details><summary class="small">Como se preparar</summary><ul class="small">${pr.map((x) => `<li>${esc(x)}</li>`).join("")}</ul></details>` : ""}<a class="small" href="${gcal(a)}" target="_blank" rel="noopener">+ adicionar à minha agenda</a></span></li>`; }).join("")}</ul>` : `<p class="vazio">Nenhum compromisso marcado. Quando houver audiência, perícia ou reunião, aparece aqui com orientações.</p>`)}
+        ${sec("pagamentos", "💳", "Pagamentos", pags.length ? `<div class="totais"><div><span class="small muted">Pago</span><br><b>${reais(pago.reduce((s, p) => s + (+p.valor || 0), 0))}</b></div><div><span class="small muted">A pagar</span><br><b>${reais(aPagar.reduce((s, p) => s + (+p.valor || 0), 0))}</b></div></div>
+          ${atraso.length ? `<p class="small" style="margin:0"><span class="pill atraso">${atraso.length} em atraso</span> Se já pagou, desconsidere. Se estiver com dificuldade, fale com a gente: dá para conversar.</p>` : ""}
+          <ul class="lista">${pags.map((p) => `<li><span class="data">${br(p.venc)}</span><span>${esc(p.desc)}${p.parcela ? ` (${esc(p.parcela)})` : ""}<br><b>${reais(p.valor)}</b> ${p.pago ? `<span class="pill ok">pago em ${br(p.pago)}</span>` : p.venc < hoje ? `<span class="pill atraso">em atraso</span>` : `<span class="pill">vence ${quandoTxt(p.venc)}</span>`}</span></li>`).join("")}</ul>` : `<p class="vazio">Nenhum pagamento lançado.</p>`)}
       </div>
-      ${(d.feitos || []).length ? `<div class="cartao"><h2>✔️ O que já fizemos</h2><ul class="lista linha-feitos">${d.feitos.map((f) => `<li><span class="data">${br(f.data)}</span><span>${esc(f.texto)}</span></li>`).join("")}</ul></div>` : ""}
-      ${d.guia ? `<div class="cartao"><h2>📖 Entenda o seu caso</h2><p style="margin:0"><b>${esc(d.guia.t)}</b></p><ol class="passos">${d.guia.passos.map((x) => `<li>${esc(x)}</li>`).join("")}</ol><p class="small muted" style="margin:0">⏱️ ${esc(d.guia.tempo)} Cada caso é único: a advogada explica o que vale para o seu.</p></div>` : ""}
-      <div class="cartao">
-        <h2>⚖️ Seus processos</h2>
-        ${(d.processos || []).length ? d.processos.map((p) => `<div class="proc"><div><span class="num">${esc(p.numero)}</span> ${p.tribunal ? `<span class="pill">${esc(p.tribunal)}</span>` : ""}<br><span class="small muted">${esc([p.classe, p.orgao].filter(Boolean).join(" · "))}</span></div>
-          ${(p.eventos || []).length ? `<ul class="lista">${p.eventos.map((e) => `<li><span class="data">${br(e.data)}</span><span><b>${esc(e.titulo)}</b>${e.explicacao ? `<br><span class="small">Em palavras simples: ${esc(e.explicacao)}.</span>` : ""}</span></li>`).join("")}</ul>` : `<p class="vazio">Ainda sem movimentações registradas.</p>`}</div>`).join("") : `<p class="vazio">Ainda não há processo judicial. Quando houver, as novidades aparecem aqui.</p>`}
-        <p class="small muted">As movimentações são resumidas para facilitar. A análise de cada etapa é feita pela advogada, que avisa você do que for importante.</p>
-      </div>
-      ${(d.glossario || []).length ? `<div class="cartao"><h2>📚 Palavras do seu processo</h2><dl class="glossario">${d.glossario.map(([t, e]) => `<dt>${esc(t)}</dt><dd>${esc(e)}</dd>`).join("")}</dl></div>` : ""}
-      <div class="cartao">
-        <h2>💬 Fale com a advogada ${(() => { let v = ""; try { v = localStorage.getItem("ma-visto-" + token.slice(0, 8)) || ""; localStorage.setItem("ma-visto-" + token.slice(0, 8), new Date().toISOString()); } catch {} const n = (d.conversa || []).filter((m) => m.de === "advogada" && String(m.em) > v).length; return n && v ? `<span class="pill">${n} resposta(s) nova(s)</span>` : ""; })()}</h2>
-        <p class="small muted" style="margin:0">${d.advogada ? `Seu caso é cuidado por <b>${esc(d.advogada)}</b>. ` : ""}${esc(d.contato?.horario || "")}. ${esc(d.contato?.resposta || "")}</p>
-        ${(d.conversa || []).length ? `<ul class="lista small">${d.conversa.slice(0, 10).map((m) => `<li><span class="data">${new Date(m.em).toLocaleDateString("pt-BR")}</span><span><b>${m.de === "advogada" ? "Advogada" : "Você"}:</b> ${esc(m.texto)}</span></li>`).join("")}</ul>` : (d.mensagens || []).length ? `<ul class="lista small">${d.mensagens.slice(0, 5).map((m) => `<li><span class="data">${new Date(m.criado).toLocaleDateString("pt-BR")}</span><span>${esc(m.texto)}</span></li>`).join("")}</ul>` : ""}
-        <textarea id="ma-msg" rows="3" maxlength="2000" placeholder="Escreva sua dúvida ou recado. A resposta aparece aqui nesta conversa."></textarea>
-        <div class="acoes"><button class="btn" id="ma-enviar">Enviar mensagem</button><a class="btn btn-wa" href="https://wa.me/${WA}?text=${encodeURIComponent(`Olá! Sou ${d.nome} e queria falar sobre o meu caso.`)}" target="_blank" rel="noopener">WhatsApp</a><span class="small" id="ma-msg-st"></span></div>
-      </div>
-      ${(d.duvidas || []).length ? `<div class="cartao"><h2>❓ Dúvidas comuns</h2>${d.duvidas.map(([q, a]) => `<details class="duvida"><summary>${esc(q)}</summary><p>${esc(a)}</p></details>`).join("")}</div>` : ""}
+
+      ${sec("conversa", "💬", "Conversa com a advogada", `
+        <p class="small muted" style="margin:0">${esc(d.contato?.horario || "")}. ${esc(d.contato?.resposta || "")}</p>
+        <div class="chat">${(d.conversa || []).length ? [...d.conversa].reverse().slice(-12).map((m) => `<div class="msg ${m.de === "advogada" ? "dela" : "minha"}"><span>${esc(m.texto)}</span><small>${m.de === "advogada" ? "Advogada" : "Você"} · ${new Date(m.em).toLocaleString("pt-BR", { dateStyle: "short", timeStyle: "short" })}</small></div>`).join("") : `<p class="vazio">Ainda não há mensagens. Escreva sua dúvida abaixo.</p>`}</div>
+        <textarea id="ma-msg" rows="3" maxlength="2000" placeholder="Escreva sua dúvida ou recado. A resposta aparece aqui."></textarea>
+        <div class="acoes"><button class="btn" id="ma-enviar">Enviar mensagem</button><a class="btn btn-wa" href="https://wa.me/${WA}?text=${encodeURIComponent(`Olá! Sou ${d.nome} e queria falar sobre o meu caso.`)}" target="_blank" rel="noopener">WhatsApp</a><span class="small" id="ma-msg-st"></span></div>`, novas && visto ? ` <span class="pill">${novas} nova(s)</span>` : "")}
+
+      ${sec("entenda", "📖", "Entenda o seu caso", `
+        ${d.guia ? `<p style="margin:0"><b>${esc(d.guia.t)}</b></p><ol class="passos">${d.guia.passos.map((x) => `<li>${esc(x)}</li>`).join("")}</ol><p class="small muted" style="margin:0">⏱️ ${esc(d.guia.tempo)} Cada caso é único: a advogada explica o que vale para o seu.</p>` : ""}
+        ${(d.glossario || []).length ? `<h3 class="small">Palavras que aparecem no seu processo</h3><dl class="glossario">${d.glossario.map(([t, e]) => `<dt>${esc(t)}</dt><dd>${esc(e)}</dd>`).join("")}</dl>` : ""}
+        <h3 class="small">Seus direitos durante o atendimento</h3>
+        <ul class="small"><li>Receber informações claras sobre o andamento e pedir cópia das peças e documentos do seu caso.</li><li>Ser avisado(a) com antecedência quando precisar comparecer ou enviar algo.</li><li>Ter seus dados protegidos e pedir a correção ou a exclusão quando o caso terminar (LGPD).</li><li>Fazer perguntas sempre que quiser — nenhuma dúvida é boba.</li></ul>
+        ${(d.duvidas || []).length ? `<h3 class="small">Dúvidas comuns</h3>${d.duvidas.map(([q, a]) => `<details class="duvida"><summary>${esc(q)}</summary><p>${esc(a)}</p></details>`).join("")}` : ""}`)}
+
+      <p class="small muted so-tela"><button class="linkbtn" onclick="window.print()">🖨️ Imprimir ou salvar um resumo do meu caso</button></p>
       <p class="small muted">🔒 Este link é pessoal: não compartilhe. As informações são um resumo para acompanhamento; a orientação sobre o seu caso é sempre dada pela advogada.</p>`;
+    const chat = document.querySelector(".chat"); if (chat) chat.scrollTop = chat.scrollHeight;
     $("ma-enviar").onclick = async () => {
       const t = $("ma-msg").value.trim(); if (!t) return;
       $("ma-enviar").disabled = true;

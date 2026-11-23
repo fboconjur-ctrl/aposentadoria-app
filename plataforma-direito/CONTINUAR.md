@@ -57,3 +57,10 @@ Prévia: https://deploy-preview-1--prevcalculadora.netlify.app/plataforma-direit
 ## Leitura do relato com IA (/api/analisar)
 - Função `netlify/functions/analisar.mjs`. Precisa da variável `ANTHROPIC_API_KEY` no Netlify (Site settings → Environment variables). Sem a chave, o portal usa a leitura por palavras-chave.
 - A IA só organiza os fatos, aponta o que a pessoa já fez e escolhe, entre os trechos JÁ REVISADOS dos roteiros, os que se relacionam com o relato. Não conclui nada sobre o caso. O texto não é guardado.
+
+## Ideias guardadas para depois (23/11/2026)
+- Página de agendamento: titular define dias/horários livres; cliente escolhe pelo site ou área do cliente; cai na agenda e no Google Agenda; lembrete na véspera.
+- Follow-up automático por e-mail (documento pendente, atualização mensal, contato que sumiu) — depende da chave do Resend na Netlify.
+- WhatsApp 24h só pela API oficial da Meta (custo por conversa, número dedicado); robô só acolhe e agenda, sem orientação jurídica (OAB). Nada de ferramenta não oficial.
+- NÃO fazer: prospecção de empresas (Google Maps / "empresas da cidade") — captação vedada pela OAB.
+- Pendências da titular: publicar o app no Google (Branding + Publicar app), testar Entrar com Google e Salvar no Drive; revisar e publicar o termo de adesão dos associados; ligar Resend; desligar prévias de deploy na Netlify; proteção de senha vazada no Supabase.
