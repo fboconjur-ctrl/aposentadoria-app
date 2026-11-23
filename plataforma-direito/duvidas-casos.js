@@ -48,3 +48,80 @@ const DUVIDAS_CASOS = {
     ["Qual o prazo para pedir?", "Se o pedido for feito logo (em geral até 90 dias do falecimento, para a maioria dos dependentes), a pensão é paga desde a data da morte. Depois disso, é paga só a partir do pedido. Por isso, não deixe para depois."],
   ],
 };
+
+Object.assign(DUVIDAS_CASOS, {
+  "plano-negou": [
+    ["O plano pode negar se o procedimento não está no rol da ANS?", "Nem sempre. Desde 2022, a lei (Lei 14.454/2022) permite a cobertura de tratamentos fora do rol quando há comprovação de eficácia ou recomendação técnica, entre outros critérios. Cada caso precisa ser analisado com o relatório do médico."],
+    ["O plano tem que me dar a negativa por escrito?", "Sim. Você pode pedir a negativa por escrito, com o motivo, e o plano deve fornecer. Anote também o número de protocolo de cada ligação. Esses documentos são essenciais para reclamar na ANS ou na Justiça."],
+    ["É urgente. Dá para resolver rápido?", "Quando há risco à saúde, é possível pedir ao juiz uma decisão urgente (liminar), que costuma ser analisada em poucos dias. Para isso, o relatório médico precisa explicar a urgência e o risco de esperar."],
+    ["Reclamar na ANS adianta?", "Muitas vezes, sim. A reclamação na ANS (pelo site ou telefone 0800 701 9656) abre uma mediação com o plano, que tem prazo para responder. Pode resolver sem processo — e o protocolo ainda serve de prova."],
+    ["E se eu pagar do meu bolso para não esperar?", "Guarde todas as notas e recibos. Se a negativa for considerada indevida, é possível pedir o reembolso, além de indenização em alguns casos."],
+    ["O que o relatório do médico precisa dizer?", "O diagnóstico (CID), o tratamento indicado, por que ele é necessário no seu caso, se há alternativa e qual o risco de não fazer ou de atrasar. Quanto mais detalhado, mais forte o pedido."],
+  ],
+  "prazo-atendimento": [
+    ["Existe prazo máximo para o plano marcar consulta?", "Sim. A ANS fixa prazos máximos de atendimento (por exemplo, consultas básicas e exames simples têm prazos de poucos dias úteis). Se o plano não cumprir, ele deve oferecer outro prestador ou reembolsar."],
+    ["Não tem médico disponível na rede. O que faço?", "Peça ao plano, por escrito ou com protocolo, a indicação de um profissional dentro do prazo. Se não houver, você pode ser atendido fora da rede e pedir reembolso, conforme as regras da ANS."],
+    ["Adianta reclamar na ANS?", "Sim. A reclamação abre uma notificação ao plano, que precisa resolver em prazo curto. Guarde o número do protocolo."],
+    ["É urgência ou emergência. Tem carência?", "Em urgência e emergência, a carência máxima é de 24 horas após a contratação. Depois disso, o plano deve atender."],
+  ],
+  "liminar-medicamento": [
+    ["O SUS tem que me dar um remédio que não está na lista?", "Pode ter, mas há requisitos definidos pelos tribunais superiores: comprovação de que o remédio é necessário, de que os da lista não servem para o seu caso, de que você não pode pagar e de que o remédio tem registro na Anvisa, entre outros. O relatório médico é a peça principal."],
+    ["E o plano de saúde, tem que fornecer remédio?", "Depende do tipo de remédio e de como ele é usado. Medicamentos de uso em internação ou alguns tratamentos (como certos quimioterápicos orais) costumam ter cobertura. Remédios de uso domiciliar em geral não, salvo exceções."],
+    ["Quanto tempo demora uma liminar?", "Quando há urgência bem demonstrada, o juiz costuma decidir em poucos dias. O cumprimento pode demorar um pouco mais, e a advogada acompanha e cobra."],
+    ["Que documentos preciso juntar?", "Receita e relatório médico detalhado, exames, a negativa do plano ou do posto (ou protocolo do pedido), comprovantes de renda e, se possível, orçamentos do remédio."],
+  ],
+  "reajuste-idade": [
+    ["O plano pode aumentar o valor por causa da idade?", "Pode, mas dentro de regras. Os reajustes por faixa etária precisam estar previstos no contrato, seguir os limites da ANS e não podem ser abusivos. Para contratos mais recentes, não há reajuste por idade depois dos 60 anos."],
+    ["Meu reajuste anual foi muito alto. É legal?", "Nos planos individuais, o limite é definido pela ANS todo ano. Nos coletivos (por empresa ou associação), o reajuste é negociado, mas precisa ser justificado e não pode ser abusivo. A análise depende do contrato e dos números."],
+    ["Consigo de volta o que paguei a mais?", "Se o reajuste for considerado abusivo, é possível pedir a devolução das diferenças, em regra dos últimos anos (respeitado o prazo legal), além da correção das próximas mensalidades."],
+    ["O que preciso para analisar?", "O contrato, os boletos (para ver a evolução dos valores) e as cartas de reajuste do plano."],
+  ],
+  "tea-terapia": [
+    ["O plano é obrigado a cobrir terapias para autismo?", "Sim. A ANS determinou a cobertura das terapias indicadas pelo médico para pessoas com TEA (como psicologia, fonoaudiologia e terapia ocupacional, inclusive com métodos como ABA), sem limite de sessões."],
+    ["O plano limita o número de sessões. Pode?", "Não. Para TEA e outros transtornos globais do desenvolvimento, não pode haver limite de sessões quando há indicação médica."],
+    ["Não há profissional habilitado na rede. E agora?", "O plano deve indicar um profissional apto. Se não indicar, é possível buscar fora da rede e pedir o reembolso, ou pedir na Justiça que o plano custeie."],
+    ["O que o relatório deve conter?", "Diagnóstico, terapias indicadas, método, carga horária semanal e justificativa. Relatórios genéricos enfraquecem o pedido."],
+  ],
+  "manter-plano": [
+    ["Fui demitido(a). Posso continuar no plano da empresa?", "Se você contribuía com parte da mensalidade e foi demitido sem justa causa, pode manter o plano por um período, assumindo o pagamento integral. O prazo depende de quanto tempo você contribuiu."],
+    ["E se eu me aposentei?", "O aposentado que contribuiu para o plano também pode continuar, assumindo o valor integral. Com 10 anos ou mais de contribuição, pode ficar por tempo indeterminado; com menos, por um período proporcional."],
+    ["Preciso avisar até quando?", "Há um prazo curto para manifestar o interesse depois do desligamento. Não deixe passar: peça a manutenção por escrito assim que receber a comunicação da empresa."],
+    ["A empresa pagava tudo. Tenho esse direito?", "Em regra, não: o direito é de quem contribuía com parte da mensalidade. Mas vale conferir o contracheque, porque às vezes havia desconto."],
+  ],
+  "superendividamento": [
+    ["O que é superendividamento?", "É quando a pessoa, de boa-fé, não consegue pagar as dívidas de consumo sem comprometer o mínimo para viver (moradia, alimentação, saúde). A lei (Lei 14.181/2021) criou um caminho para renegociar tudo junto."],
+    ["Como funciona a renegociação?", "É feito um plano de pagamento com todos os credores ao mesmo tempo, em audiência de conciliação, preservando o mínimo existencial. Se algum credor não aceitar, o juiz pode definir um plano obrigatório."],
+    ["Todas as dívidas entram?", "As dívidas de consumo, sim (cartão, empréstimo, cheque especial, contas). Algumas ficam de fora, como financiamento imobiliário com garantia, dívidas de crédito rural e as contraídas com má-fé."],
+    ["Vou ficar com o nome sujo?", "A renegociação busca justamente organizar a situação. Durante o plano, as condições são definidas para você conseguir pagar. A advogada orienta sobre o efeito nos cadastros em cada caso."],
+    ["O banco desconta quase todo o meu salário. Pode?", "Há limites para descontos em folha (margem consignável) e a Justiça pode limitar descontos que comprometam o seu sustento. Separe os contracheques e os extratos."],
+  ],
+  "consignado-nao-contratado": [
+    ["Apareceu um empréstimo que eu não fiz. O que faço primeiro?", "Registre reclamação no banco (anote o protocolo), faça boletim de ocorrência e, se for aposentado, bloqueie o benefício para novos empréstimos no Meu INSS. Não gaste o dinheiro que caiu na conta: ele pode ter que ser devolvido."],
+    ["O dinheiro caiu na minha conta. Posso usar?", "Não use. Se o contrato não foi feito por você, o ideal é devolver ou deixar o valor separado, para mostrar boa-fé. A advogada orienta a forma de devolução."],
+    ["Recebo de volta as parcelas descontadas?", "Sim, se o contrato for anulado. Em muitos casos, a devolução é em dobro, e pode haver indenização por danos morais."],
+    ["Quais provas preciso?", "Extrato do benefício ou contracheque com os descontos, extrato da conta mostrando o depósito, protocolos de reclamação e o boletim de ocorrência."],
+  ],
+  "pix-golpe": [
+    ["Caí em um golpe no Pix. Ainda dá para recuperar?", "Às vezes, sim. Avise o seu banco imediatamente e peça o MED (Mecanismo Especial de Devolução), que pode bloquear o valor na conta do golpista. Quanto mais rápido, maior a chance."],
+    ["O banco é responsável?", "Depende. Se houve falha de segurança do banco (por exemplo, transações muito fora do seu padrão sem bloqueio, ou falha no atendimento), ele pode ser responsabilizado. Cada caso precisa ser analisado."],
+    ["Preciso fazer boletim de ocorrência?", "Sim. O BO, os prints da conversa com o golpista e os comprovantes do Pix são as principais provas."],
+    ["Qual o prazo para pedir o MED?", "O pedido deve ser feito o quanto antes. Há prazo limite contado da transação, e depois disso o mecanismo não pode mais ser usado."],
+  ],
+  "busca-apreensao": [
+    ["Atrasei parcelas do carro. O banco pode tomar o carro?", "Em contratos com alienação fiduciária, sim, após a notificação do atraso o banco pode pedir a busca e apreensão na Justiça. Por isso é importante agir logo ao receber a notificação."],
+    ["Dá para evitar perder o carro?", "Às vezes. É possível negociar, discutir cobranças abusivas no contrato ou, depois da apreensão, pagar a dívida em prazo curto definido pela lei para reaver o bem. A análise depende do contrato e do momento."],
+    ["O carro foi levado. E agora?", "Há um prazo curto (contado da apreensão) para pagar a dívida e ter o carro de volta, ou para apresentar defesa. Procure a advogada imediatamente."],
+    ["E se o banco vender o carro por menos do que devo?", "O valor da venda é abatido da dívida. O banco deve prestar contas. Se sobrar dívida, ela pode ser cobrada; se sobrar dinheiro, ele é seu."],
+  ],
+  "negativado": [
+    ["Fui negativado sem aviso. Pode?", "A inclusão no cadastro de inadimplentes precisa ser precedida de comunicação ao consumidor. Se não houve aviso, ou se a dívida não existe, a negativação pode ser cancelada."],
+    ["A dívida não é minha. Tenho direito a indenização?", "Negativação indevida costuma gerar indenização por danos morais, mas há exceções (por exemplo, quando a pessoa já tinha outras negativações legítimas). A advogada analisa com o seu relatório de crédito."],
+    ["Paguei, mas meu nome continua sujo. O que fazer?", "Depois do pagamento, o credor tem prazo curto (5 dias úteis) para pedir a retirada. Guarde o comprovante e, se não sair, reclame."],
+    ["Quanto tempo uma dívida pode ficar no meu nome?", "No máximo 5 anos. Depois disso, a informação deve ser retirada, mesmo que a dívida não tenha sido paga."],
+  ],
+  "compra-nao-reconhecida": [
+    ["Apareceram compras que eu não fiz. O que faço?", "Bloqueie o cartão, conteste as compras no banco (anote o protocolo) e registre boletim de ocorrência. Não pague as compras contestadas sem orientação."],
+    ["O banco disse que a compra foi com chip e senha, então é minha. E agora?", "Mesmo assim, o banco pode ser responsabilizado se houve falha de segurança, compras fora do seu padrão ou se a contestação foi mal analisada. Reúna as faturas e a resposta do banco."],
+    ["Tenho direito ao dinheiro de volta?", "Se a compra não foi feita por você e não houve culpa sua, sim. E se a cobrança indevida foi paga, pode haver devolução em dobro em alguns casos."],
+  ],
+});
