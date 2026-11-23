@@ -752,3 +752,4 @@ bindHomeDoc();
   addEventListener("scroll", ver, { passive: true }); addEventListener("resize", ver); setInterval(ver, 800); ver();
 })();
 document.getElementById("ir-temas")?.addEventListener("click", (e) => { e.preventDefault(); document.getElementById("shortcuts").scrollIntoView({ behavior: "smooth", block: "start" }); });
+document.getElementById("ir-temas2")?.addEventListener("click", (e) => { e.preventDefault(); document.getElementById("shortcuts").scrollIntoView({ behavior: "smooth", block: "start" }); });

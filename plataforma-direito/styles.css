@@ -403,3 +403,13 @@ body:has(#view-result.active .barra-acao) .wa-float { display: none; }
 @media (max-width: 560px) { .caminhos { grid-template-columns: 1fr; } }
 .rt-atalho { background: color-mix(in srgb, #1fa855 8%, var(--surface)); border-radius: 12px; padding: 10px 14px; font-size: .95rem; }
 .rt-atalho a { color: #1a8f48; font-weight: 700; }
+/* ---------- Jornada e "antes de contratar" ---------- */
+.jornada, .antes { max-width: 880px; margin: 40px auto; padding: 0 16px; }
+.jornada h2, .antes h2 { font-family: var(--font-display); font-size: clamp(1.4rem, 3.4vw, 2rem); margin: 4px 0 18px; }
+.jornada-passos { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; position: relative; }
+.jornada-passos li { display: flex; gap: 14px; align-items: flex-start; background: var(--surface); border: 1px solid var(--line); border-radius: 18px; padding: 16px; box-shadow: var(--shadow); }
+.j-num { flex: none; width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; font-weight: 800; color: #fff; background: var(--brand); }
+.jornada-passos h3 { margin: 2px 0 4px; font-size: 1.05rem; } .jornada-passos p { margin: 0; color: var(--muted); }
+.jornada-acoes { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 16px; }
+.antes .duvida { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 12px 16px; margin-bottom: 8px; }
+.antes .duvida summary { cursor: pointer; font-weight: 600; } .antes .duvida p { margin: 8px 0 0; color: var(--muted); }
