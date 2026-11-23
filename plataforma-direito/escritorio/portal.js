@@ -56,7 +56,7 @@
       docsStatus: ["Contratado", "Caso ativo"].includes(c.etapa) ? (window.docsStatus?.(c) || []) : [],
       feitos: feitos(c), guia: GUIA[c.area] || null, duvidas: DUVIDAS,
       conversa: [...(c.msgsPortal || []).map((m) => ({ de: "voce", texto: m.texto, em: m.em })), ...(c.respostasPortal || []).map((m) => ({ de: "advogada", texto: m.texto, em: m.em }))].sort((x, y) => String(y.em).localeCompare(String(x.em))).slice(0, 30),
-      contato: { horario: "Segunda a sexta, das 9h às 18h", resposta: "Respondemos em até 1 dia útil." },
+      contato: { horario: "Segunda, quarta e sexta, das 9h às 12h; terça e quinta, das 14h às 17h. Depois das 17h, só com consulta paga. Não atendemos aos sábados, domingos e feriados", resposta: "Respondemos em até 1 dia útil." },
     };
     const textoProc = JSON.stringify(d.processos);
     d.glossario = GLOSSARIO.filter(([re]) => re.test(textoProc)).map(([, t, e]) => [t, e]);
