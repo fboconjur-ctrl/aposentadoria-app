@@ -238,5 +238,6 @@
 
   // ---------- Abrir direto pelo link (?s=situacao) ----------
   const s = new URLSearchParams(location.search).get("s");
-  if (s && !abrir(s)) history.replaceState(null, "", location.pathname);
+  // Espera os outros scripts (melhorias2.js) terminarem de se ligar antes de abrir.
+  if (s) setTimeout(() => { if (!abrir(s)) history.replaceState(null, "", location.pathname); }, 0);
 })();
