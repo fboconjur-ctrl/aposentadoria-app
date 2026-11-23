@@ -18,7 +18,7 @@
     </form>
     <p class="small muted" id="login-msg" role="alert"></p>
     <p class="small"><button type="button" class="linkish" id="login-criar">Primeiro acesso? Criar minha senha</button></p>
-    <p class="small"><button type="button" class="linkish" id="login-esqueci">Esqueci minha senha</button></p></div>`;
+    <p class="small"><button type="button" class="linkish" id="login-esqueci">Esqueci minha senha</button></p><p class="small muted"><a href="../privacidade/">Política de privacidade</a></p></div>`;
   document.body.appendChild(capa);
   if (CFG.google === "auto") fetch(`${CFG.url}/auth/v1/settings`, { headers: { apikey: CFG.anonKey } }).then((r) => r.json()).then((d) => { if (d?.external?.google) document.getElementById("login-google-box").hidden = false; }).catch(() => {});
   const msg = (t) => (document.getElementById("login-msg").textContent = t);
