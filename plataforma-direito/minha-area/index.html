@@ -75,6 +75,7 @@
   .msg.minha { justify-self: end; background: color-mix(in srgb, var(--brand) 12%, var(--surface)); border-bottom-right-radius: 4px; }
   .msg.dela { justify-self: start; background: var(--tint); border-bottom-left-radius: 4px; }
   .recibos { display: grid; gap: 8px; } .recibo { display: flex; justify-content: space-between; align-items: center; gap: 10px; border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px; } .recibo.geral { border-color: var(--ok, #157f3b); background: #e3f5ea; }
+  .rt-aviso { background: var(--amber-soft, #fff6e5); border-left: 4px solid var(--amber); border-radius: 10px; padding: 10px 12px; }
   .linkbtn { background: none; border: 0; color: inherit; text-decoration: underline; cursor: pointer; padding: 0; font: inherit; }
   @media (max-width: 720px) { .resumo { grid-template-columns: 1fr; } .heroi { padding: 16px; } }
   @media print { .atalhos, .chips, .chat { display: none !important; } details { display: block; } }
@@ -148,6 +149,7 @@
   const PREPARO = [[/audi[êe]ncia/i, ["Chegue (ou entre na sala virtual) 15 minutos antes.", "Leve documento com foto.", "Fale a verdade, com calma; se não souber, diga que não sabe.", "Combine antes com a advogada o que será tratado."]], [/per[íi]cia/i, ["Leve documento com foto e todos os laudos, exames e receitas.", "Explique ao perito o que sente no dia a dia, sem exagerar nem minimizar.", "Leve a lista de remédios que usa."]], [/consulta|reuni/i, ["Separe os documentos que você tem sobre o caso.", "Anote suas dúvidas para não esquecer."]]];
   const preparo = (t) => (PREPARO.find(([re]) => re.test(t)) || [, null])[1];
   const gcal = (a) => { const d = a.quando.replace(/-/g, ""), h = (a.hora || "").replace(":", ""); const ini = h ? `${d}T${h}00` : d, fim = h ? `${d}T${String(Math.min(23, +h.slice(0, 2) + 1)).padStart(2, "0")}${h.slice(2)}00` : d; return "https://calendar.google.com/calendar/render?" + new URLSearchParams({ action: "TEMPLATE", text: a.texto, dates: `${ini}/${fim}`, location: a.local || "" }); };
+  const AVISO = "Mesmo com os documentos enviados e o contrato assinado, o caso só começa a andar depois da conversa com a advogada, que é agendada após o pagamento da entrada ou da consulta.";
   const dias = (iso) => Math.round((new Date(iso + "T12:00:00") - new Date(hoje + "T12:00:00")) / 864e5);
   const quandoTxt = (iso) => { const n = dias(iso); return n === 0 ? "hoje" : n === 1 ? "amanhã" : n > 1 ? `em ${n} dias` : `há ${-n} dia(s)`; };
 
@@ -184,6 +186,7 @@
       <nav class="atalhos">${[...((d.assinar || []).some((a) => !a.assinado) ? [["#assinar", "Assinar"]] : []), ["#caminho", "Etapas"], ["#processo", "Processo"], ["#docs", "Documentos"], ["#agenda", "Agenda"], ["#pagamentos", "Pagamentos"], ["#conversa", "Conversa"], ["#entenda", "Entenda"]].map(([h, t]) => `<a href="${h}">${t}</a>`).join("")}</nav>
 
       ${sec("caminho", "🧭", "O caminho do seu caso", `
+        ${idx <= 3 ? `<p class="rt-aviso small" style="margin:0">⚠️ ${AVISO}</p>` : ""}
         <ol class="trilha">${(d.etapas || []).map((t, i) => `<li class="${i < idx ? "feito" : i === idx ? "atual" : ""}"><span class="bola">${i < idx ? "✓" : i + 1}</span><span>${esc(t)}${i === idx ? `<br><span class="small">${esc(d.proximo || "")}</span>` : ""}</span></li>`).join("")}</ol>
         ${(d.feitos || []).length ? `<details><summary class="small"><b>Tudo o que já foi feito (${d.feitos.length})</b></summary><ul class="lista small" style="margin-top:8px">${d.feitos.map((f) => `<li><span class="data">${br(f.data)}</span><span>${esc(f.texto)}</span></li>`).join("")}</ul></details>` : ""}`)}
 
@@ -196,7 +199,7 @@
 
       ${d.proposta ? sec("proposta", "📄", "Proposta de honorários", `
         <div class="recibo${d.proposta.aceita ? " geral" : ""}"><span><b>Proposta nº ${esc(d.proposta.num)}</b><br><span class="small muted">${d.proposta.aceita ? `✅ Você aceitou em ${new Date(d.proposta.aceita).toLocaleDateString("pt-BR")}` : `Válida até ${br(d.proposta.validade)}`}</span></span><button class="btn" id="ma-prop-ver">Ver proposta</button></div>
-        ${d.proposta.aceita ? `<p class="small" style="margin:0">Próximo passo: o contrato e a procuração para assinar pelo gov.br.</p>` : `<p class="small" style="margin:0">Leia com calma. Se tiver dúvida, pergunte na conversa abaixo. Quando estiver de acordo, toque em aceitar.</p>
+        ${d.proposta.aceita ? `<p class="small" style="margin:0">Próximo passo: o contrato e a procuração para assinar pelo gov.br.</p><p class="rt-aviso small" style="margin:0">⚠️ ${AVISO}</p>` : `<p class="small" style="margin:0">Leia com calma. Se tiver dúvida, pergunte na conversa abaixo. Quando estiver de acordo, toque em aceitar.</p>
         <label class="small"><input type="checkbox" id="ma-prop-ok"> Li a proposta e estou de acordo.</label>
         <div class="acoes"><button class="btn" id="ma-prop-aceitar">✅ Aceito a proposta</button><span class="small" id="ma-prop-st"></span></div>`}`) : ""}
       ${(d.assinar || []).length ? sec("assinar", "✍️", "Documentos para você assinar", `

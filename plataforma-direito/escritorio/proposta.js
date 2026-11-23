@@ -53,7 +53,7 @@
       <h2>Outras condições</h2><ul>
         <li>Custas, perícias e demais despesas do processo ficam por conta do cliente, sempre com aviso prévio.</li>
         <li>Honorários de sucumbência eventualmente fixados pelo juiz pertencem à advogada (Lei 8.906/1994, art. 23) e não se confundem com os honorários acima.</li>
-        <li>O trabalho começa após a assinatura do contrato de honorários e da procuração (pode ser pelo gov.br).</li>
+        <li>O trabalho começa após a assinatura do contrato de honorários e da procuração (pode ser pelo gov.br) <b>e da conversa com a advogada, agendada após o pagamento da entrada ou da consulta</b>. Mesmo com os documentos já enviados, o caso só segue depois dessa conversa.</li>
         <li>Não há garantia de resultado: a advocacia é atividade de meio, e a advogada se compromete com a atuação técnica e diligente.</li>
         ${d.obs ? `<li>${e(d.obs)}</li>` : ""}</ul>
       <p class="nota">Proposta elaborada conforme o Código de Ética e Disciplina da OAB e a tabela de honorários da Seccional.</p>
