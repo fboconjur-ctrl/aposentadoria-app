@@ -2,7 +2,7 @@
 // Usa a mesma pesquisa pública do site jurisprudencia.tst.jus.br (dados públicos) e devolve
 // só o necessário: número, turma, relator, datas, ementa e dispositivo. Nada é guardado aqui.
 const API = "https://jurisprudencia-backend.tst.jus.br/rest/pesquisa-textual";
-const ORIGENS = [/^https:\/\/(www\.)?plataformadodireito\.com\.br$/, /^https:\/\/[\w-]+(--[\w-]+)?\.netlify\.app$/, /^http:\/\/localhost(:\d+)?$/];
+const ORIGENS = [/^https:\/\/(www\.)?plataformadodireito\.com\.br$/, /^https:\/\/[\w-]+(--[\w-]+)?\.netlify\.app$/, /^https:\/\/([\w-]+\.)?plataformadodireito\.pages\.dev$/, /^http:\/\/localhost(:\d+)?$/];
 const limpa = (s) => String(s || "").replace(/<[^>]+>/g, " ").replace(/&nbsp;/g, " ").replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&quot;/g, '"').replace(/\s+/g, " ").trim();
 const titulo = (s) => String(s || "").replace(/\b\w/g, (c) => c.toUpperCase());
 

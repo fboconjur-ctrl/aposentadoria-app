@@ -12,3 +12,5 @@ export default async (req) => {
     headers: { 'content-type': r.headers.get('content-type') || 'image/jpeg', 'cache-control': 'public, max-age=86400' },
   });
 };
+
+export const config = { path: "/api/ig-image" };

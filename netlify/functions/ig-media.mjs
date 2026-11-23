@@ -30,3 +30,5 @@ export default async (req) => {
   }
   return Response.json({ username: user.username, posts });
 };
+
+export const config = { path: "/api/ig-media" };
