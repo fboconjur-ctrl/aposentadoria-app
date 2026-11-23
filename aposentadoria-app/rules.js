@@ -44,7 +44,7 @@
       : sex === "female"
         ? 91
         : 101;
-    const cap = sex === "female" ? 100 : 105;
+    const cap = teacher ? (sex === "female" ? 92 : 100) : sex === "female" ? 100 : 105; // EC 103/2019, art. 15, §§1º e 3º
     return Math.min(cap, base + Math.max(0, year - baseYear));
   }
 
@@ -80,6 +80,16 @@
     return estimateDateFromMissingMonths({}, requiredMonths - currentMonths);
   }
 
+  // Procura o primeiro mês (a partir de hoje) em que a condição é cumprida, supondo que a pessoa continue contribuindo.
+  // Necessário porque a pontuação e a idade mínima exigidas sobem a cada ano (EC 103/2019, arts. 15 e 16).
+  function firstMonthWhere(check, limit = 600) {
+    for (let m = 0; m <= limit; m++) {
+      const date = addMonths(REFERENCE_DATE, m);
+      if (check(date, m)) return date;
+    }
+    return addMonths(REFERENCE_DATE, limit);
+  }
+
   function laterDate(...dates) {
     return dates.reduce((latest, date) => (date > latest ? date : latest), dates[0]);
   }
@@ -98,10 +108,14 @@
     if (!avg) return 0;
     if (ruleType === "pedagio50") return avg * 0.9; // aproximação: na regra real aplica-se o fator previdenciário
     if (ruleType === "pedagio100") return avg; // EC 103/2019, art. 20, §2º, I: 100% da média
-    if (ruleType === "incapacity") return avg * (input.needsThirdPartyCare ? 1.25 : 1);
+    if (ruleType === "pcd-tempo") return avg; // LC 142/2013, art. 8º, I: 100%
+    if (ruleType === "pcd-idade") return avg * Math.min(1, 0.7 + Math.floor(input.contribMonths / 12) * 0.01); // LC 142/2013, art. 8º, II: 70% + 1% por grupo de 12 contribuições
     // EC 103/2019, art. 26, §§2º e 5º: 60% + 2% por ano acima de 20 anos (homens) ou 15 anos (mulheres)
-    const excessYears = Math.max(0, Math.floor(input.contribMonths / 12) - (input.sex === "female" ? 15 : 20));
-    return avg * Math.min(1, 0.6 + excessYears * 0.02);
+    const excessYears = Math.max(0, Math.floor(input.contribMonths / 12) - (input.sex === "female" || (ruleType === "special15") ? 15 : 20));
+    const base = avg * Math.min(1, 0.6 + excessYears * 0.02);
+    // Incapacidade permanente não acidentária: mesma regra (EC 103, art. 26, §2º, III); +25% se precisar de assistência permanente (Lei 8.213, art. 45)
+    if (ruleType === "incapacity") return base * (input.needsThirdPartyCare ? 1.25 : 1);
+    return base;
   }
 
   function result(rule) {
@@ -136,9 +150,11 @@
     const contribReq = teacher ? (input.sex === "female" ? months(25) : months(30)) : input.sex === "female" ? months(30) : months(35);
     const pointsReq = requiredPoints(input.sex, REFERENCE_DATE.getFullYear(), teacher);
     const currentPoints = ageInMonths(input.birthDate) / 12 + input.contribMonths / 12;
-    const missingContribution = Math.max(0, contribReq - input.contribMonths);
-    const missingPointsMonths = Math.max(0, Math.ceil((pointsReq - currentPoints) * 6));
-    const date = estimateDateFromMissingMonths(input, Math.max(missingContribution, missingPointsMonths));
+    const date = firstMonthWhere((d, m) => {
+      const contrib = input.contribMonths + m;
+      return contrib >= contribReq && ageInMonths(input.birthDate, d) / 12 + contrib / 12 >= requiredPoints(input.sex, d.getFullYear(), teacher);
+    });
+    const pointsAtDate = requiredPoints(input.sex, date.getFullYear(), teacher);
     return result({
       id: teacher ? "professor-pontos" : "pontos",
       title: teacher ? "Professor - regra dos pontos" : "Regra dos pontos",
@@ -149,6 +165,7 @@
         `Pontuação exigida em ${REFERENCE_DATE.getFullYear()}: ${pointsReq} pontos`,
         `Tempo mínimo: ${formatMonths(contribReq)}`,
         `Pontuação aproximada atual: ${currentPoints.toFixed(1)}`,
+        ...(date.getFullYear() > REFERENCE_DATE.getFullYear() ? [`Pontuação exigida em ${date.getFullYear()}, quando você cumpriria a regra: ${pointsAtDate} pontos`] : []),
       ],
       notes: teacher ? ["Aplicável quando todo o tempo informado for de magistério na educação básica."] : ["Soma idade e tempo de contribuição."],
       disqualifier: !input.startedBeforeReform ? "Regra de transição: só vale para quem já contribuía até 13/11/2019." : teacher && !input.isTeacher ? "Marque professor(a) para avaliar esta regra." : null,
@@ -158,7 +175,8 @@
   function ruleProgressiveAge(input, teacher = false) {
     const contribReq = teacher ? (input.sex === "female" ? months(25) : months(30)) : input.sex === "female" ? months(30) : months(35);
     const ageReq = progressiveAgeMonths(input.sex, REFERENCE_DATE.getFullYear(), teacher);
-    const date = laterDate(dateWhenAgeReached(input.birthDate, ageReq), contributionDate(input, contribReq));
+    const date = firstMonthWhere((d, m) => input.contribMonths + m >= contribReq && ageInMonths(input.birthDate, d) >= progressiveAgeMonths(input.sex, d.getFullYear(), teacher));
+    const ageAtDate = progressiveAgeMonths(input.sex, date.getFullYear(), teacher);
     return result({
       id: teacher ? "professor-idade-progressiva" : "idade-progressiva",
       title: teacher ? "Professor - idade mínima progressiva" : "Idade mínima progressiva",
@@ -167,6 +185,7 @@
       estimatedBenefit: benefitEstimate(input, "standard"),
       requirements: [
         `Idade mínima em ${REFERENCE_DATE.getFullYear()}: ${formatMonths(ageReq)}`,
+        ...(date.getFullYear() > REFERENCE_DATE.getFullYear() ? [`Idade mínima em ${date.getFullYear()}, quando você cumpriria a regra: ${formatMonths(ageAtDate)}`] : []),
         `Tempo mínimo: ${formatMonths(contribReq)}`,
       ],
       notes: teacher ? ["A idade progressiva do professor atinge limite menor que a regra comum."] : ["A idade sobe seis meses por ano ate o limite legal."],
@@ -219,7 +238,7 @@
   function ruleSpecial(input) {
     const exposure = Number(input.specialExposureYears || 25);
     const pointsReq = exposure === 15 ? 66 : exposure === 20 ? 76 : 86;
-    const currentPoints = ageInMonths(input.birthDate) / 12 + input.specialContributionMonths / 12;
+    const currentPoints = ageInMonths(input.birthDate) / 12 + Math.max(input.contribMonths, input.specialContributionMonths) / 12; // EC 103, art. 21: idade + tempo de contribuição total
     const missingExposure = Math.max(0, months(exposure) - input.specialContributionMonths);
     const missingPointsMonths = Math.max(0, Math.ceil((pointsReq - currentPoints) * 6));
     const date = estimateDateFromMissingMonths(input, Math.max(missingExposure, missingPointsMonths));
@@ -228,7 +247,7 @@
       title: "Transição da aposentadoria especial",
       type: "special",
       eligibleDate: date,
-      estimatedBenefit: benefitEstimate(input, "standard"),
+      estimatedBenefit: benefitEstimate(input, exposure === 15 ? "special15" : "standard"),
       requirements: [
         `Exposição mínima: ${exposure} anos`,
         `Pontuação exigida: ${pointsReq} pontos`,
@@ -255,7 +274,7 @@
       title: "Aposentadoria especial - regra permanente",
       type: "special",
       eligibleDate: date,
-      estimatedBenefit: benefitEstimate(input, "standard"),
+      estimatedBenefit: benefitEstimate(input, exposure === 15 ? "special15" : "standard"),
       requirements: [
         `Idade mínima: ${formatMonths(ageReq)}`,
         `Exposição mínima: ${formatMonths(exposureReq)}`,
@@ -281,7 +300,7 @@
       title: "Pessoa com deficiência - aposentadoria por idade",
       type: "disability",
       eligibleDate: date,
-      estimatedBenefit: benefitEstimate(input, "standard"),
+      estimatedBenefit: benefitEstimate(input, "pcd-idade"),
       requirements: [
         `Idade mínima: ${formatMonths(ageReq)}`,
         "Tempo mínimo na condição de pessoa com deficiência: 15 anos",
@@ -314,7 +333,7 @@
       title: "Pessoa com deficiência - tempo de contribuição",
       type: "disability",
       eligibleDate: date,
-      estimatedBenefit: benefitEstimate(input, "standard"),
+      estimatedBenefit: benefitEstimate(input, "pcd-tempo"),
       requirements: [
         `Grau informado: deficiência ${requirement.label}`,
         `Tempo mínimo: ${formatMonths(requirement.months)}`,
@@ -343,7 +362,7 @@
         input.incapacityCarencyWaived ? "Carência indicada como dispensada" : "Carência mínima operacional: 12 contribuições",
       ],
       notes: [
-        "Depende de parecer da Perícia Médica Federal.",
+        "Depende de parecer da Perícia Médica Federal.", "Se a incapacidade decorre de acidente de trabalho ou doença profissional, o valor é de 100% da média (EC 103/2019, art. 26, §3º, II).",
         input.needsThirdPartyCare ? "Marcado possível acréscimo de 25% por assistência permanente de terceiros." : "Pode haver acréscimo de 25% se houver necessidade de assistência permanente de terceiros.",
       ],
       disqualifier: !input.isPermanentlyIncapable
@@ -368,7 +387,7 @@
         `Idade mínima: ${formatMonths(ageReq)}`,
         "Tempo rural comprovável: 180 meses",
       ],
-      notes: ["Exige comprovação documental do exercício de atividade rural.", "Pode haver análise específica para segurado especial e aposentadoria híbrida."],
+      notes: ["Exige comprovação documental do exercício de atividade rural.", "Pode haver análise específica para segurado especial e aposentadoria híbrida.", "Para o segurado especial (agricultura familiar), o valor costuma ser de um salário mínimo; a estimativa pela média pode não se aplicar."],
       disqualifier: input.isRuralWorker ? null : "Marque trabalhador(a) rural para avaliar esta regra.",
     });
   }
