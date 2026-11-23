@@ -311,6 +311,7 @@ function abrirForm(c) {
   if (!c) { fichaAtual = null; go("ficha"); $("fi-nome").textContent = "Novo cliente"; $("fi-sub").textContent = ""; document.querySelector("#v-ficha .dossie").hidden = true; document.querySelector("#v-ficha .fi-acoes").hidden = true; }
   Object.entries(CAMPOS).forEach(([k, id]) => ($(id).value = c ? c[k] || "" : k === "area" ? "Previdenciário" : k === "origem" ? "Indicação" : ""));
   $("crm-form-titulo").textContent = c ? "Dados do cliente" : "Novo cliente";
+  $("c-mais").open = !!(c && (c.cpf || c.email || c.procs || c.contra));
   $("crm-excluir").hidden = !c; $("crm-form").hidden = false; $("crm-wa").hidden = true; $("c-nome").focus();
 }
 const fecharForm = () => { $("crm-form").hidden = true; document.querySelector("#v-ficha .dossie").hidden = false; document.querySelector("#v-ficha .fi-acoes").hidden = false; };
@@ -320,7 +321,7 @@ $("crm-cancelar").onclick = () => { fecharForm(); if (!fichaAtual) go("clientes"
 $("crm-salvar").onclick = () => {
   const dados = Object.fromEntries(Object.entries(CAMPOS).map(([k, id]) => [k, $(id).value.trim()]));
   if (!dados.nome) { $("c-nome").focus(); return; }
-  if (dados.cpf && !DocId.valido(dados.cpf)) { $("c-cpf").setCustomValidity("CPF ou CNPJ inválido"); $("c-cpf").reportValidity(); return; }
+  if (dados.cpf && !DocId.valido(dados.cpf)) { $("c-mais").open = true; $("c-cpf").setCustomValidity("CPF ou CNPJ inválido"); $("c-cpf").reportValidity(); return; }
   $("c-cpf").setCustomValidity(""); if (dados.cpf) dados.cpf = DocId.formatar(dados.cpf);
   dados.procs = [...dados.procs.matchAll(CNJ_RE)].map(fmtCnj).join("\n") || dados.procs;
   // Conflito de interesses: confere a carteira antes de cadastrar (ou quando muda a parte contrária).

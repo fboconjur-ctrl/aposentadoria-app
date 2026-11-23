@@ -49,7 +49,7 @@
     const nome = c?.nome || $("nc-nome").value.trim();
     if (!nome) { $("nc-msg").textContent = "Informe o nome do cliente (ou escolha um já cadastrado)."; $("nc-nome").focus(); return; }
     const cpf = $("nc-cpf").value.trim();
-    if (cpf && !DocId.valido(cpf)) { $("nc-msg").textContent = "O CPF/CNPJ não confere. Corrija ou deixe em branco."; $("nc-cpf").focus(); return; }
+    if (cpf && !DocId.valido(cpf)) { $("nc-msg").textContent = "O CPF/CNPJ não confere. Corrija ou deixe em branco."; $("nc-cpf").closest("details").open = true; $("nc-cpf").focus(); return; }
     const L = dadosLidos(), agora = new Date().toISOString();
     const procs = [...$("nc-proc").value.matchAll(CNJ_RE)].map(fmtCnj).join("\n");
     if (!c) { c = { id: novoId("CL-"), criado: agora, etapa: "Contratado", hist: [], nome, origem: "Indicação" }; clientes.push(c); }

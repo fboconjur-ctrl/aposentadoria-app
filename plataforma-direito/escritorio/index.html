@@ -57,7 +57,7 @@
 
   <section id="v-clientes" class="oview">
     <header class="ohead"><div><h1>Clientes</h1></div>
-      <div style="display:flex;gap:8px;flex-wrap:wrap"><input id="crm-busca" class="search" placeholder="Buscar nome, telefone, processo"><button class="btn" onclick="abrirNovoCaso()">➕ Novo caso</button><button class="back" id="crm-novo">Só cadastrar cliente</button></div></header>
+      <div style="display:flex;gap:8px;flex-wrap:wrap"><input id="crm-busca" class="search" placeholder="Buscar nome, telefone, processo"><button class="btn" id="crm-novo">➕ Novo cliente</button><button class="back" onclick="abrirNovoCaso()">📂 Novo caso com documentos</button></div></header>
     <details class="panel" id="cli-sug" hidden open>
       <summary><b>Clientes encontrados nos seus processos</b> <span class="small muted" id="cli-sug-n"></span></summary>
       <p class="small">Estes nomes aparecem como partes intimadas nas publicações da sua OAB. A publicação traz <b>também a parte contrária</b>, então confira: deixe marcados só os seus clientes e clique em cadastrar. Os desmarcados não aparecem mais.</p>
@@ -85,19 +85,23 @@
     </form>
     <div class="panel" id="crm-form" hidden>
       <h2 id="crm-form-titulo">Novo cliente</h2>
+      <p class="small muted" style="margin-top:0">Só o nome é obrigatório. O resto você completa quando quiser.</p>
       <div class="crm-grid">
         <label>Nome<input id="c-nome" class="search"></label>
         <label>WhatsApp (com DDD)<input id="c-tel" class="search" inputmode="tel" placeholder="61 99999-9999"></label>
+        <label>Área<select id="c-area" class="search"><option>Previdenciário</option><option>Consumidor</option><option>Saúde</option><option>Administrativo</option><option>Cartório/Extrajudicial</option><option>Trabalhista</option><option>Empresas</option><option>Outra</option></select></label>
+        <label>Assunto (uma linha)<input id="c-assunto" class="search" placeholder="Ex.: Plano negou cirurgia"></label>
+      </div>
+      <details id="c-mais"><summary class="small"><b>Mais dados</b> (CPF/CNPJ, e-mail, processos, parte contrária, origem)</summary>
+      <div class="crm-grid" style="margin-top:8px">
         <label>CPF ou CNPJ<input id="c-cpf" class="search" inputmode="numeric" placeholder="pode completar depois"></label>
         <label>E-mail<input id="c-email" class="search" type="email"></label>
-        <label>Área<select id="c-area" class="search"><option>Previdenciário</option><option>Consumidor</option><option>Saúde</option><option>Administrativo</option><option>Cartório/Extrajudicial</option><option>Trabalhista</option><option>Empresas</option><option>Outra</option></select></label>
         <label>Origem<select id="c-origem" class="search"><option>Plataforma</option><option>Indicação</option><option>WhatsApp</option><option>Instagram</option><option>Google</option><option>Outra</option></select></label>
-        <label class="wide">Assunto (uma linha)<input id="c-assunto" class="search" placeholder="Ex.: Plano negou cirurgia"></label>
         <label class="wide">Processos (números CNJ, um por linha)<textarea id="c-procs" rows="2" class="search"></textarea></label>
         <label class="wide">Parte contrária (nome ou CPF/CNPJ, uma por linha) — usada na verificação de conflito<textarea id="c-contra" rows="2" class="search" placeholder="Ex.: Banco X S/A"></textarea></label>
-      </div>
-      <div id="c-conflito" class="small" hidden></div>
+      </div></details>
       <div style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn" id="crm-salvar">Salvar</button><button class="back" id="crm-cancelar">Cancelar</button><button class="back" id="crm-excluir" style="color:#b42318">Apagar dados deste cliente</button></div>
+      <div id="c-conflito" class="small" hidden></div>
     </div>
     <div class="panel" id="crm-wa" hidden>
       <h2>Mensagem para <span id="wa-nome"></span></h2>
@@ -197,22 +201,24 @@
       <div class="crm-grid" id="nc-novo">
         <label>Nome<input id="nc-nome" class="search" placeholder="sai sozinho do RG/CNH, se você anexar"></label>
         <label>WhatsApp<input id="nc-tel" class="search" inputmode="tel" placeholder="61 99999-9999"></label>
+      </div>
+      <details><summary class="small"><b>CPF/CNPJ e e-mail</b> (saem sozinhos dos documentos, se você anexar)</summary><div class="crm-grid" style="margin-top:8px">
         <label>CPF ou CNPJ<input id="nc-cpf" class="search" inputmode="numeric" placeholder="sai sozinho do documento"></label>
         <label>E-mail<input id="nc-email" class="search" type="email"></label>
-      </div>
+      </div></details>
     </div>
     <div class="panel">
       <h2>2. O caso</h2>
       <div class="crm-grid">
         <label>Área<select id="nc-area" class="search"></select></label>
         <label>Parte contrária<input id="nc-contra" class="search" placeholder="Ex.: INSS, Banco X, Lightbase Ltda."></label>
-        <label class="wide">Número do processo (se já existir)<input id="nc-proc" class="search" placeholder="0000000-00.0000.0.00.0000"></label>
       </div>
-      <label><b>Conte tudo o que sabe do caso</b> <span class="small muted">— fatos, datas, o que o cliente quer, o que já foi feito. Isso vira os “fatos” das peças.</span>
-        <textarea id="nc-relato" class="search" rows="8" style="width:100%;box-sizing:border-box"></textarea></label>
+      <details><summary class="small"><b>Já existe processo?</b></summary><label class="wide" style="display:block;margin-top:8px">Número do processo<input id="nc-proc" class="search" placeholder="0000000-00.0000.0.00.0000"></label></details>
+      <label><b>O que aconteceu?</b> <span class="small muted">— pode ser resumido; dá para completar depois. Isso vira os “fatos” das peças.</span>
+        <textarea id="nc-relato" class="search" rows="5" style="width:100%;box-sizing:border-box"></textarea></label>
     </div>
     <div class="panel">
-      <h2>3. Documentos</h2>
+      <h2>3. Documentos <span class="small muted">(opcional)</span></h2>
       <div id="nc-zona" class="or-zona"><p><b>Arraste aqui todos os documentos do cliente</b> (PDF ou fotos) ou</p><label class="btn">Escolher arquivos<input type="file" id="nc-arq" multiple accept="application/pdf,image/*" hidden></label><p class="small muted">Lidos no seu computador. Nada é enviado.</p></div>
       <p class="small" id="nc-status" role="status"></p>
       <ul class="list" id="nc-docs"></ul>
