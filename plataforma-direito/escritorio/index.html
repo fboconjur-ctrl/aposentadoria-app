@@ -146,6 +146,7 @@
     <div class="mais-grid">
       <button class="card-c" data-view="docs"><b>🧾 Procuração, contrato e kit</b><span class="meta">Gera os documentos de entrada do cliente</span></button>
       <button class="card-c" data-view="peticoes"><b>✍️ Redator de petições</b><span class="meta">Seus modelos + sua jurisprudência conferida. Não inventa nada</span></button>
+      <button class="card-c" data-view="pecas"><b>🔎 Ler sentença e peças</b><span class="meta">Analisa sentença, resume a peça da outra parte e tira dados pessoais</span></button>
       <button class="card-c" data-view="organizador"><b>📂 Organizar arquivos do cliente</b><span class="meta">Separa por tipo, renomeia e baixa em pastas</span></button>
     </div>
     <h2 class="mais-grupo">🧠 Análise e apoio</h2>
@@ -295,6 +296,18 @@
         <label class="small"><input type="checkbox" id="pe-jur-conf" checked> Conferi no site oficial do tribunal</label>
         <div><button class="btn">Adicionar ao banco</button></div>
       </form></details>
+  </section>
+
+  <section id="v-pecas" class="oview">
+    <header class="ohead"><div><button class="back" data-voltar>← Voltar</button><h1>Ler sentença e peças</h1><p class="muted">Tudo é feito no seu computador: o texto não é enviado a lugar nenhum. O painel só aponta o que está escrito — confira sempre.</p></div></header>
+    <div class="subnav"><button data-pc-aba="sentenca">⚖️ Analisar sentença</button><button data-pc-aba="peca">📄 Resumir peça da outra parte</button><button data-pc-aba="anon">🕶️ Tirar dados pessoais</button></div>
+    <div class="panel">
+      <p class="small" id="pc-ajuda"></p>
+      <textarea id="pc-texto" class="search" rows="10" style="width:100%;box-sizing:border-box" placeholder="Cole o texto aqui"></textarea>
+      <label class="small" id="pc-nomes-l" hidden>Outros nomes para esconder (um por linha ou separados por ;)<textarea id="pc-nomes" class="search" rows="2" style="width:100%;box-sizing:border-box"></textarea></label>
+      <div class="as-linha"><label class="back as-pdf-btn">📎 Carregar PDF ou foto<input type="file" id="pc-arq" accept="application/pdf,image/*" hidden></label><button class="btn" type="button" id="pc-ir">Analisar</button><span class="small muted" id="pc-st" role="status"></span></div>
+    </div>
+    <div class="panel" id="pc-saida" hidden><div id="pc-res" class="as-resultado"></div></div>
   </section>
 
   <section id="v-assistente" class="oview">
@@ -577,5 +590,6 @@
 <script src="avisos.js"></script>
 <script src="backup.js"></script>
 <script src="busca.js"></script>
+<script src="juridico.js"></script>
 </body>
 </html>
