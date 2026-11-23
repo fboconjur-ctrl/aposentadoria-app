@@ -275,5 +275,5 @@ REGRAS PARA O ROBÔ
 
   camposModelo(); tipoParte(); listaClientes();
   window.__reais = reais; // usado nos testes
-  window.DocGerador = { MODELOS, reais, adv: () => adv }; // usado pelo financeiro (recibo)
+  window.DocGerador = { MODELOS, reais, adv: () => adv, advQualif, local, assinatura, esc }; // usado pelo financeiro (recibo)
 })();

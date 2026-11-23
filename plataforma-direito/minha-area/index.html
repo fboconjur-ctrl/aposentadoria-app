@@ -74,6 +74,7 @@
   .msg { max-width: 82%; padding: 10px 12px; border-radius: 14px; display: grid; gap: 4px; } .msg small { font-size: .72rem; color: var(--muted); }
   .msg.minha { justify-self: end; background: color-mix(in srgb, var(--brand) 12%, var(--surface)); border-bottom-right-radius: 4px; }
   .msg.dela { justify-self: start; background: var(--tint); border-bottom-left-radius: 4px; }
+  .recibos { display: grid; gap: 8px; } .recibo { display: flex; justify-content: space-between; align-items: center; gap: 10px; border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px; } .recibo.geral { border-color: var(--ok, #157f3b); background: #e3f5ea; }
   .linkbtn { background: none; border: 0; color: inherit; text-decoration: underline; cursor: pointer; padding: 0; font: inherit; }
   @media (max-width: 720px) { .resumo { grid-template-columns: 1fr; } .heroi { padding: 16px; } }
   @media print { .atalhos, .chips, .chat { display: none !important; } details { display: block; } }
@@ -191,6 +192,7 @@
           ${pr ? `<details><summary class="small">Como se preparar</summary><ul class="small">${pr.map((x) => `<li>${esc(x)}</li>`).join("")}</ul></details>` : ""}<a class="small" href="${gcal(a)}" target="_blank" rel="noopener">+ adicionar à minha agenda</a></span></li>`; }).join("")}</ul>` : `<p class="vazio">Nenhum compromisso marcado. Quando houver audiência, perícia ou reunião, aparece aqui com orientações.</p>`)}
         ${sec("pagamentos", "💳", "Pagamentos", pags.length ? `<div class="totais"><div><span class="small muted">Pago</span><br><b>${reais(pago.reduce((s, p) => s + (+p.valor || 0), 0))}</b></div><div><span class="small muted">A pagar</span><br><b>${reais(aPagar.reduce((s, p) => s + (+p.valor || 0), 0))}</b></div></div>
           ${atraso.length ? `<p class="small" style="margin:0"><span class="pill atraso">${atraso.length} em atraso</span> Se já pagou, desconsidere. Se estiver com dificuldade, fale com a gente: dá para conversar.</p>` : ""}
+          ${(d.recibos || []).length ? `<div class="recibos"><b class="small">🧾 Seus recibos</b>${d.recibos.map((r, i) => `<div class="recibo${r.geral ? " geral" : ""}"><span><b>${esc(r.titulo)}</b><br><span class="small muted">${esc(r.desc)}${r.valor != null ? ` · ${reais(r.valor)}` : ""}${r.data ? ` · ${br(r.data)}` : ""}</span></span><button class="btn" data-recibo="${i}">Ver / imprimir</button></div>`).join("")}</div>` : ""}
           <ul class="lista">${pags.map((p) => `<li><span class="data">${br(p.venc)}</span><span>${esc(p.desc)}${p.parcela ? ` (${esc(p.parcela)})` : ""}<br><b>${reais(p.valor)}</b> ${p.pago ? `<span class="pill ok">pago em ${br(p.pago)}</span>` : p.venc < hoje ? `<span class="pill atraso">em atraso</span>` : `<span class="pill">vence ${quandoTxt(p.venc)}</span>`}</span></li>`).join("")}</ul>` : `<p class="vazio">Nenhum pagamento lançado.</p>`)}
       </div>
 
@@ -209,6 +211,7 @@
 
       <p class="small muted so-tela"><button class="linkbtn" onclick="window.print()">🖨️ Imprimir ou salvar um resumo do meu caso</button></p>
       <p class="small muted">🔒 Este link é pessoal: não compartilhe. As informações são um resumo para acompanhamento; a orientação sobre o seu caso é sempre dada pela advogada.</p>`;
+    document.querySelectorAll("[data-recibo]").forEach((b) => (b.onclick = () => { const r = d.recibos[+b.dataset.recibo]; const w = open(URL.createObjectURL(new Blob([r.html], { type: "text/html" })), "_blank"); if (!w) alert("Permita abrir janelas para ver o recibo."); }));
     const chat = document.querySelector(".chat"); if (chat) chat.scrollTop = chat.scrollHeight;
     $("ma-enviar").onclick = async () => {
       const t = $("ma-msg").value.trim(); if (!t) return;
