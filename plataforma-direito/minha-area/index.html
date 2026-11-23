@@ -99,8 +99,22 @@
 
   function erro(msg) { $("ma").innerHTML = `<div class="cartao erro"><h1>Não foi possível abrir</h1><p class="muted">${msg}</p><p><a class="btn" href="https://wa.me/${WA}" target="_blank" rel="noopener">Falar no WhatsApp</a></p></div>`; }
 
+  function entrada() {
+    const msg = encodeURIComponent("Olá! Sou cliente do escritório e perdi o link da minha área do cliente. Meu nome completo é: ");
+    $("ma").innerHTML = `<div class="ma-topo"><a class="brand" href="../">Plataforma do Direito</a></div>
+      <section class="heroi"><p class="eyebrow">Área do cliente</p><h1>Acompanhe o seu caso</h1>
+        <p class="muted" style="margin:0">Cada cliente tem um <b>link pessoal</b> para acompanhar o caso: etapa, próximos passos, processo explicado, documentos, agenda, pagamentos, recibos e conversa com a advogada.</p></section>
+      <section class="cartao"><h2>🔑 Como entrar</h2>
+        <ol class="passos"><li>Procure a mensagem da advogada no <b>WhatsApp</b> ou no seu <b>e-mail</b> com o link da sua área (começa com <span class="small">plataformadodireito.com.br/plataforma-direito/minha-area/#…</span>).</li><li>Toque no link. Ele abre direto, sem senha.</li><li>Dica: depois de abrir, salve nos favoritos do navegador ou na tela inicial do celular para entrar mais rápido.</li></ol></section>
+      <section class="cartao"><h2>❓ Perdeu o link?</h2>
+        <p style="margin:0">Peça pelo WhatsApp. Por segurança, a advogada confirma quem é você antes de reenviar.</p>
+        <div class="acoes"><a class="btn btn-wa" href="https://wa.me/${WA}?text=${msg}" target="_blank" rel="noopener">Pedir meu link pelo WhatsApp</a></div></section>
+      <section class="cartao"><h2>Ainda não é cliente?</h2><p style="margin:0">Conte o seu caso na página inicial e veja o que a lei diz sobre a sua situação.</p><div class="acoes"><a class="btn" href="../">Ir para a página inicial</a></div></section>
+      <p class="small muted">🔒 O link é pessoal: não compartilhe. Quem tem o link vê as informações do caso.</p>`;
+  }
   async function carregar() {
-    if (!token || token.length < 32) return erro("Este link está incompleto. Use o link que a advogada enviou pelo WhatsApp.");
+    if (!token) return entrada();
+    if (token.length < 32) return erro("Este link está incompleto. Use o link completo que a advogada enviou pelo WhatsApp ou por e-mail.");
     let d; try { const r = await rpc("portal_ver", { p_token: token }); d = await r.json(); } catch { return erro("Sem conexão no momento. Tente de novo em instantes."); }
     if (!d) return erro("Este link não está mais ativo. Peça um novo à advogada.");
     render(d);
