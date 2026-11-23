@@ -64,3 +64,4 @@ Prévia: https://deploy-preview-1--prevcalculadora.netlify.app/plataforma-direit
 - WhatsApp 24h só pela API oficial da Meta (custo por conversa, número dedicado); robô só acolhe e agenda, sem orientação jurídica (OAB). Nada de ferramenta não oficial.
 - NÃO fazer: prospecção de empresas (Google Maps / "empresas da cidade") — captação vedada pela OAB.
 - Pendências da titular: publicar o app no Google (Branding + Publicar app), testar Entrar com Google e Salvar no Drive; revisar e publicar o termo de adesão dos associados; ligar Resend; desligar prévias de deploy na Netlify; proteção de senha vazada no Supabase.
+- Ideia futura: simulador da Reforma Tributária (CBS/IBS/IS) no Raio-x, usando as tabelas oficiais dos repositórios da Receita (calculadora-rtc-regime-regular, calculadora-rtc-simples-nacional; Portaria Cotec 342/2026). Não afeta o simulador previdenciário nem o motor administrativo.
