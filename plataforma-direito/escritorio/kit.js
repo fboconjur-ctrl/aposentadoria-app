@@ -46,23 +46,41 @@
     const t = e.target.closest("[data-kt-tira]"); if (t) { docs.splice(+t.dataset.ktTira, 1); lista(); }
     const s = e.target.closest("[data-kt-sobe]"); if (s) { const i = +s.dataset.ktSobe; if (i > 0) { [docs[i - 1], docs[i]] = [docs[i], docs[i - 1]]; } lista(); }
   });
-  $q("#kt-gerar").addEventListener("click", async () => {
+  function montar() {
     const c = cliPorId($q("#kt-cli").value), n = $q("#kt-proc").value, st = $q("#kt-st");
-    if (!c) { st.textContent = "Escolha o cliente."; return; }
-    if (!peca && !docs.length) { st.textContent = "Escolha a peça e/ou os documentos."; return; }
-    const pasta = limpaNome(`${c.nome}${n ? " - " + mascara(n) : ""} - ${$q("#kt-tipo").value || "Protocolo"} - ${fmt(hoje).replace(/\//g, "-")}`);
-    const z = new JSZip(), raiz = z.folder(pasta);
-    if (peca) raiz.folder("01 Peça").file(limpaNome(`${$q("#kt-tipo").value || "Peça"} - ${c.nome}${extDe(peca.name)}`), peca);
-    docs.forEach((d, i) => raiz.folder("02 Documentos").file(limpaNome(`Doc ${String(i + 1).padStart(2, "0")} - ${d.nome}${extDe(d.file.name)}`), d.file));
+    if (!c) { st.textContent = "Escolha o cliente."; return null; }
+    if (!peca && !docs.length) { st.textContent = "Escolha a peça e/ou os documentos."; return null; }
+    const tipo = $q("#kt-tipo").value || "Protocolo";
+    const pasta = limpaNome(`${n ? mascara(n) + " - " : ""}${tipo} - ${fmt(hoje).replace(/\//g, "-")}`);
+    const arqs = [];
+    if (peca) arqs.push({ pasta: ["01 Peça"], nome: limpaNome(`${$q("#kt-tipo").value || "Peça"} - ${c.nome}${extDe(peca.name)}`), blob: peca });
+    docs.forEach((d, i) => arqs.push({ pasta: ["02 Documentos"], nome: limpaNome(`Doc ${String(i + 1).padStart(2, "0")} - ${d.nome}${extDe(d.file.name)}`), blob: d.file }));
     const tr = n ? tribunal(n) : null;
     const ck = [`KIT DE PROTOCOLO — ${c.nome}`, n ? `Processo: ${mascara(n)}${tr ? ` (${tr[0]})` : ""}` : "Petição inicial (processo ainda não distribuído)", `Peça: ${$q("#kt-tipo").value || "—"}`, `Montado em: ${new Date().toLocaleString("pt-BR")}`, "",
       "CONFERIR ANTES DE PROTOCOLAR", "[ ] Peça revisada, sem [PREENCHER] nem [CONFERIR]", "[ ] Peça salva em PDF (o PJe só aceita PDF)", "[ ] Procuração e documentos pessoais legíveis", "[ ] Cada arquivo dentro do limite de tamanho do tribunal", "[ ] Custas recolhidas ou pedido de gratuidade com declaração", "[ ] Prazo conferido (data final)", "[ ] Após protocolar: anotar o número/recibo no painel", "",
       "ORDEM DOS DOCUMENTOS", ...docs.map((d, i) => `Doc ${String(i + 1).padStart(2, "0")} - ${d.nome}`), "", tr ? `PJe do ${tr[0]}: ${tr[1]}` : "Acesse o PJe do tribunal com seu certificado digital."].join("\r\n");
-    raiz.file("03 Checklist do protocolo.txt", ck);
+    arqs.push({ pasta: [], nome: "03 Checklist do protocolo.txt", blob: new Blob([ck], { type: "text/plain" }) });
+    return { c, pasta, arqs, tr, cliPasta: limpaNome(c.nome) };
+  }
+  const pje = (tr) => (tr ? ` <a href="${tr[1]}" target="_blank" rel="noopener">Abrir o PJe do ${tr[0]}</a>` : "");
+  $q("#kt-gerar").addEventListener("click", async () => {
+    const m = montar(); if (!m) return;
+    const nomeZip = `${m.cliPasta} - ${m.pasta}`, z = new JSZip(), raiz = z.folder(nomeZip);
+    m.arqs.forEach((a) => (a.pasta.length ? raiz.folder(a.pasta.join("/")) : raiz).file(a.nome, a.blob));
     const blob = await z.generateAsync({ type: "blob" }), l = document.createElement("a");
-    l.href = URL.createObjectURL(blob); l.download = pasta + ".zip"; document.body.appendChild(l); l.click(); l.remove(); setTimeout(() => URL.revokeObjectURL(l.href), 5000);
-    (c.hist ||= []).unshift({ em: new Date().toISOString(), o: `Kit de protocolo montado (${docs.length} documento(s))` }); salvarCrm();
-    st.innerHTML = `✅ Kit baixado: <b>${esc(pasta)}.zip</b>. Arraste a pasta para o Google Drive (ou salve direto na pasta do Drive no computador). ${tr ? `<a href="${tr[1]}" target="_blank" rel="noopener">Abrir o PJe do ${tr[0]}</a>` : ""}`;
+    l.href = URL.createObjectURL(blob); l.download = nomeZip + ".zip"; document.body.appendChild(l); l.click(); l.remove(); setTimeout(() => URL.revokeObjectURL(l.href), 5000);
+    (m.c.hist ||= []).unshift({ em: new Date().toISOString(), o: `Kit de protocolo montado (${docs.length} documento(s))` }); salvarCrm();
+    $q("#kt-st").innerHTML = `✅ Kit baixado: <b>${esc(nomeZip)}.zip</b>.${pje(m.tr)}`;
+  });
+  $q("#kt-drive").hidden = !window.Drive;
+  $q("#kt-drive").addEventListener("click", async () => {
+    const m = montar(); if (!m) return; const st = $q("#kt-st");
+    st.textContent = "Pedindo permissão ao Google…";
+    try {
+      const link = await Drive.salvar(["Escritório", "Clientes", m.cliPasta, m.pasta], m.arqs, (i, t) => (st.textContent = `Enviando ao Drive… ${i} de ${t}`));
+      (m.c.hist ||= []).unshift({ em: new Date().toISOString(), o: `Kit de protocolo salvo no Drive (${docs.length} documento(s))` }); m.c.drive = link; salvarCrm();
+      st.innerHTML = `✅ Salvo no Drive em <b>Escritório › Clientes › ${esc(m.cliPasta)} › ${esc(m.pasta)}</b>. <a href="${esc(link)}" target="_blank" rel="noopener">Abrir a pasta</a>${pje(m.tr)}`;
+    } catch (er) { st.textContent = "Não foi possível salvar no Drive: " + er.message; }
   });
   window.KitProtocolo = { tribunal };
   lista();

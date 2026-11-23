@@ -337,7 +337,7 @@
   </section>
 
   <section id="v-kit" class="oview">
-    <header class="ohead"><div><button class="back" data-voltar>← Voltar</button><h1>Kit de protocolo</h1><p class="muted">Junta a peça e os documentos numerados numa pasta com checklist. Baixe e arraste para o Google Drive. Nada é enviado: tudo acontece no seu computador.</p></div></header>
+    <header class="ohead"><div><button class="back" data-voltar>← Voltar</button><h1>Kit de protocolo</h1><p class="muted">Junta a peça e os documentos numerados numa pasta com checklist e salva direto no seu Google Drive (Escritório › Clientes › nome do cliente) — ou baixa como .zip.</p></div></header>
     <div class="panel">
       <div class="crm-grid">
         <label>Cliente<select id="kt-cli" class="search"><option value="">— escolha o cliente —</option></select></label>
@@ -353,7 +353,7 @@
       <p class="small" id="kt-peca-info"></p>
       <h3 class="small">Documentos (na ordem em que serão numerados — ajuste o nome se quiser)</h3>
       <ul class="list" id="kt-docs"></ul>
-      <div class="as-linha"><button class="btn" type="button" id="kt-gerar">📦 Montar e baixar o kit</button><span class="small" id="kt-st" role="status"></span></div>
+      <div class="as-linha"><button class="btn" type="button" id="kt-drive" hidden>☁️ Salvar no Google Drive</button><button class="back" type="button" id="kt-gerar">📦 Baixar como .zip</button><span class="small" id="kt-st" role="status"></span></div>
     </div>
   </section>
 
@@ -654,6 +654,7 @@
 <script src="juridico.js"></script>
 <script src="raiox.js"></script>
 <script src="painel.js"></script>
+<script src="drive.js"></script>
 <script src="kit.js"></script>
 </body>
 </html>
