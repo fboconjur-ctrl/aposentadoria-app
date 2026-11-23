@@ -152,6 +152,7 @@
     <h2 class="mais-grupo">🧠 Análise e apoio</h2>
     <div class="mais-grid">
       <button class="card-c" data-view="assistente"><b>✨ Assistente jurídico (IA)</b><span class="meta">Sentença, resumo, notificação, posts… (precisa ligar a chave)</span></button>
+      <button class="card-c" data-view="raiox"><b>🩻 Raio-x da empresa e licitações</b><span class="meta">CNPJ: situação, regime, pontos a verificar, certidões e licitações abertas</span></button>
       <button class="card-c" data-view="dac"><b>⚖️ Motor de Direito Administrativo</b><span class="meta">Fatos, regras com fonte, lacunas e perguntas</span></button>
     </div>
     <h2 class="mais-grupo so-titular">💼 Gestão do escritório</h2>
@@ -308,6 +309,25 @@
       <div class="as-linha"><label class="back as-pdf-btn">📎 Carregar PDF ou foto<input type="file" id="pc-arq" accept="application/pdf,image/*" hidden></label><button class="btn" type="button" id="pc-ir">Analisar</button><span class="small muted" id="pc-st" role="status"></span></div>
     </div>
     <div class="panel" id="pc-saida" hidden><div id="pc-res" class="as-resultado"></div></div>
+  </section>
+
+  <section id="v-raiox" class="oview">
+    <header class="ohead"><div><button class="back" data-voltar>← Voltar</button><h1>Raio-x da empresa</h1><p class="muted">Dados públicos da Receita e licitações abertas no Portal Nacional de Contratações Públicas (PNCP). Mostra pontos a verificar — nunca conclusões.</p></div></header>
+    <form class="panel" id="rx-form" autocomplete="off">
+      <div class="as-linha" style="flex-wrap:wrap"><label class="small">Cliente <select id="rx-cli" class="search"><option value="">— sem cliente —</option></select></label>
+      <label class="small">CNPJ <input id="rx-cnpj" class="search" inputmode="numeric" placeholder="00.000.000/0000-00"></label></div>
+      <label class="small"><input type="checkbox" id="rx-ok"> O cliente autorizou esta consulta (LGPD). Uso apenas para atender quem já é cliente ou me procurou.</label>
+      <div class="as-linha"><button class="btn">Fazer raio-x</button><span class="small muted" id="rx-st" role="status"></span></div>
+    </form>
+    <div class="panel" id="rx-res-p"><div id="rx-res"><p class="small muted">O resultado aparece aqui.</p></div></div>
+    <form class="panel" id="rx-lic" autocomplete="off">
+      <h2>🏛️ Licitações abertas</h2>
+      <p class="small muted">Busca editais recebendo propostas. As palavras vêm das atividades (CNAE) da empresa — ajuste à vontade, separando por ponto e vírgula.</p>
+      <label class="small">Palavras-chave<input id="rx-termos" class="search" style="width:100%;box-sizing:border-box" placeholder="ex.: limpeza; vigilância; software"></label>
+      <div class="as-linha"><label class="small">Estado <select id="rx-uf" class="search"><option value="">Todo o Brasil</option><option>AC</option><option>AL</option><option>AP</option><option>AM</option><option>BA</option><option>CE</option><option>DF</option><option>ES</option><option>GO</option><option>MA</option><option>MT</option><option>MS</option><option>MG</option><option>PA</option><option>PB</option><option>PR</option><option>PE</option><option>PI</option><option>RJ</option><option>RN</option><option>RS</option><option>RO</option><option>RR</option><option>SC</option><option>SP</option><option>SE</option><option>TO</option></select></label><button class="btn">Buscar licitações</button></div>
+      <p class="small" id="rx-lic-st" role="status"></p>
+      <ul class="list" id="rx-lic-res"></ul>
+    </form>
   </section>
 
   <section id="v-assistente" class="oview">
@@ -591,5 +611,6 @@
 <script src="backup.js"></script>
 <script src="busca.js"></script>
 <script src="juridico.js"></script>
+<script src="raiox.js"></script>
 </body>
 </html>
