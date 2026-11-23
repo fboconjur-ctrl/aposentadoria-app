@@ -324,3 +324,112 @@ Object.assign(DUVIDAS_CASOS, {
     ["Como me proteger depois do vazamento?", "Troque senhas, ative verificação em duas etapas e acompanhe seu CPF no Registrato e em serviços de proteção de crédito."],
   ],
 });
+
+Object.assign(DUVIDAS_CASOS, {
+  "inventario-cartorio": [
+    ["Quando posso fazer o inventário em cartório?", "Quando todos os herdeiros estão de acordo e são maiores e capazes. Desde 2024, o CNJ passou a permitir também com herdeiros menores ou incapazes, em certas condições e com participação do Ministério Público. Também é possível mesmo com testamento, em alguns casos."],
+    ["Preciso de advogado?", "Sim, a lei exige a presença de advogado no inventário em cartório, que pode ser um só para todos os herdeiros."],
+    ["Tem prazo para abrir o inventário?", "O prazo legal é de 2 meses a partir do falecimento. O atraso pode gerar multa no imposto (ITCMD), conforme a lei de cada estado."],
+    ["Quanto custa?", "Há o imposto (ITCMD, com alíquota definida pelo estado), os emolumentos do cartório (tabela estadual) e os honorários. A advogada faz uma estimativa com os bens."],
+  ],
+  "divorcio-cartorio": [
+    ["Posso me divorciar em cartório?", "Sim, quando há acordo entre os dois. Desde 2024, o CNJ também permite em cartório quando há filhos menores, desde que as questões de guarda, visitas e pensão já estejam resolvidas na Justiça."],
+    ["Precisa de advogado?", "Sim, a escritura exige advogado, que pode ser comum ao casal ou um para cada."],
+    ["Quanto tempo leva?", "Com documentos em ordem e acordo sobre a partilha, costuma ser rápido: às vezes, poucos dias."],
+    ["E se não houver acordo?", "Aí o divórcio precisa ser feito na Justiça. Ainda assim, ninguém pode ser obrigado a continuar casado: o divórcio é um direito."],
+  ],
+  "uniao-estavel": [
+    ["Preciso registrar a união estável?", "Não é obrigatório, mas formalizar em cartório facilita provar a união para pensão, plano de saúde, herança e financiamentos."],
+    ["Qual o regime de bens?", "Se não houver contrato escrito, vale a comunhão parcial: o que for adquirido durante a união, em regra, é dos dois."],
+    ["Como desfazer a união estável?", "Com acordo, pode ser por escritura em cartório, com advogado. Sem acordo, na Justiça."],
+  ],
+  "usucapiao": [
+    ["Moro há anos num imóvel sem documento. Posso pedir usucapião?", "Pode, se a posse for contínua, sem oposição e como se fosse dono, pelo tempo exigido (de 5 a 15 anos, conforme o tipo de usucapião e a situação)."],
+    ["Dá para fazer em cartório?", "Sim, a usucapião extrajudicial é feita no Cartório de Registro de Imóveis, com advogado, ata notarial e planta assinada por profissional. Se alguém se opuser, vai para a Justiça."],
+    ["Que provas preciso?", "Contas no seu nome no endereço, IPTU, recibos, fotos antigas, declarações de vizinhos e qualquer documento que mostre o tempo de posse."],
+  ],
+  "adjudicacao": [
+    ["Paguei tudo e o vendedor não passa a escritura. O que faço?", "Você pode exigir a escritura e, se ele não cumprir, pedir a adjudicação compulsória — na Justiça ou, desde 2022, também em cartório."],
+    ["O vendedor faleceu ou sumiu. E agora?", "Ainda é possível, com os documentos da compra e a quitação. A falta do vendedor não impede a regularização."],
+    ["Que documentos preciso?", "Contrato de compra e venda ou promessa, comprovantes de pagamento e a matrícula do imóvel."],
+  ],
+  "alvara-valores": [
+    ["Como sacar FGTS e PIS de quem faleceu?", "Os dependentes habilitados no INSS (certidão de dependentes) podem sacar diretamente na Caixa. Sem dependentes, os herdeiros precisam de alvará judicial ou escritura de inventário."],
+    ["E o dinheiro no banco?", "Valores pequenos podem ser liberados por alvará judicial simples, sem inventário completo, conforme o caso. Valores maiores entram no inventário."],
+    ["Quanto tempo leva o alvará?", "Costuma ser um processo rápido, sem disputa, mas o prazo depende da vara."],
+  ],
+  "protesto": [
+    ["Meu nome foi protestado. Como cancelo?", "Pague a dívida (no cartório ou ao credor) e peça a carta de anuência ao credor. Com ela, você solicita o cancelamento no cartório, pagando os emolumentos."],
+    ["O protesto é indevido. E agora?", "Se a dívida não existe ou já foi paga, é possível pedir o cancelamento na Justiça, inclusive com indenização."],
+    ["O protesto prescreve?", "O protesto em si não some sozinho, mas a dívida pode prescrever. A análise depende do tipo de título e das datas."],
+  ],
+  "reurb": [
+    ["O que é a Reurb?", "É a regularização fundiária urbana (Lei 13.465/2017), que permite regularizar núcleos informais e entregar o título de propriedade aos moradores."],
+    ["Quem pode pedir?", "Os próprios moradores, associações, o município e outros legitimados. Na Reurb de interesse social, para população de baixa renda, os custos são menores ou gratuitos."],
+    ["Como começar?", "Procure a prefeitura para saber se a área já tem processo de Reurb. Se não tiver, a organização dos moradores ajuda a pedir."],
+  ],
+  "certidao-matricula": [
+    ["Para que serve a certidão de matrícula?", "Ela mostra quem é o dono do imóvel, as características, e se há dívidas, penhoras, hipotecas ou outras restrições. É indispensável antes de comprar."],
+    ["Como tiro a certidão?", "No Cartório de Registro de Imóveis da região ou pela internet, no site do Registro de Imóveis do Brasil (registradores.onr.org.br)."],
+    ["A certidão tem validade?", "Para negócios, costuma-se exigir certidão recente (em geral, de até 30 dias)."],
+  ],
+  "mudar-nome": [
+    ["Posso mudar meu nome direto no cartório?", "Sim. Desde 2022 (Lei 14.382), maiores de 18 anos podem mudar o prenome uma vez, no cartório, sem precisar explicar o motivo nem ir à Justiça."],
+    ["E o sobrenome?", "A inclusão ou exclusão de sobrenomes de família também pode ser feita em cartório em várias situações, como casamento, divórcio e inclusão de sobrenome de avós."],
+    ["Pessoas trans podem alterar nome e gênero em cartório?", "Sim, diretamente no cartório, sem cirurgia e sem laudo, conforme decisão do STF e norma do CNJ."],
+  ],
+  "testamento": [
+    ["Posso deixar meus bens para quem eu quiser?", "Em parte. Se você tem herdeiros necessários (filhos, pais, cônjuge), metade dos bens é reservada a eles. A outra metade pode ser deixada livremente."],
+    ["Qual tipo de testamento é mais seguro?", "O testamento público, feito no cartório de notas com duas testemunhas, é o mais seguro, porque fica registrado e é difícil de contestar."],
+    ["Posso mudar o testamento depois?", "Sim, a qualquer momento, fazendo um novo."],
+  ],
+  "planejamento-sucessorio": [
+    ["O que é planejamento sucessório?", "É organizar, em vida, como os bens serão transmitidos, para evitar conflitos, reduzir custos e dar segurança à família."],
+    ["Doação com usufruto vale a pena?", "Pode valer: os bens passam aos herdeiros, mas você continua usando e recebendo os rendimentos. Há imposto na doação (ITCMD), e a vantagem depende do caso e do estado."],
+    ["Holding familiar é para mim?", "Costuma ser útil para patrimônios maiores, com imóveis de aluguel ou empresas. Para patrimônios menores, testamento e doação podem bastar."],
+  ],
+  "ata-notarial": [
+    ["Prints de WhatsApp valem como prova?", "Podem valer, mas são mais fáceis de contestar. A ata notarial, feita em cartório, dá fé pública ao conteúdo e torna a prova muito mais forte."],
+    ["Como funciona a ata notarial?", "Você leva o celular ou indica o site ao tabelião, que registra o que vê, com data e hora. O documento sai em cartório de notas."],
+    ["Quanto custa?", "Depende da tabela do estado e da quantidade de páginas. Vale para provas importantes."],
+  ],
+  "itcmd": [
+    ["O que é o ITCMD?", "É o imposto estadual cobrado sobre heranças e doações. Cada estado define a alíquota (até 8%)."],
+    ["Quem paga?", "Na herança, os herdeiros; na doação, em regra, quem recebe."],
+    ["Tem isenção?", "Alguns estados isentam valores pequenos ou certos bens. A advogada verifica a lei do seu estado."],
+  ],
+  "compra-imovel": [
+    ["O que conferir antes de comprar um imóvel?", "Certidão de matrícula atualizada, certidões do vendedor (ações, dívidas, protestos), IPTU e condomínio em dia, e se a construção está regular na prefeitura."],
+    ["Contrato de gaveta tem valor?", "Tem valor entre as partes, mas não transfere a propriedade. Para ser dono, é preciso escritura e registro no Cartório de Registro de Imóveis."],
+    ["Quais custos além do preço?", "ITBI (imposto municipal), escritura e registro. Em financiamento, a escritura pode ser substituída pelo contrato do banco."],
+  ],
+  "socioafetiva": [
+    ["Posso reconhecer como filho quem eu criei?", "Sim. A filiação socioafetiva pode ser reconhecida em cartório para filhos a partir de 12 anos, com consentimento, ou na Justiça."],
+    ["O filho fica com dois pais ou duas mães?", "Pode ficar: a multiparentalidade é admitida, mantendo os pais biológicos e incluindo o socioafetivo."],
+    ["Quais os efeitos?", "Os mesmos de qualquer filiação: nome, herança, pensão alimentícia e direitos previdenciários."],
+  ],
+  "regime-bens": [
+    ["Posso mudar o regime de bens do casamento?", "Pode, com pedido conjunto e justificado, e sem prejudicar terceiros (como credores)."],
+    ["É feito em cartório?", "Em regra, precisa de autorização judicial. Há normas e discussões recentes sobre fazer em cartório; a advogada confirma o caminho atual."],
+    ["O que muda para os bens que já tenho?", "Em regra, a mudança vale para frente, e os bens anteriores seguem o regime antigo, salvo acordo diferente aprovado."],
+  ],
+  "apostila": [
+    ["O que é apostila de Haia?", "É um selo que valida documentos brasileiros para uso em outros países que fazem parte da Convenção da Apostila."],
+    ["Onde faço?", "Em cartórios autorizados, apresentando o documento original."],
+    ["Preciso de tradução?", "Muitas vezes, sim. A tradução juramentada é feita antes ou depois da apostila, conforme a exigência do país de destino."],
+  ],
+  "inventario-negativo": [
+    ["Preciso fazer inventário se não há bens?", "Não é obrigatório, mas o inventário negativo pode ser útil para provar que não há bens (por exemplo, para o viúvo se casar de novo sem restrição de regime ou para encerrar dívidas)."],
+    ["Pode ser em cartório?", "Sim, com acordo dos herdeiros e advogado."],
+  ],
+  "cessao-hereditaria": [
+    ["Posso vender minha parte na herança?", "Pode, por escritura pública de cessão de direitos hereditários. Os outros herdeiros têm preferência na compra."],
+    ["Posso renunciar à herança?", "Pode, por escritura pública ou termo no processo. A renúncia é total e não pode ser desfeita, e a sua parte vai para os outros herdeiros."],
+    ["Renunciar me livra das dívidas do falecido?", "As dívidas do falecido são pagas com os bens da herança, nunca além do valor herdado. Renunciar não é necessário só por causa disso."],
+  ],
+  "heranca-digital": [
+    ["O que acontece com as redes sociais de quem morreu?", "Depende das regras de cada plataforma: muitas permitem transformar a conta em memorial ou excluí-la a pedido da família."],
+    ["E criptomoedas e saldos em apps?", "Entram no inventário, como qualquer bem. O problema prático é o acesso às senhas: por isso, planejar em vida é importante."],
+    ["Como evitar que se percam?", "Deixe orientações em testamento ou em documento guardado com segurança, sem expor senhas diretamente."],
+  ],
+});
