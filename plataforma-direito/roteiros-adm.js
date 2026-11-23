@@ -10,7 +10,7 @@ Object.assign(ROTEIROS, {
     acolhe: "O estágio probatório avalia o servidor nos primeiros anos, mas a reprovação precisa seguir regras e garantir defesa.",
     perguntas: [{ q: "O que aconteceu?", a: ["Avaliação ruim", "Ameaça de exoneração", "Fui exonerado(a)", "Quero entender as regras"] }],
     lei: ["A estabilidade é adquirida após 3 anos de efetivo exercício, com avaliação especial de desempenho (Constituição, art. 41).", "A exoneração por reprovação no estágio probatório exige processo com contraditório e ampla defesa."],
-    juris: ["STF, Súmula 21: o funcionário em estágio probatório não pode ser exonerado nem demitido sem inquérito ou sem as formalidades legais de apuração de sua capacidade."],
+    juris: ["No regime federal, o servidor estável que for inabilitado no estágio de um novo cargo pode ser reconduzido ao cargo anterior (Lei 8.112/1990, art. 29). Servidores federais (Sipec): estágio de 36 meses, disciplinado pelo Decreto 12.374/2025, alterado pelo Decreto 12.967/2026.", "STF, Súmula 21: o funcionário em estágio probatório não pode ser exonerado nem demitido sem inquérito ou sem as formalidades legais de apuração de sua capacidade."],
     prazos: [NOTA_ENTE],
     docs: ["Portaria de nomeação e posse", "Avaliações de desempenho", "Notificações e processo de avaliação", "Provas do seu trabalho (elogios, metas cumpridas)"],
     passos: ["Peça cópia de todas as avaliações e do processo.", "Apresente defesa ou recurso no prazo.", "Se exonerado sem defesa ou com avaliação irregular, cabe pedido de anulação e reintegração."],
@@ -21,7 +21,7 @@ Object.assign(ROTEIROS, {
     acolhe: "Demissão de servidor só pode acontecer depois de processo regular — e, se for ilegal, cabe reintegração.",
     perguntas: [{ q: "Em que fase está?", a: ["PAD em andamento", "Já fui demitido(a)", "Fui demitido(a) há muito tempo"] }],
     lei: ["O servidor estável só perde o cargo por sentença judicial definitiva, processo administrativo com ampla defesa ou avaliação periódica de desempenho (Constituição, art. 41, §1º).", "Invalidada a demissão por decisão judicial, o servidor é reintegrado, com ressarcimento das vantagens (Constituição, art. 41, §2º)."],
-    juris: ["O Judiciário pode examinar a legalidade do PAD e a proporcionalidade da pena, sem substituir o mérito administrativo."],
+    juris: ["STJ, Súmula 665: o controle judicial do PAD se restringe à regularidade do procedimento e à legalidade do ato, admitida a intervenção em situações como manifesta desproporcionalidade da pena."],
     prazos: ["A ação para anular a demissão deve ser proposta em até 5 anos (Decreto 20.910/1932)."],
     docs: ["Cópia integral do PAD", "Portaria de demissão", "Ficha funcional", "Provas da defesa"],
     passos: ["Obtenha a cópia integral do processo.", "Verifique falhas: defesa, prazos, comissão, provas, proporcionalidade, prescrição.", "Avalie pedido de reconsideração, recurso ou ação de reintegração."],
@@ -30,8 +30,8 @@ Object.assign(ROTEIROS, {
   },
   "acumulacao-cargos": {
     acolhe: "A Constituição permite acumular dois cargos públicos em alguns casos — e a compatibilidade de horários é o ponto central.",
-    perguntas: [{ q: "Quais cargos?", a: ["Dois de professor", "Professor + técnico/científico", "Dois de saúde", "Outros"] }],
-    lei: ["É vedada a acumulação remunerada de cargos públicos, exceto: dois de professor; um de professor com outro técnico ou científico; dois de profissionais de saúde com profissão regulamentada — sempre com compatibilidade de horários (Constituição, art. 37, XVI)."],
+    perguntas: [{ q: "Quais cargos?", a: ["Dois de professor", "Professor + outro cargo qualquer", "Dois de saúde", "Outros"] }],
+    lei: ["É vedada a acumulação remunerada de cargos públicos, exceto: dois de professor; um de professor com outro de qualquer natureza (redação da EC 138/2025); dois cargos ou empregos privativos de profissionais de saúde com profissões regulamentadas — sempre com compatibilidade de horários e respeito ao teto (Constituição, art. 37, XVI).", "No regime federal, notificado da acumulação ilegal, o servidor tem 10 dias para optar (Lei 8.112/1990, art. 133)."],
     juris: ["STF, Tema 1.081: a acumulação não pode ser negada só por ultrapassar um limite fixo de horas semanais; o que importa é a compatibilidade real de horários."],
     prazos: [],
     docs: ["Portarias e descrições dos cargos", "Escalas e horários de cada vínculo", "Notificação do órgão"],
@@ -54,7 +54,7 @@ Object.assign(ROTEIROS, {
     acolhe: "Progressões e promoções atrasadas são uma das reclamações mais comuns de servidores — e costumam gerar valores retroativos.",
     perguntas: [{ q: "O que está acontecendo?", a: ["Progressão atrasada", "Avaliação não feita", "Promoção negada", "Reenquadramento errado"] }],
     lei: ["As regras de progressão e promoção estão na lei do plano de carreira de cada cargo.", "Valores atrasados podem ser cobrados dos últimos 5 anos (Decreto 20.910/1932)."],
-    juris: ["Quando a Administração deixa de fazer a avaliação de desempenho exigida para a progressão, a omissão não pode prejudicar o servidor."],
+    juris: ["STJ, Tema 1.075: cumpridos todos os requisitos legais da progressão, o excesso de gasto com pessoal (Lei de Responsabilidade Fiscal) não justifica a negativa.", "STJ, Súmula 85: sem negativa do próprio direito, a prescrição atinge só as parcelas anteriores aos 5 anos do ajuizamento."],
     prazos: ["5 anos para cobrar as diferenças."],
     docs: ["Lei do plano de carreira", "Ficha funcional", "Contracheques", "Pedido administrativo e resposta"],
     passos: ["Confira na lei os requisitos e o tempo (interstício) de cada progressão.", "Compare com a sua ficha funcional.", "Faça o pedido administrativo e, se negado ou ignorado, avalie a ação."],
@@ -65,7 +65,7 @@ Object.assign(ROTEIROS, {
     acolhe: "O adicional de insalubridade ou periculosidade depende de laudo técnico do local de trabalho.",
     perguntas: [{ q: "Qual a situação?", a: ["Nunca recebi", "Foi cortado", "Recebo menos do que deveria"] }],
     lei: ["No âmbito federal, os servidores que trabalham com habitualidade em locais insalubres ou com risco de vida fazem jus aos adicionais (Lei 8.112/1990, arts. 68 a 70)."],
-    juris: ["STJ (PUIL 413): o adicional é devido a partir do laudo que reconhece a insalubridade, não sendo, em regra, retroativo a períodos anteriores ao laudo."],
+    juris: ["STJ, PUIL 413/RS: um laudo atual não serve para presumir insalubridade em período anterior; a data inicial depende do regime e da documentação técnica existente.", "Quem preenche os requisitos dos dois adicionais deve optar por um, e o direito cessa quando a condição ou o risco é eliminado (Lei 8.112/1990, art. 68)."],
     prazos: [NOTA_ENTE],
     docs: ["Laudo técnico (LTCAT) do setor", "Descrição das atividades", "Contracheques", "Ato de concessão ou corte"],
     passos: ["Peça o laudo do seu local de trabalho.", "Se não houver laudo, peça formalmente a avaliação.", "Corte sem novo laudo ou sem defesa pode ser questionado."],
@@ -109,7 +109,7 @@ Object.assign(ROTEIROS, {
     acolhe: "Limites de idade, altura e outros requisitos precisam estar previstos em lei e ter relação com o cargo.",
     perguntas: [{ q: "Qual requisito te eliminou?", a: ["Idade", "Altura", "Tatuagem", "Escolaridade ou registro profissional", "Outro"] }],
     lei: ["Requisitos de acesso a cargo público devem estar previstos em lei (Constituição, art. 37, I)."],
-    juris: ["STF, Súmula 683: o limite de idade só se legitima quando justificado pela natureza das atribuições do cargo.", "STF, Tema 838: editais não podem vetar candidatos com tatuagem, salvo conteúdo que viole valores constitucionais.", "STJ, Súmula 266: o diploma ou registro exigido deve ser comprovado na posse, não na inscrição."],
+    juris: ["STF, Súmula 683: o limite de idade só se legitima quando justificado pela natureza das atribuições do cargo.", "STF, Tema 1.424: em cargos da segurança pública, a altura mínima exige lei e deve observar os parâmetros do Exército (1,60 m para homens e 1,55 m para mulheres).", "STF, Tema 838: restrição por tatuagem só em situações excepcionais, quando o conteúdo viola valores constitucionais.", "STJ, Súmula 266: o diploma ou registro exigido deve ser comprovado na posse, não na inscrição."],
     prazos: ["Mandado de segurança: 120 dias do ato."],
     docs: ["Edital", "Lei que criou o cargo", "Ato de eliminação"],
     passos: ["Verifique se o requisito está na lei, e não só no edital.", "Avalie se tem relação com as funções.", "Aja rápido: o concurso segue em frente."],
@@ -131,7 +131,7 @@ Object.assign(ROTEIROS, {
     acolhe: "Depois da nomeação há prazos curtos para tomar posse e entrar em exercício — e alguns imprevistos podem ser resolvidos.",
     perguntas: [{ q: "Qual o problema?", a: ["Posse negada", "Perdi o prazo de posse", "Quero adiar a posse", "Exame médico admissional"] }],
     lei: ["No âmbito federal, a posse ocorre em até 30 dias da publicação da nomeação, e o exercício em até 15 dias da posse (Lei 8.112/1990, arts. 13, §1º, e 15, §1º)."],
-    juris: ["A nomeação precisa ser comunicada de forma eficaz: quando passa muito tempo entre o resultado e a nomeação, a publicação só no Diário Oficial pode não bastar."],
+    juris: ["STF, Tema 161: aprovado dentro do número de vagas tem, em regra, direito à nomeação.", "STF, Tema 784: no cadastro de reserva, o surgimento de vagas não gera direito à nomeação, salvo preterição arbitrária e imotivada.", "A nomeação precisa ser comunicada de forma eficaz: quando passa muito tempo entre o resultado e a nomeação, a publicação só no Diário Oficial pode não bastar."],
     prazos: [NOTA_ENTE],
     docs: ["Ato de nomeação", "Comunicações recebidas", "Exames e laudos admissionais", "Documentos exigidos para a posse"],
     passos: ["Acompanhe o Diário Oficial e seu e-mail.", "Se houver problema, peça por escrito o motivo.", "Avalie pedido de prorrogação ou ação urgente."],
@@ -141,8 +141,8 @@ Object.assign(ROTEIROS, {
   "pcd-concurso": {
     acolhe: "Pessoas com deficiência têm vagas reservadas e direito a adaptações nas provas.",
     perguntas: [{ q: "Qual o problema?", a: ["Não fui enquadrado(a) como PcD", "Adaptação negada na prova", "Eliminado(a) por incompatibilidade com o cargo"] }],
-    lei: ["A lei reservará percentual dos cargos para pessoas com deficiência (Constituição, art. 37, VIII). No âmbito federal, a reserva vai de 5% a 20% das vagas (Lei 8.112/1990, art. 5º, §2º; Decreto 9.508/2018)."],
-    juris: ["A compatibilidade da deficiência com o cargo deve ser avaliada durante o estágio probatório, com as adaptações razoáveis, e não presumida antes."],
+    lei: ["A lei reservará percentual dos cargos para pessoas com deficiência (Constituição, art. 37, VIII). No âmbito federal, o Decreto 9.508/2018 prevê reserva mínima de 5%, e a Lei 8.112/1990 prevê até 20% (art. 5º, §2º)."],
+    juris: ["O Decreto 9.508/2018, alterado pelo Decreto 12.533/2025, prevê equipe multiprofissional e interdisciplinar e assegura acessibilidade e adaptações razoáveis ao longo do concurso. O enquadramento na reserva e as condições de exercício do cargo são questões distintas."],
     prazos: ["Recursos no prazo do edital; mandado de segurança em 120 dias."],
     docs: ["Laudo médico conforme o edital", "Pedido de atendimento especial", "Resposta da banca"],
     passos: ["Siga à risca as exigências do edital para o laudo.", "Recorra da decisão da equipe multiprofissional.", "Avalie ação se a negativa for indevida."],
@@ -152,7 +152,7 @@ Object.assign(ROTEIROS, {
   "processo-administrativo": {
     acolhe: "Quando você tem um pedido ou uma defesa num órgão público, existem prazos e garantias que a Administração precisa respeitar.",
     perguntas: [{ q: "Qual a situação?", a: ["Pedido sem resposta", "Decisão contra mim", "Quero recorrer", "Órgão anulou um ato a meu favor"] }],
-    lei: ["Concluída a instrução, a Administração tem até 30 dias para decidir, prorrogáveis por mais 30 motivadamente (Lei 9.784/1999, art. 49).", "O recurso administrativo tem prazo de 10 dias da ciência da decisão (Lei 9.784/1999, art. 59).", "A Administração tem 5 anos para anular atos que favoreçam o interessado de boa-fé (Lei 9.784/1999, art. 54)."],
+    lei: ["Concluída a instrução, a Administração tem até 30 dias para decidir, prorrogáveis por mais 30 motivadamente (Lei 9.784/1999, art. 49).", "O recurso administrativo tem prazo de 10 dias da ciência da decisão (Lei 9.784/1999, art. 59).", "A Administração tem 5 anos para anular atos favoráveis ao interessado, salvo má-fé comprovada; em pagamentos contínuos, o prazo conta do primeiro pagamento (Lei 9.784/1999, art. 54)."],
     juris: ["A demora excessiva e injustificada para decidir pode ser levada à Justiça, que pode fixar prazo para a decisão."],
     prazos: ["10 dias para recorrer (regra federal).", NOTA_ENTE],
     docs: ["Protocolo do pedido", "Decisão e fundamentação", "Cópia do processo"],
@@ -163,9 +163,9 @@ Object.assign(ROTEIROS, {
   "sancao-licitante": {
     acolhe: "Empresas punidas em licitação ou contrato público têm direito a defesa — e a pena precisa ser proporcional.",
     perguntas: [{ q: "Qual sanção?", a: ["Multa", "Impedimento de licitar", "Declaração de inidoneidade", "Ainda é só notificação"] }],
-    lei: ["As sanções são advertência, multa, impedimento de licitar e contratar (até 3 anos) e declaração de inidoneidade (de 3 a 6 anos) (Lei 14.133/2021, art. 156).", "Para impedimento e inidoneidade, a empresa tem 15 dias úteis para defesa, em processo conduzido por comissão (Lei 14.133/2021, art. 158)."],
+    lei: ["As sanções são advertência, multa, impedimento de licitar e contratar (até 3 anos) e declaração de inidoneidade (de 3 a 6 anos) (Lei 14.133/2021, art. 156).", "A defesa é de 15 dias úteis da intimação para multa, impedimento e inidoneidade (Lei 14.133/2021, arts. 157 e 158).", "Da decisão cabe recurso em 15 dias úteis (advertência, multa e impedimento) ou pedido de reconsideração no mesmo prazo (inidoneidade), ambos com efeito suspensivo (arts. 166 a 168)."],
     juris: [],
-    prazos: ["15 dias úteis para defesa nos processos de impedimento e inidoneidade."],
+    prazos: ["15 dias úteis para defesa e 15 dias úteis para recurso ou reconsideração."],
     docs: ["Contrato e edital", "Notificações", "Comunicações com o fiscal do contrato", "Provas da execução"],
     passos: ["Leia a notificação e anote o prazo.", "Reúna provas da execução e das dificuldades enfrentadas.", "Apresente defesa e, se necessário, recurso e ação."],
     urgente: ["Inscrição em cadastro de empresas punidas iminente"],
@@ -176,7 +176,7 @@ Object.assign(ROTEIROS, {
     perguntas: [{ q: "O que aconteceu?", a: ["Aumento forte de insumos", "Mudança de tributo", "Alteração do contrato pelo órgão", "Atraso de pagamento"] }],
     lei: ["O contrato pode ser alterado para restabelecer o equilíbrio econômico-financeiro em caso de fatos imprevisíveis ou previsíveis de consequências incalculáveis (Lei 14.133/2021, art. 124, II, d).", "Reajuste e repactuação seguem as regras do contrato e da lei (Lei 14.133/2021, arts. 25, §7º, e 135)."],
     juris: [],
-    prazos: ["Peça o reequilíbrio durante a vigência do contrato."],
+    prazos: ["Protocole o pedido durante a vigência e antes de eventual prorrogação (Lei 14.133/2021, art. 131, parágrafo único). Pedido feito a tempo pode ser reconhecido mesmo após a extinção do contrato (art. 131)."],
     docs: ["Contrato e proposta original", "Notas fiscais e cotações antes e depois", "Índices oficiais de preços", "Pedidos já feitos"],
     passos: ["Documente a variação de custos.", "Faça o pedido formal ao órgão.", "Se negado ou sem resposta, avalie a via judicial."],
     urgente: ["Contrato ficando inviável de executar"],
@@ -198,13 +198,13 @@ Object.assign(ROTEIROS, {
 Object.assign(DUVIDAS_CASOS, {
   "estagio-probatorio": [
     ["Posso ser exonerado(a) durante o estágio probatório?", "Pode, por reprovação na avaliação, mas só após processo em que você possa se defender. Exoneração sem esse procedimento pode ser anulada."],
-    ["Licenças e afastamentos interrompem o estágio?", "Alguns afastamentos suspendem a contagem do estágio, conforme o estatuto. A advogada confere as regras do seu ente."],
-    ["Posso fazer concurso para outro cargo durante o estágio?", "Pode. Em alguns casos, o servidor reprovado ou que desiste pode ser reconduzido ao cargo anterior, se era estável."],
+    ["Licenças e afastamentos interrompem o estágio?", "Licenças e afastamentos podem suspender a contagem, conforme a norma aplicável. A advogada confere as regras do seu ente."],
+    ["Posso fazer concurso para outro cargo durante o estágio?", "Sim. No regime federal, quem já era estável pode ser reconduzido ao cargo anterior se for inabilitado no estágio do novo cargo. A desistência exige examinar o regime aplicável e o vínculo anterior."],
   ],
   "demissao-servidor": [
     ["Fui demitido(a). Posso voltar ao cargo?", "Se a demissão for anulada, sim: é a reintegração, com pagamento dos valores que deixou de receber."],
     ["A pena foi exagerada para o que fiz. Dá para rever?", "Sim. Penas desproporcionais podem ser revistas pela própria Administração ou pela Justiça."],
-    ["Respondo a processo criminal pelo mesmo fato. Uma coisa depende da outra?", "Em regra, as instâncias são independentes. Mas a absolvição criminal por inexistência do fato ou negativa de autoria repercute no administrativo."],
+    ["Respondo a processo criminal pelo mesmo fato. Uma coisa depende da outra?", "Em regra, as esferas são independentes. No regime federal, a absolvição criminal que nega o fato ou a autoria afasta a responsabilidade administrativa pelo mesmo fato (Lei 8.112/1990, art. 126)."],
   ],
   "acumulacao-cargos": [
     ["Posso ter dois cargos de saúde com mais de 60 horas semanais?", "O STF decidiu que não há limite fixo de horas: o que importa é a compatibilidade real de horários, sem prejuízo do trabalho e do descanso."],
@@ -216,12 +216,12 @@ Object.assign(DUVIDAS_CASOS, {
     ["Preciso de junta médica para remoção por saúde?", "No federal, sim. O laudo do seu médico ajuda, mas a junta oficial é exigida."],
   ],
   "progressao-servidor": [
-    ["O órgão não fez minha avaliação e por isso não progredi. É justo?", "Não. A omissão da Administração não pode prejudicar o servidor. É possível pedir a progressão e os valores retroativos."],
-    ["Até quando posso cobrar?", "As diferenças dos últimos 5 anos antes do pedido."],
+    ["O órgão não fez minha avaliação e por isso não progredi. É justo?", "É possível pedir que a avaliação seja feita e que os efeitos do atraso sejam analisados. Mas a omissão, sozinha, não prova que todos os requisitos foram cumpridos."],
+    ["Até quando posso cobrar?", "Em regra, as parcelas dos últimos 5 anos antes da ação. Se houve negativa expressa do direito, é preciso verificar se a prescrição alcança o próprio direito."],
   ],
   "insalubridade-servidor": [
-    ["Recebo o adicional desde quando?", "Em regra, a partir do laudo que reconhece a insalubridade. Por isso, peça a avaliação do ambiente o quanto antes."],
-    ["Cortaram meu adicional. Pode?", "Só com novo laudo que mostre a mudança das condições, e com comunicação. Corte sem laudo pode ser questionado."],
+    ["Recebo o adicional desde quando?", "Depende do regime e da documentação técnica: um laudo atual não comprova sozinho períodos anteriores. Por isso, peça a avaliação do ambiente o quanto antes."],
+    ["Cortaram meu adicional. Pode?", "O adicional cessa quando a condição de risco é eliminada ou há mudança de lotação. Peça o laudo e o ato de cessação: corte sem motivo técnico pode ser questionado."],
   ],
   "desvio-funcao": [
     ["Se eu provar o desvio, mudo de cargo?", "Não. A mudança de cargo exige concurso. Mas você recebe as diferenças salariais do período."],
@@ -233,9 +233,9 @@ Object.assign(DUVIDAS_CASOS, {
     ["Assinei um termo de parcelamento. Ainda posso discutir?", "Pode, mas é melhor buscar orientação antes de assinar."],
   ],
   "questao-concurso": [
-    ["A banca cobrou assunto que não estava no edital. Anula?", "Sim, essa é uma das hipóteses em que a Justiça admite anular a questão."],
-    ["Discordo da correção da minha redação. A Justiça revê?", "Em regra, não reavalia o mérito da correção, mas pode anular quando não há critérios claros, falta fundamentação ou o recurso não foi respondido."],
-    ["Se a questão for anulada, ganho os pontos?", "Normalmente, os pontos são atribuídos a todos os candidatos, conforme o edital, o que pode mudar a classificação."],
+    ["A banca cobrou assunto que não estava no edital. Anula?", "Pode ser, se a incompatibilidade com o programa do edital for demonstrada. É uma das hipóteses de ilegalidade examinadas pela Justiça."],
+    ["Discordo da correção da minha redação. A Justiça revê?", "Em regra, não: a nota pertence à avaliação da banca. Mas, se a correção desrespeitar critérios do edital ou houver vício de fundamentação, é possível questionar."],
+    ["Se a questão for anulada, ganho os pontos?", "O efeito sobre os pontos e a classificação depende do edital e da decisão."],
   ],
   "requisitos-concurso": [
     ["Fui eliminado(a) por idade. Pode?", "Só se o limite estiver previsto em lei e tiver justificativa nas atribuições do cargo."],
@@ -243,9 +243,9 @@ Object.assign(DUVIDAS_CASOS, {
     ["Tatuagem elimina?", "Em regra, não. Só tatuagens com conteúdo que viole valores constitucionais (por exemplo, de ódio ou violência)."],
   ],
   "investigacao-social": [
-    ["Respondo a processo que ainda não terminou. Podem me eliminar?", "Pela jurisprudência do STF, sem lei específica, não: há presunção de inocência."],
+    ["Respondo a processo que ainda não terminou. Podem me eliminar?", "Pelo Tema 22 do STF, o simples fato de responder a inquérito ou ação penal não basta, sem previsão adequada em lei. Carreiras com requisitos legais mais rigorosos exigem análise específica."],
     ["Esqueci de declarar um processo antigo. Isso elimina?", "Depende da relevância e da boa-fé. Omissões sem má-fé e sem gravidade podem ser relevadas."],
-    ["Dívidas e nome negativado eliminam?", "Em regra, não deveriam, salvo situações muito específicas previstas no edital e justificadas pelo cargo."],
+    ["Dívidas e nome negativado eliminam?", "Depende: é preciso verificar a base legal, a motivação e a relação com o cargo."],
   ],
   "posse-nomeacao": [
     ["Perdi o prazo da posse porque não fiquei sabendo da nomeação. E agora?", "Se a comunicação não foi eficaz (por exemplo, nomeação muito tempo depois do resultado, só no Diário Oficial), é possível pedir nova oportunidade de posse."],
@@ -253,7 +253,7 @@ Object.assign(DUVIDAS_CASOS, {
   ],
   "pcd-concurso": [
     ["A banca disse que minha deficiência não é suficiente para concorrer como PcD. Posso recorrer?", "Pode, com laudos e, se preciso, na Justiça."],
-    ["Podem me eliminar dizendo que a deficiência é incompatível com o cargo?", "A compatibilidade deve ser avaliada na prática, no estágio probatório, com as adaptações necessárias."],
+    ["Podem me eliminar dizendo que a deficiência é incompatível com o cargo?", "Confira as atribuições do cargo, a fundamentação e as adaptações consideradas. A negativa precisa ser motivada e pode ser contestada."],
   ],
   "processo-administrativo": [
     ["O órgão não responde meu pedido há meses. O que faço?", "A demora injustificada pode ser levada à Justiça, por mandado de segurança, para que o órgão decida em prazo fixado."],
@@ -263,14 +263,14 @@ Object.assign(DUVIDAS_CASOS, {
   "sancao-licitante": [
     ["Minha empresa foi multada no contrato. Posso contestar?", "Sim. A sanção exige processo, prazo de defesa e proporcionalidade."],
     ["O impedimento vale para todos os órgãos?", "O impedimento de licitar vale, em regra, para o ente que aplicou (União, estado, DF ou município). A inidoneidade vale para toda a Administração."],
-    ["Podemos voltar a licitar antes do fim da pena?", "A lei prevê reabilitação, cumpridos requisitos como reparação do dano e prazo mínimo."],
+    ["Podemos voltar a licitar antes do fim da pena?", "A lei prevê reabilitação, com requisitos cumulativos do art. 163, inclusive prazo mínimo de 1 ano (impedimento) ou 3 anos (inidoneidade)."],
   ],
   "reequilibrio-contrato": [
-    ["Os custos subiram muito. Posso pedir reajuste fora da data?", "O reajuste segue a data do contrato. Mas, se houve fato imprevisível que quebrou o equilíbrio, cabe o pedido de reequilíbrio a qualquer tempo, com provas."],
-    ["O órgão alterou o contrato e meu custo aumentou. Tenho direito?", "Sim. Alterações unilaterais exigem a recomposição do equilíbrio."],
+    ["Os custos subiram muito. Posso pedir reajuste fora da data?", "O reajuste segue o índice e a data-base do contrato. Se houve força maior, caso fortuito, fato do príncipe ou fato imprevisível que inviabilize a execução, cabe a revisão extraordinária, observada a matriz de riscos — sempre durante a vigência e antes de eventual prorrogação."],
+    ["O órgão alterou o contrato e meu custo aumentou. Tenho direito?", "Sim. Se a alteração unilateral aumentar os encargos, a recomposição deve constar do mesmo termo aditivo (art. 130)."],
   ],
   "sancao-administrativa": [
-    ["A multa do Procon é muito alta. Dá para reduzir?", "Sim, quando não respeita os critérios legais (gravidade, vantagem obtida, porte da empresa) ou falta fundamentação."],
-    ["Preciso pagar para recorrer?", "Em regra, não pode ser exigido depósito prévio para recorrer administrativamente (STF, Súmula Vinculante 21)."],
+    ["A multa do Procon é muito alta. Dá para reduzir?", "Sim, quando não respeita os critérios legais (no Procon: gravidade, vantagem auferida e condição econômica do fornecedor — CDC, art. 57) ou falta fundamentação."],
+    ["Preciso pagar para recorrer?", "Não. O STF considera inconstitucional exigir depósito ou arrolamento prévio para admitir recurso administrativo (Súmula Vinculante 21)."],
   ],
 });
