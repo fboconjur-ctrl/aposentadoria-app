@@ -10,7 +10,7 @@
   capa.innerHTML = `<div class="login-box">
     <a class="brand" href="../">Plataforma do Direito</a>
     <h1>Área do escritório</h1><p class="muted">Acesso restrito à equipe.</p>
-    ${CFG.google ? `<button class="btn" type="button" id="login-google">Entrar com Google</button><p class="small muted">ou</p>` : ""}
+    ${CFG.google ? `<div id="login-google-box" ${CFG.google === "auto" ? "hidden" : ""}><button class="btn" type="button" id="login-google">Entrar com Google</button><p class="small muted">ou</p></div>` : ""}
     <form id="login-form">
       <label>E-mail<input id="login-email" class="search" type="email" required autocomplete="email" inputmode="email"></label>
       <label>Senha<span class="login-senha"><input id="login-senha" class="search" type="password" required minlength="8" autocomplete="current-password"><button type="button" class="linkish small" id="login-ver" aria-label="Mostrar senha">mostrar</button></span></label>
@@ -20,6 +20,7 @@
     <p class="small"><button type="button" class="linkish" id="login-criar">Primeiro acesso? Criar minha senha</button></p>
     <p class="small"><button type="button" class="linkish" id="login-esqueci">Esqueci minha senha</button></p></div>`;
   document.body.appendChild(capa);
+  if (CFG.google === "auto") fetch(`${CFG.url}/auth/v1/settings`, { headers: { apikey: CFG.anonKey } }).then((r) => r.json()).then((d) => { if (d?.external?.google) document.getElementById("login-google-box").hidden = false; }).catch(() => {});
   const msg = (t) => (document.getElementById("login-msg").textContent = t);
   document.getElementById("login-ver").onclick = (e) => { const i = document.getElementById("login-senha"), ver = i.type === "password"; i.type = ver ? "text" : "password"; e.target.textContent = ver ? "ocultar" : "mostrar"; };
 

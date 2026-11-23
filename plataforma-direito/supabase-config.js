@@ -3,5 +3,6 @@
 window.SUPABASE_CONFIG = {
   url: "https://apgrgbotrrhtxfhcjsgq.supabase.co",
   anonKey: "sb_publishable_DmfEqquL-n4VPBaTpbPumw_sSC6gmnW",
-  google: false, // vira true quando o login com Google estiver ativado no Supabase
+  google: "auto", // mostra "Entrar com Google" quando o provedor estiver ligado no Supabase
+  googleClientId: "491578847701-hgf139r9a15olip0d0n7fs7va3kj7hpp.apps.googleusercontent.com", // público por natureza (Drive e login)
 };
