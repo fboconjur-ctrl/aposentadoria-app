@@ -674,6 +674,8 @@ function catalogo() {
 }
 function titulo(id) { return catalogo()[id] || id; }
 async function api(corpo, ms = 25000) {
+  // Sem API paga: o site funciona só com os roteiros e as dúvidas escritos à mão. Para religar, apagar a linha abaixo.
+  if (true) return null;
   const c = new AbortController(); const t = setTimeout(() => c.abort(), ms);
   try { const r = await fetch("/api/analisar", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(corpo), signal: c.signal }); return r.ok ? await r.json() : null; }
   catch { return null; } finally { clearTimeout(t); }

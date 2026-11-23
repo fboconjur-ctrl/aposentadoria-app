@@ -51,6 +51,15 @@
   let controle = null, bruto = "";
   $("as-form").onsubmit = async (e) => {
     e.preventDefault();
+    // Sem API paga: monta o pedido, copia e abre o Claude da assinatura da advogada.
+    const texto0 = $("as-texto").value.trim();
+    if (texto0.length < 20) { $("as-status").textContent = "Escreva ou cole um texto maior."; return; }
+    const nome = TAREFAS.find((t) => t[0] === sel.value)[1].replace(/^\S+\s/, "");
+    const pedido = `Tarefa: ${nome}.\nSou advogada no Brasil. Responda em português, com linguagem clara, sem inventar jurisprudência, números de processo ou dados: marque [CONFERIR] o que precisar de verificação. Respeite a ética da OAB (Provimento 205/2021). Não repita dados pessoais desnecessários.\n\n---\n${texto0}`;
+    try { await navigator.clipboard.writeText(pedido); } catch { $("as-status").textContent = "Não consegui copiar. Selecione o texto e copie manualmente."; return; }
+    window.open("https://claude.ai/new", "_blank", "noopener");
+    $("as-status").textContent = "Pedido copiado. No Claude que abriu, cole com Ctrl+V e envie.";
+    return;
     if (controle) { controle.abort(); return; }
     const texto = $("as-texto").value.trim();
     if (texto.length < 20) { $("as-status").textContent = "Escreva ou cole um texto maior."; return; }
@@ -82,7 +91,7 @@
     } catch (er) {
       if (er.name !== "AbortError") { $("as-resultado").innerHTML = ""; $("as-saida").hidden = true; $("as-status").textContent = er.message; }
       else $("as-status").textContent = "Parado.";
-    } finally { controle = null; $("as-enviar").textContent = "Gerar"; }
+    } finally { controle = null; $("as-enviar").textContent = "Copiar e abrir no Claude"; }
   };
   $("as-copiar").onclick = async () => { try { await navigator.clipboard.writeText(bruto); $("as-status").textContent = "Copiado! Cole no Word, e-mail ou WhatsApp."; } catch { $("as-status").textContent = "Não consegui copiar; selecione o texto e use Ctrl+C."; } };
   $("as-notas").onclick = () => {
