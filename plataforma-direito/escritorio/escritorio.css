@@ -183,8 +183,10 @@ body.office { display: grid; grid-template-columns: 240px minmax(0, 1fr); min-he
 .dac-q { display: flex; gap: 12px; justify-content: space-between; align-items: center; flex-wrap: wrap; padding: 10px 0; border-bottom: 1px solid var(--line); }
 .dac-opts { display: flex; gap: 6px; } .dac-opts .on { background: var(--brand); color: #fff; border-color: var(--brand); }
 
-/* Associado: só os casos atribuídos — sem financeiro, cadastro de clientes, pedidos, publicações e equipe. */
-.modo-associado .so-titular, .modo-associado [data-view="fin"], .modo-associado [data-view="importar"], .modo-associado [data-view="djen"],
+/* Associado: só os casos atribuídos — sem financeiro, cadastro de clientes, pedidos e equipe.
+   Publicações ficam liberadas: a busca pela OAB dele roda no aparelho dele e não vai para o escritório. */
+.so-associado { display: none; } .modo-associado .so-associado { display: block; }
+.modo-associado .so-titular, .modo-associado [data-view="fin"], .modo-associado [data-view="importar"],
 .modo-associado #crm-novo, .modo-associado #crm-excluir, .modo-associado #fi-hon-abrir, .modo-associado #fi-ind-abrir,
 .modo-associado .panel:has(> .fi-tit #fi-hon-abrir) { display: none !important; }
 
