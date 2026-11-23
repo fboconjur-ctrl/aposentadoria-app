@@ -56,7 +56,31 @@
       if (publicados.get(c.portal.token) === pk) continue;
       try { await Portal.publicar(c.portal.token, d); publicados.set(c.portal.token, pk); } catch {}
     }
+    avisarPorEmail();
   }, 2000); };
+  // Aviso automático por e-mail: novidade no processo ou resposta da advogada. Só o aviso e o link (sigilo).
+  let avisando = false;
+  async function avisarPorEmail() {
+    if (avisando || !window.enviarEmail) return; avisando = true;
+    try {
+      for (const c of clientes.filter((x) => x.portal?.token && x.portal.ativo !== false && x.email && x.avisoEmail !== false)) {
+        const d = dadosDoCliente(c);
+        const evMax = (d.processos || []).flatMap((p) => p.eventos || []).map((e) => e.data).sort().pop() || "";
+        const respMax = (c.respostasPortal || []).map((r) => r.em).sort().pop() || "";
+        c.avisoBase ||= { ev: evMax, resp: respMax }; // primeira vez: só marca a base, não dispara aviso antigo
+        const motivos = [];
+        if (evMax && evMax > c.avisoBase.ev) motivos.push("houve uma novidade no seu processo");
+        if (respMax && respMax > c.avisoBase.resp) motivos.push("a advogada respondeu a sua mensagem");
+        if (!motivos.length) continue;
+        const texto = `Olá, ${primeiroNome(c.nome)}!\n\nPassando para avisar que ${motivos.join(" e ")}.\n\nVeja os detalhes, explicados em palavras simples, na sua área de acompanhamento:\n${link(c.portal.token)}\n\nEste link é pessoal: não compartilhe.\n\nEsta é uma mensagem automática. Para responder, use a conversa na sua área ou o WhatsApp do escritório.`;
+        try {
+          await enviarEmail(c.email, "Novidade no seu caso", texto);
+          c.avisoBase = { ev: evMax || c.avisoBase.ev, resp: respMax || c.avisoBase.resp };
+          (c.hist ||= []).unshift({ em: new Date().toISOString(), o: `E-mail automático: ${motivos.join(" e ")}` }); salvarCrm();
+        } catch (er) { if (/RESEND_API_KEY|ainda não foi ligado/i.test(er.message)) break; }
+      }
+    } finally { avisando = false; }
+  }
   const setOrig = Storage.prototype.setItem;
   Storage.prototype.setItem = function (k, v) { setOrig.call(this, k, v); if (this === localStorage && /^pd-(crm|itens|financeiro|acervo|adv)$/.test(k)) publicarTodos(); };
 
@@ -109,6 +133,7 @@
       : `<div class="as-linha"><code class="small" style="word-break:break-all">${esc(link(p.token))}</code></div>
         <div class="as-linha"><button class="wa-btn" id="fi-portal-wa">Enviar link pelo WhatsApp</button><button class="back" id="fi-portal-copiar">Copiar link</button><a class="back" href="${esc(link(p.token))}" target="_blank" rel="noopener">Ver como o cliente vê</a><button class="linkish small" id="fi-portal-desligar">${p.ativo === false ? "reativar link" : "desativar link"}</button></div>
         <p class="small muted">${p.ativo === false ? "⛔ Link desativado: o cliente não consegue abrir." : p.visto ? `Última visita do cliente: ${new Date(p.visto).toLocaleString("pt-BR")}` : "O cliente ainda não abriu."}</p>
+        <label class="small"><input type="checkbox" id="fi-portal-avemail" ${c.avisoEmail !== false ? "checked" : ""} ${c.email ? "" : "disabled"}> Avisar por e-mail quando houver novidade no processo ou resposta minha ${c.email ? `(${esc(c.email)})` : "— cadastre o e-mail do cliente em “Editar dados”"}</label>
         <label class="small">Recado para o cliente (aparece no topo da área dele)<textarea id="fi-portal-recado" class="search" rows="2" style="width:100%;box-sizing:border-box">${esc(c.recado || "")}</textarea></label>
         <label class="small">Próximo passo (se vazio, usa o texto padrão da etapa)<input id="fi-portal-prox" class="search" style="width:100%;box-sizing:border-box" value="${esc(c.proximoCliente || "")}" placeholder="${esc(PROXIMO[c.etapa] || "")}"></label>
         ${(c.msgsPortal || []).length ? `<h3 class="small">Mensagens do cliente ${naoLidas.length ? `<span class="pill-s amber">${naoLidas.length} nova(s)</span>` : ""}</h3><ul class="list small">${[...c.msgsPortal.map((m) => ({ ...m, quem: "Cliente" })), ...(c.respostasPortal || []).map((m) => ({ ...m, quem: "Você" }))].sort((x, y) => String(y.em).localeCompare(String(x.em))).slice(0, 12).map((m) => `<li><span class="when">${new Date(m.em).toLocaleString("pt-BR")}</span><span><b>${m.quem}:</b> ${esc(m.texto)}</span></li>`).join("")}</ul>${naoLidas.length ? `<button class="linkish small" id="fi-portal-lidas">marcar como lidas</button>` : ""}` : ""}
@@ -130,6 +155,7 @@
       salvarCrm(); publicarTodos(); render(); renderHoje(); $("fi-portal-resp-st").innerHTML = `✅ Enviada. ${telWa(c.tel) ? `<button class="wa-btn" id="fi-portal-avisar">Avisar pelo WhatsApp</button>` : ""}`;
       $("fi-portal-avisar")?.addEventListener("click", () => { open(`https://wa.me/${telWa(c.tel)}?text=${encodeURIComponent(`Olá, ${primeiroNome(c.nome)}! Respondi a sua mensagem na sua área do cliente:\n\n${link(p.token)}`)}`, "_blank", "noopener"); (c.hist ||= []).unshift({ em: new Date().toISOString(), o: "WhatsApp: aviso de resposta na área do cliente" }); salvarCrm(); });
     });
+    $("fi-portal-avemail")?.addEventListener("change", (e) => { c.avisoEmail = e.target.checked; salvarCrm(); });
     $("fi-portal-lidas")?.addEventListener("click", async () => { await Portal.marcarLidas(naoLidas.map((m) => m.id)); naoLidas.forEach((m) => (m.lida = true)); render(); renderHoje(); });
   }
   const orig = window.renderOnb;
