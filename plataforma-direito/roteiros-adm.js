@@ -195,7 +195,26 @@ Object.assign(ROTEIROS, {
   },
 });
 
+Object.assign(ROTEIROS, {
+  "tempo-servidor-inss": {
+    acolhe: "Quem sai do serviço público não perde o tempo trabalhado: ele pode ser levado para o INSS e contar para a aposentadoria.",
+    perguntas: [{ q: "Qual era o seu vínculo?", a: ["Cargo efetivo (concursado)", "Cargo em comissão, temporário ou celetista", "Não sei"] }],
+    lei: ["É assegurada a contagem recíproca do tempo de contribuição entre o regime próprio do servidor e o INSS, com compensação financeira entre os regimes (Constituição, art. 201, §9º; Lei 9.796/1999).", "Quem ocupava só cargo em comissão, temporário ou emprego público (celetista) já contribuía para o INSS: esse tempo, em regra, já aparece no CNIS.", "O mesmo período não pode ser contado duas vezes, nem quando já foi usado para outra aposentadoria (Lei 8.213/1991, art. 96)."],
+    juris: [],
+    prazos: ["Não há prazo para pedir a certidão, mas é bom fazer logo após sair, enquanto os registros estão fáceis de localizar."],
+    docs: ["Ato de exoneração ou vacância", "Certidão de Tempo de Contribuição (CTC) emitida pelo órgão ou pelo instituto de previdência do servidor", "Relação das remunerações de contribuição (normalmente anexa à CTC)", "Documentos pessoais e CNIS atualizado"],
+    passos: ["Peça a CTC ao setor de pessoal do órgão ou ao instituto de previdência (RPPS) onde você contribuía.", "Confira na certidão os períodos, as datas e se há tempo já usado em outro benefício.", "No Meu INSS, peça a averbação/atualização do tempo de contribuição anexando a CTC.", "Depois, confira se o período passou a aparecer no seu CNIS e refaça a simulação."],
+    urgente: ["Já vai pedir a aposentadoria no INSS e falta esse tempo"],
+    fontes: [CF, ["Lei 8.213/1991 (benefícios do INSS)", "https://www.planalto.gov.br/ccivil_03/leis/l8213cons.htm"], ["Lei 9.796/1999 (compensação entre regimes)", "https://www.planalto.gov.br/ccivil_03/leis/l9796.htm"]],
+  },
+});
 Object.assign(DUVIDAS_CASOS, {
+  "tempo-servidor-inss": [
+    ["Pedi exoneração. Perco os anos que trabalhei no serviço público?", "Não. Com a Certidão de Tempo de Contribuição, esse tempo é levado para o INSS e conta para a aposentadoria."],
+    ["O órgão demora ou se recusa a emitir a CTC. O que faço?", "Faça o pedido por escrito e guarde o protocolo. Se a demora for injustificada, é possível exigir a emissão na Justiça."],
+    ["Trabalhei ao mesmo tempo no serviço público e numa empresa. Soma tudo?", "Não: períodos simultâneos não se somam na contagem recíproca. Cada período só conta uma vez."],
+    ["O valor da aposentadoria no INSS vai considerar meus salários de servidor?", "As remunerações que constam da certidão podem entrar no cálculo da média. Por isso, confira se a relação de remunerações veio junto com a CTC."],
+  ],
   "estagio-probatorio": [
     ["Posso ser exonerado(a) durante o estágio probatório?", "Pode, por reprovação na avaliação, mas só após processo em que você possa se defender. Exoneração sem esse procedimento pode ser anulada."],
     ["Licenças e afastamentos interrompem o estágio?", "Licenças e afastamentos podem suspender a contagem, conforme a norma aplicável. A advogada confere as regras do seu ente."],
