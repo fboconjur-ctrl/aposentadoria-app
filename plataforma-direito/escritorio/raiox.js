@@ -86,13 +86,28 @@
     const sel = $q("#rx-cli"), v = sel.value;
     sel.innerHTML = `<option value="">— sem cliente —</option>` + clientes.map((c) => `<option value="${c.id}">${esc(c.nome)}</option>`).join(""); sel.value = v;
   });
-  $q("#rx-cli").addEventListener("change", (e) => { const c = clientes.find((x) => x.id === e.target.value); const n = soNum(c?.cnpj || c?.cpf); if (n.length === 14) $q("#rx-cnpj").value = fmtCnpj(n); });
+  const cnpjDoCliente = (c) => {
+    if (!c) return "";
+    for (const v of [c.cnpj, c.cpf, c.doc]) { const n = soNum(v); if (n.length === 14 && cnpjValido(n)) return n; }
+    for (const m of JSON.stringify(c).matchAll(/\d{2}\.?\d{3}\.?\d{3}\/?\d{4}-?\d{2}/g)) { const n = soNum(m[0]); if (cnpjValido(n)) return n; }
+    return "";
+  };
+  $q("#rx-cli").addEventListener("change", (e) => {
+    const c = clientes.find((x) => x.id === e.target.value), n = cnpjDoCliente(c), st = $q("#rx-st");
+    $q("#rx-cnpj").value = n ? fmtCnpj(n) : "";
+    st.textContent = !c ? "" : n ? "CNPJ encontrado no cadastro do cliente." : "Este cliente ainda não tem CNPJ no cadastro. Digite aqui: depois da consulta ele fica salvo na ficha.";
+  });
   $q("#rx-form").addEventListener("submit", async (e) => {
     e.preventDefault(); const st = $q("#rx-st"), c = soNum($q("#rx-cnpj").value);
+    if (!c) { st.textContent = "Digite o CNPJ da empresa."; return; }
     if (!cnpjValido(c)) { st.textContent = "CNPJ inválido. Confira os números."; return; }
     if (!$q("#rx-ok").checked) { st.textContent = "Marque a autorização do cliente para consultar."; return; }
     st.textContent = "Consultando a base pública da Receita…"; $q("#rx-res").innerHTML = "";
-    try { empresa = await chamar({ acao: "cnpj", cnpj: c }); renderEmpresa(empresa); st.textContent = ""; }
+    try {
+      empresa = await chamar({ acao: "cnpj", cnpj: c }); renderEmpresa(empresa); st.textContent = "";
+      const cli = clientes.find((x) => x.id === $q("#rx-cli").value);
+      if (cli && !cnpjDoCliente(cli)) { cli.cnpj = c; salvarCrm(); st.textContent = "CNPJ salvo no cadastro do cliente."; }
+    }
     catch (er) { st.textContent = er.message; }
   });
 
