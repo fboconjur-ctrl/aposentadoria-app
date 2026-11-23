@@ -512,3 +512,98 @@ Object.assign(DUVIDAS_CASOS, {
     ["Quanto tempo tenho para reclamar?", "Para serviços com defeito, o prazo inicial é de 90 dias; para indenização por danos, em regra 5 anos."],
   ],
 });
+
+Object.assign(DUVIDAS_CASOS, {
+  "pcd-grau": [
+    ["Quem decide se minha deficiência é leve, moderada ou grave?", "O INSS, numa avaliação feita por perito médico e assistente social, que medem como a deficiência limita o seu dia a dia e o trabalho."],
+    ["Posso contestar o grau?", "Sim, por recurso administrativo ou na Justiça, com laudos e relatórios que mostrem as limitações reais."],
+    ["O grau muda o tempo de contribuição exigido?", "Muda: quanto mais grave, menor o tempo exigido. Por isso vale a pena discutir quando o grau não reflete a realidade."],
+  ],
+  "pontos-2026": [
+    ["Quantos pontos preciso em 2026?", "Na regra de transição por pontos, em 2026 são 93 pontos para mulheres e 103 para homens (idade + tempo de contribuição), com mínimo de 30 e 35 anos de contribuição, respectivamente. A pontuação sobe 1 ponto por ano."],
+    ["Essa regra serve para mim?", "Só para quem já contribuía antes de 13/11/2019. A advogada compara com as outras regras de transição para ver a mais vantajosa."],
+    ["Frações de ano contam?", "Sim, meses de idade e de contribuição entram na conta."],
+  ],
+  "calculo-valor": [
+    ["Como é calculado o valor da aposentadoria hoje?", "Em regra, faz-se a média de todos os salários de contribuição desde julho de 1994. Sobre essa média, aplica-se 60% mais 2% por ano de contribuição que passar de 15 anos (mulheres) ou 20 anos (homens), com exceções."],
+    ["Por que meu valor ficou tão baixo?", "Salários baixos no início da carreira, períodos faltando no CNIS ou aplicação da regra errada costumam reduzir o valor. Vale conferir o cálculo e o CNIS."],
+    ["Posso pedir revisão?", "Em regra, o prazo para pedir revisão é de 10 anos contados do primeiro pagamento. Erros de cálculo e períodos não considerados são as causas mais comuns."],
+  ],
+  "recurso-prazo": [
+    ["Qual o prazo para recorrer de decisão do INSS?", "30 dias contados da ciência da decisão, pelo Meu INSS."],
+    ["Perdi o prazo. E agora?", "Você ainda pode fazer um novo pedido ou ir à Justiça. A advogada avalia o melhor caminho para não perder valores atrasados."],
+    ["Preciso de advogado para recorrer?", "Não é obrigatório, mas uma defesa bem fundamentada aumenta muito as chances, principalmente em discussões técnicas."],
+  ],
+  "especial-ppp": [
+    ["O que é aposentadoria especial?", "É a aposentadoria de quem trabalhou exposto a agentes nocivos à saúde (ruído, produtos químicos, agentes biológicos, entre outros), com tempo de contribuição menor."],
+    ["O que é o PPP e como consigo?", "O Perfil Profissiográfico Previdenciário descreve as condições do seu trabalho. A empresa é obrigada a fornecer. Se fechou, existem outros meios de prova, como laudos e perícia."],
+    ["Usar EPI tira o direito?", "Nem sempre. Para ruído, o STF decidiu que o EPI não afasta o direito. Para outros agentes, depende da eficácia comprovada."],
+  ],
+  "salario-maternidade": [
+    ["Quem tem direito ao salário-maternidade?", "Seguradas do INSS que têm filho, adotam ou obtêm guarda para adoção: empregadas, domésticas, contribuintes individuais, MEI, facultativas e seguradas especiais (rurais). Em alguns casos, também homens (adoção ou falecimento da mãe)."],
+    ["Por quanto tempo?", "120 dias, em regra. Em caso de internação longa da mãe ou do bebê após o parto, o prazo pode ser estendido."],
+    ["Preciso ter contribuído quanto tempo?", "Para empregadas e domésticas, não há carência. Para as demais, as exigências mudaram depois de decisão recente do STF sobre carência; a advogada confere a regra aplicável ao seu caso."],
+    ["Estou desempregada. Tenho direito?", "Pode ter, se ainda estiver no período de graça (mantendo a qualidade de segurada)."],
+  ],
+  "ir-doenca-grave": [
+    ["Aposentado com doença grave paga Imposto de Renda?", "Não sobre os proventos de aposentadoria, pensão ou reforma, se a doença estiver na lista da lei (câncer, cardiopatia grave, Parkinson, entre outras)."],
+    ["Preciso de laudo oficial?", "Para pedir na fonte pagadora, em regra sim (laudo de serviço médico oficial). Na Justiça, outros laudos médicos são aceitos."],
+    ["Recebo o que já paguei?", "Sim, em regra os valores dos últimos 5 anos, desde que a doença já existisse no período."],
+    ["E se a doença estiver controlada?", "O STJ entende que a isenção continua mesmo sem sintomas atuais, por exemplo, após o tratamento do câncer."],
+  ],
+  "pericia-inss": [
+    ["Como me preparar para a perícia?", "Leve documento com foto, relatórios médicos recentes e detalhados (com CID, tratamento e limitações), exames e receitas. Organize tudo por data."],
+    ["O que dizer ao perito?", "Explique com sinceridade como a doença afeta o seu trabalho e o dia a dia, sem exagerar nem minimizar."],
+    ["O perito me deu poucos minutos. Isso é normal?", "Infelizmente, é comum. Por isso, os documentos precisam falar por você. Se a perícia for injusta, é possível recorrer ou pedir perícia judicial."],
+  ],
+  "servidor-aposentadoria": [
+    ["As regras do servidor são iguais às do INSS?", "Não. O servidor efetivo tem regime próprio (RPPS), com regras do seu ente (União, estado ou município), que podem ser diferentes."],
+    ["Tenho direito a integralidade e paridade?", "Depende da data de ingresso no serviço público e da regra de transição. Quem entrou antes de 2004 pode ter direito, conforme as condições."],
+    ["Posso contar o tempo de INSS no serviço público?", "Sim, por meio da Certidão de Tempo de Contribuição (CTC), emitida pelo INSS."],
+  ],
+  "periodo-graca": [
+    ["Parei de contribuir. Ainda sou segurado?", "Sim, por um tempo (período de graça): em regra, 12 meses após a última contribuição, podendo ir a 24 ou 36 meses em algumas situações (mais de 120 contribuições sem perder a qualidade, ou desemprego involuntário comprovado)."],
+    ["Para que serve isso?", "Durante o período de graça, você e seus dependentes mantêm a proteção do INSS, como auxílio por incapacidade e pensão por morte."],
+    ["Perdi a qualidade de segurado. Perdi tudo?", "Não. O tempo já contribuído continua contando para a aposentadoria. Para outros benefícios, é preciso voltar a contribuir."],
+  ],
+  "auxilio-acidente": [
+    ["Quem tem direito ao auxílio-acidente?", "O segurado empregado, doméstico, trabalhador avulso ou segurado especial que ficou com sequela permanente que reduz a capacidade para o trabalho, depois de um acidente de qualquer natureza."],
+    ["Posso trabalhar e receber ao mesmo tempo?", "Sim. É uma indenização mensal de 50% do salário de benefício, paga junto com o salário, até a aposentadoria."],
+    ["Precisa de carência?", "Não. Mas é preciso comprovar a sequela e a redução da capacidade, geralmente por perícia."],
+  ],
+  "rural": [
+    ["Como funciona a aposentadoria rural?", "O trabalhador rural (segurado especial) se aposenta por idade aos 55 anos (mulheres) ou 60 (homens), comprovando atividade rural pelo tempo exigido, mesmo sem ter contribuído mensalmente."],
+    ["O que é a aposentadoria híbrida?", "Para quem trabalhou parte no campo e parte na cidade: soma-se o tempo rural ao urbano, com as idades da regra urbana."],
+    ["Como provar o trabalho rural?", "Documentos da época (bloco de notas do produtor, contratos, certidões com profissão de lavrador, declarações do sindicato) e testemunhas."],
+  ],
+  "conversao-especial": [
+    ["Posso converter tempo especial em comum?", "Sim, mas só para o tempo trabalhado até 13/11/2019. Depois da Reforma, a conversão não é mais permitida."],
+    ["Quanto o tempo aumenta?", "Para atividades de 25 anos, o tempo especial é multiplicado por 1,4 (homens) ou 1,2 (mulheres)."],
+    ["Preciso do PPP?", "Sim, ou outros documentos que provem a exposição aos agentes nocivos."],
+  ],
+  "auxilio-reclusao": [
+    ["Quem tem direito ao auxílio-reclusão?", "Os dependentes de segurado de baixa renda preso em regime fechado, conforme o limite de renda fixado anualmente."],
+    ["Precisa de tempo de contribuição?", "Desde 2019, exige-se carência de 24 contribuições do segurado."],
+    ["O benefício continua se o preso mudar de regime?", "Não. Ele é pago só enquanto durar o regime fechado."],
+  ],
+  "vida-toda": [
+    ["Ainda dá para pedir a revisão da vida toda?", "Não. Em 2024, o STF decidiu que a regra de transição é obrigatória, o que na prática encerrou a revisão da vida toda."],
+    ["Entrei com a ação antes. O que acontece?", "As ações em andamento tendem a ser julgadas improcedentes. O STF tratou da situação de quem já recebeu valores; a advogada analisa cada caso."],
+    ["Existe outra revisão que eu possa pedir?", "Pode haver, dependendo do seu benefício: erros de cálculo, períodos não considerados, tempo especial. Vale uma análise do processo de concessão."],
+  ],
+  "adicional-25": [
+    ["Quem tem direito ao acréscimo de 25%?", "O aposentado por incapacidade permanente (invalidez) que precisa da ajuda permanente de outra pessoa para atividades do dia a dia."],
+    ["Aposentados por idade ou tempo também têm direito?", "Não. O STF decidiu que o acréscimo vale só para a aposentadoria por incapacidade permanente."],
+    ["Como pedir?", "Pelo Meu INSS, com relatório médico que mostre a necessidade de assistência permanente. Haverá perícia."],
+  ],
+  "complementacao": [
+    ["Contribuo como MEI. Isso conta para aposentadoria?", "Conta para aposentadoria por idade e outros benefícios, no valor de um salário mínimo. Para aposentadoria por tempo de contribuição ou regras de transição, é preciso complementar a contribuição."],
+    ["Como complementar?", "Pagando a diferença de alíquota (para chegar a 20%) por guia específica, inclusive de períodos anteriores, com juros."],
+    ["Vale a pena complementar?", "Depende do seu objetivo e do tempo que falta. A simulação mostra se compensa."],
+  ],
+  "tempo-militar": [
+    ["Tempo de serviço militar conta para aposentadoria?", "Sim. O tempo de serviço militar obrigatório conta como tempo de contribuição, com certidão das Forças Armadas."],
+    ["E aluno-aprendiz?", "Pode contar, se houve remuneração (inclusive indireta, como alimentação e alojamento) à conta do orçamento público. A certidão da escola é a prova principal."],
+    ["Como incluir esses períodos?", "Com as certidões, você pede a averbação no INSS, de preferência antes de pedir a aposentadoria."],
+  ],
+});
