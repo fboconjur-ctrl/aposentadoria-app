@@ -37,6 +37,7 @@
       processos: procsDe(c).map((n) => { const p = ac[n] || {}, mv = acomp[n]?.movs || []; return { numero: mascara(n), tribunal: p.trib || acomp[n]?.tribunal || "", classe: p.classe || acomp[n]?.classe || "", orgao: p.orgao || acomp[n]?.orgao || "",
         eventos: [...(p.pubs || []).slice(0, 6).map((x) => ({ data: x.data, titulo: x.tipo, explicacao: window.Acervo?.explicar(x.tipo, x.texto) || "" })), ...mv.slice(0, 4).map((m) => ({ data: String(m.data).slice(0, 10), titulo: m.nome, explicacao: "" }))].sort((x, y) => y.data.localeCompare(x.data)).slice(0, 8) }; }),
       pagamentos: fin.filter((l) => l.cli === c.id && l.tipo === "receita").sort((x, y) => x.venc.localeCompare(y.venc)).map((l) => ({ desc: l.desc, parcela: l.parcela || "", valor: l.valor, venc: l.venc, pago: l.pago || "" })),
+      assinar: (c.assinar || []).filter((a) => a.expira >= hojeIso).map((a) => ({ nome: a.nome, url: a.url, em: a.em.slice(0, 10), assinado: (c.docsPedido || []).some((d) => /assinad/i.test(d.nome) && d.em >= a.em) })),
       recibos: [...fin.filter((l) => l.cli === c.id && l.reciboLib?.html).map((l) => ({ num: l.reciboLib.num, titulo: `Recibo nº ${l.reciboLib.num}`, desc: `${l.desc || "Honorários"}${l.parcela ? ` (${l.parcela})` : ""}`, valor: l.valor, data: l.pago, html: l.reciboLib.html })),
         ...(c.quitacao?.html ? [{ num: c.quitacao.num, titulo: `Quitação geral nº ${c.quitacao.num}`, desc: "Recibo de quitação geral dos honorários", valor: null, data: c.quitacao.em.slice(0, 10), html: c.quitacao.html, geral: true }] : [])],
       documentosRecebidos: [...(c.docsRecebidos || []), ...(c.docsPedido || [])].slice(-20).map((d) => d.nome),
@@ -136,6 +137,9 @@
         <div class="as-linha"><button class="wa-btn" id="fi-portal-wa">Enviar link pelo WhatsApp</button><button class="back" id="fi-portal-copiar">Copiar link</button><a class="back" href="${esc(link(p.token))}" target="_blank" rel="noopener">Ver como o cliente vê</a><button class="linkish small" id="fi-portal-desligar">${p.ativo === false ? "reativar link" : "desativar link"}</button></div>
         <p class="small muted">${p.ativo === false ? "⛔ Link desativado: o cliente não consegue abrir." : p.visto ? `Última visita do cliente: ${new Date(p.visto).toLocaleString("pt-BR")}` : "O cliente ainda não abriu."}</p>
         <label class="small"><input type="checkbox" id="fi-portal-avemail" ${c.avisoEmail !== false ? "checked" : ""} ${c.email ? "" : "disabled"}> Avisar por e-mail quando houver novidade no processo ou resposta minha ${c.email ? `(${esc(c.email)})` : "— cadastre o e-mail do cliente em “Editar dados”"}</label>
+        <div class="small" style="margin:6px 0"><b>✍️ Documentos para o cliente assinar no gov.br</b>
+          ${(c.assinar || []).map((a) => { const ok = (c.docsPedido || []).some((d) => /assinad/i.test(d.nome) && d.em >= a.em); return `<div>${ok ? "✅" : "⏳"} ${esc(a.nome)} <span class="muted">· enviado ${fmt(new Date(a.em))}${ok ? " · cliente devolveu assinado (veja em Documentos enviados pelo cliente)" : ` · disponível até ${fmt(deIso(a.expira))}`}</span></div>`; }).join("")}
+          <label class="linkish small" style="cursor:pointer">+ Enviar PDF para assinar<input type="file" id="fi-portal-assinar" accept="application/pdf" hidden></label> <span class="muted" id="fi-portal-assinar-st"></span></div>
         <label class="small">Recado para o cliente (aparece no topo da área dele)<textarea id="fi-portal-recado" class="search" rows="2" style="width:100%;box-sizing:border-box">${esc(c.recado || "")}</textarea></label>
         <label class="small">Próximo passo (se vazio, usa o texto padrão da etapa)<input id="fi-portal-prox" class="search" style="width:100%;box-sizing:border-box" value="${esc(c.proximoCliente || "")}" placeholder="${esc(PROXIMO[c.etapa] || "")}"></label>
         ${(c.msgsPortal || []).length ? `<h3 class="small">Mensagens do cliente ${naoLidas.length ? `<span class="pill-s amber">${naoLidas.length} nova(s)</span>` : ""}</h3><ul class="list small">${[...c.msgsPortal.map((m) => ({ ...m, quem: "Cliente" })), ...(c.respostasPortal || []).map((m) => ({ ...m, quem: "Você" }))].sort((x, y) => String(y.em).localeCompare(String(x.em))).slice(0, 12).map((m) => `<li><span class="when">${new Date(m.em).toLocaleString("pt-BR")}</span><span><b>${m.quem}:</b> ${esc(m.texto)}</span></li>`).join("")}</ul>${naoLidas.length ? `<button class="linkish small" id="fi-portal-lidas">marcar como lidas</button>` : ""}` : ""}
@@ -156,6 +160,13 @@
       if (naoLidas.length) { await Portal.marcarLidas(naoLidas.map((m) => m.id)).catch(() => {}); naoLidas.forEach((m) => (m.lida = true)); }
       salvarCrm(); publicarTodos(); render(); renderHoje(); $("fi-portal-resp-st").innerHTML = `✅ Enviada. ${telWa(c.tel) ? `<button class="wa-btn" id="fi-portal-avisar">Avisar pelo WhatsApp</button>` : ""}`;
       $("fi-portal-avisar")?.addEventListener("click", () => { open(`https://wa.me/${telWa(c.tel)}?text=${encodeURIComponent(`Olá, ${primeiroNome(c.nome)}! Respondi a sua mensagem na sua área do cliente:\n\n${link(p.token)}`)}`, "_blank", "noopener"); (c.hist ||= []).unshift({ em: new Date().toISOString(), o: "WhatsApp: aviso de resposta na área do cliente" }); salvarCrm(); });
+    });
+    $("fi-portal-assinar")?.addEventListener("change", async (e) => {
+      const f = e.target.files[0]; e.target.value = ""; if (!f) return;
+      if (!/pdf$/i.test(f.type) && !/\.pdf$/i.test(f.name)) { alert("Envie o documento em PDF (o assinador do gov.br só aceita PDF)."); return; }
+      $("fi-portal-assinar-st").textContent = "Enviando…";
+      try { const r = await Portal.paraAssinar(p.token, f); (c.assinar ||= []).push({ nome: f.name.replace(/\.pdf$/i, ""), ...r, em: new Date().toISOString() }); (c.hist ||= []).unshift({ em: new Date().toISOString(), o: `Documento enviado para assinatura gov.br: ${f.name}` }); salvarCrm(); publicarTodos(); render(); }
+      catch (er) { $("fi-portal-assinar-st").textContent = "Não foi possível enviar: " + er.message; }
     });
     $("fi-portal-avemail")?.addEventListener("change", (e) => { c.avisoEmail = e.target.checked; salvarCrm(); });
     $("fi-portal-lidas")?.addEventListener("click", async () => { await Portal.marcarLidas(naoLidas.map((m) => m.id)); naoLidas.forEach((m) => (m.lida = true)); render(); renderHoje(); });
