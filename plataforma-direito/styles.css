@@ -417,3 +417,25 @@ body:has(#view-result.active .barra-acao) .wa-float { display: none; }
 
 .tile-destaque{background:var(--azul,#2340b8)!important;color:#fff!important;font-weight:700}
 .guia-link{display:block;margin:12px 0 0;padding:12px 14px;border:1px solid #c9d2f0;border-radius:12px;background:#f3f6ff;color:#2340b8;font-weight:600;text-decoration:none}
+/* Busca, ferramentas da situação, prazo, glossário e modelos */
+.busca-box input{width:100%;padding:14px 16px;border:1.5px solid #c9d2f0;border-radius:14px;font:inherit;font-size:1rem;background:#fff}
+.busca-box input:focus{outline:none;border-color:#2340b8;box-shadow:0 0 0 3px #2340b822}
+.busca-res{display:flex;flex-direction:column;gap:6px;margin-top:8px}
+.busca-res button{text-align:left;padding:11px 14px;border:1px solid #e3e7f5;border-radius:12px;background:#fff;font:inherit;cursor:pointer;color:#16224a}
+.busca-res button:hover{border-color:#2340b8}
+.busca-zap{font-size:.9rem;margin-top:2px}
+.rt-ferramentas{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 16px}
+.rt-ferramentas button,.btn-sec{background:#fff;border:1px solid #c9d2f0;color:#2340b8;border-radius:99px;padding:8px 14px;font:inherit;font-size:.9rem;font-weight:600;cursor:pointer}
+.modelo-acoes{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.rt-prazo label{display:block;font-weight:600;margin-top:6px}
+.rt-prazo input{display:block;margin-top:6px;padding:10px 12px;border:1px solid #c9d2f0;border-radius:10px;font:inherit}
+.rt-prazo-res{margin:12px 0 0;padding:12px;border-radius:10px;background:#fff7e6}
+.gl{background:none;border:0;padding:0;font:inherit;color:inherit;border-bottom:1.5px dotted #2340b8;cursor:help}
+.gl-def{display:block;margin:6px 0;padding:8px 10px;border-radius:8px;background:#eef2ff;font-size:.9rem;color:#16224a}
+.dlg-modelos{max-width:680px;width:calc(100% - 24px);border:0;border-radius:16px;padding:20px;box-shadow:0 20px 60px #0003}
+.dlg-modelos::backdrop{background:#0006}
+.dlg-topo{display:flex;justify-content:space-between;align-items:center}.dlg-topo h2{margin:0}
+.dlg-x{border:0;background:none;font-size:1.3rem;cursor:pointer}
+.modelo{border:1px solid #e3e7f5;border-radius:12px;padding:10px 12px;margin:10px 0}
+.modelo summary{cursor:pointer}
+.modelo textarea{width:100%;margin-top:10px;font:inherit;font-size:.9rem;padding:10px;border:1px solid #e3e7f5;border-radius:8px}
