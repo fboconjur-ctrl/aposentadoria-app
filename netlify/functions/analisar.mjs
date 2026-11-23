@@ -6,7 +6,7 @@
 // Modelo menor e barato: a tarefa é só organizar e selecionar conteúdo já escrito.
 const MODELO = "claude-haiku-5-5";
 // Só aceita chamadas do próprio portal (evita que terceiros usem a chave).
-const ORIGENS = [/^https:\/\/(www\.)?plataformadodireito\.com\.br$/, /^https:\/\/[\w-]+(--[\w-]+)?\.netlify\.app$/, /^http:\/\/localhost(:\d+)?$/];
+const ORIGENS = [/^https:\/\/(www\.)?plataformadodireito\.com\.br$/, /^https:\/\/[\w-]+(--[\w-]+)?\.netlify\.app$/, /^https:\/\/([\w-]+\.)?plataformadodireito\.pages\.dev$/, /^http:\/\/localhost(:\d+)?$/];
 
 const REGRAS = `Você ajuda um portal jurídico informativo brasileiro a ORGANIZAR o relato de um visitante.
 Regras obrigatórias (ética da OAB):

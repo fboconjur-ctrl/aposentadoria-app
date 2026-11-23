@@ -145,11 +145,11 @@ async function importImages(files){
   posts=out;$('stat').textContent=`${posts.length} fotos carregadas. As legendas usam o nome do arquivo.`;render();
 }
 
-// ---------- login com Instagram (funções em netlify/functions) ----------
+// ---------- login com Instagram (funções em /api) ----------
 const redirectUri=location.origin+location.pathname;
 async function igLogin(){
   try{
-    const {clientId}=await fetch('/.netlify/functions/ig-config').then(r=>r.json());
+    const {clientId}=await fetch('/api/ig-config').then(r=>r.json());
     if(!clientId)throw 0;
     location.href=`https://www.instagram.com/oauth/authorize?client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=code&scope=instagram_business_basic`;
   }catch{$('stat').textContent='O login com Instagram ainda não está configurado neste site (falta o app da Meta).';}
@@ -157,12 +157,12 @@ async function igLogin(){
 async function igImport(code){
   history.replaceState(null,'',redirectUri);
   $('stat').textContent='Buscando todas as postagens do perfil…';
-  const r=await fetch('/.netlify/functions/ig-media',{method:'POST',body:JSON.stringify({code,redirect:redirectUri})}).then(r=>r.json());
+  const r=await fetch('/api/ig-media',{method:'POST',body:JSON.stringify({code,redirect:redirectUri})}).then(r=>r.json());
   if(r.error){$('stat').textContent=r.error;return;}
   if(r.username)$('tUser').value='@'+r.username;
   const out=[];let n=0;
   for(const p of r.posts){
-    try{out.push({img:await loadImage('/.netlify/functions/ig-image?u='+encodeURIComponent(p.url)),caption:p.caption,date:new Date(p.timestamp),on:true});}catch{}
+    try{out.push({img:await loadImage('/api/ig-image?u='+encodeURIComponent(p.url)),caption:p.caption,date:new Date(p.timestamp),on:true});}catch{}
     if(++n%10===0)$('stat').textContent=`Baixando fotos: ${n} de ${r.posts.length}…`;
   }
   posts=out;$('stat').textContent=`${posts.length} postagens importadas de @${r.username}.`;render();

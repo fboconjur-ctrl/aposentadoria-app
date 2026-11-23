@@ -3,7 +3,7 @@
 // EMAIL_RESPOSTA (e-mail que recebe as respostas dos clientes). Nada é guardado aqui.
 const SB_URL = "https://apgrgbotrrhtxfhcjsgq.supabase.co";
 const SB_KEY = "sb_publishable_DmfEqquL-n4VPBaTpbPumw_sSC6gmnW"; // chave pública; as regras ficam no banco
-const ORIGENS = [/^https:\/\/(www\.)?plataformadodireito\.com\.br$/, /^https:\/\/[\w-]+(--[\w-]+)?\.netlify\.app$/, /^http:\/\/localhost(:\d+)?$/];
+const ORIGENS = [/^https:\/\/(www\.)?plataformadodireito\.com\.br$/, /^https:\/\/[\w-]+(--[\w-]+)?\.netlify\.app$/, /^https:\/\/([\w-]+\.)?plataformadodireito\.pages\.dev$/, /^http:\/\/localhost(:\d+)?$/];
 const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 const emailOk = (e) => /^[^\s@<>]+@[^\s@<>]+\.[^\s@<>]+$/.test(e);
 
