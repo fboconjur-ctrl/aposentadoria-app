@@ -49,6 +49,7 @@
         eventos: [...(p.pubs || []).slice(0, 6).map((x) => ({ data: x.data, titulo: x.tipo, explicacao: window.Acervo?.explicar(x.tipo, x.texto) || "" })), ...mv.slice(0, 4).map((m) => ({ data: String(m.data).slice(0, 10), titulo: m.nome, explicacao: "" }))].sort((x, y) => y.data.localeCompare(x.data)).slice(0, 8) }; }),
       pagamentos: fin.filter((l) => l.cli === c.id && l.tipo === "receita").sort((x, y) => x.venc.localeCompare(y.venc)).map((l) => ({ desc: l.desc, parcela: l.parcela || "", valor: l.valor, venc: l.venc, pago: l.pago || "" })),
       assinar: (c.assinar || []).filter((a) => a.expira >= hojeIso).map((a) => ({ nome: a.nome, url: a.url, em: a.em.slice(0, 10), assinado: !!assinadoDe(c, a) })),
+      proposta: c.proposta?.html && !c.proposta.aceita && c.proposta.validade >= hojeIso ? { num: c.proposta.num, html: c.proposta.html, validade: c.proposta.validade } : c.proposta?.aceita ? { num: c.proposta.num, html: c.proposta.html, aceita: c.proposta.aceita } : null,
       recibos: [...fin.filter((l) => l.cli === c.id && l.reciboLib?.html).map((l) => ({ num: l.reciboLib.num, titulo: `Recibo nº ${l.reciboLib.num}`, desc: `${l.desc || "Honorários"}${l.parcela ? ` (${l.parcela})` : ""}`, valor: l.valor, data: l.pago, html: l.reciboLib.html })),
         ...(c.quitacao?.html ? [{ num: c.quitacao.num, titulo: `Quitação geral nº ${c.quitacao.num}`, desc: "Recibo de quitação geral dos honorários", valor: null, data: c.quitacao.em.slice(0, 10), html: c.quitacao.html, geral: true }] : [])],
       documentosRecebidos: [...(c.docsRecebidos || []), ...(c.docsPedido || [])].slice(-20).map((d) => d.nome),
@@ -106,6 +107,7 @@
     let mudou = false;
     for (const c of clientes.filter((x) => x.portal?.token)) {
       const minhas = msgs.filter((m) => m.token === c.portal.token);
+      for (const m of minhas) if (c.proposta && !c.proposta.aceita && /^✅ Aceito a proposta/.test(m.texto) && m.texto.includes(c.proposta.num)) { c.proposta.aceita = m.criado; (c.hist ||= []).unshift({ em: m.criado, o: `Proposta nº ${c.proposta.num} aceita pelo cliente na área do cliente` }); mudou = true; }
       for (const m of minhas) if (!(c.msgsPortal ||= []).some((x) => x.id === m.id)) { c.msgsPortal.unshift({ id: m.id, texto: m.texto, em: m.criado }); (c.hist ||= []).unshift({ em: m.criado, o: `Mensagem pela área do cliente: ${m.texto.slice(0, 80)}` }); mudou = true; }
       const docs = await Portal.docs(c.portal.token).catch(() => []);
       for (const d of docs) if (!(c.docsPedido ||= []).some((x) => x.caminho === d.caminho)) { c.docsPedido.push(d); (c.hist ||= []).unshift({ em: d.em || new Date().toISOString(), o: `Documento enviado pela área do cliente: ${d.nome}` }); mudou = true; }

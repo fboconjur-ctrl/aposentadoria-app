@@ -70,7 +70,7 @@
 
   <section id="v-ficha" class="oview">
     <header class="ohead"><div><button class="back" data-view="clientes">← Clientes</button><h1 id="fi-nome"></h1><p class="muted" id="fi-sub"></p></div>
-      <div class="fi-acoes"><label class="small fi-etapa-l">Etapa <select id="fi-etapa" class="search" aria-label="Etapa"></select></label><button class="wa-btn" id="fi-wa">💬 WhatsApp</button><button class="back" id="fi-editar">✏️ Editar dados</button>
+      <div class="fi-acoes"><label class="small fi-etapa-l">Etapa <select id="fi-etapa" class="search" aria-label="Etapa"></select></label><button class="wa-btn" id="fi-wa">💬 WhatsApp</button><button class="back" id="fi-editar">✏️ Editar dados</button><button class="back" id="fi-proposta" onclick="Proposta.abrirPara(cliPorId(fichaAtual))">📄 Proposta</button>
         <details class="fi-mais"><summary class="back">Mais ações ▾</summary><div class="fi-mais-menu"><button class="back" id="fi-docs">🧾 Procuração, contrato e kit</button><button class="back" id="fi-pet" onclick="go('peticoes');$('pe-cli').dispatchEvent(new Event('focus'));$('pe-cli').value=fichaAtual;$('pe-cli').dispatchEvent(new Event('change'))">✍️ Montar petição</button><button class="back" id="fi-org" onclick="abrirOrganizador(fichaAtual)">📂 Organizar arquivos</button><button class="back" id="fi-dac">⚖️ Motor DAC</button><button class="back" id="fi-ind-abrir">↗️ Indicar a colega</button></div></details><label class="small so-titular" id="fi-resp-box" hidden>Responsável <select id="fi-resp" class="search"></select></label></div></header>
     <form class="panel" id="fi-ind" hidden>
       <h2>Indicar a colega</h2>
@@ -354,6 +354,31 @@
       <h3 class="small">Documentos (na ordem em que serão numerados — ajuste o nome se quiser)</h3>
       <ul class="list" id="kt-docs"></ul>
       <div class="as-linha"><button class="btn" type="button" id="kt-drive" hidden>☁️ Salvar no Google Drive</button><button class="back" type="button" id="kt-gerar">📦 Baixar como .zip</button><span class="small" id="kt-st" role="status"></span></div>
+    </div>
+  </section>
+
+  <section id="v-proposta" class="oview">
+    <header class="ohead"><div><button class="back" data-voltar>← Voltar</button><h1>Proposta de honorários</h1><p class="muted">Monte a proposta, veja como fica, envie pelo WhatsApp e libere na área do cliente — ele aceita com um toque.</p></div></header>
+    <div class="panel">
+      <div class="crm-grid">
+        <label>Cliente<select id="pp-cli" class="search"></select></label>
+        <label>Parte contrária (opcional)<input id="pp-contra" class="search"></label>
+        <label class="wide">Serviço<input id="pp-serv" class="search" placeholder="Ex.: Ação contra o INSS para concessão de aposentadoria por idade"></label>
+        <label class="wide">O que está incluído<textarea id="pp-inclui" class="search" rows="3"></textarea></label>
+        <label class="wide">O que não está incluído<textarea id="pp-nao" class="search" rows="2"></textarea></label>
+      </div>
+      <h3 class="small">Honorários <button class="linkish small" type="button" id="pp-calc">(calcular pela tabela da OAB)</button></h3>
+      <div class="crm-grid">
+        <label>Opção 1 — valor fixo (R$)<input id="pp-v1" class="search" inputmode="decimal"></label>
+        <label>Parcelas<input id="pp-parc" class="search" type="number" min="1" max="24" value="1"></label>
+        <label class="wide"><input type="checkbox" id="pp-op2"> Oferecer também a Opção 2 (fixo + êxito)</label>
+        <label>Opção 2 — fixo (R$)<input id="pp-v2" class="search" inputmode="decimal"></label>
+        <label>Êxito (%)<input id="pp-pct" class="search" type="number" min="0" max="30" value="20"></label>
+        <label>Validade (dias)<input id="pp-val" class="search" type="number" min="1" value="15"></label>
+        <label class="wide">Observações (opcional)<input id="pp-obs" class="search"></label>
+      </div>
+      <div class="as-linha" style="flex-wrap:wrap;margin-top:10px"><button class="btn" type="button" id="pp-ver">👀 Ver / imprimir (PDF)</button><button class="back" type="button" id="pp-liberar">📤 Liberar na área do cliente</button><button class="wa-btn" type="button" id="pp-wa">Enviar resumo pelo WhatsApp</button></div>
+      <p class="small" id="pp-st"></p>
     </div>
   </section>
 
@@ -648,6 +673,7 @@
 <script src="novocaso.js"></script>
 <script src="docspedido.js"></script>
 <script src="recibos.js"></script>
+<script src="proposta.js"></script>
 <script src="portal.js"></script>
 <script src="avisos.js"></script>
 <script src="backup.js"></script>

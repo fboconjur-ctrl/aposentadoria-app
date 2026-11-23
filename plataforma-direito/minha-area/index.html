@@ -160,7 +160,7 @@
     const ultima = evs[0] || (d.feitos || [])[0] && { data: d.feitos[0].data, titulo: d.feitos[0].texto };
     let visto = ""; try { visto = localStorage.getItem("ma-visto-" + token.slice(0, 8)) || ""; localStorage.setItem("ma-visto-" + token.slice(0, 8), new Date().toISOString()); } catch {}
     const novas = (d.conversa || []).filter((m) => m.de === "advogada" && String(m.em) > visto).length;
-    const pend = [...(docsPend.length ? [[`📋 ${docsPend.length} documento(s) para enviar`, "#docs"]] : []), ...((d.assinar || []).filter((a) => !a.assinado).length ? [[`✍️ ${(d.assinar || []).filter((a) => !a.assinado).length} documento(s) para assinar`, "#assinar"]] : []), ...(atraso.length ? [[`💳 ${atraso.length} pagamento(s) em atraso`, "#pagamentos"]] : []), ...(prox && dias(prox.quando) <= 7 ? [[`📅 ${prox.texto} ${quandoTxt(prox.quando)}`, "#agenda"]] : []), ...(novas && visto ? [[`💬 ${novas} resposta(s) nova(s) da advogada`, "#conversa"]] : [])];
+    const pend = [...(docsPend.length ? [[`📋 ${docsPend.length} documento(s) para enviar`, "#docs"]] : []), ...(d.proposta && !d.proposta.aceita ? [["📄 Proposta de honorários para ver", "#proposta"]] : []), ...((d.assinar || []).filter((a) => !a.assinado).length ? [[`✍️ ${(d.assinar || []).filter((a) => !a.assinado).length} documento(s) para assinar`, "#assinar"]] : []), ...(atraso.length ? [[`💳 ${atraso.length} pagamento(s) em atraso`, "#pagamentos"]] : []), ...(prox && dias(prox.quando) <= 7 ? [[`📅 ${prox.texto} ${quandoTxt(prox.quando)}`, "#agenda"]] : []), ...(novas && visto ? [[`💬 ${novas} resposta(s) nova(s) da advogada`, "#conversa"]] : [])];
     const sec = (id, ico, tit, corpo, extra = "") => `<section class="cartao" id="${id}"><h2>${ico} ${tit}${extra}</h2>${corpo}</section>`;
 
     $("ma").innerHTML = `
@@ -194,6 +194,11 @@
           ${(p.eventos || []).length > 1 ? `<details><summary class="small"><b>Histórico completo (${p.eventos.length})</b></summary><ul class="lista" style="margin-top:8px">${p.eventos.map((e) => `<li><span class="data">${br(e.data)}</span><span><b>${esc(e.titulo)}</b>${e.explicacao ? `<br><span class="small">${esc(e.explicacao)}.</span>` : ""}</span></li>`).join("")}</ul></details>` : ""}
         </div>`; }).join("") + `<p class="small muted" style="margin:0">As fases são uma visão simplificada. Nem todo processo passa por todas, e a ordem pode mudar.</p>` : `<p class="vazio">Ainda não há processo judicial. Quando houver, as novidades aparecem aqui, explicadas em palavras simples.</p>`)}
 
+      ${d.proposta ? sec("proposta", "📄", "Proposta de honorários", `
+        <div class="recibo${d.proposta.aceita ? " geral" : ""}"><span><b>Proposta nº ${esc(d.proposta.num)}</b><br><span class="small muted">${d.proposta.aceita ? `✅ Você aceitou em ${new Date(d.proposta.aceita).toLocaleDateString("pt-BR")}` : `Válida até ${br(d.proposta.validade)}`}</span></span><button class="btn" id="ma-prop-ver">Ver proposta</button></div>
+        ${d.proposta.aceita ? `<p class="small" style="margin:0">Próximo passo: o contrato e a procuração para assinar pelo gov.br.</p>` : `<p class="small" style="margin:0">Leia com calma. Se tiver dúvida, pergunte na conversa abaixo. Quando estiver de acordo, toque em aceitar.</p>
+        <label class="small"><input type="checkbox" id="ma-prop-ok"> Li a proposta e estou de acordo.</label>
+        <div class="acoes"><button class="btn" id="ma-prop-aceitar">✅ Aceito a proposta</button><span class="small" id="ma-prop-st"></span></div>`}`) : ""}
       ${(d.assinar || []).length ? sec("assinar", "✍️", "Documentos para você assinar", `
         <p class="small" style="margin:0">A assinatura é feita pelo <b>gov.br</b>, de graça e com validade jurídica (assinatura eletrônica avançada, Lei 14.063/2020). Você precisa de conta gov.br nível <b>prata ou ouro</b>.</p>
         ${d.assinar.map((a) => `<div class="recibo${a.assinado ? " geral" : ""}"><span><b>${esc(a.nome)}</b><br><span class="small muted">${a.assinado ? "✅ Recebemos assinado. Obrigada!" : "Aguardando sua assinatura"}</span></span>${a.assinado ? "" : `<a class="btn" href="${esc(a.url)}" target="_blank" rel="noopener" download>1. Baixar</a>`}</div>`).join("")}
@@ -237,6 +242,13 @@
 
       <p class="small muted so-tela"><button class="linkbtn" onclick="window.print()">🖨️ Imprimir ou salvar um resumo do meu caso</button></p>
       <p class="small muted">🔒 Este link é pessoal: não compartilhe. As informações são um resumo para acompanhamento; a orientação sobre o seu caso é sempre dada pela advogada.</p>`;
+    if ($("ma-prop-ver")) $("ma-prop-ver").onclick = () => { const w = open(URL.createObjectURL(new Blob([d.proposta.html], { type: "text/html" })), "_blank"); if (!w) alert("Permita abrir janelas para ver a proposta."); };
+    if ($("ma-prop-aceitar")) $("ma-prop-aceitar").onclick = async () => {
+      if (!$("ma-prop-ok").checked) { $("ma-prop-st").textContent = "Marque a caixa confirmando que leu a proposta."; return; }
+      $("ma-prop-aceitar").disabled = true;
+      try { const r = await rpc("portal_enviar", { p_token: token, p_texto: `✅ Aceito a proposta nº ${d.proposta.num}. Li e estou de acordo com as condições.` }); const ok = await r.json(); $("ma-prop-st").textContent = ok ? "Recebido! A advogada vai te enviar o contrato e a procuração para assinar." : "Não foi possível registrar agora. Tente de novo."; }
+      catch { $("ma-prop-st").textContent = "Sem conexão. Tente de novo."; $("ma-prop-aceitar").disabled = false; }
+    };
     document.querySelectorAll("[data-recibo]").forEach((b) => (b.onclick = () => { const r = d.recibos[+b.dataset.recibo]; const w = open(URL.createObjectURL(new Blob([r.html], { type: "text/html" })), "_blank"); if (!w) alert("Permita abrir janelas para ver o recibo."); }));
     const chat = document.querySelector(".chat"); if (chat) chat.scrollTop = chat.scrollHeight;
     $("ma-enviar").onclick = async () => {
