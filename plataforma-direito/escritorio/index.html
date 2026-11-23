@@ -35,6 +35,7 @@
 
   <section id="v-hoje" class="oview on">
     <header class="ohead"><div><p class="eyebrow" id="hoje-data"></p><h1 id="hoje-ola">Bom dia.</h1></div><button class="btn" onclick="abrirNovoCaso()">➕ Novo caso</button></header>
+    <div id="painel-dia"></div>
     <div class="panel guia" id="guia" hidden>
       <div class="fi-tit"><h2>Primeiros passos</h2><span class="small muted" id="guia-prog"></span></div>
       <ol class="guia-lista" id="guia-lista"></ol>
@@ -45,8 +46,9 @@
       <p class="small muted" style="margin:0">O painel olhou suas publicações, prazos, compromissos e pagamentos e preparou estas tarefas. Um clique e está feito.</p>
       <ul class="list" id="auto-lista"></ul>
     </div>
-    <div class="panel"><h2>Atrasado e hoje</h2><ul class="list" id="h-agora"></ul></div>
-    <div class="panel"><h2>Próximos 7 dias</h2><ul class="list" id="h-semana"></ul></div>
+    <details class="panel"><summary><b>Lista completa</b> <span class="small muted">(atrasados, hoje e próximos 7 dias)</span></summary>
+      <h3 class="small">Atrasado e hoje</h3><ul class="list" id="h-agora"></ul>
+      <h3 class="small">Próximos 7 dias</h3><ul class="list" id="h-semana"></ul></details>
     <div class="panel"><h2>Novidades</h2><ul class="list" id="h-novidades"></ul>
       <details><summary class="small"><b>Colar pedido recebido por e-mail</b> (linha "PD1:…")</summary>
         <textarea id="ped-texto" rows="3" class="search" style="width:100%;margin-top:8px" placeholder="PD1:..."></textarea>
@@ -612,5 +614,6 @@
 <script src="busca.js"></script>
 <script src="juridico.js"></script>
 <script src="raiox.js"></script>
+<script src="painel.js"></script>
 </body>
 </html>
