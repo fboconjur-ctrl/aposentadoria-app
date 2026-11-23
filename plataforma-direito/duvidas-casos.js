@@ -433,3 +433,82 @@ Object.assign(DUVIDAS_CASOS, {
     ["Como evitar que se percam?", "Deixe orientações em testamento ou em documento guardado com segurança, sem expor senhas diretamente."],
   ],
 });
+
+Object.assign(DUVIDAS_CASOS, {
+  "carencia-urgencia": [
+    ["Quais são os prazos de carência?", "Os máximos são: 24 horas para urgência e emergência, 300 dias para parto e 180 dias para os demais procedimentos. O contrato pode prever prazos menores."],
+    ["Estou em carência e tive uma emergência. O plano tem que atender?", "Sim, a partir de 24 horas da contratação. Recusar atendimento de urgência ou emergência por carência longa é ilegal."],
+    ["Doença preexistente tem carência diferente?", "Pode haver cobertura parcial temporária de até 24 meses para procedimentos de alta complexidade ligados a doença que você declarou. Urgências continuam cobertas."],
+  ],
+  "sus-remedio": [
+    ["Como conseguir remédio pelo SUS?", "Com a receita, procure a farmácia da unidade básica ou a farmácia de alto custo do estado. Se o remédio não estiver disponível, peça a negativa por escrito."],
+    ["O remédio não está na lista do SUS. E agora?", "É possível pedir na Justiça, desde que preenchidos os requisitos dos tribunais: necessidade comprovada por relatório médico, ineficácia das alternativas da lista, falta de condições de pagar e registro na Anvisa."],
+    ["Quanto tempo leva?", "Com urgência demonstrada, a liminar pode sair em poucos dias. A entrega depois depende do cumprimento pelo poder público."],
+  ],
+  "bariatrica": [
+    ["O plano tem que cobrir a bariátrica?", "Sim, quando há indicação médica e os critérios da ANS são atendidos (como determinados índices de IMC e doenças associadas)."],
+    ["E a cirurgia plástica depois do emagrecimento?", "As cirurgias reparadoras indicadas após a bariátrica (como retirada de excesso de pele) têm sido reconhecidas como parte do tratamento, e não como estéticas. O STJ já decidiu nesse sentido."],
+    ["O que o relatório médico precisa ter?", "Histórico de tratamentos, IMC, doenças associadas e, para a reparadora, os problemas causados pelo excesso de pele (infecções, dores, limitações)."],
+  ],
+  "oncologico": [
+    ["O plano tem que cobrir o tratamento do câncer?", "Sim. Quimioterapia, radioterapia, cirurgias e diversos medicamentos, inclusive orais em uso domiciliar previstos pela ANS, têm cobertura obrigatória."],
+    ["O plano negou um medicamento novo. Pode?", "Depende do registro na Anvisa e das evidências. Com relatório médico fundamentado, é possível pedir na Justiça, inclusive com urgência."],
+    ["Tenho prazo para começar o tratamento?", "A lei garante que o paciente do SUS inicie o tratamento em até 60 dias após o diagnóstico. No plano, valem os prazos da ANS e a urgência indicada pelo médico."],
+  ],
+  "reembolso": [
+    ["Quando o plano tem que reembolsar consulta particular?", "Quando o contrato prevê reembolso (livre escolha) ou quando o plano não oferece profissional ou serviço na rede dentro do prazo da ANS."],
+    ["Qual valor recebo de volta?", "Em contratos com livre escolha, o valor da tabela do plano. Quando o plano falhou em oferecer atendimento, o reembolso deve ser integral."],
+    ["Quanto tempo o plano tem para pagar?", "Em geral, até 30 dias após a entrega dos documentos. Guarde notas fiscais e recibos detalhados."],
+  ],
+  "erro-medico": [
+    ["Como sei se foi erro médico?", "Nem todo resultado ruim é erro. O erro acontece quando o profissional age com imprudência, negligência ou imperícia. Normalmente é preciso uma análise técnica (perícia)."],
+    ["Quem responde: o médico ou o hospital?", "Podem responder o hospital, a clínica, o plano e o próprio médico, conforme o caso. O hospital responde pelos serviços que presta."],
+    ["Quais provas reunir?", "Prontuário médico completo (é seu direito pedir cópia), exames, receitas, fotos e relatórios de outros médicos."],
+    ["Qual o prazo para entrar com ação?", "Em regra, 5 anos a partir de quando você soube do dano e de quem o causou."],
+  ],
+  "home-care": [
+    ["O plano é obrigado a cobrir home care?", "Quando há indicação médica de internação domiciliar em substituição à hospitalar, os tribunais entendem que o plano não pode negar, mesmo que o contrato exclua."],
+    ["O que entra no home care?", "Depende da prescrição: enfermagem, fisioterapia, equipamentos, medicamentos e materiais. O relatório médico deve detalhar."],
+    ["O plano quer reduzir as horas de enfermagem. Pode?", "Só com nova avaliação médica que justifique. Reduções unilaterais podem ser questionadas."],
+  ],
+  "cancelamento-plano": [
+    ["O plano pode me cancelar durante um tratamento?", "Plano individual não pode ser cancelado, salvo fraude ou falta de pagamento por mais de 60 dias, com aviso. Em plano coletivo, o STJ entende que o tratamento de doença grave deve ser mantido até a alta."],
+    ["Atrasei a mensalidade. Já podem cancelar?", "No plano individual, só após 60 dias de atraso (somados ou não, em 12 meses) e com notificação até o 50º dia."],
+    ["O plano coletivo foi cancelado pela empresa. Fico sem nada?", "Podem existir opções: portabilidade sem carência ou contratação de plano individual. E quem está em tratamento pode pedir a manutenção."],
+  ],
+  "saude-mental": [
+    ["O plano cobre internação psiquiátrica?", "Sim. Não pode haver limite de dias de internação psiquiátrica. Cláusulas que limitam são consideradas abusivas."],
+    ["E tratamento para dependência química?", "Também tem cobertura, incluindo internação quando indicada pelo médico."],
+    ["E psicoterapia?", "As sessões de psicoterapia previstas no rol da ANS têm cobertura, e para vários transtornos não há limite de sessões quando há indicação."],
+  ],
+  "liminar-descumprida": [
+    ["Ganhei a liminar e o plano não cumpre. O que faço?", "Avise a advogada imediatamente. É possível pedir ao juiz multa diária, aumento da multa, bloqueio de valores para custear o tratamento e outras medidas."],
+    ["O governo não cumpre a decisão. Pode bloquear dinheiro?", "Sim. Quando o poder público descumpre decisão sobre saúde, o juiz pode determinar o bloqueio de verbas públicas para garantir o tratamento."],
+    ["O que levo para mostrar o descumprimento?", "Protocolos de contato, negativas, mensagens e datas. Quanto mais detalhes, mais rápida a medida."],
+  ],
+  "opme-protese": [
+    ["O plano pode negar a prótese da cirurgia?", "Se a cirurgia tem cobertura, as próteses, órteses e materiais ligados ao ato cirúrgico também têm."],
+    ["O plano quer trocar a marca que o médico pediu. Pode?", "Pode haver divergência, que deve ser resolvida por junta médica, nos termos da ANS. O plano não pode simplesmente impor um material inferior."],
+    ["Quem escolhe o material?", "O médico indica as características técnicas, e o plano deve oferecer opções que atendam."],
+  ],
+  "fertilizacao": [
+    ["O plano é obrigado a cobrir fertilização in vitro?", "Em regra, não. O STJ decidiu que a fertilização in vitro não tem cobertura obrigatória, salvo previsão no contrato."],
+    ["Há exceções?", "A Justiça tem admitido em casos específicos, como preservação de fertilidade antes de tratamento de câncer. Cada caso deve ser avaliado."],
+    ["E o tratamento da infertilidade?", "Procedimentos de diagnóstico e tratamento de causas da infertilidade previstos no rol (como algumas cirurgias) têm cobertura."],
+  ],
+  "portabilidade": [
+    ["Posso trocar de plano sem cumprir carência de novo?", "Sim, pela portabilidade de carências, desde que cumpridos os requisitos da ANS: estar em dia, ter permanência mínima no plano atual e escolher plano compatível."],
+    ["Como saber os planos compatíveis?", "Pelo Guia ANS de Planos de Saúde, no site da ANS."],
+    ["E se eu estiver em tratamento?", "A portabilidade garante a continuidade da cobertura sem nova carência, inclusive para doenças preexistentes já cumpridas."],
+  ],
+  "uti-sus": [
+    ["Não há vaga de UTI pelo SUS. O que fazer?", "É uma situação de urgência. Com o relatório médico indicando a necessidade de UTI, é possível pedir à Justiça (inclusive no plantão) que o poder público providencie a vaga, até em hospital particular, às custas do Estado."],
+    ["Quanto tempo demora?", "Pedidos de UTI costumam ser analisados em horas. Por isso, o relatório médico e o número do pedido na central de regulação são essenciais."],
+    ["Quem pode pedir?", "O paciente ou a família, com advogado ou pela Defensoria Pública."],
+  ],
+  "odontologico": [
+    ["O plano odontológico pode negar tratamento?", "Deve cobrir os procedimentos do rol da ANS para a segmentação contratada. Negativas devem ser por escrito e fundamentadas."],
+    ["O dentista errou no tratamento. Tenho direito a quê?", "Ao refazimento, ao reembolso do que pagou e, conforme o caso, a indenização. Reúna o prontuário, radiografias e orçamentos de correção."],
+    ["Quanto tempo tenho para reclamar?", "Para serviços com defeito, o prazo inicial é de 90 dias; para indenização por danos, em regra 5 anos."],
+  ],
+});
