@@ -148,6 +148,7 @@
       <button class="card-c" data-view="prazos"><b>📅 Calcular prazo</b><span class="meta">Dias úteis e feriados; lança na agenda</span></button>
       <button class="card-c" data-view="djen"><b>🔔 Ver publicações</b><span class="meta">Intimações da sua OAB</span></button>
       <button class="card-c" data-view="docs"><b>🧾 Procuração e contrato</b><span class="meta">Documentos de entrada do cliente</span></button>
+      <button class="card-c" data-view="kit"><b>📦 Kit de protocolo</b><span class="meta">Peça + documentos numerados numa pasta para o Drive</span></button>
       <button class="card-c" data-view="raiox"><b>🩻 Raio-x de empresa</b><span class="meta">CNPJ, teses a verificar e licitações</span></button>
     </div>
     <h2 class="mais-grupo so-titular">💼 Escritório</h2>
@@ -335,6 +336,27 @@
     </form>
   </section>
 
+  <section id="v-kit" class="oview">
+    <header class="ohead"><div><button class="back" data-voltar>← Voltar</button><h1>Kit de protocolo</h1><p class="muted">Junta a peça e os documentos numerados numa pasta com checklist. Baixe e arraste para o Google Drive. Nada é enviado: tudo acontece no seu computador.</p></div></header>
+    <div class="panel">
+      <div class="crm-grid">
+        <label>Cliente<select id="kt-cli" class="search"><option value="">— escolha o cliente —</option></select></label>
+        <label>Processo<select id="kt-proc" class="search"><option value="">— sem processo (petição inicial) —</option></select></label>
+        <label class="wide">Qual peça?<input id="kt-tipo" class="search" placeholder="Ex.: Contrarrazões de apelação" list="kt-tipos"></label>
+      </div>
+      <datalist id="kt-tipos"><option>Petição inicial</option><option>Contestação</option><option>Réplica</option><option>Embargos de declaração</option><option>Apelação</option><option>Contrarrazões de apelação</option><option>Agravo de instrumento</option><option>Manifestação</option><option>Recurso inominado</option></datalist>
+      <div class="as-linha" style="flex-wrap:wrap;margin-top:10px">
+        <label class="btn">📄 Escolher a peça (PDF)<input type="file" id="kt-peca" accept="application/pdf,.doc,.docx" hidden></label>
+        <label class="back as-pdf-btn">📎 Adicionar documentos<input type="file" id="kt-arq" multiple accept="application/pdf,image/*" hidden></label>
+        <button class="back" type="button" id="kt-dp" hidden>⬇️ Usar documentos que o cliente enviou</button>
+      </div>
+      <p class="small" id="kt-peca-info"></p>
+      <h3 class="small">Documentos (na ordem em que serão numerados — ajuste o nome se quiser)</h3>
+      <ul class="list" id="kt-docs"></ul>
+      <div class="as-linha"><button class="btn" type="button" id="kt-gerar">📦 Montar e baixar o kit</button><span class="small" id="kt-st" role="status"></span></div>
+    </div>
+  </section>
+
   <section id="v-assistente" class="oview">
     <header class="ohead"><div><button class="back" data-voltar>← Voltar</button><h1>Assistente jurídico</h1><p class="muted">Escolha o que precisa, cole o texto (ou carregue o PDF) e clique em Gerar. É um rascunho de apoio: revise sempre antes de usar.</p></div></header>
     <form class="panel" id="as-form">
@@ -396,6 +418,20 @@
       </div>
       <div><button class="btn">Liberar acesso</button></div>
     </form>
+    <div class="panel">
+      <h2>📜 Termo de adesão dos associados</h2>
+      <p class="small" id="eq-termo-st"></p>
+      <details><summary class="small"><b>Ver / editar o termo</b></summary>
+        <textarea id="eq-termo" class="search" rows="16" style="width:100%;box-sizing:border-box;margin-top:8px"></textarea>
+        <button class="btn" type="button" id="eq-publicar">Publicar nova versão</button>
+        <p class="small muted">O associado só acessa os casos depois de aceitar a versão em vigor. O aceite fica registrado com data e hora. Se houver sociedade ou associação formal, o contrato de associação deve ser registrado na OAB — este termo não o substitui.</p>
+      </details>
+    </div>
+    <div class="panel">
+      <h2>🕵️ Atividade da equipe</h2>
+      <p class="small muted">Quem abriu ou alterou cada caso, e quando (últimos 60 registros).</p>
+      <ul class="list" id="eq-ativ"></ul>
+    </div>
   </section>
 
   <section id="v-dac" class="oview">
@@ -618,5 +654,6 @@
 <script src="juridico.js"></script>
 <script src="raiox.js"></script>
 <script src="painel.js"></script>
+<script src="kit.js"></script>
 </body>
 </html>

@@ -81,6 +81,7 @@
       alert(error ? "Não foi possível trocar: " + error.message : "Senha trocada! Use a nova senha da próxima vez.");
     });
     document.getElementById("sair")?.addEventListener("click", () => { sessionStorage.removeItem("pd-sync-ok"); sb.auth.signOut().then(() => location.reload()); });
+    window.agendaLink = async (novo) => { const { data, error } = await sb.rpc("agenda_link", { p_novo: !!novo }); if (error) throw error; return `${CFG.url}/functions/v1/agenda?t=${data}`; };
     if (papel === "associado") return modoAssociado(sb, user);
 
     // 1) Traz o que está na nuvem para este navegador (a nuvem é a fonte da verdade).
@@ -149,7 +150,11 @@
     window.Equipe = {
       listar: async () => { const { data, error } = await sb.from("associados").select("uid, nome, email, oab, ativo").order("nome"); if (error) throw error; localStorage.setItem("pd-equipe", JSON.stringify(data.map(({ uid, nome, ativo }) => ({ uid, nome, ativo })))); return data; },
       adicionar: async (email, nome, oab) => { const { data, error } = await sb.rpc("adicionar_associado", { p_email: email, p_nome: nome, p_oab: oab || null }); if (error) throw error; return data; },
-      ativar: async (uid, ativo) => { const { error } = await sb.from("associados").update({ ativo }).eq("uid", uid); if (error) throw error; },
+      ativar: async (uid, ativo) => { const { error } = ativo ? await sb.from("associados").update({ ativo }).eq("uid", uid) : await sb.rpc("desligar_associado", { p_uid: uid }); if (error) throw error; },
+      termoAtual: async () => (await sb.from("termos").select("versao, texto, criado").order("versao", { ascending: false }).limit(1)).data?.[0] || null,
+      publicarTermo: async (texto) => { const at = await window.Equipe.termoAtual(); const { error } = await sb.from("termos").insert({ versao: (at?.versao || 0) + 1, texto }); if (error) throw error; },
+      aceites: async () => (await sb.from("termo_aceites").select("uid, versao, em")).data || [],
+      atividades: async () => (await sb.from("atividades").select("uid, acao, caso_id, detalhe, em").order("em", { ascending: false }).limit(60)).data || [],
     };
     Equipe.listar().catch(() => {});
     const enviados = new Map(); // id → JSON do último envio/recebimento (evita reenviar o que não mudou)
@@ -189,6 +194,25 @@
 
   // ---------- Modo associado: só os casos atribuídos, sem financeiro nem cadastro de clientes ----------
   async function modoAssociado(sb, user) {
+    // Termo de adesão: sem aceite da versão vigente, o banco não libera nenhum caso.
+    const { data: termo } = await sb.rpc("termo_pendente");
+    if (termo) {
+      capa.innerHTML = `<div class="login-box" style="max-width:760px"><h1>Termo de adesão</h1><p class="muted">Para acessar os casos, leia e aceite o termo (versão ${termo.versao}).</p>
+        <div style="white-space:pre-wrap;max-height:55vh;overflow:auto;border:1px solid var(--line);border-radius:10px;padding:12px;font-size:.92rem;text-align:left"></div>
+        <label class="small" style="display:block;margin:12px 0"><input type="checkbox" id="tm-ok"> Li e aceito o termo. Sei que o aceite fica registrado com data e hora.</label>
+        <button class="btn" id="tm-aceitar">Aceitar e entrar</button> <button class="linkish" id="tm-sair">Sair</button><p class="small" id="tm-msg"></p></div>`;
+      capa.querySelector("div[style*='pre-wrap']").textContent = termo.texto; capa.hidden = false;
+      document.getElementById("tm-sair").onclick = () => sb.auth.signOut().then(() => location.reload());
+      document.getElementById("tm-aceitar").onclick = async () => {
+        if (!document.getElementById("tm-ok").checked) { document.getElementById("tm-msg").textContent = "Marque a caixa para confirmar."; return; }
+        const { error } = await sb.rpc("aceitar_termo", { p_versao: termo.versao, p_navegador: navigator.userAgent });
+        if (error) { document.getElementById("tm-msg").textContent = "Não foi possível registrar: " + error.message; return; }
+        sessionStorage.removeItem("pd-sync-ok"); location.reload();
+      };
+      return;
+    }
+    const origFicha = window.abrirFicha;
+    window.abrirFicha = (id, ...r) => { if (id) sb.rpc("registrar_atividade", { p_acao: "abriu_caso", p_caso: id }); return origFicha(id, ...r); };
     const { data: rows, error } = await sb.from("casos").select("id, ficha, itens, em");
     if (error) { msg("Erro ao ler seus casos: " + error.message); return; }
     const montar = (rs) => ({ crm: JSON.stringify(rs.map((r) => ({ ...r.ficha, casoEm: r.em }))), itens: JSON.stringify(rs.flatMap((r) => r.itens)) });

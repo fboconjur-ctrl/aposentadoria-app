@@ -38,7 +38,7 @@
       <div class="pd-grade">
         <section class="pd-card pd-lilas pd-largo">
           <div class="pd-tit"><h2>${dia === hojeIso ? "Para hoje" : "Agenda de " + esc(longo(dia))}</h2>
-            <div><button class="linkish small" id="pd-imprimir">🖨️ Imprimir / PDF do dia</button>${dia !== hojeIso ? ` · <button class="linkish small" data-pd-dia="${hojeIso}">voltar para hoje</button>` : ""}</div></div>
+            <div><button class="linkish small" id="pd-imprimir">🖨️ Imprimir / PDF do dia</button> · <button class="linkish small" id="pd-gagenda">📆 Google Agenda</button>${dia !== hojeIso ? ` · <button class="linkish small" data-pd-dia="${hojeIso}">voltar para hoje</button>` : ""}</div></div>
           ${atr.length ? `<p class="small atrasada" style="margin:4px 0">⚠️ ${atr.length} atrasado(s)</p><ul class="list">${atr.slice(0, 8).map((x) => linha(x)).join("")}</ul>` : ""}
           <ul class="list">${lista.map((x) => linha(x)).join("") || `<li class="muted" style="justify-content:center">${dia === hojeIso && !atr.length ? "Tudo em dia. 🎉" : "Nada marcado para este dia."}</li>`}</ul>
           <form class="pd-rapida" id="pd-rapida" autocomplete="off">
@@ -88,10 +88,27 @@
     w.document.close();
   }
 
+  async function agenda(novo) {
+    if (!window.agendaLink) return alert("Entre no painel com seu login para gerar o link da agenda.");
+    let url; try { url = await window.agendaLink(novo); } catch (er) { return alert("Não foi possível gerar o link: " + er.message); }
+    let d = document.getElementById("pd-gdlg");
+    if (!d) { d = document.createElement("dialog"); d.id = "pd-gdlg"; d.style.cssText = "max-width:560px;border:1px solid var(--line);border-radius:16px;padding:20px"; document.body.appendChild(d); }
+    d.innerHTML = `<h2 style="margin-top:0">📆 Ver a agenda no Google Agenda</h2>
+      <p class="small">Prazos, audiências e tarefas do painel aparecem no seu Google Agenda (celular e computador) e se atualizam sozinhos. O Google costuma atualizar a cada poucas horas. Prazos têm lembrete 1 dia antes.</p>
+      <p class="small"><b>1.</b> Copie o link abaixo.<br><b>2.</b> No computador, abra o <a href="https://calendar.google.com/calendar/r/settings/addbyurl" target="_blank" rel="noopener">Google Agenda → Adicionar agenda → Do URL</a>.<br><b>3.</b> Cole o link e clique em <b>Adicionar agenda</b>. Pronto — aparece no celular também.</p>
+      <input class="search" readonly value="${esc(url)}" style="width:100%;box-sizing:border-box" onclick="this.select()">
+      <div class="as-linha" style="margin-top:10px"><button class="btn" id="pd-gcop">Copiar link</button><button class="back" id="pd-gnovo">Gerar link novo</button><button class="back" id="pd-gfechar">Fechar</button></div>
+      <p class="small muted">🔒 O link é secreto e pessoal: quem tiver o link vê sua agenda. Se ele vazar, clique em “Gerar link novo” — o antigo para de funcionar (e você troca no Google Agenda).</p>`;
+    d.querySelector("#pd-gcop").onclick = () => { navigator.clipboard?.writeText(url); d.querySelector("#pd-gcop").textContent = "✅ Copiado"; };
+    d.querySelector("#pd-gnovo").onclick = () => { if (confirm("Gerar um link novo? O link antigo para de funcionar.")) { d.close(); agenda(true); } };
+    d.querySelector("#pd-gfechar").onclick = () => d.close();
+    if (!d.open) d.showModal();
+  }
   box.addEventListener("click", (e) => {
     const d = e.target.closest("[data-pd-dia]"); if (d) { dia = d.dataset.pdDia; render(); return; }
     const m = e.target.closest("[data-pd-mov]"); if (m) { dia = addDias(dia, +m.dataset.pdMov); render(); return; }
     if (e.target.id === "pd-imprimir") imprimir();
+    if (e.target.id === "pd-gagenda") agenda();
   });
   box.addEventListener("submit", (e) => {
     if (e.target.id !== "pd-rapida") return; e.preventDefault();
