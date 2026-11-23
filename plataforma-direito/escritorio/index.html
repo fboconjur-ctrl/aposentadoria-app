@@ -137,34 +137,31 @@
   </section>
 
   <section id="v-mais" class="oview">
-    <header class="ohead"><div><h1>Ferramentas</h1><p class="muted">Tudo o que o painel faz, separado por assunto.</p></div></header>
-    <h2 class="mais-grupo">📁 Processos e prazos</h2>
-    <div class="mais-grid">
-      <button class="card-c" data-view="djen"><b>🔔 Publicações</b><span class="meta">Busque as intimações da sua OAB no Diário (DJEN)</span></button>
-      <button class="card-c" data-view="prazos"><b>📅 Calcular prazo</b><span class="meta">Dias úteis, feriados e recesso. Já lança na ficha</span></button>
-      <button class="card-c" data-view="importar"><b>📋 Importar processos</b><span class="meta">Cole uma lista de números de processo</span></button>
+    <header class="ohead"><div><h1>Ferramentas</h1><p class="muted">O que você precisa fazer agora?</p></div></header>
+    <div class="mais-grid mais-principal">
+      <button class="card-c" data-view="peticoes"><b>✍️ Escrever uma peça</b><span class="meta">Com seus modelos e sua jurisprudência</span></button>
+      <button class="card-c" data-view="pecas"><b>🔎 Ler sentença ou peça</b><span class="meta">Resumo, prazos e o que rebater</span></button>
+      <button class="card-c" data-view="prazos"><b>📅 Calcular prazo</b><span class="meta">Dias úteis e feriados; lança na agenda</span></button>
+      <button class="card-c" data-view="djen"><b>🔔 Ver publicações</b><span class="meta">Intimações da sua OAB</span></button>
+      <button class="card-c" data-view="docs"><b>🧾 Procuração e contrato</b><span class="meta">Documentos de entrada do cliente</span></button>
+      <button class="card-c" data-view="raiox"><b>🩻 Raio-x de empresa</b><span class="meta">CNPJ, teses a verificar e licitações</span></button>
     </div>
-    <h2 class="mais-grupo">📄 Documentos e peças</h2>
-    <div class="mais-grid">
-      <button class="card-c" data-view="docs"><b>🧾 Procuração, contrato e kit</b><span class="meta">Gera os documentos de entrada do cliente</span></button>
-      <button class="card-c" data-view="peticoes"><b>✍️ Redator de petições</b><span class="meta">Seus modelos + sua jurisprudência conferida. Não inventa nada</span></button>
-      <button class="card-c" data-view="pecas"><b>🔎 Ler sentença e peças</b><span class="meta">Analisa sentença, resume a peça da outra parte e tira dados pessoais</span></button>
-      <button class="card-c" data-view="organizador"><b>📂 Organizar arquivos do cliente</b><span class="meta">Separa por tipo, renomeia e baixa em pastas</span></button>
-    </div>
-    <h2 class="mais-grupo">🧠 Análise e apoio</h2>
-    <div class="mais-grid">
-      <button class="card-c" data-view="assistente"><b>✨ Assistente jurídico (IA)</b><span class="meta">Sentença, resumo, notificação, posts… (precisa ligar a chave)</span></button>
-      <button class="card-c" data-view="raiox"><b>🩻 Raio-x da empresa e licitações</b><span class="meta">CNPJ: situação, regime, pontos a verificar, certidões e licitações abertas</span></button>
-      <button class="card-c" data-view="dac"><b>⚖️ Motor de Direito Administrativo</b><span class="meta">Fatos, regras com fonte, lacunas e perguntas</span></button>
-    </div>
-    <h2 class="mais-grupo so-titular">💼 Gestão do escritório</h2>
+    <h2 class="mais-grupo so-titular">💼 Escritório</h2>
     <div class="mais-grid so-titular">
-      <button class="card-c" data-view="fin"><b>💰 Financeiro</b><span class="meta">Recebido, a receber, atrasados e despesas</span></button>
-      <button class="card-c" data-view="metricas"><b>📊 Números do escritório</b><span class="meta">Contatos, contratação, recebimentos e prazos</span></button>
-      <button class="card-c" data-view="equipe"><b>👥 Equipe</b><span class="meta">Associados e quem cuida de cada caso</span></button>
-      <button class="card-c" id="bk-baixar"><b>💾 Cópia de segurança</b><span class="meta">Baixa um arquivo com tudo do painel (guarde no seu computador)</span></button>
-      <label class="card-c" style="cursor:pointer"><b>♻️ Restaurar cópia</b><span class="meta">Volta o painel a partir de um arquivo de cópia</span><input type="file" id="bk-restaurar" accept=".json,application/json" hidden></label>
+      <button class="card-c" data-view="fin"><b>💰 Financeiro</b><span class="meta">Recebido, a receber e atrasados</span></button>
+      <button class="card-c" data-view="metricas"><b>📊 Números</b><span class="meta">Como o escritório está indo</span></button>
+      <button class="card-c" data-view="equipe"><b>👥 Equipe</b><span class="meta">Associados e casos</span></button>
     </div>
+    <details class="mais-outras"><summary><b>Outras ferramentas</b> <span class="small muted">(usadas de vez em quando)</span></summary>
+      <div class="mais-grid">
+        <button class="card-c" data-view="organizador"><b>📂 Organizar arquivos</b><span class="meta">Separa e renomeia os documentos do cliente</span></button>
+        <button class="card-c" data-view="importar"><b>📋 Importar processos</b><span class="meta">Cole uma lista de números</span></button>
+        <button class="card-c" data-view="assistente"><b>✨ Assistente (IA)</b><span class="meta">Precisa ligar a chave</span></button>
+        <button class="card-c" data-view="dac"><b>⚖️ Direito Administrativo</b><span class="meta">Fatos, regras e lacunas</span></button>
+        <button class="card-c so-titular" id="bk-baixar"><b>💾 Cópia de segurança</b><span class="meta">Baixa tudo do painel</span></button>
+        <label class="card-c so-titular" style="cursor:pointer"><b>♻️ Restaurar cópia</b><span class="meta">Volta a partir de um arquivo</span><input type="file" id="bk-restaurar" accept=".json,application/json" hidden></label>
+      </div>
+    </details>
   </section>
 
   <section id="v-acervo" class="oview">

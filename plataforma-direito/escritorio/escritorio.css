@@ -331,3 +331,8 @@ body.office { display: grid; grid-template-columns: 240px minmax(0, 1fr); min-he
   .pd-grade { grid-template-columns: 1fr; }
 }
 .pd-amarelo { background: color-mix(in srgb, var(--amber) 12%, var(--surface)); }
+.mais-principal { grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+.mais-principal .card-c { padding: 18px; }
+.mais-principal .card-c b { font-size: 1.05rem; }
+.mais-outras { margin-top: 18px; }
+.mais-outras summary { cursor: pointer; padding: 8px 0; }
