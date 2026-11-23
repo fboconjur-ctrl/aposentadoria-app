@@ -218,56 +218,56 @@ Object.assign(DUVIDAS_CASOS, {
   "auxilio-incapacidade": [
     ["Preciso fazer perícia presencial?", "Nem sempre. Em muitos casos, o INSS analisa só pelos documentos médicos enviados pelo Meu INSS (Atestmed), para afastamentos de menor duração. O atestado precisa estar legível e completo."],
     ["Quanto vou receber?", "Em regra, 91% da média dos seus salários de contribuição, limitado à média dos últimos 12 salários."],
-    ["O benefício acabou e eu ainda não consigo trabalhar. E agora?", "Peça a prorrogação nos últimos 15 dias antes da data de fim. Se já passou, faça novo pedido ou recurso, com relatório médico atualizado."],
-    ["Posso ser demitido(a) enquanto estou afastado(a)?", "Durante o afastamento pelo INSS, o contrato fica suspenso. Se o afastamento for por acidente de trabalho, há estabilidade de 12 meses após o retorno."],
+    ["O benefício acabou e eu ainda não consigo trabalhar. E agora?", "Confira a data de cessação e se o benefício admite prorrogação. Quando disponível, o pedido deve ser feito nos últimos 15 dias antes da cessação. Para benefício concedido por análise documental, consulte as regras vigentes do Atestmed e as opções exibidas no Meu INSS."],
+    ["Posso ser demitido(a) enquanto estou afastado(a)?", "O afastamento com benefício pode suspender o contrato. Se a incapacidade decorrer de acidente ou doença do trabalho, pode haver estabilidade após a cessação do benefício, observados os requisitos. No benefício comum, não há essa estabilidade automática. A validade de uma dispensa concreta depende das datas e do motivo."],
   ],
   "invalidez": [
     ["Aposentado por invalidez pode trabalhar?", "Não. Quem volta a trabalhar tem o benefício cancelado, porque a aposentadoria pressupõe a incapacidade."],
-    ["O INSS pode rever minha aposentadoria?", "Pode convocar para perícias periódicas. Pessoas com mais de 60 anos, em regra, ficam dispensadas, com exceções. Guarde sempre relatórios atualizados."],
-    ["Quanto vou receber?", "Depende: 60% da média mais 2% por ano acima do tempo mínimo, ou 100% se a incapacidade veio de acidente ou doença do trabalho."],
+    ["O INSS pode rever minha aposentadoria?", "Pode, observadas as dispensas legais e suas exceções. Além das hipóteses por idade e tempo de benefício, há dispensa de reavaliação periódica quando a perícia constata incapacidade permanente, irreversível ou irrecuperável, ressalvada suspeita fundamentada de fraude ou erro."],
+    ["Quanto vou receber?", "Para benefícios sujeitos à reforma de 2019, a regra geral é de 60% da média mais 2 pontos percentuais por ano que exceder 15 anos de contribuição para mulheres ou 20 para homens. A renda é de 100% da média quando a incapacidade decorre de acidente de trabalho, doença profissional ou doença do trabalho."],
   ],
   "professor": [
     ["Professor de faculdade tem a regra especial?", "Não. A regra especial vale para a educação infantil, o ensino fundamental e o médio."],
     ["Coordenação pedagógica conta como magistério?", "Conta, quando exercida em escola de educação básica, por professor de carreira."],
-    ["Dou aula na rede pública e na particular. Como fica?", "São regimes diferentes (regime próprio e INSS). Cada um tem as suas regras, e pode ser possível se aposentar nos dois."],
+    ["Dou aula na rede pública e na particular. Como fica?", "Identifique o regime de cada vínculo. A rede pública pode estar no RPPS ou no RGPS, conforme o vínculo e o ente. A rede privada, em regra, está no RGPS. A possibilidade de dois benefícios depende das contribuições a regimes diferentes, sem contagem dupla do mesmo tempo."],
   ],
   "revisao-beneficio": [
-    ["Qual o prazo para pedir revisão?", "10 anos contados do primeiro pagamento do benefício. Depois disso, em regra, não é mais possível."],
-    ["Recebo os valores atrasados?", "Sim, as diferenças dos últimos 5 anos, corrigidas."],
+    ["Qual o prazo para pedir revisão?", "Em regra, o prazo para revisar o ato de concessão é de dez anos, contado do primeiro dia do mês seguinte ao recebimento da primeira prestação. Verifique a natureza exata do pedido e o marco inicial aplicável."],
+    ["Recebo os valores atrasados?", "Se a revisão for acolhida, o termo inicial depende do tipo de erro e da prova produzida, observada, em regra, a prescrição das parcelas vencidas há mais de cinco anos. Confira se existe alguma causa que altere a contagem."],
     ["Revisão pode diminuir meu benefício?", "O INSS também pode corrigir erros a favor dele, mas há prazo e regras. Por isso, a análise prévia com a advogada é importante."],
   ],
   "fila-sus": [
-    ["Existe prazo máximo para a cirurgia pelo SUS?", "Não há um prazo único em lei para todos os casos, mas a demora que coloca a saúde em risco pode ser levada à Justiça. Para câncer, o início do tratamento deve ocorrer em até 60 dias do diagnóstico."],
+    ["Existe prazo máximo para a cirurgia pelo SUS?", "Não há prazo geral único para todas as cirurgias. A demora pode ser questionada conforme o risco clínico e a regulação. Para câncer, o primeiro tratamento no SUS deve começar em até 60 dias do diagnóstico firmado em laudo patológico, ou antes se houver necessidade registrada."],
     ["Como saber minha posição na fila?", "Peça o número do pedido na unidade de saúde e consulte a central de regulação do seu município ou estado. Muitos têm consulta pela internet."],
     ["A Defensoria pode ajudar?", "Sim, para quem não pode pagar advogado. A advogada também pode atuar, inclusive com pedido urgente."],
   ],
   "pensao-alimenticia": [
     ["Quanto é a pensão? É 30% do salário?", "Não há percentual fixo na lei. O valor depende da necessidade de quem recebe e da possibilidade de quem paga. Percentuais como 30% são comuns, mas não são regra."],
-    ["A pensão acaba aos 18 anos?", "Não automaticamente. Pode continuar se o filho estiver estudando (em geral até 24 anos) ou não puder se sustentar. Para parar de pagar, é preciso decisão judicial."],
+    ["A pensão acaba aos 18 anos?", "A maioridade não encerra automaticamente a pensão. A continuidade depende da necessidade demonstrada, inclusive em razão dos estudos, e da possibilidade de quem paga. A lei não fixa extinção aos 24 anos. O cancelamento de pensão judicial exige decisão com contraditório."],
     ["O pai está desempregado. Ele deixa de pagar?", "Não deixa, mas o valor pode ser revisto conforme a nova situação. Enquanto não houver nova decisão, vale o valor fixado."],
-    ["Quem não paga pode ser preso?", "Sim, pelas 3 últimas prestações em atraso. Também é possível penhorar bens, salário e contas."],
+    ["Quem não paga pode ser preso?", "A prisão civil pode ser requerida pelas três prestações anteriores ao ajuizamento da execução e pelas que vencerem durante o processo. Parcelas antigas podem ser cobradas por medidas patrimoniais, como penhora."],
     ["Avós podem ser obrigados a pagar?", "Sim, de forma complementar, quando os pais não conseguem pagar o necessário."],
   ],
   "guarda-convivencia": [
     ["Guarda compartilhada é a criança morar metade do tempo em cada casa?", "Não necessariamente. A criança pode ter uma residência principal. O compartilhamento é das decisões e da responsabilidade."],
-    ["O outro genitor não deixa eu ver meu filho. O que fazer?", "Registre os descumprimentos e peça ao juiz o cumprimento do regime de convivência. Dificultar o contato pode configurar alienação parental."],
-    ["Posso mudar de cidade com meu filho?", "Mudança que afeta a convivência deve ser combinada ou autorizada pelo juiz."],
+    ["O outro genitor não deixa eu ver meu filho. O que fazer?", "Preserve mensagens e registros dos descumprimentos. Havendo decisão de convivência, é possível pedir seu cumprimento. Se houver risco de violência doméstica ou familiar, o juízo deve considerar a segurança da criança e das partes ao fixar ou revisar guarda e convivência."],
+    ["Posso mudar de cidade com meu filho?", "A decisão sobre mudança da residência permanente da criança para outro município integra o poder familiar. Busque anuência do outro genitor ou autorização judicial se houver desacordo, considerando a convivência e o melhor interesse da criança."],
   ],
   "divorcio-litigioso": [
     ["Meu marido ou minha esposa não quer o divórcio. Posso me divorciar mesmo assim?", "Sim. O divórcio é um direito e não depende da concordância do outro."],
-    ["Quanto tempo leva?", "O divórcio em si pode ser decretado rapidamente. A partilha dos bens e as questões dos filhos podem levar mais tempo, conforme os conflitos."],
+    ["Quanto tempo leva?", "O prazo varia com a citação, os pedidos e o andamento do juízo. É possível pedir que o divórcio seja decidido separadamente, enquanto partilha e questões dos filhos continuam em discussão."],
     ["Quem fica com a casa?", "Depende do regime de bens e de quando e como a casa foi adquirida. Também há regras para quem fica com os filhos."],
   ],
   "verbas-rescisorias": [
-    ["O que entra nas verbas rescisórias?", "Saldo de salário, férias vencidas e proporcionais com 1/3, 13º proporcional, aviso-prévio (conforme o caso) e, na demissão sem justa causa, a multa de 40% do FGTS e a liberação do seguro-desemprego."],
+    ["O que entra nas verbas rescisórias?", "Depende da forma de desligamento. Na dispensa sem justa causa, em regra, há saldo salarial, férias devidas com um terço, 13º proporcional, aviso-prévio e indenização de 40% do FGTS. Saque do FGTS e seguro-desemprego seguem requisitos próprios. Confira o termo rescisório e a modalidade de saque."],
     ["Pedi demissão. Perco tudo?", "Não. Você recebe saldo de salário, férias e 13º proporcionais. Não tem direito à multa do FGTS, ao saque e ao seguro-desemprego."],
     ["Fui demitido por justa causa. Posso contestar?", "Pode. A justa causa precisa ser grave, comprovada e aplicada logo após a falta. Se for revertida, você recebe todas as verbas."],
-    ["Fiz acordo com a empresa. Como fica?", "No acordo (art. 484-A da CLT), recebe-se metade do aviso e da multa do FGTS, e pode-se sacar 80% do FGTS, sem seguro-desemprego."],
+    ["Fiz acordo com a empresa. Como fica?", "Na extinção por acordo, a CLT prevê metade do aviso-prévio quando indenizado e metade da indenização do FGTS. As demais verbas são integrais. Pode haver saque de até 80% do saldo nas condições legais, sem seguro-desemprego."],
   ],
   "horas-extras": [
     ["Não tenho cartão de ponto. Consigo provar?", "Sim, com testemunhas, mensagens, e-mails, registros de acesso e outros documentos."],
-    ["Cargo de confiança recebe hora extra?", "Em regra, não, se for realmente de gestão e com gratificação. Mas muitas empresas chamam de 'cargo de confiança' quem não é. Vale analisar."],
-    ["Trabalho em home office. Tenho direito?", "Depende de como o trabalho é controlado. Quando há controle de jornada, as horas extras são devidas."],
+    ["Cargo de confiança recebe hora extra?", "Para a exceção de cargo de gestão da CLT, verifique os poderes efetivamente exercidos e se o salário do cargo, com eventual gratificação, alcança o salário efetivo acrescido de 40%. O nome do cargo, sozinho, é insuficiente."],
+    ["Trabalho em home office. Tenho direito?", "O teletrabalho por produção ou tarefa está na exceção legal da jornada. Se o trabalho for prestado por jornada, examine o controle efetivo, os registros e as horas que ultrapassaram os limites aplicáveis."],
   ],
   "assedio-trabalho": [
     ["O que é assédio moral?", "Condutas repetidas que humilham, isolam ou desestabilizam o trabalhador, como xingamentos, metas impossíveis com ameaças e exposição ao ridículo."],
@@ -277,7 +277,7 @@ Object.assign(DUVIDAS_CASOS, {
   "acidente-trabalho": [
     ["Acidente no caminho para o trabalho conta?", "Sim. O acidente no trajeto entre a casa e o trabalho é equiparado a acidente de trabalho pela lei previdenciária (Lei 8.213/1991, art. 21, IV, d)."],
     ["A empresa não emitiu a CAT. O que faço?", "Você, o sindicato, o médico ou a autoridade pública podem emitir a CAT pelo site do INSS."],
-    ["Tenho estabilidade?", "Sim, de 12 meses após o fim do auxílio por incapacidade acidentário."],
+    ["Tenho estabilidade?", "Em regra, há estabilidade de 12 meses após cessar o benefício por incapacidade acidentária. A jurisprudência do TST também reconhece exceção quando doença ocupacional ligada ao contrato é constatada depois da dispensa."],
   ],
   "fgts-nao-depositado": [
     ["Como vejo se a empresa depositou?", "Pelo app FGTS, que mostra cada depósito mês a mês."],
@@ -289,8 +289,8 @@ Object.assign(DUVIDAS_CASOS, {
     ["Quanto tempo tenho para sair?", "O juiz fixa o prazo, que costuma ser de 15 ou 30 dias, conforme o caso."],
   ],
   "aluguel-caucao": [
-    ["O proprietário pode ficar com a caução por causa de pintura?", "Só se o desgaste for maior que o normal ou se o contrato previr a pintura na saída, comparando com a vistoria de entrada."],
-    ["Quanto pode ser a caução?", "Até 3 meses de aluguel, devolvida corrigida no fim."],
+    ["O proprietário pode ficar com a caução por causa de pintura?", "O locatário deve devolver o imóvel no estado em que o recebeu, ressalvado o desgaste normal. Compare os laudos de entrada e saída. A retenção deve corresponder a dano ou obrigação comprovada, conforme a lei e o contrato."],
+    ["Quanto pode ser a caução?", "Se a caução for em dinheiro, o limite é de três meses de aluguel. O valor deve ser depositado em poupança, com os rendimentos em favor do locatário, e devolvido ao final, ressalvadas retenções justificadas."],
     ["O reajuste veio muito alto. Pode?", "Deve seguir o índice do contrato. Índices diferentes ou aumentos fora da periodicidade podem ser questionados."],
   ],
   "condominio": [
