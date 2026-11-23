@@ -45,6 +45,35 @@
     return p;
   }
 
+
+  // ---------- Teses tributárias a verificar (lista curta, só o que tem base conhecida; sempre conferir a situação atual) ----------
+  const ehComercio = (cn) => cn.some((x) => /^4[5-7]/.test(String(x.codigo)) || /^1|^2|^3[0-3]/.test(String(x.codigo)));
+  const ehServico = (cn) => cn.some((x) => /^[5-9]/.test(String(x.codigo)));
+  const temMonofasico = (cn) => cn.some((x) => /medicament|farmac|perfum|cosm[ée]t|higiene|combust|bebida|autope[çc]|pneu|ve[íi]culo/i.test(x.descricao || ""));
+  function teses(d, regime) {
+    const cn = [d.cnae, ...(d.cnaes || [])].filter(Boolean), T = [];
+    const simples = regime === "simples", lucro = regime === "presumido" || regime === "real";
+    if (lucro && ehComercio(cn)) T.push({ id: "icms", t: "Exclusão do ICMS da base do PIS/COFINS", q: "Empresas do Lucro Presumido ou Real que vendem mercadorias com ICMS destacado.", f: "STF, Tema 69 (RE 574.706), com efeitos a partir de 15/03/2017 para quem não tinha ação antes.", calc: true });
+    if (lucro && ehServico(cn)) T.push({ id: "iss", t: "Exclusão do ISS da base do PIS/COFINS", q: "Prestadoras de serviço no Lucro Presumido ou Real.", f: "STF, Tema 118 (RE 592.616). Conferir a situação atual do julgamento e eventual modulação antes de ajuizar." });
+    if (simples && temMonofasico(cn)) T.push({ id: "mono", t: "PIS/COFINS monofásico pago de novo no Simples", q: "Empresas do Simples que revendem produtos com tributação concentrada no fabricante (ex.: medicamentos, cosméticos, perfumaria, bebidas, autopeças).", f: "LC 123/2006, art. 18, § 4º-A, e leis do regime monofásico (ex.: Lei 10.147/2000). Recuperação dos últimos 5 anos, em regra pela via administrativa (retificação do PGDAS)." });
+    if (lucro && temMonofasico(cn)) T.push({ id: "mono2", t: "Revenda de produtos monofásicos com alíquota zero", q: "Atacadistas e varejistas no Lucro Presumido ou Real que revendem produtos do regime monofásico.", f: "Lei 10.147/2000 (medicamentos, perfumaria, higiene) e demais leis do regime. Verificar se o PIS/COFINS foi recolhido sobre essas revendas." });
+    if (regime === "real") T.push({ id: "insumos", t: "Créditos de PIS/COFINS sobre insumos", q: "Empresas do Lucro Real (não cumulativo).", f: "STJ, REsp 1.221.170 (Temas 779/780): insumo segundo a essencialidade ou relevância para a atividade. Levantar despesas não creditadas." });
+    if (simples && cn.some((x) => /^4[5-7]/.test(String(x.codigo)))) T.push({ id: "st", t: "ICMS-ST pago em duplicidade no Simples", q: "Comércio no Simples que compra mercadorias com substituição tributária.", f: "LC 123/2006, art. 18, § 4º-A: receitas com ST devem ser segregadas no PGDAS. Conferir as declarações." });
+    if (!regime || regime === "nao") T.push({ id: "regime", t: "Primeiro passo: confirmar o regime tributário", q: "As teses dependem do regime (Simples, Presumido ou Real).", f: "Peça ao cliente o último PGDAS ou a ECF, ou confirme com o contador." });
+    T.push({ id: "divida", t: "Negociação de débitos (transação tributária)", q: "Empresas com débitos inscritos em dívida ativa da União.", f: "Lei 13.988/2020: descontos e prazos conforme os editais vigentes da PGFN. Consultar o Regularize." });
+    return T;
+  }
+  function renderTeses() {
+    const d = empresa; if (!d) return;
+    const reg = $q("#rx-regime").value, fat = +String($q("#rx-fat").value).replace(/\./g, "").replace(",", ".") || 0, icms = +String($q("#rx-icms").value).replace(",", ".") || 0;
+    const T = teses(d, reg);
+    const pis = reg === "real" ? 0.0925 : 0.0365;
+    $q("#rx-teses").innerHTML = T.map((x) => {
+      let est = "";
+      if (x.calc) est = fat && icms ? `<br><b>Estimativa grosseira:</b> ${reais(fat * (icms / 100) * pis * 5)} em 5 anos <span class="muted">(faturamento × ICMS médio × ${String(pis * 100).replace(".", ",")}% × 5). Só um ponto de partida: o valor real sai das notas e da apuração.${temMonofasico([d.cnae, ...(d.cnaes || [])]) ? " Se a maior parte das vendas for de produtos monofásicos (alíquota zero na revenda), o ganho desta tese cai bastante." : ""}</span>` : `<br><span class="muted">Informe faturamento anual e ICMS médio acima para uma estimativa grosseira.</span>`;
+      return `<li><div><b>${esc(x.t)}</b> <span class="pill-s amber">a verificar</span><br>${esc(x.q)}<br><span class="muted">Base: ${esc(x.f)}</span>${est}</div></li>`;
+    }).join("") + `<li class="small muted">⚠️ Antes de propor qualquer medida, confira no site do STF/STJ a situação atual de cada tema e o prazo de 5 anos. Não prometa valores ao cliente.</li>`;
+  }
   function renderEmpresa(d) {
     const c = soNum(d.cnpj), cn = [d.cnae, ...(d.cnaes || [])];
     const links = [
@@ -62,11 +91,21 @@
       Situação: <b>${esc(d.situacao || "")}</b> desde ${br(d.dataSituacao)} · Simples: <b>${d.simples == null ? "não informado" : d.simples ? "sim" : "não"}</b> · MEI: <b>${d.mei == null ? "não informado" : d.mei ? "sim" : "não"}</b></p>
       <h3>Pontos a verificar</h3><p class="small muted">Sugestões de análise a partir dos dados públicos. Não são conclusões: confirme com documentos e com o contador.</p>
       <ul class="list small">${pontos(d).map(([i, t, s]) => `<li><span class="ico">${i}</span><div><b>${esc(t)}</b><br>${esc(s)}</div></li>`).join("")}</ul>
+      <h3>Teses tributárias a verificar</h3>
+      <div class="as-linha" style="flex-wrap:wrap">
+        <label class="small">Regime <select id="rx-regime" class="search"><option value="nao">não sei</option><option value="simples">Simples Nacional</option><option value="presumido">Lucro Presumido</option><option value="real">Lucro Real</option></select></label>
+        <label class="small">Faturamento anual (R$) <input id="rx-fat" class="search" inputmode="decimal" placeholder="opcional" style="width:150px"></label>
+        <label class="small">ICMS médio (%) <input id="rx-icms" class="search" inputmode="decimal" placeholder="ex.: 12" style="width:90px"></label>
+      </div>
+      <ul class="list small" id="rx-teses"></ul>
       <h3>Atividades (CNAE)</h3><ul class="list small">${cn.filter((x) => x?.codigo).map((x, i) => `<li>${i === 0 ? "<b>Principal:</b> " : ""}${esc(String(x.codigo))} — ${esc(x.descricao || "")}</li>`).join("")}</ul>
       ${d.socios?.length ? `<h3>Sócios e administradores</h3><ul class="list small">${d.socios.map((s) => `<li>${esc(s.nome)} — ${esc(s.qualificacao || "")}${s.entrada ? ` (desde ${br(s.entrada)})` : ""}</li>`).join("")}</ul>` : ""}
       <h3>Consultas oficiais (abrem em nova aba; o CNPJ foi copiado)</h3>
       <div class="as-linha" style="flex-wrap:wrap">${links.map(([t, u]) => `<a class="back" href="${u}" target="_blank" rel="noopener" data-copiar="${c}">${esc(t)}</a>`).join("")}</div>
       <div class="as-linha"><button class="btn" type="button" id="rx-ir-lic">🏛️ Ver licitações abertas para estas atividades</button><button class="back" type="button" id="rx-salvar">Salvar resumo na ficha do cliente</button><span class="small muted" id="rx-salvo"></span></div>`;
+    $q("#rx-regime").value = d.mei || d.simples ? "simples" : "nao";
+    ["#rx-regime", "#rx-fat", "#rx-icms"].forEach((k) => $q(k).addEventListener("input", renderTeses));
+    renderTeses();
     $q("#rx-termos").value = termosDe(cn).join("; ");
     $q("#rx-uf").value = d.uf || "";
   }
@@ -126,5 +165,5 @@
     } catch (er) { st.textContent = er.message; }
   }
   $q("#rx-lic").addEventListener("submit", (e) => { e.preventDefault(); buscarLic(); });
-  window.RaioX = { termosDe, cnpjValido, pontos };
+  window.RaioX = { termosDe, cnpjValido, pontos, teses };
 })();
