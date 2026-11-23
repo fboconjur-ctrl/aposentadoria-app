@@ -125,3 +125,87 @@ Object.assign(DUVIDAS_CASOS, {
     ["Tenho direito ao dinheiro de volta?", "Se a compra não foi feita por você e não houve culpa sua, sim. E se a cobrança indevida foi paga, pode haver devolução em dobro em alguns casos."],
   ],
 });
+
+Object.assign(DUVIDAS_CASOS, {
+  "concurso-vagas": [
+    ["Passei dentro do número de vagas. Tenho direito garantido?", "Em regra, sim. Quem é aprovado dentro do número de vagas previsto no edital tem direito à nomeação durante a validade do concurso (STF, Tema 161). A Administração só pode deixar de nomear em situações excepcionais e justificadas."],
+    ["Fiquei no cadastro reserva. Tenho alguma chance?", "Sim, em situações específicas: quando surgem vagas e há contratação de temporários ou terceirizados para a mesma função, ou quando há desistência de candidatos à frente. Cada caso precisa de prova."],
+    ["O concurso está para vencer e não me chamaram. O que faço?", "Não deixe passar: o pedido deve ser feito antes ou logo após o fim da validade. Guarde o edital, o resultado final e a publicação da prorrogação (se houver)."],
+    ["Como provo que há vagas?", "Pelo Portal da Transparência, Diário Oficial (exonerações, aposentadorias), contratações temporárias e pedidos pela Lei de Acesso à Informação."],
+  ],
+  "concurso-eliminacao": [
+    ["Fui eliminado no psicotécnico. Posso contestar?", "Pode. O exame psicológico precisa estar previsto em lei, ter critérios objetivos publicados e permitir recurso com acesso ao resultado. Se faltar algum desses pontos, a eliminação pode ser anulada."],
+    ["Fui reprovado no teste físico (TAF) por pouco. Adianta recorrer?", "Depende de como o teste foi aplicado. Falhas na aplicação, critérios não previstos no edital ou situações como gravidez e lesão comprovada podem justificar novo teste."],
+    ["Me eliminaram no exame médico por uma condição que não me impede de trabalhar. E agora?", "A eliminação precisa ter relação real com as atribuições do cargo. Laudos que mostrem a sua capacidade para a função podem fundamentar o pedido."],
+    ["Qual o prazo para reagir?", "Os recursos administrativos do edital costumam ter prazos de poucos dias. Na Justiça, o mandado de segurança tem prazo de 120 dias do ato. Aja rápido."],
+  ],
+  "pad-prazo": [
+    ["Recebi notificação de PAD. Sou obrigado a me defender?", "É um direito, e é muito importante exercê-lo. Você tem direito à ampla defesa: acompanhar as provas, indicar testemunhas, fazer perguntas e apresentar defesa escrita, com ou sem advogado."],
+    ["Preciso de advogado no PAD?", "A lei não obriga, mas a defesa técnica faz diferença, principalmente em casos que podem levar a demissão ou suspensão longa."],
+    ["Posso ser afastado durante o processo?", "Pode haver afastamento preventivo, em regra sem prejuízo da remuneração, quando o servidor puder influir na apuração."],
+    ["Qual o prazo para a defesa escrita?", "Depende do estatuto do seu ente (federal, estadual, municipal). No federal, em geral são 10 dias após a citação. Confira o prazo na notificação e não deixe para a última hora."],
+  ],
+  "direitos-servidor": [
+    ["Quais direitos costumam ser negados ao servidor?", "Progressões e promoções atrasadas, adicionais (insalubridade, noturno), licenças, abono de permanência, reajustes previstos em lei e conversão de licença-prêmio não gozada em dinheiro na aposentadoria, entre outros."],
+    ["Até quando posso cobrar valores atrasados?", "Em regra, as parcelas dos últimos 5 anos antes do pedido. Valores mais antigos podem estar prescritos."],
+    ["Preciso pedir primeiro na administração?", "Nem sempre, mas o pedido administrativo ajuda a documentar e às vezes resolve sem processo. Guarde o protocolo."],
+    ["Que documentos separar?", "Ficha funcional, contracheques, portarias, legislação do plano de carreira e o pedido administrativo com a resposta."],
+  ],
+  "multa-transito": [
+    ["Recebi uma multa. Qual o primeiro passo?", "Confira a notificação de autuação: ela abre prazo para a defesa prévia e para indicar o condutor, se não era você dirigindo. Esse prazo não pode passar."],
+    ["Quantas chances tenho de recorrer?", "Em geral três: defesa prévia, recurso à JARI e recurso ao conselho estadual (CETRAN) ou ao CONTRANDIFE no DF. Os prazos constam em cada notificação."],
+    ["Vou ter a CNH suspensa. Ainda posso dirigir?", "Enquanto o processo de suspensão não terminar e a penalidade não for aplicada, a CNH continua válida. Depois de aplicada, é preciso cumprir a suspensão e fazer o curso de reciclagem."],
+    ["Recorrer adianta mesmo?", "Muitas multas são anuladas por falhas formais (prazo de notificação, dados errados, equipamento sem aferição). Vale analisar antes de pagar."],
+  ],
+  "responsabilidade-estado": [
+    ["O poder público me causou um prejuízo. Preciso provar culpa?", "Em regra, não. O Estado responde pelos danos causados por seus agentes independentemente de culpa (responsabilidade objetiva). Basta provar o dano e a ligação com a atuação do poder público."],
+    ["Que tipos de casos dão indenização?", "Buracos e falta de sinalização em vias, queda de árvore, erro em hospital público, prisão indevida, danos causados por viaturas, entre outros."],
+    ["Qual o prazo para pedir?", "Em regra, 5 anos a partir do dano. Mas reúna as provas logo: fotos, boletim de ocorrência, orçamentos, laudos e testemunhas."],
+    ["Como o Estado paga?", "Depois da condenação final, por requisição de pequeno valor (RPV) ou precatório, conforme o valor."],
+  ],
+  "pad-prescricao": [
+    ["A infração disciplinar pode prescrever?", "Sim. Os estatutos fixam prazos para a Administração punir, que variam conforme a penalidade. No âmbito federal, por exemplo, são 5 anos para demissão, 2 para suspensão e 180 dias para advertência."],
+    ["Quando começa a contar o prazo?", "Em regra, da data em que a Administração tomou conhecimento do fato. A abertura do PAD interrompe a contagem."],
+    ["Como sei se o meu caso prescreveu?", "É preciso olhar as datas: do fato, do conhecimento pela Administração, da abertura do processo e da duração. A advogada faz essa conta com os documentos."],
+  ],
+  "licitacao-recurso": [
+    ["Qual o prazo para recorrer na licitação?", "Na Lei 14.133/2021, a intenção de recorrer deve ser manifestada logo após o ato, e as razões apresentadas em 3 dias úteis. Prazos e forma também constam no edital."],
+    ["Posso impugnar o edital?", "Sim, antes da abertura, nos prazos previstos na lei e no edital. A impugnação é útil quando há exigências que restringem a competição sem justificativa."],
+    ["Fui desclassificado por detalhe formal. Pode?", "Falhas formais que não prejudicam o conteúdo da proposta muitas vezes podem ser corrigidas (diligência). A desclassificação por excesso de formalismo pode ser questionada."],
+  ],
+  "orgao-nao-paga": [
+    ["O órgão não paga o que deve à minha empresa. O que faço?", "Primeiro, reúna o contrato, as notas fiscais, os atestes de recebimento e as cobranças feitas. Depois, faça um pedido formal de pagamento com prazo. Se não resolver, cabe cobrança judicial."],
+    ["Posso parar de prestar o serviço?", "Pela Lei 14.133/2021, atrasos longos de pagamento (em regra acima de 2 meses) permitem suspender a execução, com aviso. Mas faça isso com orientação, para não descumprir o contrato."],
+    ["Tenho direito a juros e correção?", "Sim, os atrasos geram correção monetária e juros, conforme o contrato e a lei."],
+  ],
+  "heteroidentificacao": [
+    ["Fui eliminado pela banca de heteroidentificação. Posso recorrer?", "Pode. A banca deve avaliar as características fenotípicas da pessoa, com critérios claros, decisão fundamentada e direito a recurso. Decisões sem motivação ou contraditórias podem ser anuladas."],
+    ["Que provas ajudam?", "Fotos de diferentes fases da vida, decisões anteriores de outras bancas que confirmaram a sua condição e documentos. A gravação da entrevista, quando existe, também é importante."],
+    ["Perco a vaga na ampla concorrência também?", "Depende do edital e da decisão. Se não houve má-fé, a jurisprudência tende a admitir que o candidato continue na ampla concorrência, se tiver nota."],
+  ],
+  "tribunal-contas": [
+    ["Fui citado pelo Tribunal de Contas. O que isso significa?", "Significa que o Tribunal identificou possível irregularidade em contas, contratos ou recursos públicos e quer ouvir a sua defesa antes de decidir."],
+    ["Qual o prazo para me defender?", "O prazo vem na citação (costuma ser de 15 dias, prorrogável). Não ignore: a falta de defesa pode levar a condenação ao ressarcimento e multa."],
+    ["Posso ser condenado mesmo sem ter recebido dinheiro?", "Pode haver responsabilização por atos de gestão, mesmo sem enriquecimento. A defesa deve mostrar a regularidade dos atos, a boa-fé e os documentos de cada decisão."],
+  ],
+  "improbidade": [
+    ["O que mudou na lei de improbidade?", "Desde 2021 (Lei 14.230), é preciso provar dolo, ou seja, a intenção de cometer a irregularidade. Erros sem intenção não configuram improbidade."],
+    ["O processo antigo é afetado pela mudança?", "Em parte. O STF decidiu (Tema 1.199) que a exigência de dolo vale para processos ainda não encerrados, mas há regras específicas sobre prescrição. Cada caso deve ser analisado."],
+    ["Posso ter bens bloqueados?", "Pode, mas a lei atual exige demonstração de risco concreto e limita o bloqueio. Há meios de contestar."],
+  ],
+  "desapropriacao": [
+    ["O poder público pode tomar meu imóvel?", "Pode desapropriar por utilidade pública ou interesse social, mas tem que pagar indenização justa, prévia e em dinheiro (salvo exceções previstas na Constituição)."],
+    ["Não concordo com o valor oferecido. E agora?", "Você pode discutir o valor na Justiça, com perícia. O juiz define a indenização, que pode ser maior do que a oferta."],
+    ["E se ocuparam meu imóvel sem processo?", "É a chamada desapropriação indireta. Cabe ação para exigir a indenização. Reúna escritura, matrícula, fotos e documentos da ocupação."],
+  ],
+  "lai": [
+    ["Qualquer pessoa pode pedir informação ao órgão público?", "Sim. Pela Lei de Acesso à Informação (Lei 12.527/2011), qualquer pessoa pode pedir, sem precisar explicar o motivo."],
+    ["Qual o prazo para responder?", "Até 20 dias, prorrogáveis por mais 10, com justificativa."],
+    ["E se negarem?", "Cabe recurso à autoridade superior em 10 dias, e depois a outras instâncias (como a CGU, no âmbito federal). A negativa precisa ser fundamentada."],
+  ],
+  "auto-infracao": [
+    ["Minha empresa recebeu um auto de infração. Preciso pagar já?", "Não necessariamente. Em regra, há prazo para defesa administrativa, e enquanto ela é analisada a cobrança fica suspensa. Leia o auto e anote o prazo."],
+    ["O alvará foi negado. Posso recorrer?", "Sim. A negativa deve ser fundamentada, e cabe recurso administrativo. Muitas vezes é possível corrigir pendências e pedir de novo."],
+    ["Quando vale a pena ir à Justiça?", "Quando há ilegalidade clara, risco de fechamento ou multa desproporcional. Há também a possibilidade de pedir decisão urgente."],
+  ],
+});
