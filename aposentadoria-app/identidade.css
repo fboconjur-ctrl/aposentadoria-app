@@ -41,3 +41,13 @@ input,select,textarea{border-radius:10px;border-color:var(--line);background:var
 .pd-alerta{border-left:4px solid var(--accent);background:var(--panel);padding:10px 14px;margin-top:12px;border-radius:8px}
 .pd-alerta ul{margin:6px 0 0;padding-left:18px}
 .tab-button[hidden]{display:none!important}
+
+.pd-tempo{margin:18px 0;padding:16px;border:1px solid #e3e7f5;border-radius:14px;background:#fafbff}
+.pd-tempo-linha{margin:10px 0}.pd-tempo-topo{display:flex;justify-content:space-between;gap:10px;font-size:.92rem}
+.pd-tempo-barra{height:8px;border-radius:99px;background:#e6e9f4;margin-top:5px;overflow:hidden}
+.pd-tempo-barra i{display:block;height:100%;border-radius:99px;background:#9aa8d8}
+.pd-tempo-linha.melhor .pd-tempo-barra i{background:#2340b8}.pd-tempo-linha.melhor .pd-tempo-topo span{font-weight:700}
+.pd-tempo-linha small{color:#667;font-size:.8rem}
+.pd-acoes{margin:6px 0 14px}.pd-btn-sec{background:#fff;border:1px solid #c9d2f0;color:#2340b8;border-radius:99px;padding:9px 16px;font:inherit;font-weight:600;cursor:pointer}
+@media (min-width:900px){.layout{align-items:start}.layout>.results{position:sticky;top:18px;align-self:start}}
+@media print{.form-panel,.tabs,.portal-sidebar,.workflow-strip,.notice,.pd-acoes,.pd-cta .pd-btn,.topbar .pd-lead{display:none!important}.layout{display:block!important}.results{position:static!important}}

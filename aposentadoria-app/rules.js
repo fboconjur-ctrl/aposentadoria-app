@@ -1,6 +1,7 @@
 (function () {
   const DAY = 24 * 60 * 60 * 1000;
-  const REFERENCE_DATE = new Date("2026-06-10T00:00:00");
+  const hoje = new Date();
+  const REFERENCE_DATE = new Date(hoje.getFullYear(), hoje.getMonth(), hoje.getDate());
 
   function months(years, extraMonths = 0) {
     return Number(years || 0) * 12 + Number(extraMonths || 0);
@@ -95,9 +96,11 @@
   function benefitEstimate(input, ruleType) {
     const avg = Number(input.averageSalary || 0);
     if (!avg) return 0;
-    if (ruleType === "pedagio50") return avg * 0.9;
+    if (ruleType === "pedagio50") return avg * 0.9; // aproximação: na regra real aplica-se o fator previdenciário
+    if (ruleType === "pedagio100") return avg; // EC 103/2019, art. 20, §2º, I: 100% da média
     if (ruleType === "incapacity") return avg * (input.needsThirdPartyCare ? 1.25 : 1);
-    const excessYears = Math.max(0, Math.floor(input.contribMonths / 12) - 20);
+    // EC 103/2019, art. 26, §§2º e 5º: 60% + 2% por ano acima de 20 anos (homens) ou 15 anos (mulheres)
+    const excessYears = Math.max(0, Math.floor(input.contribMonths / 12) - (input.sex === "female" ? 15 : 20));
     return avg * Math.min(1, 0.6 + excessYears * 0.02);
   }
 
@@ -143,7 +146,7 @@
       eligibleDate: date,
       estimatedBenefit: benefitEstimate(input, "standard"),
       requirements: [
-        `Pontuação exigida em 2026: ${pointsReq} pontos`,
+        `Pontuação exigida em ${REFERENCE_DATE.getFullYear()}: ${pointsReq} pontos`,
         `Tempo mínimo: ${formatMonths(contribReq)}`,
         `Pontuação aproximada atual: ${currentPoints.toFixed(1)}`,
       ],
@@ -163,7 +166,7 @@
       eligibleDate: date,
       estimatedBenefit: benefitEstimate(input, "standard"),
       requirements: [
-        `Idade mínima em 2026: ${formatMonths(ageReq)}`,
+        `Idade mínima em ${REFERENCE_DATE.getFullYear()}: ${formatMonths(ageReq)}`,
         `Tempo mínimo: ${formatMonths(contribReq)}`,
       ],
       notes: teacher ? ["A idade progressiva do professor atinge limite menor que a regra comum."] : ["A idade sobe seis meses por ano ate o limite legal."],
@@ -202,7 +205,7 @@
       title: "Pedágio de 100%",
       type: "pedagio100",
       eligibleDate: date,
-      estimatedBenefit: benefitEstimate(input, "standard"),
+      estimatedBenefit: benefitEstimate(input, "pedagio100"),
       requirements: [
         `Idade mínima: ${formatMonths(ageReq)}`,
         `Tempo mínimo com pedágio: ${formatMonths(required)}`,

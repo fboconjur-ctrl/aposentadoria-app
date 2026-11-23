@@ -242,6 +242,21 @@ function statusTag(rule) {
   return `<span class="tag wait">Faltam ${RetirementRules.formatMonths(rule.monthsUntil)}</span>`;
 }
 
+// Comparação visual: quando cada regra fica disponível, da mais próxima para a mais distante.
+function linhaDoTempo(result) {
+  const regras = result.candidates.filter((r) => r.available).sort((a, b) => a.monthsUntil - b.monthsUntil).slice(0, 5);
+  if (regras.length < 2) return "";
+  const max = Math.max(...regras.map((r) => r.monthsUntil), 1);
+  const temSalario = +form.elements.averageSalary.value > 0;
+  return `<div class="pd-tempo"><p class="eyebrow">Comparando as regras</p>${regras.map((r) => `
+    <div class="pd-tempo-linha${r.id === result.best.id ? " melhor" : ""}">
+      <div class="pd-tempo-topo"><span>${r.title}</span><strong>${r.eligible ? "Já cumpre" : RetirementRules.formatDate(r.eligibleDate)}</strong></div>
+      <div class="pd-tempo-barra"><i style="width:${r.eligible ? 100 : Math.max(6, 100 - (r.monthsUntil / max) * 94)}%"></i></div>
+      ${temSalario && r.estimatedBenefit ? `<small>Valor estimado: ${money(r.estimatedBenefit)}</small>` : ""}
+    </div>`).join("")}
+    <p class="pd-dica">Barra cheia = mais perto de se aposentar. Às vezes vale esperar uma regra que paga mais: a advogada ajuda a escolher.</p></div>`;
+}
+
 function renderBest(result) {
   if (!result.best) {
     bestResult.innerHTML = `
@@ -261,6 +276,8 @@ function renderBest(result) {
     <p>Regra que chega primeiro: <strong>${best.title}</strong>.${best.eligible ? "" : ` Faltam cerca de ${RetirementRules.formatMonths(best.monthsUntil)}.`}</p>
     ${temSalario ? `<p>Valor estimado: <strong>${money(best.estimatedBenefit)}</strong> por mês (aproximado).</p>` : `<p class="pd-dica">Informe a média dos salários para ver uma estimativa de valor.</p>`}
     ${cnisLido && cnisLido.findings.length ? `<div class="pd-alerta"><strong>Seu CNIS tem ${cnisLido.findings.length} ponto(s) de atenção</strong> que podem mudar a data e o valor:<ul>${cnisLido.findings.slice(0, 5).map((f) => `<li>${escapeHtml(f.label)}${f.vinculo ? ` <span class="pd-dica">(${escapeHtml(f.vinculo)})</span>` : ""}</li>`).join("")}</ul></div>` : ""}
+    ${linhaDoTempo(result)}
+    <div class="pd-acoes"><button type="button" class="pd-btn-sec" onclick="window.print()">🖨️ Salvar ou imprimir o resultado</button></div>
     <div class="pd-cta">
       <p><strong>Para ter certeza, consulte a advogada.</strong> A simulação usa só os números digitados; o CNIS pode ter períodos faltando ou que contam diferente — e isso muda a data e o valor.</p>
       <a class="pd-btn" href="${WA}" target="_blank" rel="noopener">Quero que a advogada confira meu caso</a>
