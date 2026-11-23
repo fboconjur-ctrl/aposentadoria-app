@@ -199,6 +199,7 @@ function mostrarRoteiro(f, R, text, an) {
     <p class="eyebrow">${an ? "Sua situação" : "Entenda a sua situação"}</p>
     <h1>${esc(an ? f.q : text)}</h1>
     <p class="lead">${esc(R.acolhe)}</p>
+    <p class="rt-atalho">Com pressa? <a href="#" data-wa>Fale agora no WhatsApp</a> — a mensagem já vai com o assunto. Ou continue lendo para entender o seu caso.</p>
     ${an ? analiseHtml(an, f.id) : ""}
     ${an && an.ia ? `<section class="card rt-relacao" id="rt-relacao"><h2>O que a lei e os tribunais dizem sobre os pontos do seu relato</h2><p class="muted">Lendo o conteúdo à luz do que você contou…</p></section>` : ""}
     <div id="rt-conteudo">
@@ -558,6 +559,8 @@ const SITUACOES = {
   imovel: [["Regularizar ou registrar meu imóvel", "reurb"], ["Paguei o imóvel e não recebi a escritura (adjudicação)", "adjudicacao"], ["Moro há anos e não tenho documento (usucapião)", "usucapiao"], ["Tirar a certidão de matrícula", "certidao-matricula"]],
 };
 const OUTRA = "Outra situação — contar com minhas palavras";
+const ZAP = "💬 Prefiro falar no WhatsApp agora";
+const abrirZap = () => window.open(`https://wa.me/${WA_NUMERO}?text=${encodeURIComponent(waTexto())}`, "_blank", "noopener");
 function mostrarSituacoes(tema) {
   const key = tema === "dividas" || tema === "servicos" ? "consumidor" : tema === "imovel" ? "cartorio" : tema;
   Object.assign(state, { text: "", answers: [], qi: 0, key, flow: FLOWS[key], followSummary: null, cnisSummary: null, docSummary: null, faqId: null, assunto: null, analise: null });
@@ -566,7 +569,8 @@ function mostrarSituacoes(tema) {
   go("chat"); setStep(1);
   say("Vamos lá. Qual destas situações é a sua?");
   const lista = SITUACOES[tema];
-  offer([...lista.map((x) => x[0]), OUTRA], (o) => {
+  offer([...lista.map((x) => x[0]), OUTRA, ZAP], (o) => {
+    if (o === ZAP) { abrirZap(); return mostrarSituacoes(tema); }
     if (o === OUTRA) return pedirHistoria();
     const [txt, id] = lista.find((x) => x[0] === o);
     if (id.startsWith("@")) return mostrarSituacoes(id.slice(1));
@@ -742,8 +746,9 @@ $("dividas").onclick = () => mostrarSituacoes("dividas");
 bindHomeDoc();
 // Botão flutuante do WhatsApp só aparece quando o da página inicial sai da tela (não cobre os assuntos).
 (() => {
-  const hero = $("wa-hero"), fl = document.querySelector(".wa-float");
+  const hero = document.querySelector(".caminho-zap"), fl = document.querySelector(".wa-float");
   if (!hero || !fl) return;
   const ver = () => { const r = hero.getBoundingClientRect(); fl.classList.toggle("oculto", !!$("view-lawyer")?.offsetParent || r.height > 0 && r.top < innerHeight && r.bottom > 0 || r.height > 0 && r.top >= innerHeight); };
   addEventListener("scroll", ver, { passive: true }); addEventListener("resize", ver); setInterval(ver, 800); ver();
 })();
+document.getElementById("ir-temas")?.addEventListener("click", (e) => { e.preventDefault(); document.getElementById("shortcuts").scrollIntoView({ behavior: "smooth", block: "start" }); });
