@@ -26,6 +26,17 @@
   const AMIGAVEL = [[/^Novo caso registrado|^Pedido pela plataforma/, "Seu caso foi aberto"], [/^Etapa: (.*)/, "Etapa do caso atualizada"], [/^Petição gerada/, "Peça preparada pela advogada"], [/^Documentos? (organizados|enviado)/, "Documentos recebidos e organizados"], [/^Processo .* (vinculado|ligado)/, "Processo acompanhado"], [/^(WhatsApp|E-mail): (Primeiro contato|Confirmar consulta|Boas-vindas|Pedir documentos|Atualização|Informar andamento|Avisar|Lembrete de documento)/, "Contato com você"], [/^Mensagem pela área do cliente/, "Você enviou uma mensagem"], [/^Área do cliente criada/, "Sua área de acompanhamento foi criada"]];
   const feitos = (c) => { const vistos = new Set(); return (c.hist || []).map((h) => { const a = AMIGAVEL.find(([re]) => re.test(h.o)); return a ? { data: String(h.em).slice(0, 10), texto: a[1] } : null; }).filter((x) => x && !vistos.has(x.data + x.texto) && vistos.add(x.data + x.texto)).slice(0, 15); };
 
+  // Liga o arquivo devolvido ao documento certo: o gov.br mantém o nome do arquivo baixado e acrescenta "_assinado".
+  function assinadoDe(c, a) {
+    const base = (x) => (x.caminho || "").split("/").pop().replace(/\.pdf$/i, "").replace(/^ASSINAR-\d+-/, "").toLowerCase().slice(0, 40);
+    const casa = (d, x) => base(x) && d.nome.toLowerCase().includes(base(x));
+    const devolvidos = (c.docsPedido || []).filter((d) => /assinad/i.test(d.nome) && String(d.em) >= String(a.em));
+    const exato = devolvidos.find((d) => casa(d, a)); if (exato) return exato;
+    // Sem nome reconhecível: só liga se houver um único documento pendente e um arquivo assinado que não pertence a outro.
+    const soltos = devolvidos.filter((d) => !(c.assinar || []).some((x) => casa(d, x)));
+    const pendentes = (c.assinar || []).filter((x) => !(c.docsPedido || []).some((d) => /assinad/i.test(d.nome) && casa(d, x)));
+    return pendentes.length === 1 && pendentes[0] === a ? soltos[0] || null : null;
+  }
   function dadosDoCliente(c) {
     const a = window.DocGerador?.adv() || {}, ac = window.Acervo?.dados() || {};
     const idx = Math.max(0, ETAPAS_CLI.findIndex(([e]) => e === c.etapa));
@@ -37,7 +48,7 @@
       processos: procsDe(c).map((n) => { const p = ac[n] || {}, mv = acomp[n]?.movs || []; return { numero: mascara(n), tribunal: p.trib || acomp[n]?.tribunal || "", classe: p.classe || acomp[n]?.classe || "", orgao: p.orgao || acomp[n]?.orgao || "",
         eventos: [...(p.pubs || []).slice(0, 6).map((x) => ({ data: x.data, titulo: x.tipo, explicacao: window.Acervo?.explicar(x.tipo, x.texto) || "" })), ...mv.slice(0, 4).map((m) => ({ data: String(m.data).slice(0, 10), titulo: m.nome, explicacao: "" }))].sort((x, y) => y.data.localeCompare(x.data)).slice(0, 8) }; }),
       pagamentos: fin.filter((l) => l.cli === c.id && l.tipo === "receita").sort((x, y) => x.venc.localeCompare(y.venc)).map((l) => ({ desc: l.desc, parcela: l.parcela || "", valor: l.valor, venc: l.venc, pago: l.pago || "" })),
-      assinar: (c.assinar || []).filter((a) => a.expira >= hojeIso).map((a) => ({ nome: a.nome, url: a.url, em: a.em.slice(0, 10), assinado: (c.docsPedido || []).some((d) => /assinad/i.test(d.nome) && d.em >= a.em) })),
+      assinar: (c.assinar || []).filter((a) => a.expira >= hojeIso).map((a) => ({ nome: a.nome, url: a.url, em: a.em.slice(0, 10), assinado: !!assinadoDe(c, a) })),
       recibos: [...fin.filter((l) => l.cli === c.id && l.reciboLib?.html).map((l) => ({ num: l.reciboLib.num, titulo: `Recibo nº ${l.reciboLib.num}`, desc: `${l.desc || "Honorários"}${l.parcela ? ` (${l.parcela})` : ""}`, valor: l.valor, data: l.pago, html: l.reciboLib.html })),
         ...(c.quitacao?.html ? [{ num: c.quitacao.num, titulo: `Quitação geral nº ${c.quitacao.num}`, desc: "Recibo de quitação geral dos honorários", valor: null, data: c.quitacao.em.slice(0, 10), html: c.quitacao.html, geral: true }] : [])],
       documentosRecebidos: [...(c.docsRecebidos || []), ...(c.docsPedido || [])].slice(-20).map((d) => d.nome),
@@ -138,7 +149,7 @@
         <p class="small muted">${p.ativo === false ? "⛔ Link desativado: o cliente não consegue abrir." : p.visto ? `Última visita do cliente: ${new Date(p.visto).toLocaleString("pt-BR")}` : "O cliente ainda não abriu."}</p>
         <label class="small"><input type="checkbox" id="fi-portal-avemail" ${c.avisoEmail !== false ? "checked" : ""} ${c.email ? "" : "disabled"}> Avisar por e-mail quando houver novidade no processo ou resposta minha ${c.email ? `(${esc(c.email)})` : "— cadastre o e-mail do cliente em “Editar dados”"}</label>
         <div class="small" style="margin:6px 0"><b>✍️ Documentos para o cliente assinar no gov.br</b>
-          ${(c.assinar || []).map((a) => { const ok = (c.docsPedido || []).some((d) => /assinad/i.test(d.nome) && d.em >= a.em); return `<div>${ok ? "✅" : "⏳"} ${esc(a.nome)} <span class="muted">· enviado ${fmt(new Date(a.em))}${ok ? " · cliente devolveu assinado (veja em Documentos enviados pelo cliente)" : ` · disponível até ${fmt(deIso(a.expira))}`}</span></div>`; }).join("")}
+          ${(c.assinar || []).map((a) => { const ok = assinadoDe(c, a); return `<div>${ok ? "✅" : "⏳"} ${esc(a.nome)} <span class="muted">· enviado ${fmt(new Date(a.em))}${ok ? " · cliente devolveu assinado (veja em Documentos enviados pelo cliente)" : ` · disponível até ${fmt(deIso(a.expira))}`}</span></div>`; }).join("")}
           <label class="linkish small" style="cursor:pointer">+ Enviar PDF para assinar<input type="file" id="fi-portal-assinar" accept="application/pdf" hidden></label> <span class="muted" id="fi-portal-assinar-st"></span></div>
         <label class="small">Recado para o cliente (aparece no topo da área dele)<textarea id="fi-portal-recado" class="search" rows="2" style="width:100%;box-sizing:border-box">${esc(c.recado || "")}</textarea></label>
         <label class="small">Próximo passo (se vazio, usa o texto padrão da etapa)<input id="fi-portal-prox" class="search" style="width:100%;box-sizing:border-box" value="${esc(c.proximoCliente || "")}" placeholder="${esc(PROXIMO[c.etapa] || "")}"></label>
