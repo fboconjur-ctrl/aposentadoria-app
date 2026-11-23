@@ -81,6 +81,7 @@
       alert(error ? "Não foi possível trocar: " + error.message : "Senha trocada! Use a nova senha da próxima vez.");
     });
     document.getElementById("sair")?.addEventListener("click", () => { sessionStorage.removeItem("pd-sync-ok"); sb.auth.signOut().then(() => location.reload()); });
+    window.agendaLink = async (novo) => { const { data, error } = await sb.rpc("agenda_link", { p_novo: !!novo }); if (error) throw error; return `${CFG.url}/functions/v1/agenda?t=${data}`; };
     if (papel === "associado") return modoAssociado(sb, user);
 
     // 1) Traz o que está na nuvem para este navegador (a nuvem é a fonte da verdade).
