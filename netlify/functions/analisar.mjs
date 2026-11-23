@@ -82,7 +82,11 @@ export default async (req) => {
       headers: { "x-api-key": chave, "anthropic-version": "2023-06-01", "content-type": "application/json" },
       body: JSON.stringify({ model: MODELO, max_tokens: 900, system: REGRAS, tools: [ferramenta], tool_choice: { type: "tool", name: ferramenta.name }, messages: [{ role: "user", content: conteudo }] }),
     });
-    if (!r.ok) return Response.json({ erro: "Análise indisponível no momento." }, { status: 502 });
+    if (!r.ok) {
+      // Motivo devolvido pela API (ex.: chave inválida, sem crédito), sem expor a chave.
+      const det = await r.json().catch(() => ({}));
+      return Response.json({ erro: "Análise indisponível no momento.", status: r.status, motivo: det?.error?.type || "", detalhe: String(det?.error?.message || "").slice(0, 200) }, { status: 502 });
+    }
     const d = await r.json();
     const uso = (d.content || []).find((c) => c.type === "tool_use");
     if (!uso) return Response.json({ erro: "Sem resultado." }, { status: 502 });
