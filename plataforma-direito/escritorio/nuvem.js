@@ -18,7 +18,7 @@
     </form>
     <p class="small muted" id="login-msg" role="alert"></p>
     <p class="small"><button type="button" class="linkish" id="login-criar">Primeiro acesso? Criar minha senha</button></p>
-    <p class="small muted">Esqueceu a senha? Fale com a titular do escritório.</p></div>`;
+    <p class="small"><button type="button" class="linkish" id="login-esqueci">Esqueci minha senha</button></p></div>`;
   document.body.appendChild(capa);
   const msg = (t) => (document.getElementById("login-msg").textContent = t);
   document.getElementById("login-ver").onclick = (e) => { const i = document.getElementById("login-senha"), ver = i.type === "password"; i.type = ver ? "text" : "password"; e.target.textContent = ver ? "ocultar" : "mostrar"; };
@@ -36,6 +36,27 @@
       if (error) return msg(error.message === "Invalid login credentials" ? "E-mail ou senha incorretos." : error.message === "Email not confirmed" ? "Acesso ainda não liberado. Avise o Claude." : error.message);
       location.reload();
     };
+    document.getElementById("login-esqueci").onclick = async () => {
+      const email = document.getElementById("login-email").value.trim();
+      if (!email) { msg("Digite seu e-mail no campo acima e clique de novo em “Esqueci minha senha”."); document.getElementById("login-email").focus(); return; }
+      msg("Enviando…");
+      const { error } = await sb.auth.resetPasswordForEmail(email, { redirectTo: location.origin + location.pathname });
+      msg(error ? "Não foi possível enviar agora: " + error.message : "Se este e-mail tiver acesso, chegará uma mensagem com um link para criar a senha nova. Confira também o spam.");
+    };
+    // Volta do link de recuperação: pede a senha nova.
+    const pedirNovaSenha = async () => {
+      for (;;) {
+        const nova = prompt("Crie sua NOVA senha (mínimo 8 caracteres):"); if (!nova) return;
+        if (nova.length < 8) { alert("A senha precisa ter pelo menos 8 caracteres."); continue; }
+        if (prompt("Digite a nova senha de novo, para confirmar:") !== nova) { alert("As duas senhas não são iguais. Tente de novo."); continue; }
+        const { error } = await sb.auth.updateUser({ password: nova });
+        if (error) { alert("Não foi possível salvar: " + error.message); continue; }
+        alert("Senha nova salva! Use ela daqui para frente."); history.replaceState(null, "", location.pathname); return;
+      }
+    };
+    const veioDoLink = /type=recovery/.test(location.hash + location.search);
+    let jaPediu = false;
+    sb.auth.onAuthStateChange((ev) => { if (ev === "PASSWORD_RECOVERY" && !jaPediu) { jaPediu = true; setTimeout(pedirNovaSenha, 300); } });
     document.getElementById("login-criar").onclick = async () => {
       if (!document.getElementById("login-form").reportValidity()) return;
       const { error } = await sb.auth.signUp(dados());
@@ -44,7 +65,8 @@
 
     const { data: { session } } = await sb.auth.getSession();
     const user = session?.user;
-    if (!user) { capa.hidden = false; return; }
+    if (!user) { capa.hidden = false; if (veioDoLink) msg("O link de recuperação expirou ou já foi usado. Digite seu e-mail e peça outro em “Esqueci minha senha”."); return; }
+    if (veioDoLink && !jaPediu) { jaPediu = true; setTimeout(pedirNovaSenha, 300); }
 
     window.tokenPainel = async () => (await sb.auth.getSession()).data.session?.access_token;
     // 0) Quem entrou: titular (vê tudo) ou associado (vê só os casos atribuídos a ele).
