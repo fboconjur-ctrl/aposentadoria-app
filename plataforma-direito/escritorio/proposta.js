@@ -66,9 +66,14 @@
 
   $q("#pp-cli").addEventListener("change", (e) => abrirPara(cliPorId(e.target.value)));
   $q("#pp-ver").onclick = () => { if (exige()) abrir(html(cli, dados(), cli.proposta?.num || "prévia")); };
-  $q("#pp-liberar").onclick = () => {
-    if (!exige()) return; if (!cli.portal?.token) { alert("Crie a área do cliente na ficha antes de liberar a proposta."); return; }
-    if (!confirm("Liberar esta proposta na área do cliente? Ele poderá ver, imprimir e aceitar.")) return;
+  $q("#pp-liberar").onclick = async () => {
+    if (!exige()) return;
+    if (!confirm("Liberar esta proposta na área do cliente? Ele poderá ver, imprimir e aceitar." + (cli.portal?.token ? "" : "\n\nEste cliente ainda não tem área: ela será criada agora, e você envia o link junto com a proposta."))) return;
+    if (!cli.portal?.token) {
+      if (!window.Portal) { alert("Entre no painel com seu login para criar a área do cliente."); return; }
+      try { const t = await Portal.criar(cli.id); cli.portal = { token: t, ativo: true }; (cli.hist ||= []).unshift({ em: new Date().toISOString(), o: "Área do cliente criada" }); }
+      catch (er) { alert("Não consegui criar a área do cliente: " + er.message); return; }
+    }
     const d = dados(), n = numero();
     cli.proposta = { num: n, em: new Date().toISOString(), validade: new Date(Date.now() + d.validade * 864e5).toISOString().slice(0, 10), html: html(cli, d, n), dados: d };
     if (["Novo pedido", "Consulta marcada"].includes(cli.etapa)) cli.etapa = "Proposta enviada";
@@ -76,7 +81,7 @@
   };
   $q("#pp-wa").onclick = () => {
     if (!exige()) return; const d = dados(), t = telWa(cli.tel);
-    const txt = `Olá, ${primeiroNome(cli.nome)}! Conforme conversamos, segue a proposta para o seu caso (${d.serv}):\n\n${d.v1 ? `• Opção 1: ${R(d.v1)}${d.parc > 1 ? ` em até ${d.parc}x de ${R(d.v1 / d.parc)}` : ""}\n` : ""}${d.op2 && d.v2 ? `• Opção 2: ${R(d.v2)} + ${d.pct}% apenas se houver êxito\n` : ""}\n${cli.proposta?.html && cli.portal?.token ? `A proposta completa está na sua área, onde você pode aceitar com um toque:\nhttps://plataformadodireito.com.br/plataforma-direito/minha-area/#${cli.portal.token}\n\n` : ""}Validade: ${d.validade} dias. Fico à disposição para qualquer dúvida.`;
+    const txt = `Olá, ${primeiroNome(cli.nome)}! Conforme conversamos, segue a proposta para o seu caso (${d.serv}):\n\n${d.v1 ? `• Opção 1: ${R(d.v1)}${d.parc > 1 ? ` em até ${d.parc}x de ${R(d.v1 / d.parc)}` : ""}\n` : ""}${d.op2 && d.v2 ? `• Opção 2: ${R(d.v2)} + ${d.pct}% apenas se houver êxito\n` : ""}\n${cli.proposta?.html && cli.portal?.token ? `A proposta completa está na sua área, onde você pode aceitar com um toque:\nhttps://plataformadodireito.com.br/plataforma-direito/minha-area/#${cli.portal.token}\n\n` : ""}Importante: mesmo com os documentos enviados e o contrato assinado, o caso só começa depois da nossa conversa, agendada após o pagamento da entrada ou da consulta.\n\nValidade: ${d.validade} dias. Fico à disposição para qualquer dúvida.`;
     if (!t) { navigator.clipboard?.writeText(txt); alert("Cliente sem WhatsApp cadastrado: o texto foi copiado."); return; }
     open(`https://wa.me/${t}?text=${encodeURIComponent(txt)}`, "_blank", "noopener"); (cli.hist ||= []).unshift({ em: new Date().toISOString(), o: "WhatsApp: proposta de honorários" }); salvarCrm();
   };
