@@ -416,3 +416,4 @@ body:has(#view-result.active .barra-acao) .wa-float { display: none; }
 .rt-aviso { background: var(--amber-soft, #fff6e5); border-left: 4px solid var(--amber); border-radius: 10px; padding: 10px 12px; }
 
 .tile-destaque{background:var(--azul,#2340b8)!important;color:#fff!important;font-weight:700}
+.guia-link{display:block;margin:12px 0 0;padding:12px 14px;border:1px solid #c9d2f0;border-radius:12px;background:#f3f6ff;color:#2340b8;font-weight:600;text-decoration:none}
