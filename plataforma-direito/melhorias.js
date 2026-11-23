@@ -137,7 +137,13 @@
   function linkDe(id) { return `${location.origin}${location.pathname}?s=${encodeURIComponent(id)}`; }
   function extras(f, R) {
     const r = $("result"), id = f.id;
-    if (ROTEIROS[id]) { history.replaceState(null, "", `?s=${encodeURIComponent(id)}`); document.title = `${titulo(id)} · Plataforma do Direito`; }
+    if (ROTEIROS[id]) {
+      // Entrada nova no histórico: o "voltar" do celular volta para onde a pessoa estava.
+      const novo = `?s=${encodeURIComponent(id)}`;
+      if (window.__voltando) window.__voltando = false;
+      else if (location.search !== novo) history.pushState({ s: id }, "", novo);
+      document.title = `${titulo(id)} · Plataforma do Direito`;
+    }
     const docs = publico(R.docs);
     const barra = document.createElement("div"); barra.className = "rt-ferramentas";
     barra.innerHTML = `${window.speechSynthesis ? `<button type="button" data-ouvir>🔊 Ouvir</button>` : ""}<button type="button" data-compartilhar>🔗 Enviar esta página</button>${docs.length ? `<button type="button" data-docs>📋 Lista de documentos</button>` : ""}${MODELO_DE[id] ? `<button type="button" data-modelo>📝 Modelo de requerimento</button>` : ""}`;
@@ -239,5 +245,21 @@
   // ---------- Abrir direto pelo link (?s=situacao) ----------
   const s = new URLSearchParams(location.search).get("s");
   // Espera os outros scripts (melhorias2.js) terminarem de se ligar antes de abrir.
-  if (s) setTimeout(() => { if (!abrir(s)) history.replaceState(null, "", location.pathname); }, 0);
+  if (s) setTimeout(() => { window.__voltando = true; if (!abrir(s)) { window.__voltando = false; history.replaceState(null, "", location.pathname); } }, 0);
+  // Botão "voltar" do navegador/celular.
+  addEventListener("popstate", () => {
+    const id = new URLSearchParams(location.search).get("s");
+    if (id) { window.__voltando = true; abrir(id); } else goOrig("home");
+  });
+
+  // ---------- Letra maior (fica lembrado neste aparelho) ----------
+  const nav = document.querySelector(".topbar nav");
+  if (nav) {
+    const b = document.createElement("button"); b.type = "button"; b.className = "btn-letra"; b.textContent = "A+"; b.title = "Aumentar o tamanho da letra"; b.setAttribute("aria-label", "Aumentar o tamanho da letra");
+    const aplicar = (on) => { document.documentElement.classList.toggle("letra-grande", on); b.textContent = on ? "A−" : "A+"; b.setAttribute("aria-pressed", on); };
+    let on = false; try { on = localStorage.getItem("pd-letra") === "1"; } catch {}
+    aplicar(on);
+    b.onclick = () => { on = !on; aplicar(on); try { localStorage.setItem("pd-letra", on ? "1" : "0"); } catch {} };
+    nav.prepend(b);
+  }
 })();

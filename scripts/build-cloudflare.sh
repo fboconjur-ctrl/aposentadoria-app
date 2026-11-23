@@ -41,4 +41,6 @@ cat > "$DIST/_headers" <<'EOF'
   X-Robots-Tag: noindex, nofollow
   Referrer-Policy: no-referrer
 EOF
+# Uma página de texto por situação (Google) e o sitemap com todas elas.
+node scripts/gerar-paginas.js "$DIST"
 echo "dist pronto"
