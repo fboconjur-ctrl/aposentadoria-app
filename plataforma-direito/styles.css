@@ -370,3 +370,26 @@ tr:last-child td { border-bottom: 0; }
 .foot-copy { border-top: 1px solid var(--line); padding-top: 14px; }
 @media (max-width: 720px) { .foot-cols { grid-template-columns: 1fr 1fr; } .foot-marca { grid-column: 1 / -1; } }
 .topo-cliente { font-weight: 700 !important; }
+
+/* ---------- Páginas de situação em camadas ---------- */
+.rt-essencial { border-left: 4px solid var(--brand); background: linear-gradient(135deg, color-mix(in srgb, var(--brand) 6%, var(--surface)), var(--surface)); }
+.rt-essencial h2 { margin: 2px 0 8px; }
+.rt-essencial ul { margin: 0 0 10px; padding-left: 20px; display: grid; gap: 8px; }
+.rt-alerta { background: var(--amber-soft, #fff6e5); border-radius: 12px; padding: 10px 12px; margin: 0 0 8px; }
+.rt-urgente-box { border: 1px solid #f3c1c1; background: #fdf1f1; border-radius: 14px; padding: 12px 16px; margin: 14px 0; }
+.rt-urgente-box ul { margin: 6px 0 0; padding-left: 20px; }
+.camadas { display: grid; gap: 10px; margin: 16px 0; }
+.camada { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; overflow: hidden; }
+.camada > summary { list-style: none; cursor: pointer; display: flex; gap: 12px; align-items: center; padding: 14px 16px; }
+.camada > summary::-webkit-details-marker { display: none; }
+.camada > summary::after { content: "＋"; margin-left: auto; font-weight: 700; color: var(--brand); }
+.camada[open] > summary::after { content: "−"; }
+.camada[open] > summary { border-bottom: 1px solid var(--line); background: color-mix(in srgb, var(--brand) 5%, var(--surface)); }
+.camada-ico { font-size: 1.4rem; width: 40px; height: 40px; display: grid; place-items: center; border-radius: 12px; background: var(--tint); flex: none; }
+.camada-corpo { padding: 4px 18px 16px; }
+.camada-corpo h3 { font-size: 1rem; margin: 16px 0 6px; }
+.camada-corpo li { margin: 6px 0; }
+.camada .duvida { border-top: 1px solid var(--line); padding: 10px 0; } .camada .duvida summary { cursor: pointer; font-weight: 600; } .camada .duvida p { color: var(--muted); margin: 8px 0 0; }
+.barra-acao { position: sticky; bottom: 0; display: flex; gap: 8px; padding: 10px 0 calc(10px + env(safe-area-inset-bottom)); background: linear-gradient(transparent, var(--bg) 30%); z-index: 20; }
+.barra-acao .btn { flex: 1; justify-content: center; text-align: center; }
+body:has(#view-result.active .barra-acao) .wa-float { display: none; }

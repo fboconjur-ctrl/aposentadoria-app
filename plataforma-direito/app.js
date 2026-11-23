@@ -189,32 +189,41 @@ function mostrarRoteiro(f, R, text, an) {
   const passos = an ? publico(R.passos).filter((x) => !an.feitos.some((c) => c.re.test(norm(x)))) : publico(R.passos);
   go("result");
   const bloco = (titulo, itens, cls = "") => publico(itens).length ? `<section class="rt-bloco ${cls}"><h2>${titulo}</h2><ul>${publico(itens).map((x) => `<li>${esc(x)}</li>`).join("")}</ul></section>` : "";
+  const pub = (k) => publico(R[k]);
+  const resumo = [...(R.explica ? publico(R.explica.itens) : []), ...pub("lei"), ...pub("passos")].slice(0, 3).map((x) => { const i = x.indexOf(": "); return i > 0 && i < 60 ? `<strong>${esc(x.slice(0, i))}:</strong> ${esc(x.slice(i + 2))}` : esc(x); });
+  const faqs = (typeof FAQ !== "undefined" ? FAQ : []).filter((x) => x.area === f.area && x.id !== f.id && x.a?.length).slice(0, 5);
+  const camada = (id, icone, titulo, sub, corpo, aberto) => corpo ? `<details class="camada"${aberto ? " open" : ""} id="${id}"><summary><span class="camada-ico">${icone}</span><span><b>${titulo}</b><br><span class="small muted">${sub}</span></span></summary><div class="camada-corpo">${corpo}</div></details>` : "";
+  const lista = (itens, cls = "") => publico(itens).length ? `<ul class="${cls}">${publico(itens).map((x) => `<li>${esc(x)}</li>`).join("")}</ul>` : "";
+  const sub2 = (t, html) => html ? `<h3>${t}</h3>${html}` : "";
   $("result").innerHTML = `
-    <p class="eyebrow">Sua situação</p>
+    <p class="eyebrow">${an ? "Sua situação" : "Entenda a sua situação"}</p>
     <h1>${esc(an ? f.q : text)}</h1>
     <p class="lead">${esc(R.acolhe)}</p>
     ${an ? analiseHtml(an, f.id) : ""}
     ${an && an.ia ? `<section class="card rt-relacao" id="rt-relacao"><h2>O que a lei e os tribunais dizem sobre os pontos do seu relato</h2><p class="muted">Lendo o conteúdo à luz do que você contou…</p></section>` : ""}
     <div id="rt-conteudo">
-      ${R.explica ? `<section class="rt-bloco rt-explica card"><h2>${esc(R.explica.titulo)}</h2><ol>${publico(R.explica.itens).map((x) => { const i = x.indexOf(": "); return `<li>${i > 0 && i < 60 ? `<strong>${esc(x.slice(0, i))}:</strong> ${esc(x.slice(i + 2))}` : esc(x)}</li>`; }).join("")}</ol></section>` : ""}
-      ${bloco("O que a lei diz", R.lei)}
-      ${bloco("Como os tribunais têm decidido", R.juris)}
-      ${bloco("Onde os tribunais ainda divergem", R.divergencia, "rt-diverge")}
-      ${bloco("Prazos que importam", R.prazos, "rt-prazo")}
-      ${publico(R.docs).length ? `<section class="rt-bloco"><h2>Documentos para separar</h2><ul class="rt-check">${publico(R.docs).map((x) => `<li><label><input type="checkbox"> ${esc(x)}</label></li>`).join("")}</ul></section>` : ""}
-      ${passos.length ? `<section class="rt-bloco"><h2>${an && an.feitos.length ? "Próximos passos (sem repetir o que você já fez)" : "O que fazer agora"}</h2><ol>${passos.map((x) => `<li data-ref="passos.${publico(R.passos).indexOf(x)}">${esc(x)}</li>`).join("")}</ol></section>` : ""}
-      ${bloco("Quando é urgente procurar a advogada", R.urgente, "rt-urgente")}
-    <div class="card rt-perguntas"${an ? " hidden" : ""}><h2>Quer adiantar seu atendimento?</h2><p class="muted">Opcional: ${R.perguntas.length} toques, menos de 1 minuto. Suas respostas vão junto se você pedir a avaliação da advogada.</p>
+      ${resumo.length ? `<section class="card rt-essencial"><p class="eyebrow">Em 1 minuto</p><h2>O essencial</h2><ul>${resumo.map((x) => `<li>${x}</li>`).join("")}</ul>
+        ${pub("prazos").length ? `<p class="rt-alerta">⏰ <b>Atenção ao prazo:</b> ${esc(pub("prazos")[0])}</p>` : ""}
+        <p class="small muted" style="margin:0">Quer entender melhor? Abra as partes abaixo, no seu ritmo.</p></section>` : ""}
+      ${publico(R.urgente).length ? `<section class="rt-urgente-box"><b>🚨 Procure a advogada logo se:</b>${lista(R.urgente)}</section>` : ""}
+      <div class="camadas">
+        ${camada("c-passos", "🧭", "O que fazer agora", "Passo a passo, na ordem", passos.length ? `<ol>${passos.map((x) => `<li data-ref="passos.${publico(R.passos).indexOf(x)}">${esc(x)}</li>`).join("")}</ol>` : "", false)}
+        ${camada("c-entender", "💡", "Entender melhor", "Como funciona, em palavras simples", (R.explica ? `<ol>${publico(R.explica.itens).map((x) => { const i = x.indexOf(": "); return `<li>${i > 0 && i < 60 ? `<strong>${esc(x.slice(0, i))}:</strong> ${esc(x.slice(i + 2))}` : esc(x)}</li>`; }).join("")}</ol>` : "") + sub2("Prazos que importam", lista(R.prazos, "rt-prazo-lista")), false)}
+        ${camada("c-docs", "📋", "Documentos para separar", "Marque o que você já tem", pub("docs").length ? `<ul class="rt-check">${pub("docs").map((x) => `<li><label><input type="checkbox"> ${esc(x)}</label></li>`).join("")}</ul>` : "", false)}
+        ${camada("c-lei", "⚖️", "Para quem quer aprofundar", "O que a lei diz e como os tribunais decidem", sub2("O que a lei diz", lista(R.lei)) + sub2("Como os tribunais têm decidido", lista(R.juris)) + sub2("Onde os tribunais ainda divergem", lista(R.divergencia)) + (R.fontes ? `<h3>Fontes oficiais</h3><ul>${R.fontes.map(([n, u]) => `<li><a href="${u}" target="_blank" rel="noopener">${esc(n)}</a></li>`).join("")}</ul>` : ""), false)}
+        ${faqs.length ? camada("c-faq", "❓", "Dúvidas que outras pessoas também têm", "Respostas rápidas sobre o tema", faqs.map((x) => `<details class="duvida"><summary>${esc(x.q)}</summary><p>${esc(x.a[0])}</p>${x.a[1] ? `<p>${esc(x.a[1])}</p>` : ""}</details>`).join(""), false) : ""}
+      </div>
+      <div class="card rt-perguntas"${an ? " hidden" : ""}><h2>Quer uma orientação sobre o <em>seu</em> caso?</h2><p class="muted">Responda ${R.perguntas.length} perguntas rápidas (só toques, sem dados pessoais). Se pedir a avaliação da advogada, elas vão junto e você não precisa repetir nada.</p>
         ${R.perguntas.map((p, i) => `<div class="rt-q" data-i="${i}"><p><strong>${esc(p.q)}</strong></p><div class="answers">${p.a.map((a) => `<button type="button" data-r="${esc(a)}">${esc(a)}</button>`).join("")}</div>${ajudaHtml(p.ajuda)}</div>`).join("")}
       </div>
-      <div class="card decision"><h2>Para ter certeza da avaliação no seu caso, consulte a advogada.</h2>
-        <p class="muted">As informações acima são gerais. O que vale para você depende dos documentos e dos detalhes do caso.</p>
-        <div class="actions"><button class="btn" id="to-lawyer">Quero a avaliação da advogada</button><a href="#" class="btn btn-wa" data-wa>Falar no WhatsApp</a></div>
+      <div class="card decision"><h2>Cada caso tem detalhes que mudam tudo.</h2>
+        <p class="muted">A advogada analisa os seus documentos e diz, com clareza, quais são os caminhos possíveis no seu caso — sem compromisso de contratar.</p>
+        <div class="actions"><button class="btn" id="to-lawyer">Pedir a avaliação da advogada</button><a href="#" class="btn btn-wa" data-wa>Tirar uma dúvida no WhatsApp</a></div>
         <p class="small"><a href="#" id="rt-guia">Onde reclamar e como consultar (Procon, Banco Central, agências, Registrato) →</a></p></div>
-      ${R.fontes ? `<details><summary>Fontes oficiais →</summary><ul>${R.fontes.map(([n, u]) => `<li><a href="${u}" target="_blank" rel="noopener">${esc(n)}</a></li>`).join("")}</ul></details>` : ""}
       <p class="muted small">Informação geral com base na lei e na jurisprudência. Não constitui orientação jurídica nem substitui a análise do seu caso pela advogada.</p>
       ${seloRevisao(f.id)}
-    </div>`;
+    </div>
+    <div class="barra-acao"><a href="#" class="btn btn-wa" data-wa>Tirar dúvida</a><button class="btn" type="button" data-an-lawyer>Avaliação da advogada</button></div>`;
   const registrar = () => { state.followSummary = `${f.q} — ` + R.perguntas.map((p, i) => `${p.q} ${resp[i] || "(sem resposta)"}`).join(" | "); state.answers = resp.filter(Boolean); };
   document.querySelectorAll(".rt-q").forEach((el) => el.querySelectorAll("[data-r]").forEach((b) => (b.onclick = () => {
     const i = +el.dataset.i; resp[i] = b.dataset.r;
@@ -227,6 +236,7 @@ function mostrarRoteiro(f, R, text, an) {
   if (an) { state.followSummary = `${f.q} — ${state.followSummary || "relato: " + text}`; document.querySelectorAll("[data-outro]").forEach((b) => (b.onclick = () => { const id = b.dataset.outro; mostrarRoteiro({ id, q: b.textContent, area: f.area, sources: [] }, ROTEIROS[id], text, { ...an }); window.scrollTo(0, 0); })); }
   $("rt-guia").onclick = (e) => { e.preventDefault(); go("guia"); };
   $("to-lawyer").onclick = () => { if (!an) registrar(); openLawyer(); };
+  document.querySelector(".barra-acao [data-an-lawyer]")?.addEventListener("click", () => { if (!an) registrar(); }, true);
   state.text = state.text || text;
 }
 
