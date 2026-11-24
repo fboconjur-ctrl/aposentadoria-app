@@ -60,7 +60,7 @@ const cabeca = (tit, desc, url, extra = "") => `<!doctype html>
 <meta property="og:type" content="article"><meta property="og:title" content="${esc(tit)}"><meta property="og:description" content="${esc(desc)}"><meta property="og:url" content="${url}"><meta property="og:image" content="${SITE}/compartilhar.png">
 <link rel="icon" href="/favicon.svg"><style>${CSS}</style>${extra}</head>`;
 
-const urls = [`${SITE}/plataforma-direito/`, `${SITE}/plataforma-direito/privacidade/`, `${SITE}/plataforma-direito/s/`, `${SITE}/plataforma-direito/treinamentos/`];
+const urls = [`${SITE}/plataforma-direito/`, `${SITE}/plataforma-direito/privacidade/`, `${SITE}/plataforma-direito/s/`, `${SITE}/plataforma-direito/treinamentos/`, `${SITE}/plataforma-direito/cursos/`];
 const indice = {};
 let n = 0;
 for (const [id, R] of Object.entries(ROTEIROS)) {
