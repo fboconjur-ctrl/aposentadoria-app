@@ -108,7 +108,7 @@
     "certidao-matricula": ["matricula do imovel", "certidao de onus", "registro de imoveis", "onr"],
     "compra-imovel": ["comprar imovel", "escritura de compra", "itbi", "financiamento imobiliario", "cuidado ao comprar"],
     "tea-escola": ["autista na escola", "escola autismo", "mediador", "acompanhante terapeutico", "at escolar", "profissional de apoio", "monitor escolar", "auxiliar de sala", "recusou matricula", "matricula negada", "cobranca extra escola", "taxa extra escola", "pei", "plano educacional individualizado", "inclusao escolar", "sala de recursos", "aee"],
-    "tea-direitos": ["ciptea", "carteira do autista", "carteirinha do autista", "fita quebra cabeca", "cordao de girassol", "prioridade autista", "fila prioritaria", "isencao ipi autista", "carro autista", "laudo de autismo", "bpc autismo", "loas autismo", "passe livre"],
+    "tea-direitos": ["ciptea", "carteira do autista", "carteirinha do autista", "fita quebra cabeca", "cordao de girassol", "prioridade autista", "fila prioritaria", "isencao ipi autista", "carro autista", "laudo de autismo", "bpc autismo", "loas autismo", "passe livre", "passe livre especial", "dftrans", "semob", "onibus de graca", "metro de graca"],
     "tea-servidor-horario": ["horario especial", "reducao de jornada", "jornada reduzida", "filho autista servidor", "filho com deficiencia servidor", "artigo 98", "tema 1097"],
   // ================= TRABALHO E MORADIA =================
     "horas-extras": ["hora extra", "horas extras", "banco de horas", "jornada", "intervalo", "plantao", "sobreaviso"],
