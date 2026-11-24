@@ -155,6 +155,7 @@
     <div class="mais-grid so-titular">
       <button class="card-c" data-view="fin"><b>💰 Financeiro</b><span class="meta">Recebido, a receber e atrasados</span></button>
       <button class="card-c" data-view="metricas"><b>📊 Números</b><span class="meta">Como o escritório está indo</span></button>
+      <button class="card-c" data-view="treinamentos"><b>🎓 Treinamentos</b><span class="meta">Propostas, presença e certificados</span></button>
       <button class="card-c" data-view="equipe"><b>👥 Equipe</b><span class="meta">Associados e casos</span></button>
     </div>
     <details class="mais-outras"><summary><b>Outras ferramentas</b> <span class="small muted">(usadas de vez em quando)</span></summary>
@@ -423,6 +424,34 @@
     </ul></details>
   </section>
 
+  <section id="v-treinamentos" class="oview so-titular">
+    <header class="ohead"><div><button class="back" data-voltar>← Voltar</button><h1>🎓 Treinamentos e consultorias</h1><p class="muted">Propostas, eventos confirmados, presença, certificados e o que falta receber. A página pública fica em <a href="/plataforma-direito/treinamentos/" target="_blank">plataformadodireito.com.br/treinamentos</a>.</p></div>
+      <button class="btn" id="tr-novo" type="button">+ Novo</button></header>
+    <div id="tr-int">
+      <div class="panel"><div class="tr-resumo" id="tr-resumo"></div>
+        <div class="tr-filtros"><button type="button" class="chip on" data-trf="ativos">Em andamento</button><button type="button" class="chip" data-trf="proposta">Propostas</button><button type="button" class="chip" data-trf="confirmado">Confirmados</button><button type="button" class="chip" data-trf="pago">Pagos</button><button type="button" class="chip" data-trf="todos">Todos</button></div>
+        <ul class="list" id="tr-itens"></ul></div>
+      <details class="panel" id="tr-cad"><summary><b>Cadastrar ou editar</b></summary>
+        <form id="tr-form-int" class="tr-grid">
+          <label>Tema<input id="tr-tema" list="tr-temas" required></label><datalist id="tr-temas"></datalist>
+          <label>Formato<select id="tr-formato"><option>Palestra</option><option>Workshop</option><option>Curso</option><option>Online ao vivo</option><option>Consultoria contínua</option><option>Parecer</option></select></label>
+          <label>Órgão, empresa ou entidade<input id="tr-org"></label>
+          <label>Contato (nome, e-mail ou telefone)<input id="tr-contato"></label>
+          <label>Data<input id="tr-data" type="date"></label>
+          <label>Horário<input id="tr-hora" type="time"></label>
+          <label>Carga horária<input id="tr-carga" placeholder="Ex.: 4 horas"></label>
+          <label>Local ou link<input id="tr-local"></label>
+          <label>Participantes (quantidade)<input id="tr-pessoas" inputmode="numeric"></label>
+          <label>Valor (R$)<input id="tr-valor" inputmode="decimal" placeholder="Ex.: 3500"></label>
+          <label class="tr-largo">Nomes dos participantes (um por linha, para presença e certificados)<textarea id="tr-participantes" rows="4"></textarea></label>
+          <label class="tr-largo">Observações<textarea id="tr-obs" rows="2"></textarea></label>
+          <div class="tr-largo"><button class="btn" id="tr-salvar">Cadastrar</button> <button type="button" class="linkish small" id="tr-excluir" hidden>excluir</button></div>
+        </form></details>
+      <div class="panel" id="tr-saida-box" hidden><h2 id="tr-saida-tit">Proposta</h2><textarea id="tr-saida" rows="16"></textarea>
+        <div><button class="btn" type="button" id="tr-copiar">Copiar</button> <button class="btn" type="button" id="tr-imprimir">Imprimir ou salvar em PDF</button></div></div>
+    </div>
+  </section>
+
   <section id="v-equipe" class="oview">
     <header class="ohead"><div><button class="back" data-voltar>← Voltar</button><h1>Equipe</h1><p class="muted">Cada associado vê só os casos que você atribuir a ele (ficha, prazos e tarefas). Ele não vê o financeiro, os outros clientes nem os pedidos do site.</p></div></header>
     <div class="panel">
@@ -684,5 +713,6 @@
 <script src="painel.js"></script>
 <script src="drive.js"></script>
 <script src="kit.js"></script>
+<script src="treinamentos.js"></script>
 </body>
 </html>
