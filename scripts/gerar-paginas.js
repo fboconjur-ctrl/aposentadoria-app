@@ -6,7 +6,7 @@ const RAIZ = path.join(__dirname, ".."), PD = path.join(RAIZ, "plataforma-direit
 const SITE = "https://plataformadodireito.com.br";
 global.window = {};
 const ler = (f) => fs.readFileSync(path.join(PD, f), "utf8").replace(/^const /gm, "var ");
-eval(["faq.js", "faq-areas.js", "faq-lote2.js", "faq-lote3.js", "roteiros.js", "duvidas-casos.js", "roteiros-novos.js", "roteiros-adm.js", "roteiros-cartorio.js"].map(ler).join("\n"));
+eval(["faq.js", "faq-areas.js", "faq-lote2.js", "faq-lote3.js", "roteiros.js", "duvidas-casos.js", "roteiros-novos.js", "roteiros-adm.js", "roteiros-cartorio.js", "roteiros-tea.js"].map(ler).join("\n"));
 const app = fs.readFileSync(path.join(PD, "app.js"), "utf8");
 const WA = (app.match(/WA_NUMERO = "(\d+)"/) || [])[1];
 const titulos = {};
@@ -19,7 +19,7 @@ const lista = (t, l, tag = "ul") => pub(l).length ? `<h2>${t}</h2><${tag}>${pub(
 // Temas (para o índice de artigos), lidos do objeto SITUACOES do app.
 const sitTxt = app.slice(app.indexOf("const SITUACOES = {"), app.indexOf("const OUTRA"));
 eval(sitTxt.replace("const SITUACOES", "var SITUACOES"));
-const PAI = { dividas: "consumidor", servicos: "consumidor", imovel: "cartorio", registro: "cartorio", servidor: "administrativo", concurso: "administrativo", licitacao: "administrativo", multas: "administrativo" };
+const PAI = { dividas: "consumidor", servicos: "consumidor", imovel: "cartorio", registro: "cartorio", servidor: "administrativo", autismo: "saude", concurso: "administrativo", licitacao: "administrativo", multas: "administrativo" };
 const NOME_TEMA = { administrativo: "Servidor público, concurso e órgãos públicos", previdenciario: "INSS e aposentadoria", saude: "Saúde: planos e SUS", consumidor: "Consumidor, bancos e serviços", cartorio: "Cartório, família e herança", familia: "Família", trabalhista: "Trabalho", moradia: "Aluguel e condomínio", outros: "Outros temas" };
 const temaDe = {};
 for (const [k, l] of Object.entries(SITUACOES)) l.forEach(([, id]) => { if (!temaDe[id]) temaDe[id] = PAI[k] || k; });

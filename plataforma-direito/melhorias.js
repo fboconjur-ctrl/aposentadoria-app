@@ -24,7 +24,7 @@
     .forEach((id) => (ROTEIROS_REVISADOS[id] ||= "2026-11-23"));
 
   // ---------- Onde cada situação mora (para abrir direto pelo link) ----------
-  const PAI = { dividas: "consumidor", servicos: "consumidor", imovel: "cartorio", registro: "cartorio", servidor: "administrativo", concurso: "administrativo", licitacao: "administrativo", multas: "administrativo" };
+  const PAI = { dividas: "consumidor", servicos: "consumidor", imovel: "cartorio", registro: "cartorio", servidor: "administrativo", autismo: "saude", concurso: "administrativo", licitacao: "administrativo", multas: "administrativo" };
   const areaDe = (id) => { for (const [k, l] of Object.entries(SITUACOES)) if (l.some((x) => x[1] === id)) return PAI[k] || k; return (FAQ.find((x) => x.id === id) || {}).area || null; };
   function abrir(id) {
     if (!ROTEIROS[id] && !FAQ.find((x) => x.id === id)) return false;
