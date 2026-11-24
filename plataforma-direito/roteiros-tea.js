@@ -29,7 +29,7 @@ Object.assign(ROTEIROS, {
       "Pessoas com TEA podem ter isenção de IPI e de IOF na compra de veículo, conforme as regras e os limites da Receita Federal (Lei 8.989/1995).",
       "Com renda familiar baixa, a pessoa com TEA pode ter direito ao BPC/LOAS: um salário mínimo por mês, pago pelo INSS, após avaliação da deficiência e da renda.",
       "Passe livre interestadual: pessoa com deficiência, inclusive com TEA, e com renda familiar de até um salário mínimo por pessoa pode viajar de graça em ônibus, trem ou barco entre estados, com dois assentos reservados por veículo no serviço convencional; o acompanhante também viaja de graça quando a necessidade é registrada pelo médico no sistema da ANTT (Lei 8.899/1994; Decreto 3.691/2000).",
-      "No DF, a pessoa com TEA pode pedir o Passe Livre Especial para ônibus, BRT e metrô da rede integrada, com laudo e comprovante de residência no DF. O GDF não exige mais comprovação de renda. A gratuidade vale também para um acompanhante cadastrado por viagem, quando houver indicação médica (Lei distrital 6.637/2020).",
+      "No DF, a pessoa com TEA pode pedir o Passe Livre Especial para ônibus, BRT e metrô da rede integrada, com laudo e comprovante de residência no DF. O GDF não exige mais comprovação de renda. A gratuidade vale também para um acompanhante cadastrado por viagem, quando a necessidade constar no laudo (Lei distrital 6.637/2020; Portaria Conjunta 4/2025).",
     ],
     juris: [],
     prazos: [],
