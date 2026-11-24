@@ -5,67 +5,252 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Treinamentos e consultorias em Direito Administrativo · Plataforma do Direito</title>
 <meta name="description" content="Treinamentos e consultorias em licitações e contratos, PAD, gestão pública, LAI e LGPD e direitos do servidor, para órgãos, empresas e associações.">
-<meta name="theme-color" content="#16224a">
+<meta name="theme-color" content="#0f1838">
 <link rel="canonical" href="https://plataformadodireito.com.br/plataforma-direito/treinamentos/">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <meta property="og:type" content="website"><meta property="og:title" content="Treinamentos e consultorias em Direito Administrativo">
-<meta property="og:description" content="Licitações, contratos, PAD, gestão pública e direitos do servidor.">
+<meta property="og:description" content="Licitações, contratos, PAD, gestão pública e direitos do servidor — conteúdo prático para equipes.">
 <meta property="og:url" content="https://plataformadodireito.com.br/plataforma-direito/treinamentos/"><meta property="og:image" content="https://plataformadodireito.com.br/compartilhar.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Figtree:wght@400;500;600&display=swap">
-<link rel="stylesheet" href="../styles.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Figtree:wght@400;500;600;700&display=swap">
+<style>
+:root{--noite:#0f1838;--noite2:#17245a;--azul:#2f54eb;--azul-claro:#7d97ff;--ouro:#f2b544;--tinta:#141c3a;--suave:#5a6283;--fundo:#f6f7fb;--linha:#e3e6f1;--verde:#1fa855;--r:20px}
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+body{margin:0;font:17px/1.6 Figtree,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:var(--tinta);background:var(--fundo)}
+a{color:inherit}
+h1,h2,h3{font-family:"Bricolage Grotesque",system-ui,sans-serif;line-height:1.1;letter-spacing:-.02em;margin:0}
+.w{max-width:1120px;margin:0 auto;padding:0 20px}
+.eyebrow{font:700 .78rem/1 Figtree,sans-serif;letter-spacing:.14em;text-transform:uppercase;color:var(--azul)}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:15px 24px;border-radius:999px;font:700 1rem/1 Figtree,sans-serif;text-decoration:none;border:0;cursor:pointer;transition:transform .15s,box-shadow .15s}
+.btn:hover{transform:translateY(-2px)}
+.btn-ouro{background:var(--ouro);color:#1b1503;box-shadow:0 10px 30px #f2b54455}
+.btn-vidro{background:#ffffff14;color:#fff;border:1px solid #ffffff33}
+.btn-zap{background:var(--verde);color:#fff;box-shadow:0 10px 30px #1fa85540}
+
+/* Topo */
+.nav{position:absolute;top:0;left:0;right:0;z-index:5}
+.nav .w{display:flex;justify-content:space-between;align-items:center;padding-top:22px}
+.marca{font:800 1.1rem "Bricolage Grotesque",sans-serif;color:#fff;text-decoration:none;display:flex;align-items:center;gap:10px}
+.marca i{display:grid;place-items:center;width:34px;height:34px;border-radius:10px;background:#fff;color:var(--noite);font-style:normal}
+.nav nav{display:flex;gap:22px;align-items:center}.nav nav a{color:#dfe5ff;text-decoration:none;font-weight:600;font-size:.95rem}
+@media(max-width:700px){.nav nav a:not(.cta-topo){display:none}}
+.cta-topo{background:#fff;color:var(--noite)!important;padding:10px 16px;border-radius:999px;white-space:nowrap}
+@media(max-width:480px){.marca{font-size:.98rem}.cta-topo{padding:9px 13px;font-size:.88rem!important}.hero .eyebrow{font-size:.7rem}}
+
+/* Hero */
+.hero{position:relative;overflow:hidden;color:#fff;background:radial-gradient(1200px 600px at 85% -10%,#3b5bff55,transparent 60%),radial-gradient(800px 500px at -10% 110%,#f2b54422,transparent 60%),linear-gradient(160deg,var(--noite),var(--noite2));padding:150px 0 110px}
+.hero::after{content:"";position:absolute;inset:0;background-image:linear-gradient(#ffffff08 1px,transparent 1px),linear-gradient(90deg,#ffffff08 1px,transparent 1px);background-size:48px 48px;mask-image:linear-gradient(#000,transparent 85%);pointer-events:none}
+.hero .w{position:relative;z-index:1;display:grid;grid-template-columns:1.25fr .9fr;gap:48px;align-items:center}
+@media(max-width:900px){.hero .w{grid-template-columns:1fr}.hero{padding:120px 0 80px}}
+.hero .eyebrow{color:var(--ouro)}
+.hero h1{font-size:clamp(2.3rem,5.4vw,4.2rem);margin:16px 0 20px}
+.hero h1 em{font-style:normal;background:linear-gradient(90deg,var(--ouro),#ffd98a);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p.sub{font-size:1.2rem;color:#c9d2f7;max-width:600px;margin:0 0 30px}
+.hero .acoes{display:flex;flex-wrap:wrap;gap:12px}
+.painel{background:#ffffff0d;border:1px solid #ffffff22;border-radius:24px;padding:26px;backdrop-filter:blur(6px)}
+.painel h3{font-size:1.05rem;color:#fff;margin-bottom:14px}
+.painel ul{list-style:none;margin:0;padding:0;display:grid;gap:12px}
+.painel li{display:flex;gap:12px;align-items:flex-start;color:#dfe5ff;font-size:.98rem}
+.painel li b{color:#fff}
+.painel .ico{flex:none;width:36px;height:36px;border-radius:10px;display:grid;place-items:center;background:#ffffff14}
+
+/* Faixa de públicos */
+.publicos{background:#fff;border-bottom:1px solid var(--linha)}
+.publicos .w{display:flex;flex-wrap:wrap;justify-content:center;gap:10px 34px;padding:22px 20px;color:var(--suave);font-weight:600}
+.publicos span{display:flex;align-items:center;gap:8px}
+
+/* Seções */
+section.s{padding:90px 0}
+.cab{max-width:720px;margin-bottom:42px}
+.cab h2{font-size:clamp(1.9rem,3.8vw,2.8rem);margin:12px 0 12px}
+.cab p{color:var(--suave);font-size:1.1rem;margin:0}
+.grade{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:18px}
+.card{position:relative;background:#fff;border:1px solid var(--linha);border-radius:var(--r);padding:26px;transition:transform .2s,box-shadow .2s,border-color .2s;cursor:pointer}
+.card:hover,.card:focus-visible{transform:translateY(-4px);box-shadow:0 18px 40px #1a2a6c14;border-color:#c5cff7;outline:none}
+.card .ic{width:50px;height:50px;border-radius:14px;display:grid;place-items:center;font-size:1.5rem;background:linear-gradient(135deg,#eef2ff,#e1e8ff);margin-bottom:16px}
+.card h3{font-size:1.25rem;margin-bottom:8px}
+.card p{margin:0 0 12px;color:#3d4566}
+.card .para{font-size:.88rem;color:var(--suave);border-top:1px dashed var(--linha);padding-top:10px;margin:0}
+.card .mais{position:absolute;top:24px;right:22px;color:var(--azul);font-weight:700;font-size:.85rem;opacity:0;transition:opacity .2s}
+.card:hover .mais{opacity:1}
+.consult .card{background:linear-gradient(180deg,#fff,#fbfcff)}
+.consult .card .ic{background:linear-gradient(135deg,#fff6e3,#ffeccc)}
+
+/* Formatos */
+.formatos{background:var(--noite);color:#fff}
+.formatos .cab p{color:#b8c2ee}.formatos .eyebrow{color:var(--ouro)}
+.fmt{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px}
+.fmt div{border:1px solid #ffffff22;border-radius:18px;padding:22px;background:#ffffff08}
+.fmt b{display:block;font:700 1.15rem "Bricolage Grotesque",sans-serif;margin:8px 0 4px}
+.fmt span{color:#b8c2ee;font-size:.95rem}
+
+/* Como funciona */
+.passos{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:18px;counter-reset:p}
+.passos div{background:#fff;border:1px solid var(--linha);border-radius:var(--r);padding:26px;counter-increment:p}
+.passos div::before{content:counter(p,decimal-leading-zero);font:800 2.2rem "Bricolage Grotesque",sans-serif;color:#d6ddfb;display:block;margin-bottom:6px}
+.passos h3{font-size:1.15rem;margin-bottom:6px}.passos p{margin:0;color:var(--suave)}
+
+/* Diferenciais */
+.dif{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center}
+@media(max-width:900px){.dif{grid-template-columns:1fr}}
+.dif ul{list-style:none;padding:0;margin:0;display:grid;gap:16px}
+.dif li{display:flex;gap:14px}.dif li b{display:block;font-size:1.05rem}.dif li span{color:var(--suave)}
+.dif .ok{flex:none;width:30px;height:30px;border-radius:50%;background:#e8f7ee;color:var(--verde);display:grid;place-items:center;font-weight:800}
+.citacao{background:linear-gradient(135deg,var(--noite),var(--noite2));color:#fff;border-radius:28px;padding:40px;font:600 1.35rem/1.45 "Bricolage Grotesque",sans-serif}
+.citacao small{display:block;margin-top:18px;font:500 .95rem Figtree,sans-serif;color:#b8c2ee}
+
+/* FAQ */
+.faq{max-width:820px}
+.faq details{background:#fff;border:1px solid var(--linha);border-radius:16px;padding:18px 22px;margin-bottom:10px}
+.faq summary{cursor:pointer;font-weight:700;list-style:none;display:flex;justify-content:space-between;gap:12px}
+.faq summary::after{content:"+";font-size:1.4rem;line-height:1;color:var(--azul)}.faq details[open] summary::after{content:"–"}
+.faq p{margin:12px 0 0;color:#3d4566}
+
+/* Formulário final */
+.final{background:radial-gradient(900px 500px at 100% 0,#3b5bff44,transparent 60%),linear-gradient(160deg,var(--noite),var(--noite2));color:#fff}
+.final .w{display:grid;grid-template-columns:1fr 1.1fr;gap:48px;align-items:start}
+@media(max-width:900px){.final .w{grid-template-columns:1fr}}
+.final h2{font-size:clamp(2rem,4vw,3rem);margin:12px 0 16px}.final p{color:#c9d2f7}
+.final .eyebrow{color:var(--ouro)}
+form{background:#fff;color:var(--tinta);border-radius:24px;padding:28px;display:grid;gap:12px;box-shadow:0 30px 60px #0006}
+form label{font-weight:600;font-size:.92rem;display:grid;gap:6px}
+form input,form select,form textarea{font:inherit;padding:13px 14px;border:1.5px solid var(--linha);border-radius:12px;background:#fafbff;width:100%}
+form input:focus,form select:focus,form textarea:focus{outline:none;border-color:var(--azul);box-shadow:0 0 0 4px #2f54eb22}
+.duas{display:grid;grid-template-columns:1fr 1fr;gap:12px}@media(max-width:560px){.duas{grid-template-columns:1fr}}
+form .btn{justify-content:center;margin-top:6px}
+form .nota{font-size:.82rem;color:var(--suave);margin:0}
+
+footer{background:#0a1029;color:#8d97c4;padding:34px 0;font-size:.92rem}
+footer .w{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px}footer a{color:#c9d2f7;text-decoration:none;margin-left:16px}
+
+.flutua{position:fixed;right:18px;bottom:18px;z-index:9;width:58px;height:58px;border-radius:50%;background:var(--verde);display:grid;place-items:center;box-shadow:0 12px 30px #1fa85566;text-decoration:none;font-size:1.6rem}
+.rev{opacity:0;transform:translateY(18px);transition:opacity .6s ease,transform .6s ease}.rev.on{opacity:1;transform:none}
+@media(prefers-reduced-motion:reduce){.rev{opacity:1;transform:none;transition:none}html{scroll-behavior:auto}}
+</style>
 </head>
 <body>
-<header class="topbar">
-  <a class="brand" href="/plataforma-direito/">Plataforma do Direito</a>
-  <nav><a href="/plataforma-direito/s/">Artigos</a><a href="#" class="btn-wa-sm" data-wa>WhatsApp</a></nav>
-</header>
-<main>
-  <section class="view active">
-    <div class="b2b">
-      <p class="eyebrow">Plataforma do Direito · Treinamentos e consultorias</p>
-      <h1>Treinamentos e consultorias em Direito Administrativo</h1>
-      <p class="lead">Para órgãos públicos, empresas que contratam com o governo, associações e sindicatos de servidores. Conteúdo prático, com base na lei e nas decisões dos tribunais, adaptado à realidade de cada equipe.</p>
 
-      <h2 class="tr-sec">Treinamentos</h2>
-      <p class="muted">Palestras, workshops e cursos, presenciais no DF ou online ao vivo, com material de apoio e certificado.</p>
-      <div class="tools">
-        <article class="tool" data-tema="Nova Lei de Licitações na prática"><h3>Nova Lei de Licitações na prática</h3><p>Lei 14.133/2021 do planejamento ao contrato: estudo técnico preliminar, termo de referência, pregão, dispensa e inexigibilidade, matriz de riscos e recursos.</p><p class="small muted">Para: equipes de compras, pregoeiros, agentes de contratação e empresas fornecedoras.</p></article>
-        <article class="tool" data-tema="Gestão e fiscalização de contratos"><h3>Gestão e fiscalização de contratos</h3><p>Papel do gestor e do fiscal, registros, medições, aditivos, reajuste, repactuação e reequilíbrio, aplicação de sanções com processo regular.</p><p class="small muted">Para: gestores e fiscais de contrato.</p></article>
-        <article class="tool" data-tema="PAD e sindicância para comissões"><h3>PAD e sindicância para comissões</h3><p>Instauração, citação, instrução, defesa, relatório final, prescrição e as nulidades que mais derrubam processos na Justiça.</p><p class="small muted">Para: membros de comissão, corregedorias e áreas de gestão de pessoas.</p></article>
-        <article class="tool" data-tema="Responsabilidade do gestor público"><h3>Responsabilidade do gestor público</h3><p>Improbidade após a Lei 14.230/2021, Tribunal de Contas, LINDB e segurança jurídica nas decisões do dia a dia.</p><p class="small muted">Para: gestores, ordenadores de despesa e assessorias.</p></article>
-        <article class="tool" data-tema="LAI e LGPD no setor público"><h3>LAI e LGPD no setor público</h3><p>Como responder pedidos de acesso à informação, o que é sigiloso, transparência ativa e tratamento de dados pessoais pelo poder público.</p><p class="small muted">Para: SIC, ouvidorias, gestão de pessoas e TI.</p></article>
-        <article class="tool" data-tema="Direitos do servidor público"><h3>Direitos do servidor público</h3><p>Estágio probatório, progressão, licenças, horário especial, acumulação de cargos, aposentadoria e o que fazer quando um direito é negado.</p><p class="small muted">Para: associações, sindicatos e equipes de RH.</p></article>
-      </div>
+<header class="nav"><div class="w">
+  <a class="marca" href="/plataforma-direito/"><i>§</i>Plataforma do Direito</a>
+  <nav><a href="#treinamentos">Treinamentos</a><a href="#consultorias">Consultorias</a><a href="#como">Como funciona</a><a href="#proposta" class="cta-topo">Pedir proposta</a></nav>
+</div></header>
 
-      <h2 class="tr-sec">Consultorias</h2>
-      <p class="muted">Acompanhamento jurídico preventivo, para evitar problemas antes que virem processo.</p>
-      <div class="tools">
-        <article class="tool" data-tema="Consultoria para empresas que licitam"><h3>Empresas que licitam</h3><p>Análise do edital antes de participar, documentos de habilitação, impugnações e recursos, execução do contrato e pedidos de reequilíbrio.</p></article>
-        <article class="tool" data-tema="Programa de integridade (compliance)"><h3>Programa de integridade</h3><p>Estruturação ou revisão do programa de integridade da empresa (Lei 12.846/2013), inclusive para contratos de grande vulto, em que a Lei 14.133/2021 o exige.</p></article>
-        <article class="tool" data-tema="Pareceres jurídicos"><h3>Pareceres jurídicos</h3><p>Pareceres em Direito Administrativo para órgãos, gestores, empresas e entidades, com fundamentação na lei e na jurisprudência atual.</p></article>
-        <article class="tool" data-tema="Consultoria para associações de servidores"><h3>Associações e sindicatos</h3><p>Orientação jurídica contínua sobre direitos da categoria, mudanças na legislação e estratégias coletivas.</p></article>
-      </div>
+<section class="hero"><div class="w">
+  <div>
+    <p class="eyebrow">Treinamentos e consultorias · Direito Administrativo</p>
+    <h1>Sua equipe decidindo com <em>segurança jurídica</em>.</h1>
+    <p class="sub">Treinamentos práticos e consultoria preventiva em licitações, contratos, processo disciplinar e gestão pública — para órgãos, empresas que contratam com o governo e entidades de servidores.</p>
+    <div class="acoes"><a href="#proposta" class="btn btn-ouro">Pedir uma proposta →</a><a href="#treinamentos" class="btn btn-vidro">Ver os temas</a></div>
+  </div>
+  <aside class="painel">
+    <h3>O que sua equipe leva</h3>
+    <ul>
+      <li><span class="ico">⚖️</span><span><b>Lei e jurisprudência atual</b><br>Lei 14.133/2021, Lei 8.112/1990, LC 840/2011, TCU, STF e STJ.</span></li>
+      <li><span class="ico">🧩</span><span><b>Casos reais do dia a dia</b><br>Situações que a equipe enfrenta, não teoria solta.</span></li>
+      <li><span class="ico">📘</span><span><b>Material de apoio</b><br>Roteiros e modelos para usar depois do encontro.</span></li>
+      <li><span class="ico">🎓</span><span><b>Certificado</b><br>Para cada participante dos treinamentos.</span></li>
+    </ul>
+  </aside>
+</div></section>
 
-      <form class="card lead-form" id="tr-form">
-        <h3>Pedir uma proposta</h3>
-        <p class="muted small">Conte o que precisa. A advogada responde com a proposta de conteúdo, formato e honorários.</p>
-        <label for="tr-tema">Tema</label><select id="tr-tema"></select>
-        <label for="tr-org">Órgão, empresa ou entidade</label><input id="tr-org" autocomplete="organization">
-        <label for="tr-formato">Formato</label><select id="tr-formato"><option>Ainda não sei</option><option>Palestra (até 2 horas)</option><option>Workshop (meio período)</option><option>Curso (mais de um encontro)</option><option>Online ao vivo</option><option>Consultoria contínua</option><option>Parecer</option></select>
-        <label for="tr-pessoas">Número aproximado de participantes (se for treinamento)</label><input id="tr-pessoas" inputmode="numeric">
-        <label for="tr-obs">Algo mais? (datas, público, objetivo)</label><textarea id="tr-obs" rows="3"></textarea>
-        <button class="btn btn-wa" type="submit">Enviar pelo WhatsApp</button>
-        <p class="muted small">Nenhum serviço começa antes da proposta aceita e do contrato assinado.</p>
-      </form>
+<div class="publicos"><div class="w">
+  <span>🏛️ Órgãos públicos</span><span>🏢 Empresas que licitam</span><span>🤝 Associações e sindicatos</span><span>👥 Equipes de RH e corregedorias</span>
+</div></div>
+
+<section class="s" id="treinamentos"><div class="w">
+  <div class="cab rev"><p class="eyebrow">Treinamentos</p><h2>Temas que mudam a rotina da equipe</h2><p>Escolha um tema ou combine vários. Todo conteúdo é ajustado ao público e ao nível da equipe. Toque num tema para pedir a proposta.</p></div>
+  <div class="grade">
+    <article class="card rev" tabindex="0" data-tema="Nova Lei de Licitações na prática"><span class="mais">Pedir →</span><div class="ic">📑</div><h3>Nova Lei de Licitações na prática</h3><p>Do planejamento ao contrato: estudo técnico preliminar, termo de referência, pregão, dispensa e inexigibilidade, matriz de riscos e recursos.</p><p class="para">Para equipes de compras, pregoeiros, agentes de contratação e fornecedores.</p></article>
+    <article class="card rev" tabindex="0" data-tema="Gestão e fiscalização de contratos"><span class="mais">Pedir →</span><div class="ic">🔍</div><h3>Gestão e fiscalização de contratos</h3><p>Papel do gestor e do fiscal, registros, medições, aditivos, reajuste, repactuação, reequilíbrio e sanções com processo regular.</p><p class="para">Para gestores e fiscais de contrato.</p></article>
+    <article class="card rev" tabindex="0" data-tema="PAD e sindicância para comissões"><span class="mais">Pedir →</span><div class="ic">📂</div><h3>PAD e sindicância para comissões</h3><p>Instauração, citação, instrução, defesa, relatório final, prescrição e as nulidades que mais derrubam processos na Justiça.</p><p class="para">Para comissões, corregedorias e gestão de pessoas.</p></article>
+    <article class="card rev" tabindex="0" data-tema="Responsabilidade do gestor público"><span class="mais">Pedir →</span><div class="ic">🛡️</div><h3>Responsabilidade do gestor público</h3><p>Improbidade após a Lei 14.230/2021, Tribunal de Contas, LINDB e segurança jurídica nas decisões do dia a dia.</p><p class="para">Para gestores, ordenadores de despesa e assessorias.</p></article>
+    <article class="card rev" tabindex="0" data-tema="LAI e LGPD no setor público"><span class="mais">Pedir →</span><div class="ic">🔐</div><h3>LAI e LGPD no setor público</h3><p>Pedidos de acesso à informação, o que é sigiloso, transparência ativa e tratamento de dados pessoais pelo poder público.</p><p class="para">Para SIC, ouvidorias, gestão de pessoas e TI.</p></article>
+    <article class="card rev" tabindex="0" data-tema="Direitos do servidor público"><span class="mais">Pedir →</span><div class="ic">👩‍💼</div><h3>Direitos do servidor público</h3><p>Estágio probatório, progressão, licenças, horário especial, acumulação de cargos, aposentadoria e o que fazer quando um direito é negado.</p><p class="para">Para associações, sindicatos e equipes de RH.</p></article>
+  </div>
+</div></section>
+
+<section class="s formatos"><div class="w">
+  <div class="cab rev"><p class="eyebrow">Formatos</p><h2>Do jeito que cabe na agenda da equipe</h2><p>Presencial no Distrito Federal ou online ao vivo.</p></div>
+  <div class="fmt">
+    <div class="rev">🎤<b>Palestra</b><span>Até 2 horas, para sensibilizar e alinhar a equipe.</span></div>
+    <div class="rev">🛠️<b>Workshop</b><span>Meio período, com exercícios sobre casos reais.</span></div>
+    <div class="rev">📚<b>Curso</b><span>Mais de um encontro, para aprofundar o tema.</span></div>
+    <div class="rev">💻<b>Online ao vivo</b><span>Com interação e espaço para perguntas.</span></div>
+  </div>
+</div></section>
+
+<section class="s consult" id="consultorias"><div class="w">
+  <div class="cab rev"><p class="eyebrow">Consultorias</p><h2>Prevenir custa menos que remediar</h2><p>Acompanhamento jurídico para evitar que o problema vire processo, sanção ou apontamento do Tribunal de Contas.</p></div>
+  <div class="grade">
+    <article class="card rev" tabindex="0" data-tema="Consultoria para empresas que licitam"><span class="mais">Pedir →</span><div class="ic">🏢</div><h3>Empresas que licitam</h3><p>Análise do edital antes de participar, habilitação, impugnações e recursos, execução do contrato e pedidos de reequilíbrio.</p></article>
+    <article class="card rev" tabindex="0" data-tema="Programa de integridade (compliance)"><span class="mais">Pedir →</span><div class="ic">✅</div><h3>Programa de integridade</h3><p>Estruturação ou revisão do programa de integridade (Lei 12.846/2013), inclusive para contratos de grande vulto, em que a Lei 14.133/2021 o exige.</p></article>
+    <article class="card rev" tabindex="0" data-tema="Pareceres jurídicos"><span class="mais">Pedir →</span><div class="ic">🖋️</div><h3>Pareceres jurídicos</h3><p>Pareceres em Direito Administrativo para órgãos, gestores, empresas e entidades, com fundamentação na lei e na jurisprudência atual.</p></article>
+    <article class="card rev" tabindex="0" data-tema="Consultoria para associações de servidores"><span class="mais">Pedir →</span><div class="ic">🤝</div><h3>Associações e sindicatos</h3><p>Orientação contínua sobre direitos da categoria, mudanças na legislação e estratégias coletivas.</p></article>
+  </div>
+</div></section>
+
+<section class="s" id="como" style="padding-top:20px"><div class="w">
+  <div class="cab rev"><p class="eyebrow">Como funciona</p><h2>Simples, do pedido ao certificado</h2></div>
+  <div class="passos">
+    <div class="rev"><h3>Você conta a necessidade</h3><p>Tema, público, formato e datas possíveis, pelo formulário ou pelo WhatsApp.</p></div>
+    <div class="rev"><h3>Recebe a proposta</h3><p>Conteúdo, carga horária, formato e honorários, por escrito.</p></div>
+    <div class="rev"><h3>Ajustamos o conteúdo</h3><p>Casos e exemplos pensados para a realidade da sua equipe.</p></div>
+    <div class="rev"><h3>Treinamento e certificado</h3><p>Encontro, material de apoio e certificado para os participantes.</p></div>
+  </div>
+</div></section>
+
+<section class="s" style="padding-top:20px"><div class="w dif">
+  <div class="rev">
+    <p class="eyebrow">Por que com a gente</p>
+    <h2 style="font-size:clamp(1.9rem,3.6vw,2.6rem);margin:12px 0 26px">Direito Administrativo é a nossa área principal</h2>
+    <ul>
+      <li><span class="ok">✓</span><span><b>Atuação diária na área</b><span>Defesas em PAD, licitações, contratos, Tribunal de Contas e direitos de servidores.</span></span></li>
+      <li><span class="ok">✓</span><span><b>Método com fonte em cada regra</b><span>Cada orientação aponta a lei, o artigo ou a decisão de onde vem.</span></span></li>
+      <li><span class="ok">✓</span><span><b>Linguagem clara</b><span>Conteúdo técnico explicado para quem precisa aplicar amanhã.</span></span></li>
+    </ul>
+  </div>
+  <div class="citacao rev">“Uma equipe que conhece as regras decide melhor, erra menos e se protege.”<small>Plataforma do Direito</small></div>
+</div></section>
+
+<section class="s" style="padding-top:10px"><div class="w faq">
+  <div class="cab rev"><p class="eyebrow">Dúvidas frequentes</p><h2>Antes de pedir a proposta</h2></div>
+  <details class="rev"><summary>Vocês atendem fora do Distrito Federal?</summary><p>Sim, no formato online ao vivo. Encontros presenciais fora do DF podem ser combinados na proposta.</p></details>
+  <details class="rev"><summary>Dá para montar um treinamento sob medida?</summary><p>Sim. Os temas da página são pontos de partida: o conteúdo é ajustado ao público, ao nível da equipe e aos problemas que vocês enfrentam.</p></details>
+  <details class="rev"><summary>Órgão público pode contratar?</summary><p>Sim. A forma de contratação segue as regras do próprio órgão, conforme a Lei 14.133/2021. Na proposta, enviamos as informações necessárias para o processo.</p></details>
+  <details class="rev"><summary>Quanto custa?</summary><p>Depende do tema, do formato, da carga horária e do número de participantes. O valor vem por escrito na proposta, antes de qualquer compromisso.</p></details>
+</div></section>
+
+<section class="s final" id="proposta"><div class="w">
+  <div class="rev">
+    <p class="eyebrow">Proposta sem compromisso</p>
+    <h2>Vamos preparar a proposta da sua equipe?</h2>
+    <p>Preencha ao lado e a mensagem já chega organizada no WhatsApp da advogada. Se preferir, fale direto.</p>
+    <p><a href="#" class="btn btn-zap" data-wa>💬 Falar no WhatsApp</a></p>
+  </div>
+  <form id="tr-form" class="rev">
+    <label>Tema<select id="tr-tema"></select></label>
+    <label>Órgão, empresa ou entidade<input id="tr-org" autocomplete="organization" placeholder="Ex.: Secretaria de Saúde"></label>
+    <div class="duas">
+      <label>Formato<select id="tr-formato"><option>Ainda não sei</option><option>Palestra (até 2 horas)</option><option>Workshop (meio período)</option><option>Curso (mais de um encontro)</option><option>Online ao vivo</option><option>Consultoria contínua</option><option>Parecer</option></select></label>
+      <label>Participantes<input id="tr-pessoas" inputmode="numeric" placeholder="Ex.: 30"></label>
     </div>
-  </section>
-</main>
-<footer class="foot"><div class="foot-cols"><div class="foot-marca"><span class="brand">Plataforma do Direito</span><p>Direito Administrativo para órgãos, empresas e servidores.</p></div><div><h4>Navegue</h4><a href="/plataforma-direito/">Página inicial</a><a href="/plataforma-direito/s/">Artigos</a><a href="/plataforma-direito/privacidade/">Privacidade</a></div></div></footer>
+    <label>Algo mais? <span style="font-weight:400;color:var(--suave)">(datas, público, objetivo)</span><textarea id="tr-obs" rows="3"></textarea></label>
+    <button class="btn btn-zap" type="submit">Enviar pelo WhatsApp →</button>
+    <p class="nota">Nenhum serviço começa antes da proposta aceita e do contrato assinado.</p>
+  </form>
+</div></section>
+
+<footer><div class="w"><span>© <span id="ano"></span> Plataforma do Direito</span><span><a href="/plataforma-direito/">Página inicial</a><a href="/plataforma-direito/s/">Artigos</a><a href="/plataforma-direito/privacidade/">Privacidade</a></span></div></footer>
+<a href="#" class="flutua" data-wa aria-label="Falar no WhatsApp">💬</a>
+
 <script>
 const WA_NUMERO = "5561999733111";
 const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+document.getElementById("ano").textContent = new Date().getFullYear();
 document.querySelectorAll("[data-wa]").forEach((a) => a.addEventListener("click", (e) => { e.preventDefault(); window.open("https://wa.me/" + WA_NUMERO + "?text=" + encodeURIComponent("Olá! Vim pela página de treinamentos e consultorias."), "_blank", "noopener"); }));
+// Aparecer suavemente ao rolar
+const io = "IntersectionObserver" in window ? new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { e.target.classList.add("on"); io.unobserve(e.target); } }), { threshold: 0.12 }) : null;
+document.querySelectorAll(".rev").forEach((el) => (io ? io.observe(el) : el.classList.add("on")));
 </script>
 <script src="../treinamentos.js"></script>
 </body>
