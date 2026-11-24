@@ -228,7 +228,7 @@
         if (melhor) cobre++; s += melhor;
       });
       // Frase reconhecida (ex.: "alto custo", "monjaro", "pensao por morte") pesa muito.
-      e.pl.forEach((pp) => { if (pp.length >= 3 && new RegExp(`(^|\\W)${pp.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}`).test(nq)) s += 6 + pp.length / 3; });
+      e.pl.forEach((pp) => { if (pp.length >= 3 && new RegExp(`(^|\\W)${pp.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}${pp.length <= 4 ? "(\\W|$)" : ""}`).test(nq)) s += 6 + pp.length / 3; });
       if (nq.length >= 4 && e.t.includes(nq)) s += 6;
       s *= Math.pow(cobre / originais.length, 1.5);
       return [s, e];
