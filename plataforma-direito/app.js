@@ -718,7 +718,8 @@ function sugerirSituacoes(t) {
   const n = norm(t);
   const nomes = {}; Object.values(SITUACOES).flat().forEach(([txt, id]) => (nomes[id] = txt));
   const cat = catalogo();
-  let ids = Object.entries(PISTAS).map(([id, ks]) => [id, ks.filter((k) => new RegExp("\\b" + k).test(n)).length]).filter(([id, sc]) => sc && cat[id]).sort((a, b) => b[1] - a[1]).map(([id]) => id);
+  // Busca com pesos (melhorias.js) quando disponível; senão, as pistas simples.
+  let ids = window.buscarSituacoes ? window.buscarSituacoes(t).map((e) => e.id).filter((id) => cat[id]) : Object.entries(PISTAS).map(([id, ks]) => [id, ks.filter((k) => new RegExp("\\b" + k).test(n)).length]).filter(([id, sc]) => sc && cat[id]).sort((a, b) => b[1] - a[1]).map(([id]) => id);
   // Também usa as palavras-chave das perguntas frequentes (cobre todos os assuntos com roteiro).
   const fq = findFaq(t);
   if (fq && cat[fq.id] && !ids.includes(fq.id)) ids.splice(ids.length ? 1 : 0, 0, fq.id);

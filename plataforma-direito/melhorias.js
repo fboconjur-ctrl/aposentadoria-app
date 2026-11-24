@@ -198,24 +198,46 @@
   const PARADA = new Set("a o as os de da do das dos e em no na nos nas um uma uns umas para por com sem que meu minha meus minhas me mim eu ele ela isso esse essa este esta foi ser ter tem estou esta sou nao sim mais muito como qual quais quando onde porque pra pro ao aos se ja ou".split(" "));
   const tokens = (t) => N(t).split(/[^a-z0-9]+/).filter((x) => x.length > 2 && !PARADA.has(x));
   let indice = null;
+  // Palavras equivalentes: a busca procura também pelo sinônimo.
+  const EQUIV = { medicamento: ["remedio"], medicamentos: ["remedio"], remedio: ["medicamento"], remedios: ["medicamento"], farmaco: ["remedio", "medicamento"], caro: ["alto custo"], custo: ["caro"], demitido: ["demissao", "rescisao"], aposentar: ["aposentadoria"], morreu: ["faleceu", "falecimento"], faleceu: ["falecimento", "morte"], servidora: ["servidor"], concursado: ["concurso"], empregada: ["trabalho"], patrao: ["empresa", "empregador"] };
   function montarIndice() {
     const cat = catalogo(); indice = [];
     Object.entries(cat).forEach(([id, tit]) => {
-      if (!ROTEIROS[id]) return;
-      const qs = (DUVIDAS_CASOS[id] || []).map((x) => x[0]).join(" ");
-      indice.push({ id, tit, t: N(tit), q: N(qs), p: N((PISTAS[id] || []).join(" ")), a: N((ROTEIROS[id].acolhe || "")) });
+      const R = ROTEIROS[id]; if (!R) return;
+      const duv = DUVIDAS_CASOS[id] || [];
+      const tudo = [R.acolhe, ...(R.lei || []), ...(R.juris || []), ...(R.passos || []), ...(R.docs || []), ...(R.prazos || []), ...(R.explica?.itens || []), ...duv.flat()].join(" ");
+      indice.push({ id, tit, t: N(tit), q: N(duv.map((x) => x[0]).join(" ")), pl: (PISTAS[id] || []).map(N), p: N((PISTAS[id] || []).join(" ")), a: N(R.acolhe || ""), x: N(tudo) });
     });
   }
   function buscar(q) {
     if (!indice) montarIndice();
-    const tk = tokens(q); if (!tk.length) return [];
-    return indice.map((e) => {
-      let s = 0;
-      tk.forEach((k) => { const raiz = k.length > 5 ? k.slice(0, -2) : k; if (e.t.includes(raiz)) s += 4; if (e.p.includes(raiz)) s += 3; if (e.q.includes(raiz)) s += 1.5; if (e.a.includes(raiz)) s += 1; });
-      if (e.t.includes(N(q).trim())) s += 5;
+    const nq = N(q).trim();
+    let tk = tokens(q); if (!tk.length) return [];
+    tk = [...new Set(tk.flatMap((k) => [k, ...(EQUIV[k] || []).flatMap(tokens)]))];
+    const raiz = (k) => (k.length > 5 ? k.slice(0, -2) : k);
+    const total = indice.length;
+    // Palavras que aparecem em quase tudo (ex.: "custo", "prazo") valem pouco; as raras valem muito.
+    const peso = {}; tk.forEach((k) => { const r = raiz(k); const df = indice.filter((e) => e.x.includes(r) || e.t.includes(r) || e.p.includes(r)).length; peso[k] = df ? Math.log(1 + total / df) : 0; });
+    const originais = tokens(q);
+    const r = indice.map((e) => {
+      let s = 0, cobre = 0;
+      originais.forEach((k0) => {
+        const grupo = [k0, ...(EQUIV[k0] || []).flatMap(tokens)];
+        let melhor = 0;
+        grupo.forEach((k) => { const rz = raiz(k), w = peso[k] || 0; const tem = (c) => (k.length <= 3 ? new RegExp(`(^|[^a-z0-9])${k}([^a-z0-9]|$)`).test(c) : c.includes(rz)); const v = tem(e.t) ? 4 * w : tem(e.p) ? 3.5 * w : tem(e.q) ? 2 * w : tem(e.a) ? 1.2 * w : tem(e.x) ? 0.6 * w : 0; melhor = Math.max(melhor, v); });
+        if (melhor) cobre++; s += melhor;
+      });
+      // Frase reconhecida (ex.: "alto custo", "monjaro", "pensao por morte") pesa muito.
+      e.pl.forEach((pp) => { if (pp.length >= 3 && new RegExp(`(^|\\W)${pp.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}`).test(nq)) s += 6 + pp.length / 3; });
+      if (nq.length >= 4 && e.t.includes(nq)) s += 6;
+      s *= Math.pow(cobre / originais.length, 1.5);
       return [s, e];
-    }).filter(([s]) => s >= 3).sort((a, b) => b[0] - a[0]).slice(0, 6).map(([, e]) => e);
+    }).filter(([s]) => s > 0).sort((a, b) => b[0] - a[0]);
+    if (!r.length) return [];
+    const topo = r[0][0];
+    return r.filter(([s]) => s >= Math.max(2, topo * 0.35)).slice(0, 6).map(([, e]) => e);
   }
+  window.buscarSituacoes = buscar;
   const ancora = document.querySelector("#view-home .hero .eyebrow[style]") || document.getElementById("shortcuts");
   if (ancora) {
     const box = document.createElement("div"); box.className = "busca-box";
