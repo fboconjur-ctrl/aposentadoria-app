@@ -43,7 +43,7 @@ Prévia: https://deploy-preview-1--prevcalculadora.netlify.app/plataforma-direit
    b) Criar cliente → Aplicativo da Web → URI de redirecionamento: `https://apgrgbotrrhtxfhcjsgq.supabase.co/auth/v1/callback`;
    c) Supabase (projeto apgrgbotrrhtxfhcjsgq) → Authentication → Sign In / Providers → Google: ativar, colar ID e chave secreta (a chave NÃO vai para o repositório nem para o chat);
    d) Authentication → URL Configuration: Site URL e Redirect URLs = `https://deploy-preview-1--prevcalculadora.netlify.app/plataforma-direito/escritorio/`;
-   e) em `supabase-config.js` trocar `google: false` → `true`, publicar; ela entra com Google (mesmo e-mail fboconjur@gmail.com → o Supabase liga à conta existente, já admin). Conferir em auth.users/public.admins via conector Supabase.
+   e) em `supabase-config.js` trocar `google: false` → `true`, publicar; ela entra com Google (mesmo e-mail (seu e-mail) → o Supabase liga à conta existente, já admin). Conferir em auth.users/public.admins via conector Supabase.
 1. **Supabase (login por e-mail e senha)** — projeto criado (apgrgbotrrhtxfhcjsgq) e código ligado (`supabase-config.js`, `escritorio/nuvem.js`, `supabase.sql`). Tabelas e regras JÁ CRIADAS no Supabase (via conector). ela cria a senha no painel ("Primeiro acesso"); o Claude roda as 2 linhas finais do `supabase.sql` para liberar o acesso.
 2. Repositório privado (GitHub → Settings → Change visibility).
 3. Asaas (boleto/Pix/cartão) ligado ao Financeiro — depende do Supabase/servidor.
