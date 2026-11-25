@@ -268,10 +268,10 @@
     return r.filter(([s]) => s >= Math.max(2, topo * 0.35)).slice(0, 6).map(([, e]) => e);
   }
   window.buscarSituacoes = buscar;
-  const ancora = document.querySelector("#view-home .hero .eyebrow[style]") || document.getElementById("shortcuts");
+  const ancora = document.getElementById("busca-slot") || document.querySelector("#view-home .hero .eyebrow[style]") || document.getElementById("shortcuts");
   if (ancora) {
     const box = document.createElement("div"); box.className = "busca-box";
-    box.innerHTML = `<label for="busca-q" class="eyebrow" style="margin-top:18px;display:block">Procure pelo seu problema</label>
+    box.innerHTML = `<label for="busca-q" class="busca-rot">Procure pelo seu problema</label>
       <input id="busca-q" type="search" placeholder="Ex.: INSS negou, PAD, plano negou cirurgia, golpe no Pix" autocomplete="off" enterkeyhint="search">
       <div id="busca-res" class="busca-res" aria-live="polite"></div>`;
     ancora.before(box);

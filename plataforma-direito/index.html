@@ -20,6 +20,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Figtree:wght@400;500;600&display=swap">
 <link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="visual.css">
 </head>
 <body>
 <header class="topbar">
@@ -34,15 +35,22 @@
 <main>
   <!-- HOME -->
   <section id="view-home" class="view active">
-    <div class="hero hero-simples">
-        <p class="eyebrow">A plataforma que explica as leis em linguagem simples</p>
-        <h1>Como podemos <em>ajudar você?</em></h1>
-        <p class="lead">Escolha como prefere começar:</p>
+    <div class="h-hero">
+      <div class="h-hero-in">
+        <p class="eyebrow">Direito explicado em linguagem simples · Brasília/DF</p>
+        <h1>Entenda seus direitos. <em>Saiba o que fazer.</em></h1>
+        <p class="lead">Servidor público, concurso, INSS, saúde, bancos, família e cartório: o que a lei e os tribunais dizem, sem juridiquês — e uma advogada de verdade quando o caso pedir.</p>
+        <div id="busca-slot"></div>
         <div class="caminhos">
-          <a href="#" class="caminho caminho-zap" data-wa><span class="caminho-ico">⚡</span><span><b>Quero falar agora</b><br><span>Converse direto com a advogada pelo WhatsApp.</span></span></a>
-          <a href="#shortcuts" class="caminho caminho-ler" id="ir-temas"><span class="caminho-ico">📖</span><span><b>Quero entender meu caso</b><br><span>Escolha o assunto e veja, em linguagem simples, o que a lei e os tribunais dizem.</span></span></a>
+          <a href="#" class="caminho caminho-zap" data-wa><span class="caminho-ico">💬</span><span><b>Falar agora com a advogada</b><br><span>Pelo WhatsApp, sem cadastro.</span></span></a>
+          <a href="#shortcuts" class="caminho caminho-ler" id="ir-temas"><span class="caminho-ico">📖</span><span><b>Entender meu caso primeiro</b><br><span>Escolha o assunto e leia no seu ritmo.</span></span></a>
         </div>
-        <p class="eyebrow" style="margin-top:18px">Qual é o assunto?</p>
+        <ul class="h-selos"><li>✓ Textos revisados pela advogada</li><li>✓ Fonte oficial em cada regra</li><li>✓ Resposta em até 1 dia útil</li></ul>
+      </div>
+    </div>
+
+    <div class="hero hero-simples">
+        <div class="h-sec-cab"><p class="eyebrow" style="margin-top:18px">Qual é o assunto?</p><h2>Escolha por onde começar</h2></div>
         <div class="tiles" id="shortcuts">
           <button data-topic="administrativo" class="tile-full tile-destaque"><span aria-hidden="true">🏛️</span>Servidor, concurso, licitação ou órgão público</button>
           <button data-topic="cartorio"><span aria-hidden="true">📄</span>Cartório sem processo: divórcio, inventário, nome</button>
@@ -56,10 +64,6 @@
           <button data-topic="moradia"><span aria-hidden="true">🏠</span>Aluguel e condomínio</button>
           <button id="outro" class="tile-full"><span aria-hidden="true">💬</span>Outro assunto</button>
         </div>
-        <a class="guia-link guia-destaque" href="materiais/guia-completo-de-direitos.pdf" target="_blank" rel="noopener" download>📚 Guia completo de direitos (PDF, 92 páginas): todas as dúvidas, Direito Administrativo, cartório e autismo, revisados pela advogada</a>
-        <a class="guia-link" href="materiais/guia-administrativo-e-registro-civil.pdf" target="_blank" rel="noopener" download>📘 Guia gratuito (PDF): 21 situações de servidor, concurso, licitação e cartório</a>
-        <a class="guia-link" href="materiais/guia-duvidas-juridicas-por-tema.pdf" target="_blank" rel="noopener" download>📗 Guia gratuito (PDF): 419 dúvidas jurídicas em 10 temas — INSS, saúde, bancos, consumo, família, herança e mais</a>
-        <a class="guia-link" href="materiais/direitos-pessoa-com-tea.pdf" target="_blank" rel="noopener" download>🧩 Guia gratuito (PDF): direitos da pessoa com autismo — horário especial, escola e passe livre</a>
         <form id="start-form" class="composer" hidden>
           <label for="start-text">Conte seu problema com suas palavras</label>
           <textarea id="start-text" rows="3" placeholder="Ex.: Meu plano de saúde negou uma cirurgia que meu médico pediu..."></textarea>
@@ -68,7 +72,14 @@
             <button type="submit" class="btn">Continuar <span aria-hidden="true">→</span></button>
           </div>
         </form>
-        <p class="trust">Sem cadastro · Sem juridiquês · Análise do caso sempre feita pela advogada</p>
+
+        <div class="h-sec-cab"><p class="eyebrow">Materiais gratuitos</p><h2>Guias para baixar e guardar</h2></div>
+        <div class="h-guias">
+        <a class="guia-link guia-destaque" href="materiais/guia-completo-de-direitos.pdf" target="_blank" rel="noopener" download>📚 Guia completo de direitos (PDF, 92 páginas): todas as dúvidas, Direito Administrativo, cartório e autismo, revisados pela advogada</a>
+        <a class="guia-link" href="materiais/guia-administrativo-e-registro-civil.pdf" target="_blank" rel="noopener" download>📘 Guia gratuito (PDF): 21 situações de servidor, concurso, licitação e cartório</a>
+        <a class="guia-link" href="materiais/guia-duvidas-juridicas-por-tema.pdf" target="_blank" rel="noopener" download>📗 Guia gratuito (PDF): 419 dúvidas jurídicas em 10 temas — INSS, saúde, bancos, consumo, família, herança e mais</a>
+        <a class="guia-link" href="materiais/direitos-pessoa-com-tea.pdf" target="_blank" rel="noopener" download>🧩 Guia gratuito (PDF): direitos da pessoa com autismo — horário especial, escola e passe livre</a>
+        </div>
         <section class="cnis-card doc-card home-doc" id="home-doc">
           <h2>Recebeu carta, citação, notificação ou decisão? Envie que a gente lê</h2>
           <p class="muted">Carta do INSS, negativa do plano de saúde, citação em processo administrativo, notificação ou decisão. <strong>A leitura acontece no seu aparelho: o arquivo não é enviado nem guardado.</strong></p>
@@ -77,9 +88,13 @@
           <details><summary>Prefere colar o texto?</summary><textarea id="home-doc-text" rows="5"></textarea><button class="btn secondary" id="home-doc-paste" type="button">Ler texto</button></details>
           <div id="home-doc-out" aria-live="polite"></div>
         </section>
+
+        <div class="h-sec-cab"><p class="eyebrow">Para profissionais e equipes</p><h2>Advogados, órgãos e empresas</h2></div>
+        <div class="h-b2b">
         <a href="/plataforma-direito/cursos/" class="b2b-card"><b>🎬 Cursos gravados e skills do Claude</b><span>Direito Administrativo na prática e escritório com IA, para advogados, servidores e empresas.</span></a>
         <a href="/plataforma-direito/treinamentos/" class="b2b-card"><b>🎓 Treinamentos e consultorias</b><span>Licitações, contratos, PAD, gestão pública e direitos do servidor, para órgãos, empresas e associações.</span></a>
         <a href="#" class="b2b-card" data-go="empresas"><b>🏢 Empresas e gestores públicos — Direito Administrativo</b><span>Licitações, contratos públicos, improbidade e controle externo →</span></a>
+        </div>
       </div>
 
       <section class="jornada" id="como" aria-labelledby="jornada-tit">
