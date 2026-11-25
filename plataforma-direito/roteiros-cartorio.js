@@ -66,3 +66,9 @@ Object.assign(DUVIDAS_CASOS, {
     ["Os pais deixam de pagar pensão?", "Não automaticamente. Pensão fixada judicialmente só se encerra ou se altera por pedido de revisão ou exoneração na Justiça."],
   ],
 });
+
+// Revisão da advogada (24/11/2026): pontos que deixaram de ser divergência e viraram regra conferida.
+["conta-alta", "inventario-cartorio", "regime-bens"].forEach((id) => {
+  const R = ROTEIROS[id]; if (!R || !R.divergencia) return;
+  R.lei = [...(R.lei || []), ...R.divergencia]; delete R.divergencia;
+});
