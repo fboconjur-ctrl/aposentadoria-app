@@ -74,7 +74,7 @@
     "auto-infracao": ["auto de infracao", "fiscalizacao", "autuado", "ibama", "agefis", "dfl"],
     // ================= BANCOS E CONSUMO =================
     "juros-abusivos": ["juros abusivos", "juros altos", "revisional", "taxa de juros", "cheque especial", "rotativo"],
-    "conta-invadida": ["whatsapp bloqueado", "conta do whatsapp", "whatsapp hackeado", "instagram hackeado", "perfil invadido", "conta bloqueada", "conta invadida", "conta hackeada", "transferencia que nao fiz", "app do banco invadido"],
+    "conta-invadida": ["conta de whatsapp", "acesso a conta", "bloqueio da conta", "restabeleca o acesso", "restabelecer o acesso", "whatsapp business", "whatsapp bloqueado", "conta do whatsapp", "whatsapp hackeado", "instagram hackeado", "perfil invadido", "conta bloqueada", "conta invadida", "conta hackeada", "transferencia que nao fiz", "app do banco invadido"],
     "tarifas-venda-casada": ["tarifa", "venda casada", "seguro embutido", "cesta de servicos", "titulo de capitalizacao"],
     "seguro-negado": ["seguro negado", "seguradora negou", "sinistro", "seguro de vida", "seguro do carro", "seguro prestamista"],
     "imovel-planta": ["imovel na planta", "atraso na obra", "construtora", "distrato", "entrega das chaves"],

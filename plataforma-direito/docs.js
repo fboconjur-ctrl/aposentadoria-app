@@ -81,6 +81,12 @@ const DOC_READERS = {
       const base = latest(datesIn(t));
       const items = [];
       if (resultado) items.push(`Pelo texto, o resultado parece ser: ${resultado}. Confira a parte final (dispositivo) da decisão.`);
+      // O que a decisão manda fazer: prazo dado à outra parte, multa e audiência.
+      const ordem = t.match(/(?:determinar|determino|condeno)[^.]{0,200}?no prazo de (\d{1,3}) ?(?:\([^)]*\))? ?dias/i);
+      const multa = t.match(/multa di[aá]ria de (R\$ ?\d[\d.]*,\d{2})(?:[^.]{0,40}?limitada[^R]{0,30}(R\$ ?\d[\d.]*,\d{2}))?/i);
+      if (ordem) items.push(`A decisão dá prazo de ${ordem[1]} dias, contado da intimação, para a outra parte cumprir a ordem.${multa ? ` Se não cumprir, há multa diária de ${multa[1]}${multa[2] ? `, limitada a ${multa[2]}` : ""}.` : ""} Se o prazo passar sem cumprimento, avise quem cuida do processo para pedir a cobrança da multa ou outras medidas.`);
+      else if (multa) items.push(`A decisão fixa multa diária de ${multa[1]}${multa[2] ? `, limitada a ${multa[2]}` : ""} em caso de descumprimento.`);
+      if (/audiencia/.test(n)) items.push("A decisão manda marcar audiência. Fique atento(a) à data: nos Juizados, a ausência do autor pode levar ao arquivamento do processo (Lei 9.099/1995, art. 51, I).");
       items.push("Os prazos contam da intimação do advogado (publicação ou sistema do tribunal), não da data em que você viu o documento.");
       if (kind === "Despacho") items.push("Despacho costuma só dar andamento ao processo (por exemplo, mandar intimar ou juntar documento). Veja se ele pede alguma providência e em que prazo.");
       else if (juizado) items.push(kind === "Sentença" || kind.startsWith("Acórdão") ? "Nos Juizados Especiais, em regra: embargos de declaração em 5 dias e recurso inominado contra a sentença em 10 dias (Lei 9.099/1995, arts. 42 e 49)." : "Nos Juizados Especiais, decisões tomadas no meio do processo (como uma liminar), em regra, não têm recurso imediato; cabem embargos de declaração em 5 dias se houver omissão, contradição ou obscuridade.");
@@ -156,7 +162,17 @@ function htmlLeitura(r, btnId) {
 // Página inicial: qualquer documento (carta do INSS, negativa do plano, citação, notificação, decisão) — descobre o tipo e lê.
 // Assuntos do site que combinam com o texto do documento (usa a mesma busca da página inicial).
 function relacionadas(text) {
-  const ids = (window.buscarSituacoes ? window.buscarSituacoes(String(text || "").slice(0, 4000)) : []).slice(0, 3);
+  // Usa só o miolo do documento (pedido e fundamentos), sem o cabeçalho do sistema do tribunal.
+  let miolo = String(text || "");
+  const ini = miolo.search(/\n\s*(DECIS[ÃA]O|SENTEN[ÇC]A|DESPACHO|AC[ÓO]RD[ÃA]O)\s*\n|Trata-se|A autora|O autor|A parte autora|Vistos/i);
+  if (ini > 0) miolo = miolo.slice(ini);
+  // Conta as expressões típicas de cada situação (as mesmas usadas pela busca) que aparecem no documento.
+  const n = miolo.slice(0, 3000).normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
+  const cat = typeof catalogo === "function" ? catalogo() : {};
+  const ids = Object.entries(typeof PISTAS !== "undefined" ? PISTAS : {}).map(([id, ks]) => [id, ks.filter((k) => k.length >= 5 && n.includes(k)).reduce((a, k) => a + k.length, 0)])
+    .filter(([id, sc]) => sc >= 8 && cat[id] && ROTEIROS[id]).sort((a, b) => b[1] - a[1]);
+  const topo = ids[0]?.[1] || 0;
+  ids.splice(0, ids.length, ...ids.filter(([, sc]) => sc >= topo * 0.6).slice(0, 3).map(([id]) => ({ id, tit: cat[id] })));
   if (!ids.length) return "";
   return `<div class="doc-rel"><p><strong>Pelo conteúdo, o documento parece tratar de:</strong></p>${ids.map((e) => `<button type="button" class="btn-sec" data-ir-sit="${esc(e.id)}">${esc(e.tit.replace(/\s*→$/, ""))}</button>`).join(" ")}</div>`;
 }
