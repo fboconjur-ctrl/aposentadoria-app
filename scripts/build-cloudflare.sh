@@ -24,6 +24,9 @@ cat > "$DIST/_redirects" <<'EOF'
 /simulador       /aposentadoria-app/           200
 /treinamentos    /plataforma-direito/treinamentos/   301
 /cursos          /plataforma-direito/cursos/   301
+/escritorio      /plataforma-direito/escritorio/   301
+/painel          /plataforma-direito/escritorio/   301
+/cliente         /plataforma-direito/minha-area/   301
 /simulador/*     /aposentadoria-app/:splat     200
 EOF
 
