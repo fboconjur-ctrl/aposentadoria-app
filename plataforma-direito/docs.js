@@ -67,6 +67,33 @@ const DOC_READERS = {
       };
     },
   },
+  judicial: {
+    title: "Recebeu uma decisão judicial? Envie que a gente lê",
+    hint: "Sentença, decisão, despacho ou acórdão em PDF.",
+    analyze(text) {
+      const t = text.replace(/\s+/g, " ");
+      const n = t.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+      if (!/sentenca|juiz|juiza|vistos|tribunal de justica|tribunal regional|\bvara\b|juizado|acordao|desembargador|relator|despacho|\d{7}-\d{2}\.\d{4}\.\d\.\d{2}\.\d{4}/.test(n)) return null;
+      const kind = /acordao|desembargador|turma recursal|\brelator/.test(n) ? "Acórdão (decisão de tribunal)" : /sentenca|julgo (procedente|improcedente|parcialmente)|resolvo o merito|extingo/.test(n) ? "Sentença" : /despacho|intime-se|cite-se/.test(n) && !/defiro|indefiro|decido/.test(n) ? "Despacho" : "Decisão judicial";
+      const proc = t.match(/\d{7}-\d{2}\.\d{4}\.\d\.\d{2}\.\d{4}/)?.[0];
+      const juizado = /juizado|turma recursal|lei 9\.099/.test(n);
+      const resultado = /julgo improcedente/.test(n) ? "pedido julgado improcedente" : /julgo parcialmente procedente/.test(n) ? "pedido julgado parcialmente procedente" : /julgo procedente/.test(n) ? "pedido julgado procedente" : /indefiro/.test(n) ? "pedido indeferido" : /defiro/.test(n) ? "pedido deferido" : null;
+      const base = latest(datesIn(t));
+      const items = [];
+      if (resultado) items.push(`Pelo texto, o resultado parece ser: ${resultado}. Confira a parte final (dispositivo) da decisão.`);
+      items.push("Os prazos contam da intimação do advogado (publicação ou sistema do tribunal), não da data em que você viu o documento.");
+      if (kind === "Despacho") items.push("Despacho costuma só dar andamento ao processo (por exemplo, mandar intimar ou juntar documento). Veja se ele pede alguma providência e em que prazo.");
+      else if (juizado) items.push(kind === "Sentença" || kind.startsWith("Acórdão") ? "Nos Juizados Especiais, em regra: embargos de declaração em 5 dias e recurso inominado contra a sentença em 10 dias (Lei 9.099/1995, arts. 42 e 49)." : "Nos Juizados Especiais, decisões tomadas no meio do processo (como uma liminar), em regra, não têm recurso imediato; cabem embargos de declaração em 5 dias se houver omissão, contradição ou obscuridade.");
+      else items.push(kind === "Sentença" ? "Na Justiça comum, em regra: embargos de declaração em 5 dias úteis e apelação em 15 dias úteis (CPC, arts. 1.003, §5º, 1.009 e 1.023)." : "Na Justiça comum, contra decisão no meio do processo cabem embargos de declaração em 5 dias úteis e, só nas hipóteses do art. 1.015 do CPC (como liminar), agravo de instrumento em 15 dias úteis.");
+      items.push("Se você tem advogado no processo, mostre a decisão a ele(a) logo. Se não tem, a advogada pode avaliar se cabe recurso.");
+      return {
+        facts: [["Tipo de documento", kind], ["Número do processo", proc || "não identificado"], ["Data mais recente", base ? base.toLocaleDateString("pt-BR") : "não identificada"]],
+        headline: `${kind} identificada.`,
+        tone: "near", items,
+        summary: `Decisão judicial: ${kind}; processo ${proc || "?"}; ${resultado || "resultado não identificado"}.`,
+      };
+    },
+  },
   administrativo: {
     title: "Recebeu citação, notificação ou decisão? Envie que a gente lê",
     hint: "Portaria, mandado de citação, termo de indiciamento ou decisão em PDF.",
@@ -75,6 +102,10 @@ const DOC_READERS = {
       const kind = /indiciament|indiciad/i.test(t) ? "Termo de indiciamento / citação para defesa"
         : /cita[cç][aã]o|citad/i.test(t) ? "Citação" : /notifica/i.test(t) ? "Notificação" : /portaria/i.test(t) ? "Portaria de instauração" : /decis[aã]o|julgament|aplica[cç][aã]o da penalidade/i.test(t) ? "Decisão" : null;
       if (!kind) return null;
+      const nAdm = t.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+      if (!/processo administrativo|disciplinar|\bpad\b|sindicancia|comissao|auto de infracao|tribunal de contas|licitac|contrato administrativo|servidor|orgao|secretaria|administracao publica|procon|vigilancia|detran|jari/.test(nAdm)) return null;
+      const disciplinar = /disciplinar|\bpad\b|sindicancia|indiciad|comissao processante/.test(nAdm);
+      const gestor = /tribunal de contas|improbidade|gestor|ordenador|agente publico|parecer tecnico/.test(nAdm);
       const prazo = t.match(/prazo de (\d{1,3}) \(?[a-zç ]*\)? ?dias( [úu]teis)?/i);
       const lei = ["8.112", "14.133", "9.784", "8.429", "12.846"].filter((n) => t.includes(n));
       const pena = t.match(/\b(advert[eê]ncia|suspens[aã]o|demiss[aã]o|cassa[cç][aã]o|destitui[cç][aã]o|multa|impedimento|inidoneidade)\b/i)?.[0];
@@ -84,10 +115,12 @@ const DOC_READERS = {
       const items = [];
       if (prazo) items.push(`O documento fixa prazo de ${prazo[1]} dias${prazo[2] ? " úteis" : ""}. Confirme a data em que você recebeu: o prazo conta dela.`);
       else if (/indiciad|cita[cç][aã]o/i.test(t) && lei.includes("8.112")) items.push("Pela Lei 8.112, a defesa escrita é de 10 dias da citação (20 dias se houver mais de um indiciado).");
-      items.push("Peça cópia integral dos autos antes de redigir a defesa.");
+      items.push(disciplinar ? "Peça cópia integral dos autos antes de redigir a defesa." : "Peça cópia integral do processo administrativo: você tem direito de acesso (Lei 9.784/1999, art. 3º, II).");
       if (pena) items.push(`Penalidade mencionada: ${pena}. Verifique a prescrição dessa pena antes de qualquer outra tese.`);
       if (lei.includes("14.133") || lei.includes("12.846")) items.push("Processo ligado a contratação pública: a defesa deve considerar os efeitos no cadastro de sanções (CEIS/CNEP) e no Tribunal de Contas.");
-      items.push("A acusação precisa descrever a sua conduta concreta. Responsabilização por decisão técnica exige dolo ou erro grosseiro (art. 28 da LINDB).");
+      if (disciplinar) items.push("A acusação precisa descrever a sua conduta concreta, com as provas.");
+      if (gestor) items.push("Responsabilização por decisão ou opinião técnica exige dolo ou erro grosseiro (art. 28 da LINDB).");
+      if (!prazo && !disciplinar) items.push("Contra decisão administrativa federal, o recurso é, em regra, de 10 dias (Lei 9.784/1999, art. 59). Confira a regra do órgão.");
       return {
         facts: [["Tipo de documento", kind], ["Leis citadas", lei.join(", ") || "nenhuma identificada"], ["Data mais recente", base ? base.toLocaleDateString("pt-BR") : "não identificada"]],
         headline: d ? d.text : `${kind} identificada. Confira o prazo indicado no documento.`,
@@ -114,13 +147,21 @@ function docCard(key) {
 
 function htmlLeitura(r, btnId) {
   return `<dl class="facts">${r.facts.map(([k, v]) => `<div><dt>${esc(k)}</dt><dd>${esc(v)}</dd></div>`).join("")}</dl>
-      <div class="fu-result info"><h3>O que a lei diz sobre esse tipo de documento</h3><ul>${r.items.map((i) => `<li>${esc(String(i).replace(/\s*\[(VALIDAR|COMPLETAR|PESQUISAR|CONFERIR)[^\]]*\]/g, ""))}</li>`).join("")}</ul>
+      <div class="fu-result info"><h3>O que observar neste documento</h3><ul>${r.items.map((i) => `<li>${esc(String(i).replace(/\s*\[(VALIDAR|COMPLETAR|PESQUISAR|CONFERIR)[^\]]*\]/g, ""))}</li>`).join("")}</ul>
       <p><strong>Para ter certeza da avaliação no seu caso, consulte a advogada.</strong> Os dados lidos já vão junto com o pedido.</p>
       <div class="actions"><button class="btn" id="${btnId}">Quero a avaliação da advogada</button></div></div>
       <p class="muted small">Leitura automática do arquivo, só para organizar os dados. Não é análise nem orientação jurídica.</p>`;
 }
 
 // Página inicial: qualquer documento (carta do INSS, negativa do plano, citação, notificação, decisão) — descobre o tipo e lê.
+// Assuntos do site que combinam com o texto do documento (usa a mesma busca da página inicial).
+function relacionadas(text) {
+  const ids = (window.buscarSituacoes ? window.buscarSituacoes(String(text || "").slice(0, 4000)) : []).slice(0, 3);
+  if (!ids.length) return "";
+  return `<div class="doc-rel"><p><strong>Pelo conteúdo, o documento parece tratar de:</strong></p>${ids.map((e) => `<button type="button" class="btn-sec" data-ir-sit="${esc(e.id)}">${esc(e.tit.replace(/\s*→$/, ""))}</button>`).join(" ")}</div>`;
+}
+function ligarRelacionadas(box) { box.querySelectorAll("[data-ir-sit]").forEach((b) => (b.onclick = () => window.abrirSituacao?.(b.dataset.irSit))); }
+
 function bindHomeDoc() {
   const out = $("home-doc-out"); if (!out) return;
   const run = (text) => {
@@ -129,15 +170,17 @@ function bindHomeDoc() {
     const pontos = {
       saude: (t.match(/plano de saude|operadora|\bans\b|beneficiario|rol |cobertura|procedimento|carencia/g) || []).length,
       previdenciario: (t.match(/\binss\b|previdencia|seguro social|segurado|aposentadoria|auxilio|beneficio|nb\b|cnis/g) || []).length,
-      administrativo: (t.match(/citac|notificac|intimac|processo administrativo|disciplinar|\bpad\b|sindicancia|comissao|auto de infracao|multa|decisao/g) || []).length,
+      administrativo: (t.match(/processo administrativo|disciplinar|\bpad\b|sindicancia|comissao|auto de infracao|tribunal de contas|licitac|servidor/g) || []).length,
+      judicial: (t.match(/sentenca|juiz|juiza|vistos|tribunal de justica|tribunal regional|\bvara\b|juizado|acordao|desembargador|\d{7}-\d{2}\.\d{4}\.\d\.\d{2}\.\d{4}/g) || []).length * 2,
     };
     const ordem = Object.keys(pontos).sort((a, b) => pontos[b] - pontos[a]).filter((k) => pontos[k] > 0);
     for (const key of ordem) {
       const r = DOC_READERS[key].analyze(text || "");
       if (!r) continue;
       Object.assign(state, { key, flow: FLOWS[key], docSummary: r.summary, text: state.text || `Documento enviado: ${r.facts?.[0]?.[1] || "documento"}` });
-      out.innerHTML = htmlLeitura(r, "home-doc-help");
+      out.innerHTML = htmlLeitura(r, "home-doc-help") + relacionadas(text);
       $("home-doc-help").onclick = openLawyer;
+      ligarRelacionadas(out);
       return;
     }
     if (typeof analyzeCnis === "function" && analyzeCnis(text || "").readable) {
@@ -146,8 +189,9 @@ function bindHomeDoc() {
       return;
     }
     Object.assign(state, { key: null, flow: null, docSummary: "Documento enviado pela página inicial (tipo não reconhecido automaticamente).", text: state.text || "Documento enviado para análise" });
-    out.innerHTML = `<p class="warn-text">Não reconheci automaticamente este documento — mas a advogada pode analisar.</p><div class="actions"><button class="btn" id="home-doc-help">Enviar para a advogada</button></div>`;
+    out.innerHTML = `<p class="warn-text">Não reconheci automaticamente este documento — mas a advogada pode analisar.</p><div class="actions"><button class="btn" id="home-doc-help">Enviar para a advogada</button></div>` + relacionadas(text);
     $("home-doc-help").onclick = openLawyer;
+    ligarRelacionadas(out);
   };
   $("home-doc-file").onchange = async (e) => {
     const f = e.target.files[0]; if (!f) return;
