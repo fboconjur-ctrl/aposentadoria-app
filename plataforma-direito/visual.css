@@ -135,3 +135,4 @@ a { color: var(--brand); }
 .h-guias .guia-destaque { border-bottom: 1px solid var(--line) !important; border-top: 0 !important; border-left: 0 !important; border-right: 0 !important; }
 .h-guias .guia-link::after { content: " ↓"; color: var(--salvia); }
 #result .rt-atalho a { color: var(--brand); }
+.doc-manchete{margin:10px 0 4px;color:var(--brand)}.doc-achados{background:var(--salvia-clara);border-radius:12px;padding:12px 16px;margin:10px 0}.doc-achados h3{margin:0 0 6px;font-size:1.05rem}

@@ -46,10 +46,10 @@ const DOC_READERS = {
     hint: "Pode ser o PDF ou o e-mail da operadora salvo em PDF.",
     analyze(text) {
       const t = text.replace(/\s+/g, " ");
-      if (!/negad|indeferid|n[aã]o autoriza|recusa|sem cobertura|n[aã]o coberto/i.test(t)) return null;
+      if (!/negad|negativa|indeferid|n[aã]o autoriza|recusa|sem cobertura|n[aã]o coberto/i.test(t)) return null;
       const tuss = t.match(/\b\d{8}\b/)?.[0];
       const motivos = matchAll(t, [
-        { re: /\brol\b/i, label: "Fora do rol da ANS", fix: "Pela Lei 14.454/2022, a cobertura fora do rol é possível com comprovação científica ou recomendação de órgão técnico. Peça ao médico relatório com a literatura." },
+        { re: /\brol\b/i, label: "Fora do rol da ANS", fix: "A cobertura fora do rol é excepcional: o STF (ADI 7.265) exige requisitos cumulativos, como prescrição por profissional habilitado, ausência de negativa expressa da ANS e comprovação científica de eficácia e segurança. Peça ao médico relatório detalhado com a literatura." },
         { re: /car[eê]ncia/i, label: "Carência", fix: "Em urgência e emergência, a carência máxima é de 24 horas. Confira as datas do contrato." },
         { re: /preexist|\bDLP\b|\bCPT\b/i, label: "Doença preexistente", fix: "Só vale se a doença foi declarada na contratação e por até 24 meses. Peça a declaração de saúde que você assinou." },
         { re: /contrat|exclu[ií]d|segmenta[cç][aã]o/i, label: "Exclusão contratual", fix: "Procedimentos do rol são obrigatórios para a segmentação do plano, mesmo que o contrato não os cite." },
@@ -129,7 +129,7 @@ const DOC_READERS = {
       if (!prazo && !disciplinar) items.push("Contra decisão administrativa federal, o recurso é, em regra, de 10 dias (Lei 9.784/1999, art. 59). Confira a regra do órgão.");
       return {
         facts: [["Tipo de documento", kind], ["Leis citadas", lei.join(", ") || "nenhuma identificada"], ["Data mais recente", base ? base.toLocaleDateString("pt-BR") : "não identificada"]],
-        headline: d ? d.text : `${kind} identificada. Confira o prazo indicado no documento.`,
+        headline: d && base ? `Prazo de ${prazo[1]} dias${prazo[2] ? " úteis" : ""}. Se você recebeu o documento em ${base.toLocaleDateString("pt-BR")}, ${d.text.charAt(0).toLowerCase() + d.text.slice(1)}` : `${kind} identificada. Confira o prazo indicado no documento.`,
         tone: d ? d.tone : "near", items,
         summary: `Documento administrativo: ${kind}; leis ${lei.join(", ") || "?"}; pena ${pena || "?"}; prazo ${prazo ? prazo[1] + " dias" : "?"}.`,
       };
@@ -189,12 +189,12 @@ function bindHomeDoc() {
       administrativo: (t.match(/processo administrativo|disciplinar|\bpad\b|sindicancia|comissao|auto de infracao|tribunal de contas|licitac|servidor/g) || []).length,
       judicial: (t.match(/sentenca|juiz|juiza|vistos|tribunal de justica|tribunal regional|\bvara\b|juizado|acordao|desembargador|\d{7}-\d{2}\.\d{4}\.\d\.\d{2}\.\d{4}/g) || []).length * 2,
     };
-    const ordem = Object.keys(pontos).sort((a, b) => pontos[b] - pontos[a]).filter((k) => pontos[k] > 0);
-    for (const key of ordem) {
-      const r = DOC_READERS[key].analyze(text || "");
-      if (!r) continue;
-      Object.assign(state, { key, flow: FLOWS[key], docSummary: r.summary, text: state.text || `Documento enviado: ${r.facts?.[0]?.[1] || "documento"}` });
-      out.innerHTML = htmlLeitura(r, "home-doc-help") + relacionadas(text);
+    const achado = window.escolherLeitor ? window.escolherLeitor(text || "") : null;
+    if (achado) {
+      const { key, r } = achado;
+      Object.assign(state, { key: FLOWS[key] ? key : state.key, flow: FLOWS[key] || state.flow, docSummary: r.summary, text: state.text || `Documento enviado: ${r.facts?.[0]?.[1] || "documento"}` });
+      const ex = window.extrasDocumento ? window.extrasDocumento(text || "") : [];
+      out.innerHTML = (r.headline ? `<p class="doc-manchete"><strong>${esc(r.headline)}</strong></p>` : "") + htmlLeitura(r, "home-doc-help").replace("</dl>", "</dl>" + (ex.length ? `<div class="doc-achados"><h3>O que encontramos no documento</h3><ul>${ex.map((x) => `<li>${x}</li>`).join("")}</ul></div>` : "")) + relacionadas(text);
       $("home-doc-help").onclick = openLawyer;
       ligarRelacionadas(out);
       return;
