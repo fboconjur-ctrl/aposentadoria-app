@@ -30,24 +30,24 @@ const hoje = new Date(), ISO = hoje.toISOString().slice(0, 10), DATA = `${MES[ho
 const paras = (l) => pub(l).map((x) => `<p>${esc(x)}</p>`).join("");
 const sec = (t, intro, corpo) => corpo ? `<h2>${t}</h2>${intro ? `<p>${intro}</p>` : ""}${corpo}` : "";
 const ul = (l, tag = "ul") => pub(l).length ? `<${tag}>${pub(l).map((x) => `<li>${esc(x)}</li>`).join("")}</${tag}>` : "";
-const CSS = `:root{--azul:#2340b8;--tinta:#16224a;--suave:#5b6488;--fundo:#fbfbfd;--linha:#e6e8f2}
+const CSS = `:root{--azul:#5f7d6b;--tinta:#2e2e2e;--suave:#7c766d;--fundo:#faf7f2;--linha:#e8dfd3}
 *{box-sizing:border-box}body{margin:0;background:var(--fundo);color:var(--tinta);font:18px/1.75 Georgia,"Iowan Old Style","Times New Roman",serif}
 .topo{border-bottom:1px solid var(--linha);background:#fff}.topo div{max-width:720px;margin:0 auto;padding:14px 18px;display:flex;justify-content:space-between;gap:12px;font:600 15px/1.4 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
 .topo a{color:var(--tinta);text-decoration:none}
 main{max-width:720px;margin:0 auto;padding:28px 18px 110px}
 .cat{font:700 13px/1 system-ui,sans-serif;letter-spacing:.08em;text-transform:uppercase;color:var(--azul)}
-h1{font:800 2.1rem/1.2 system-ui,-apple-system,Segoe UI,Roboto,sans-serif;margin:12px 0 14px;letter-spacing:-.01em}
+h1{font:300 2.3rem/1.18 Fraunces,Georgia,serif;margin:12px 0 14px;letter-spacing:-.01em}
 .meta{font:14px/1.5 system-ui,sans-serif;color:var(--suave);border-bottom:1px solid var(--linha);padding-bottom:16px;margin-bottom:22px}
 .linha-fina{font-size:1.2rem;color:#36406a;font-style:italic}
-h2{font:700 1.35rem/1.3 system-ui,-apple-system,Segoe UI,Roboto,sans-serif;margin:38px 0 10px}
+h2{font:400 1.45rem/1.3 Fraunces,Georgia,serif;margin:38px 0 10px}
 h3{font:700 1.05rem/1.4 system-ui,sans-serif;margin:22px 0 4px}
 li{margin:8px 0}a{color:var(--azul)}
-.destaque{border-left:4px solid #e0a100;background:#fff8e6;padding:12px 16px;border-radius:0 10px 10px 0;margin:20px 0}
+.destaque{border-left:3px solid #b9895a;background:#f6ede1;padding:12px 16px;border-radius:0 10px 10px 0;margin:20px 0}
 .destaque p{margin:4px 0}
 .cta{font-family:system-ui,sans-serif;background:#fff;border:1px solid var(--linha);border-radius:16px;padding:20px;margin:36px 0}
 .cta h2{margin-top:0}.btns{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px}
 .btn{display:inline-block;padding:12px 18px;border-radius:12px;background:var(--azul);color:#fff;text-decoration:none;font:700 15px/1.2 system-ui,sans-serif}
-.btn.wa{background:#1fa855}
+.btn.wa{background:#7a9483}
 .fontes{font:15px/1.6 system-ui,sans-serif}
 .aviso{font:14px/1.5 system-ui,sans-serif;color:var(--suave);border-top:1px solid var(--linha);padding-top:16px;margin-top:36px}
 .barra{position:fixed;left:0;right:0;bottom:0;display:flex;gap:8px;padding:10px 16px;background:#fff;border-top:1px solid var(--linha)}.barra a{flex:1;text-align:center}
@@ -58,7 +58,7 @@ const cabeca = (tit, desc, url, extra = "") => `<!doctype html>
 <title>${esc(tit)} · Plataforma do Direito</title>
 <meta name="description" content="${esc(desc)}"><link rel="canonical" href="${url}">
 <meta property="og:type" content="article"><meta property="og:title" content="${esc(tit)}"><meta property="og:description" content="${esc(desc)}"><meta property="og:url" content="${url}"><meta property="og:image" content="${SITE}/compartilhar.png">
-<link rel="icon" href="/favicon.svg"><style>${CSS}</style>${extra}</head>`;
+<link rel="icon" href="/favicon.svg"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400&display=swap"><style>${CSS}</style>${extra}</head>`;
 
 const urls = [`${SITE}/plataforma-direito/`, `${SITE}/plataforma-direito/privacidade/`, `${SITE}/plataforma-direito/s/`, `${SITE}/plataforma-direito/treinamentos/`, `${SITE}/plataforma-direito/cursos/`];
 const indice = {};

@@ -18,7 +18,7 @@
 <meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Figtree:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500&family=Figtree:wght@400;500;600&display=swap">
 <link rel="stylesheet" href="styles.css">
 <link rel="stylesheet" href="visual.css">
 </head>
@@ -37,20 +37,19 @@
   <section id="view-home" class="view active">
     <div class="h-hero">
       <div class="h-hero-in">
-        <p class="eyebrow">Direito explicado em linguagem simples · Brasília/DF</p>
-        <h1>Entenda seus direitos. <em>Saiba o que fazer.</em></h1>
-        <p class="lead">Servidor público, concurso, INSS, saúde, bancos, família e cartório: o que a lei e os tribunais dizem, sem juridiquês — e uma advogada de verdade quando o caso pedir.</p>
+        <p class="eyebrow">Advocacia · Brasília/DF</p>
+        <h1>Entenda seus direitos.<br><em>Com calma e clareza.</em></h1>
+        <p class="lead">O que a lei e os tribunais dizem sobre o seu caso, em linguagem simples. E uma advogada de verdade quando você precisar.</p>
         <div id="busca-slot"></div>
         <div class="caminhos">
-          <a href="#" class="caminho caminho-zap" data-wa><span class="caminho-ico">💬</span><span><b>Falar agora com a advogada</b><br><span>Pelo WhatsApp, sem cadastro.</span></span></a>
-          <a href="#shortcuts" class="caminho caminho-ler" id="ir-temas"><span class="caminho-ico">📖</span><span><b>Entender meu caso primeiro</b><br><span>Escolha o assunto e leia no seu ritmo.</span></span></a>
+          <a href="#shortcuts" class="caminho caminho-ler" id="ir-temas">Ver os assuntos</a>
+          <a href="#" class="caminho caminho-zap" data-wa>Conversar com a advogada</a>
         </div>
-        <ul class="h-selos"><li>✓ Textos revisados pela advogada</li><li>✓ Fonte oficial em cada regra</li><li>✓ Resposta em até 1 dia útil</li></ul>
       </div>
     </div>
 
     <div class="hero hero-simples">
-        <div class="h-sec-cab"><p class="eyebrow" style="margin-top:18px">Qual é o assunto?</p><h2>Escolha por onde começar</h2></div>
+        <div class="h-sec-cab"><p class="eyebrow">Assuntos</p><h2>Sobre o que é a sua dúvida?</h2></div>
         <div class="tiles" id="shortcuts">
           <button data-topic="administrativo" class="tile-full tile-destaque"><span aria-hidden="true">🏛️</span>Servidor, concurso, licitação ou órgão público</button>
           <button data-topic="cartorio"><span aria-hidden="true">📄</span>Cartório sem processo: divórcio, inventário, nome</button>
@@ -73,13 +72,14 @@
           </div>
         </form>
 
-        <div class="h-sec-cab"><p class="eyebrow">Materiais gratuitos</p><h2>Guias para baixar e guardar</h2></div>
+        <div class="h-sec-cab"><p class="eyebrow">Para guardar</p><h2>Guias gratuitos</h2></div>
         <div class="h-guias">
-        <a class="guia-link guia-destaque" href="materiais/guia-completo-de-direitos.pdf" target="_blank" rel="noopener" download>📚 Guia completo de direitos (PDF, 92 páginas): todas as dúvidas, Direito Administrativo, cartório e autismo, revisados pela advogada</a>
-        <a class="guia-link" href="materiais/guia-administrativo-e-registro-civil.pdf" target="_blank" rel="noopener" download>📘 Guia gratuito (PDF): 21 situações de servidor, concurso, licitação e cartório</a>
-        <a class="guia-link" href="materiais/guia-duvidas-juridicas-por-tema.pdf" target="_blank" rel="noopener" download>📗 Guia gratuito (PDF): 419 dúvidas jurídicas em 10 temas — INSS, saúde, bancos, consumo, família, herança e mais</a>
-        <a class="guia-link" href="materiais/direitos-pessoa-com-tea.pdf" target="_blank" rel="noopener" download>🧩 Guia gratuito (PDF): direitos da pessoa com autismo — horário especial, escola e passe livre</a>
+        <a class="guia-link guia-destaque" href="materiais/guia-completo-de-direitos.pdf" target="_blank" rel="noopener" download>Guia completo de direitos (PDF, 92 páginas): todas as dúvidas, Direito Administrativo, cartório e autismo, revisados pela advogada</a>
+        <a class="guia-link" href="materiais/guia-administrativo-e-registro-civil.pdf" target="_blank" rel="noopener" download>Guia gratuito (PDF): 21 situações de servidor, concurso, licitação e cartório</a>
+        <a class="guia-link" href="materiais/guia-duvidas-juridicas-por-tema.pdf" target="_blank" rel="noopener" download>Guia gratuito (PDF): 419 dúvidas jurídicas em 10 temas — INSS, saúde, bancos, consumo, família, herança e mais</a>
+        <a class="guia-link" href="materiais/direitos-pessoa-com-tea.pdf" target="_blank" rel="noopener" download>Guia gratuito (PDF): direitos da pessoa com autismo — horário especial, escola e passe livre</a>
         </div>
+        <details class="h-dobra h-doc"><summary>Recebeu uma carta, citação ou decisão? <span>Envie que a gente lê para você</span></summary>
         <section class="cnis-card doc-card home-doc" id="home-doc">
           <h2>Recebeu carta, citação, notificação ou decisão? Envie que a gente lê</h2>
           <p class="muted">Carta do INSS, negativa do plano de saúde, citação em processo administrativo, notificação ou decisão. <strong>A leitura acontece no seu aparelho: o arquivo não é enviado nem guardado.</strong></p>
@@ -88,15 +88,17 @@
           <details><summary>Prefere colar o texto?</summary><textarea id="home-doc-text" rows="5"></textarea><button class="btn secondary" id="home-doc-paste" type="button">Ler texto</button></details>
           <div id="home-doc-out" aria-live="polite"></div>
         </section>
+        </details>
 
-        <div class="h-sec-cab"><p class="eyebrow">Para profissionais e equipes</p><h2>Advogados, órgãos e empresas</h2></div>
+        <p class="h-prof">Para advogados, órgãos públicos e empresas:</p>
         <div class="h-b2b">
-        <a href="/plataforma-direito/cursos/" class="b2b-card"><b>🎬 Cursos gravados e skills do Claude</b><span>Direito Administrativo na prática e escritório com IA, para advogados, servidores e empresas.</span></a>
-        <a href="/plataforma-direito/treinamentos/" class="b2b-card"><b>🎓 Treinamentos e consultorias</b><span>Licitações, contratos, PAD, gestão pública e direitos do servidor, para órgãos, empresas e associações.</span></a>
-        <a href="#" class="b2b-card" data-go="empresas"><b>🏢 Empresas e gestores públicos — Direito Administrativo</b><span>Licitações, contratos públicos, improbidade e controle externo →</span></a>
+        <a href="/plataforma-direito/cursos/" class="b2b-card"><b>Cursos gravados e skills do Claude</b><span>Direito Administrativo na prática e escritório com IA, para advogados, servidores e empresas.</span></a>
+        <a href="/plataforma-direito/treinamentos/" class="b2b-card"><b>Treinamentos e consultorias</b><span>Licitações, contratos, PAD, gestão pública e direitos do servidor, para órgãos, empresas e associações.</span></a>
+        <a href="#" class="b2b-card" data-go="empresas"><b>Empresas e gestores públicos — Direito Administrativo</b><span>Licitações, contratos públicos, improbidade e controle externo →</span></a>
         </div>
       </div>
 
+      <details class="h-dobra h-largo"><summary>Como funciona o atendimento</summary>
       <section class="jornada" id="como" aria-labelledby="jornada-tit">
         <p class="eyebrow">Do primeiro contato à solução</p>
         <h2 id="jornada-tit">Como funciona o atendimento</h2>
@@ -109,7 +111,9 @@
         </ol>
         <div class="jornada-acoes"><a href="#" class="btn btn-wa" data-wa>Começar pelo WhatsApp</a><a href="#shortcuts" class="btn secondary" id="ir-temas2">Ler sobre o meu caso</a></div>
       </section>
+      </details>
 
+      <details class="h-dobra h-largo"><summary>Perguntas frequentes antes de contratar</summary>
       <section class="antes" aria-labelledby="antes-tit">
         <p class="eyebrow">Antes de contratar</p>
         <h2 id="antes-tit">Perguntas que todo mundo faz</h2>
@@ -127,6 +131,7 @@
         <details class="duvida"><summary>Posso trocar de advogado no meio do processo?</summary><p>Pode, a qualquer momento. Basta outorgar procuração ao novo advogado e acertar os honorários do trabalho já feito, conforme o contrato.</p></details>
         <details class="duvida"><summary>E se o meu assunto não for da área do escritório?</summary><p>A advogada avisa com franqueza e, com a sua autorização, indica um colega de confiança.</p></details>
       </section>
+      </details>
 
       <section class="porque" aria-labelledby="porque-tit">
         <p class="eyebrow">Por que usar a Plataforma</p>

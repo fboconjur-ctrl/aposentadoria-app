@@ -95,20 +95,20 @@
   let falando = false;
   function ouvir(btn) {
     const sy = window.speechSynthesis; if (!sy) return;
-    if (falando) { sy.cancel(); falando = false; btn.textContent = "🔊 Ouvir"; return; }
+    if (falando) { sy.cancel(); falando = false; btn.textContent = "Ouvir"; return; }
     const r = $("result"), partes = [r.querySelector("h1")?.textContent, r.querySelector(".lead")?.textContent, ...[...r.querySelectorAll(".rt-essencial li, .rt-alerta, #c-passos li")].map((x) => x.textContent)].filter(Boolean);
     // Frases curtas, uma de cada vez: soa mais natural e evita o corte de textos longos no Chrome.
     const texto = partes.map((x) => x.trim().replace(/\s+/g, " ").replace(/([^.!?:])$/, "$1.")).join(" ")
       .replace(/\bart\.\s*/gi, "artigo ").replace(/§§\s*/g, "parágrafos ").replace(/§\s*/g, "parágrafo ").replace(/\bnº\s*/gi, "número ").replace(/\bSTF\b/g, "S T F").replace(/\bSTJ\b/g, "S T J").replace(/\bINSS\b/g, "I N S S").replace(/\bPAD\b/g, "pád").replace(/\(|\)/g, ", ");
     const frases = texto.match(/[^.!?;]+[.!?;]*/g) || [texto];
     const voz = vozEscolhida();
-    sy.cancel(); falando = true; btn.textContent = "⏹️ Parar";
+    sy.cancel(); falando = true; btn.textContent = "Parar";
     let i = 0;
     const proxima = () => {
-      if (!falando || i >= frases.length) { falando = false; btn.textContent = "🔊 Ouvir"; return; }
+      if (!falando || i >= frases.length) { falando = false; btn.textContent = "Ouvir"; return; }
       const u = new SpeechSynthesisUtterance(frases[i++].trim());
       u.lang = "pt-BR"; u.rate = 1; u.pitch = 1; if (voz) u.voice = voz;
-      u.onend = proxima; u.onerror = () => { falando = false; btn.textContent = "🔊 Ouvir"; };
+      u.onend = proxima; u.onerror = () => { falando = false; btn.textContent = "Ouvir"; };
       sy.speak(u);
     };
     proxima();
@@ -119,7 +119,7 @@
       const vs = vozesPt(); if (vs.length < 2 || barra.querySelector(".sel-voz")) return;
       const atual = vozEscolhida();
       const sel = document.createElement("select"); sel.className = "sel-voz"; sel.setAttribute("aria-label", "Escolher a voz");
-      sel.innerHTML = vs.map((v) => `<option value="${esc(v.name)}"${atual && v.name === atual.name ? " selected" : ""}>🗣️ ${esc(v.name.replace(/Microsoft |Google |\(.*?\)| - .*$/g, "").trim() || v.name)}${pontua(v) >= 14 ? " ★" : ""}</option>`).join("");
+      sel.innerHTML = vs.map((v) => `<option value="${esc(v.name)}"${atual && v.name === atual.name ? " selected" : ""}>${esc(v.name.replace(/Microsoft |Google |\(.*?\)| - .*$/g, "").trim() || v.name)}${pontua(v) >= 14 ? " ★" : ""}</option>`).join("");
       sel.onchange = () => { try { localStorage.setItem("pd-voz", sel.value); } catch {} };
       barra.querySelector("[data-ouvir]")?.after(sel);
     };
@@ -175,7 +175,7 @@
     }
     const docs = publico(R.docs);
     const barra = document.createElement("div"); barra.className = "rt-ferramentas";
-    barra.innerHTML = `${window.speechSynthesis ? `<button type="button" data-ouvir>🔊 Ouvir</button>` : ""}<button type="button" data-compartilhar>🔗 Enviar esta página</button>${docs.length ? `<button type="button" data-docs>📋 Lista de documentos</button>` : ""}${MODELO_DE[id] ? `<button type="button" data-modelo>📝 Modelo de requerimento</button>` : ""}`;
+    barra.innerHTML = `${window.speechSynthesis ? `<button type="button" data-ouvir>Ouvir</button>` : ""}<button type="button" data-compartilhar>Enviar esta página</button>${docs.length ? `<button type="button" data-docs>Lista de documentos</button>` : ""}${MODELO_DE[id] ? `<button type="button" data-modelo>Modelo de requerimento</button>` : ""}`;
     r.querySelector(".rt-atalho")?.after(barra);
     barra.querySelector("[data-ouvir]")?.addEventListener("click", (e) => ouvir(e.currentTarget));
     if (barra.querySelector("[data-ouvir]")) seletorVoz(barra);
@@ -289,7 +289,7 @@
   // ---------- Atalho para os modelos na página inicial ----------
   const guias = document.querySelectorAll("#view-home .guia-link");
   if (guias.length) {
-    const a = document.createElement("a"); a.href = "#"; a.className = "guia-link"; a.textContent = "📝 Modelos de requerimento grátis: vista de processo, Lei de Acesso à Informação, CTC e certidões";
+    const a = document.createElement("a"); a.href = "#"; a.className = "guia-link"; a.textContent = "Modelos de requerimento grátis: vista de processo, Lei de Acesso à Informação, CTC e certidões";
     a.onclick = (e) => { e.preventDefault(); abrirModelos(); };
     guias[guias.length - 1].after(a);
   }
