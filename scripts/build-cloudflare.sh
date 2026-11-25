@@ -46,6 +46,10 @@ cat > "$DIST/_headers" <<'EOF'
   X-Robots-Tag: noindex, nofollow
   Referrer-Policy: no-referrer
 EOF
+# Versão nos links de .js e .css das páginas: cada deploy força o navegador a baixar os arquivos novos.
+V="$(date +%Y%m%d%H%M%S)"
+find "$DIST" -name "*.html" -print0 | xargs -0 sed -i -E "s#(src|href)=\"([^\":]+\.(js|css))(\?[^\"]*)?\"#\1=\"\2?v=$V\"#g"
+
 # Uma página de texto por situação (Google) e o sitemap com todas elas.
 node scripts/gerar-paginas.js "$DIST"
 echo "dist pronto"
