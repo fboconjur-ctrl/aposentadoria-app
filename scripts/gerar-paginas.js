@@ -6,7 +6,7 @@ const RAIZ = path.join(__dirname, ".."), PD = path.join(RAIZ, "plataforma-direit
 const SITE = "https://plataformadodireito.com.br";
 global.window = {};
 const ler = (f) => fs.readFileSync(path.join(PD, f), "utf8").replace(/^const /gm, "var ");
-eval(["faq.js", "faq-areas.js", "faq-lote2.js", "faq-lote3.js", "roteiros.js", "duvidas-casos.js", "roteiros-novos.js", "roteiros-adm.js", "roteiros-cartorio.js", "roteiros-tea.js", "revisao-adm-site.js"].map(ler).join("\n"));
+eval(["faq.js", "faq-areas.js", "faq-lote2.js", "faq-lote3.js", "roteiros.js", "duvidas-casos.js", "roteiros-novos.js", "roteiros-adm.js", "roteiros-cartorio.js", "roteiros-tea.js", "revisao-adm-site.js", "roteiros-contas.js"].map(ler).join("\n"));
 const app = fs.readFileSync(path.join(PD, "app.js"), "utf8");
 const WA = (app.match(/WA_NUMERO = "(\d+)"/) || [])[1];
 const titulos = {};

@@ -73,7 +73,7 @@
   por("inss", ["indeferido", "auxilio-incapacidade", "invalidez", "bpc-renda", "revisao-beneficio", "pericia-inss", "pensao-duracao", "salario-maternidade", "auxilio-acidente", "professor", "especial-ppp", "rural", "descontos-beneficio"]);
   por("saude", ["plano-negou", "prazo-atendimento", "liminar-medicamento", "tea-terapia", "home-care", "oncologico", "bariatrica", "opme-protese", "saude-mental", "fila-sus", "uti-sus", "sus-remedio"]);
   por("cartorio", ["inventario-cartorio", "divorcio-cartorio", "uniao-estavel", "inventario-negativo", "testamento", "emancipacao", "alteracao-nome", "retificacao-registro", "reconhecer-filho", "socioafetiva"]);
-  por("consumo", ["defeito", "compra-nao-entregue", "cobranca-dobro", "negativado", "voo", "telefonia", "pix-golpe", "consignado-nao-contratado", "compra-nao-reconhecida", "conta-alta", "falta-energia"]);
+  por("consumo", ["perda-conta", "defeito", "compra-nao-entregue", "cobranca-dobro", "negativado", "voo", "telefonia", "pix-golpe", "consignado-nao-contratado", "compra-nao-reconhecida", "conta-alta", "falta-energia"]);
 
   // ---------- Prepare sua consulta: linha do tempo + perguntas, guardadas só neste aparelho ----------
   const chave = (id) => `pd-preparo-${id}`;
