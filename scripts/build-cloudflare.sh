@@ -5,7 +5,7 @@ set -euo pipefail
 cd "$(dirname "$0")/.."
 DIST=dist
 mkdir -p "$DIST"
-cp -R plataforma-direito aposentadoria-app 404.html favicon.svg compartilhar.png robots.txt sitemap.xml "$DIST"/
+cp -R plataforma-direito aposentadoria-app links 404.html favicon.svg compartilhar.png robots.txt sitemap.xml "$DIST"/
 
 # Arquivos internos não vão para o site (anotações, banco, revisão, testes).
 for interno in \
@@ -49,6 +49,13 @@ EOF
 # Versão nos links de .js e .css das páginas: cada deploy força o navegador a baixar os arquivos novos.
 V="$(date +%Y%m%d%H%M%S)"
 find "$DIST" -name "*.html" -print0 | xargs -0 sed -i -E "s#(src|href)=\"([^\":]+\.(js|css))(\?[^\"]*)?\"#\1=\"\2?v=$V\"#g"
+
+# Página de links: nome, marca e OAB vêm das variáveis da Cloudflare (ADV_MARCA, ADV_NOME, ADV_OAB),
+# para não ficarem gravados no repositório. Sem as variáveis, mostra só "Plataforma do Direito".
+MARCA="${ADV_MARCA:-Plataforma do Direito}"; NOME="${ADV_NOME:-Plataforma do Direito}"; OAB="${ADV_OAB:-}"
+PRIMEIRO="$(printf '%s' "${ADV_MARCA:-}" | awk '{print $1}')"; PRIMEIRO_URL="$(printf '%s' "${PRIMEIRO:-tudo bem}" | sed 's/ /%20/g')"
+sed -i -e "s#__ADV_MARCA__#${MARCA}#g" -e "s#__ADV_NOME__#${NOME}#g" -e "s#__ADV_OAB__#${OAB}#g" -e "s#__ADV_PRIMEIRO_URL__#${PRIMEIRO_URL}#g" "$DIST/links/index.html"
+[ -n "$OAB" ] || sed -i 's# · </footer>#</footer>#; s#Plataforma do Direito · <br>#Plataforma do Direito<br>#' "$DIST/links/index.html"
 
 # Uma página de texto por situação (Google) e o sitemap com todas elas.
 node scripts/gerar-paginas.js "$DIST"
